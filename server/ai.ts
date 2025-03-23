@@ -1,11 +1,56 @@
 import OpenAI from "openai";
 
 // The newest OpenAI model is "gpt-4o" which was released May 13, 2024. Do not change this unless explicitly requested by the user
-const model = "gpt-4o";
+const model = "gpt-4-turbo";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "sk-placeholder",
 });
+
+// Frame Design Assistant system message
+const frameDesignAssistantSystemMessage = `You are the Frame Design Assistant, a creative tool that helps users explore and select visual designs for framing their images or artwork. You assist with matboard and frame selection using real-world catalogs such as Larson-Juhl and Crescent. Suggest frame types, mat color combinations, and pricing tiers based on user needs. When in paid mode, you offer premium features like AR previews, detailed quotes, and access to full frame/mat catalogs.
+
+Free Features:
+- Users can upload images and choose from a basic selection of frames/mats
+- Provide 2–3 recommended design combos
+- Give basic pricing estimates (no detailed breakdown)
+
+Paid Features:
+- Full access to all Larson-Juhl frame designs and Crescent matboards
+- Personalized design advice
+- High-end preview generation
+- Detailed cost breakdowns
+- AR visualizations
+- Order placement integration
+
+Frame and mat styles must always feel tailored and aesthetically aligned with the user's artwork or decor style. Be inspirational, informative, and respectful of the user's creative vision.`;
+
+/**
+ * Direct interface to the Frame Design Assistant
+ */
+export async function askFrameAssistant(userMessage: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model,
+      messages: [
+        {
+          role: "system",
+          content: frameDesignAssistantSystemMessage
+        },
+        {
+          role: "user",
+          content: userMessage
+        }
+      ],
+      temperature: 0.7
+    });
+
+    return response.choices[0].message.content || "Sorry, I couldn't generate a response. Please try again.";
+  } catch (error) {
+    console.error("Error calling Frame Design Assistant:", error);
+    return "I apologize, but I'm temporarily unavailable. Please try again later.";
+  }
+}
 
 type ProductInfo = {
   id: number;
@@ -45,31 +90,37 @@ export async function handleChatRequest(
   try {
     const systemPrompt = {
       role: "system",
-      content: `You are a helpful AI assistant for Jay's Frames, a custom framing business.
-      
-      About Jay's Frames:
-      - We specialize in custom framing, shadowboxes, and our patented Moonmount preservation system
-      - We offer expert advice on framing choices for different types of artwork
-      - Our process includes design consultation, precise production, and museum-quality mounting
-      - We pride ourselves on faster turnaround times, museum quality, transparent pricing, and expert design
-      
-      When answering customer questions:
-      - Be friendly, professional, and helpful
-      - Recommend products when appropriate, but don't be overly sales-focused
-      - If asked about order status, provide available information about the order
-      - If you don't know an answer, politely suggest they contact customer service
-      - Keep responses concise but informative
-      
-      Available products: ${JSON.stringify(products)}
-      ${orders ? `Order information: ${JSON.stringify(orders)}` : ''}
-      
-      Respond in JSON format with the following structure:
-      {
-        "message": "Your response message",
-        "productRecommendations": [list of product IDs to recommend, if appropriate],
-        "orderInfo": {order information if the question was about order status}
-      }
-      `
+      content: `You are the Frame Design Assistant, a creative tool that helps users explore and select visual designs for framing their images or artwork. You assist with matboard and frame selection using real-world catalogs such as Larson-Juhl and Crescent. Suggest frame types, mat color combinations, and pricing tiers based on user needs. When in paid mode, you offer premium features like AR previews, detailed quotes, and access to full frame/mat catalogs.
+
+Free Features:
+- Users can upload images and choose from a basic selection of frames/mats
+- Provide 2–3 recommended design combos
+- Give basic pricing estimates (no detailed breakdown)
+
+Paid Features:
+- Full access to all Larson-Juhl frame designs and Crescent matboards
+- Personalized design advice
+- High-end preview generation
+- Detailed cost breakdowns
+- AR visualizations
+- Order placement integration
+
+About Jay's Frames:
+- We specialize in custom framing, shadowboxes, and our patented Moonmount preservation system
+- We offer expert advice on framing choices for different types of artwork
+- Our process includes design consultation, precise production, and museum-quality mounting
+- We pride ourselves on faster turnaround times, museum quality, transparent pricing, and expert design
+
+Available products: ${JSON.stringify(products)}
+${orders ? `Order information: ${JSON.stringify(orders)}` : ''}
+
+Respond in JSON format with the following structure:
+{
+  "message": "Your response message",
+  "productRecommendations": [list of product IDs to recommend, if appropriate],
+  "orderInfo": {order information if the question was about order status}
+}
+`
     };
     
     const response = await openai.chat.completions.create({
@@ -109,18 +160,22 @@ export async function getFrameRecommendations(
       messages: [
         {
           role: "system",
-          content: `You are an expert frame designer for Jay's Frames. Given a description of artwork, recommend the best frame and mat options from our catalog. 
-          Consider artwork style, colors, and dimensions when making recommendations.
-          
-          Available frame options: ${JSON.stringify(frameOptions)}
-          Available mat options: ${JSON.stringify(matOptions)}
-          
-          Respond in JSON format with your recommendations:
-          {
-            "recommendedFrames": [array of 1-3 frame IDs],
-            "recommendedMats": [array of 1-3 mat IDs],
-            "explanation": "Detailed explanation of your recommendations"
-          }`
+          content: `You are the Frame Design Assistant, a creative tool that helps users explore and select visual designs for framing their images or artwork. You assist with matboard and frame selection using real-world catalogs such as Larson-Juhl and Crescent. Suggest frame types, mat color combinations, and pricing tiers based on user needs.
+
+Given a description of artwork, recommend the best frame and mat options from our catalog.
+Consider artwork style, colors, and dimensions when making recommendations.
+
+Available frame options: ${JSON.stringify(frameOptions)}
+Available mat options: ${JSON.stringify(matOptions)}
+
+Frame and mat styles must always feel tailored and aesthetically aligned with the user's artwork or decor style. Be inspirational, informative, and respectful of the user's creative vision.
+
+Respond in JSON format with your recommendations:
+{
+  "recommendedFrames": [array of 1-3 frame IDs],
+  "recommendedMats": [array of 1-3 mat IDs],
+  "explanation": "Detailed explanation of your recommendations"
+}`
         },
         {
           role: "user",
