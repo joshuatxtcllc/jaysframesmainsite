@@ -8,6 +8,7 @@ import Products from "@/pages/products";
 import CustomFraming from "@/pages/custom-framing";
 import OrderStatus from "@/pages/order-status";
 import AdminDashboard from "@/pages/admin/dashboard";
+import FrameAssistantTest from "@/pages/frame-assistant-test";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { CartProvider } from "@/context/cart-context";
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/custom-framing" component={CustomFraming} />
       <Route path="/order-status" component={OrderStatus} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/frame-assistant-test" component={FrameAssistantTest} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

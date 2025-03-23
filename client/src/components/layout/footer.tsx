@@ -35,10 +35,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Products</h3>
             <ul className="space-y-2">
-              <li><Link href="/custom-framing"><a className="text-neutral-300 hover:text-white transition duration-200">Custom Framing</a></Link></li>
-              <li><Link href="/products?category=shadowbox"><a className="text-neutral-300 hover:text-white transition duration-200">Shadowboxes</a></Link></li>
-              <li><Link href="/products?category=moonmount"><a className="text-neutral-300 hover:text-white transition duration-200">Moonmount™ System</a></Link></li>
-              <li><Link href="/products"><a className="text-neutral-300 hover:text-white transition duration-200">Ready-Made Frames</a></Link></li>
+              <li><Link href="/custom-framing"><div className="text-neutral-300 hover:text-white transition duration-200 cursor-pointer">Custom Framing</div></Link></li>
+              <li><Link href="/products?category=shadowbox"><div className="text-neutral-300 hover:text-white transition duration-200 cursor-pointer">Shadowboxes</div></Link></li>
+              <li><Link href="/products?category=moonmount"><div className="text-neutral-300 hover:text-white transition duration-200 cursor-pointer">Moonmount™ System</div></Link></li>
+              <li><Link href="/products"><div className="text-neutral-300 hover:text-white transition duration-200 cursor-pointer">Ready-Made Frames</div></Link></li>
               <li><a href="#" className="text-neutral-300 hover:text-white transition duration-200">Gift Cards</a></li>
             </ul>
           </div>
@@ -46,7 +46,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Customer Service</h3>
             <ul className="space-y-2">
-              <li><Link href="/order-status"><a className="text-neutral-300 hover:text-white transition duration-200">Track Your Order</a></Link></li>
+              <li><Link href="/order-status"><div className="text-neutral-300 hover:text-white transition duration-200 cursor-pointer">Track Your Order</div></Link></li>
               <li><a href="#" className="text-neutral-300 hover:text-white transition duration-200">Shipping & Returns</a></li>
               <li><a href="#" className="text-neutral-300 hover:text-white transition duration-200">Care Instructions</a></li>
               <li><a href="#" className="text-neutral-300 hover:text-white transition duration-200">FAQ</a></li>
