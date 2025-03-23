@@ -61,7 +61,11 @@
   }
   
   /* Improve button text contrast */
-  .bg-secondary.text-white, .bg-[#e67e22].text-white {
+  .bg-secondary.text-white {
+    @apply font-medium;
+  }
+  
+  .bg-\[\#e67e22\].text-white {
     @apply font-medium;
   }
 }
