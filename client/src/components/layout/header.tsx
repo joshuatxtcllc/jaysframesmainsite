@@ -42,18 +42,18 @@ const Header = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Link href="/">
-              <a className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 <span className="text-2xl font-bold text-primary font-heading tracking-wide">Jay's Frames</span>
-              </a>
+              </div>
             </Link>
           </div>
           
           <nav className="hidden md:flex space-x-8 items-center">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
-                <a className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary font-medium transition duration-200`}>
+                <div className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary font-medium transition duration-200 cursor-pointer`}>
                   {link.label}
-                </a>
+                </div>
               </Link>
             ))}
           </nav>
@@ -96,12 +96,12 @@ const Header = () => {
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link key={link.href} href={link.href}>
-                  <a 
-                    className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary font-medium transition duration-200`}
+                  <div 
+                    className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary font-medium transition duration-200 cursor-pointer`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.label}
-                  </a>
+                  </div>
                 </Link>
               ))}
             </div>

@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import { insertOrderSchema, insertChatMessageSchema } from "@shared/schema";
-import { handleChatRequest, getFrameRecommendations, type ChatMessage } from "./ai";
+import { handleChatRequest, getFrameRecommendations, askFrameAssistant, type ChatMessage } from "./ai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API Routes
@@ -223,6 +223,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Frame recommendation error:", error);
       res.status(500).json({ message: "Failed to generate frame recommendations" });
+    }
+  });
+
+  // New endpoint for direct Frame Design Assistant access
+  app.post("/api/frame-assistant", async (req: Request, res: Response) => {
+    try {
+      const { message } = req.body;
+      
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+      
+      const response = await askFrameAssistant(message);
+      res.json({ response });
+    } catch (error) {
+      console.error("Frame assistant error:", error);
+      res.status(500).json({ 
+        message: "Failed to get a response from the Frame Design Assistant" 
+      });
     }
   });
 
