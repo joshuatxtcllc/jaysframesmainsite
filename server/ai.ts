@@ -1,10 +1,10 @@
 import OpenAI from "openai";
 
 // The newest OpenAI model is "gpt-4o" which was released May 13, 2024. Do not change this unless explicitly requested by the user
-const model = "gpt-4-turbo";
+const model = "gpt-4o";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "sk-placeholder",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Frame Design Assistant system message

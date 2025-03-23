@@ -4,6 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 
+interface FrameAssistantResponse {
+  response: string;
+}
+
 export default function FrameAssistantTest() {
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
@@ -22,13 +26,13 @@ export default function FrameAssistantTest() {
     setError('');
     
     try {
-      const response = await apiRequest(
+      const fetchResponse = await apiRequest(
         'POST',
         '/api/frame-assistant',
         { message }
       );
       
-      const result = await response.json();
+      const result = await fetchResponse.json() as FrameAssistantResponse;
       setResponse(result.response);
     } catch (err) {
       console.error('Error contacting Frame Assistant:', err);
