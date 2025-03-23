@@ -1,8 +1,9 @@
+
 {
   "variant": "professional",
-  "primary": "#2C3E50",
-  "secondary": "#e67e22",
-  "accent": "#27ae60",
+  "primary": "#1a365d",
+  "secondary": "#2b6cb0",
+  "accent": "#4299e1",
   "appearance": "light",
-  "radius": 0.5
+  "radius": 0.75
 }

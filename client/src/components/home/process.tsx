@@ -55,10 +55,10 @@ const Process = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {processSteps.map((step) => (
-            <Card key={step.step} className="bg-white border-2 border-secondary hover:shadow-lg transition duration-300">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 mx-auto bg-secondary rounded-full flex items-center justify-center mb-4">
-                  <span className="text-white text-2xl font-bold">{step.step}</span>
+            <Card key={step.step} className="bg-white border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <span className="text-white text-3xl font-bold">{step.step}</span>
                 </div>
                 <h3 className="text-xl font-heading font-bold mb-2 text-primary">{step.title}</h3>
                 <p className="text-neutral-500">
