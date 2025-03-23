@@ -137,7 +137,7 @@ const CustomFraming = () => {
                   </div>
                 </div>
                 <div className="flex justify-center">
-                  <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium px-8 py-2">
+                  <Button className="bg-[#e67e22] hover:bg-[#d35400] text-white font-medium px-8 py-2">
                     Ask Our AI Assistant
                   </Button>
                 </div>
