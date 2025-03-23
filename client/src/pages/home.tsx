@@ -76,7 +76,7 @@ const Home = () => {
                   </li>
                 </ul>
                 <Link href="/custom-framing">
-                  <Button className="bg-[#e67e22] hover:bg-[#d35400] text-white w-full md:w-auto font-medium">
+                  <Button className="bg-secondary hover:bg-secondary/80 text-white w-full md:w-auto font-medium">
                     Start Designing Now
                   </Button>
                 </Link>
@@ -152,7 +152,7 @@ const Home = () => {
                   </li>
                 </ul>
                 <Link href="/frame-assistant-test">
-                  <Button className="bg-[#e67e22] hover:bg-[#d35400] text-white w-full font-medium">
+                  <Button className="bg-secondary hover:bg-secondary/80 text-white w-full font-medium">
                     Try Frame Assistant
                   </Button>
                 </Link>
@@ -214,7 +214,7 @@ const Home = () => {
                     Tailor-made frames designed for your specific artwork with expert guidance from our AI assistant.
                   </p>
                   <Link href="/custom-framing">
-                    <Button className="bg-[#e67e22] hover:bg-[#d35400] text-white font-medium">
+                    <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
                       Start Designing
                     </Button>
                   </Link>
@@ -238,7 +238,7 @@ const Home = () => {
                     Showcase memorabilia, 3D objects, and keepsakes in our custom or ready-made shadowbox frames.
                   </p>
                   <Link href="/products?category=shadowbox">
-                    <Button className="bg-[#e67e22] hover:bg-[#d35400] text-white font-medium">
+                    <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
                       Explore Options
                     </Button>
                   </Link>
@@ -262,7 +262,7 @@ const Home = () => {
                     Our proprietary, patented museum mounting method that preserves your artwork for generations.
                   </p>
                   <Link href="/products?category=moonmount">
-                    <Button className="bg-[#e67e22] hover:bg-[#d35400] text-white font-medium">
+                    <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
                       Learn More
                     </Button>
                   </Link>

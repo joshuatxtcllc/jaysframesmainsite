@@ -21,22 +21,22 @@ const processSteps = [
 
 const benefits = [
   {
-    icon: <Clock className="h-10 w-10 mx-auto text-secondary" />,
+    icon: <Clock className="h-10 w-10 mx-auto text-primary stroke-[1.5]" />,
     title: "Faster Turnaround",
     description: "Cut your waiting time in half with our streamlined production process."
   },
   {
-    icon: <Shield className="h-10 w-10 mx-auto text-secondary" />,
+    icon: <Shield className="h-10 w-10 mx-auto text-primary stroke-[1.5]" />,
     title: "Museum Quality",
     description: "Archival materials and techniques protect your art for generations."
   },
   {
-    icon: <DollarSign className="h-10 w-10 mx-auto text-secondary" />,
+    icon: <DollarSign className="h-10 w-10 mx-auto text-primary stroke-[1.5]" />,
     title: "Transparent Pricing",
     description: "Clear, upfront pricing with no hidden fees or surprises."
   },
   {
-    icon: <Lightbulb className="h-10 w-10 mx-auto text-secondary" />,
+    icon: <Lightbulb className="h-10 w-10 mx-auto text-primary stroke-[1.5]" />,
     title: "Expert Design",
     description: "Our AI assistant has been trained on thousands of professional framing projects."
   }
