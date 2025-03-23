@@ -11,3 +11,30 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+@layer components {
+  .bg-secondary {
+    @apply bg-[#e67e22];
+  }
+  
+  .text-secondary {
+    @apply text-[#e67e22];
+  }
+  
+  .hover\:bg-secondary\/80:hover {
+    @apply bg-[#d35400];
+  }
+  
+  .bg-secondary\/10 {
+    @apply bg-[#e67e22]/10;
+  }
+  
+  .bg-secondary\/20 {
+    @apply bg-[#e67e22]/20;
+  }
+  
+  /* Improve button text contrast */
+  .bg-secondary.text-white {
+    @apply font-medium;
+  }
+}
