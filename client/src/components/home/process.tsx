@@ -21,22 +21,22 @@ const processSteps = [
 
 const benefits = [
   {
-    icon: <Clock className="h-10 w-10 mx-auto text-accent" />,
+    icon: <Clock className="h-10 w-10 mx-auto text-secondary" />,
     title: "Faster Turnaround",
     description: "Cut your waiting time in half with our streamlined production process."
   },
   {
-    icon: <Shield className="h-10 w-10 mx-auto text-accent" />,
+    icon: <Shield className="h-10 w-10 mx-auto text-secondary" />,
     title: "Museum Quality",
     description: "Archival materials and techniques protect your art for generations."
   },
   {
-    icon: <DollarSign className="h-10 w-10 mx-auto text-accent" />,
+    icon: <DollarSign className="h-10 w-10 mx-auto text-secondary" />,
     title: "Transparent Pricing",
     description: "Clear, upfront pricing with no hidden fees or surprises."
   },
   {
-    icon: <Lightbulb className="h-10 w-10 mx-auto text-accent" />,
+    icon: <Lightbulb className="h-10 w-10 mx-auto text-secondary" />,
     title: "Expert Design",
     description: "Our AI assistant has been trained on thousands of professional framing projects."
   }
@@ -75,7 +75,7 @@ const Process = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mt-8">
             {benefits.map((benefit, index) => (
               <div key={index} className="p-4">
-                <div className="text-accent mb-3">
+                <div className="text-secondary mb-3">
                   {benefit.icon}
                 </div>
                 <h4 className="font-bold text-lg mb-2">{benefit.title}</h4>
