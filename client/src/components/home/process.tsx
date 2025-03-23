@@ -74,11 +74,11 @@ const Process = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mt-8">
             {benefits.map((benefit, index) => (
-              <div key={index} className="p-4">
-                <div className="text-secondary mb-3">
+              <div key={index} className="p-4 bg-white rounded-lg shadow-md border border-primary/20 hover:shadow-lg transition-shadow">
+                <div className="mb-3">
                   {benefit.icon}
                 </div>
-                <h4 className="font-bold text-lg mb-2">{benefit.title}</h4>
+                <h4 className="font-bold text-lg mb-2 text-primary">{benefit.title}</h4>
                 <p className="text-sm text-neutral-500">
                   {benefit.description}
                 </p>
