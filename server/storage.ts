@@ -13,34 +13,34 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   // Product operations
   getProducts(): Promise<Product[]>;
   getProductById(id: number): Promise<Product | undefined>;
   getProductsByCategory(category: string): Promise<Product[]>;
   createProduct(product: InsertProduct): Promise<Product>;
-  
+
   // Order operations
   getOrders(): Promise<Order[]>;
   getOrderById(id: number): Promise<Order | undefined>;
   createOrder(order: InsertOrder): Promise<Order>;
   updateOrderStatus(id: number, status: string, stage?: string): Promise<Order | undefined>;
-  
+
   // Frame options operations
   getFrameOptions(): Promise<FrameOption[]>;
   getFrameOptionById(id: number): Promise<FrameOption | undefined>;
   createFrameOption(option: InsertFrameOption): Promise<FrameOption>;
-  
+
   // Mat options operations
   getMatOptions(): Promise<MatOption[]>;
   getMatOptionById(id: number): Promise<MatOption | undefined>;
   createMatOption(option: InsertMatOption): Promise<MatOption>;
-  
+
   // Glass options operations
   getGlassOptions(): Promise<GlassOption[]>;
   getGlassOptionById(id: number): Promise<GlassOption | undefined>;
   createGlassOption(option: InsertGlassOption): Promise<GlassOption>;
-  
+
   // Chat messages operations
   getChatMessagesBySessionId(sessionId: string): Promise<ChatMessage[]>;
   createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
@@ -54,7 +54,7 @@ export class MemStorage implements IStorage {
   private matOptions: Map<number, MatOption>;
   private glassOptions: Map<number, GlassOption>;
   private chatMessages: ChatMessage[];
-  
+
   private userCounter: number;
   private productCounter: number;
   private orderCounter: number;
@@ -71,7 +71,7 @@ export class MemStorage implements IStorage {
     this.matOptions = new Map();
     this.glassOptions = new Map();
     this.chatMessages = [];
-    
+
     this.userCounter = 1;
     this.productCounter = 1;
     this.orderCounter = 1;
@@ -79,7 +79,7 @@ export class MemStorage implements IStorage {
     this.matOptionCounter = 1;
     this.glassOptionCounter = 1;
     this.chatMessageCounter = 1;
-    
+
     // Initialize with sample data
     this.initializeSampleData();
   }
@@ -101,38 +101,38 @@ export class MemStorage implements IStorage {
     this.users.set(id, user);
     return user;
   }
-  
+
   // Product operations
   async getProducts(): Promise<Product[]> {
     return Array.from(this.products.values());
   }
-  
+
   async getProductById(id: number): Promise<Product | undefined> {
     return this.products.get(id);
   }
-  
+
   async getProductsByCategory(category: string): Promise<Product[]> {
     return Array.from(this.products.values()).filter(
       (product) => product.category === category
     );
   }
-  
+
   async createProduct(product: InsertProduct): Promise<Product> {
     const id = this.productCounter++;
     const newProduct: Product = { ...product, id };
     this.products.set(id, newProduct);
     return newProduct;
   }
-  
+
   // Order operations
   async getOrders(): Promise<Order[]> {
     return Array.from(this.orders.values());
   }
-  
+
   async getOrderById(id: number): Promise<Order | undefined> {
     return this.orders.get(id);
   }
-  
+
   async createOrder(order: InsertOrder): Promise<Order> {
     const id = this.orderCounter++;
     const createdAt = new Date().toISOString();
@@ -140,74 +140,74 @@ export class MemStorage implements IStorage {
     this.orders.set(id, newOrder);
     return newOrder;
   }
-  
+
   async updateOrderStatus(id: number, status: string, stage?: string): Promise<Order | undefined> {
     const order = this.orders.get(id);
     if (!order) return undefined;
-    
+
     const updatedOrder: Order = { 
       ...order, 
       status,
       ...(stage ? { currentStage: stage } : {})
     };
-    
+
     this.orders.set(id, updatedOrder);
     return updatedOrder;
   }
-  
+
   // Frame options operations
   async getFrameOptions(): Promise<FrameOption[]> {
     return Array.from(this.frameOptions.values());
   }
-  
+
   async getFrameOptionById(id: number): Promise<FrameOption | undefined> {
     return this.frameOptions.get(id);
   }
-  
+
   async createFrameOption(option: InsertFrameOption): Promise<FrameOption> {
     const id = this.frameOptionCounter++;
     const newOption: FrameOption = { ...option, id };
     this.frameOptions.set(id, newOption);
     return newOption;
   }
-  
+
   // Mat options operations
   async getMatOptions(): Promise<MatOption[]> {
     return Array.from(this.matOptions.values());
   }
-  
+
   async getMatOptionById(id: number): Promise<MatOption | undefined> {
     return this.matOptions.get(id);
   }
-  
+
   async createMatOption(option: InsertMatOption): Promise<MatOption> {
     const id = this.matOptionCounter++;
     const newOption: MatOption = { ...option, id };
     this.matOptions.set(id, newOption);
     return newOption;
   }
-  
+
   // Glass options operations
   async getGlassOptions(): Promise<GlassOption[]> {
     return Array.from(this.glassOptions.values());
   }
-  
+
   async getGlassOptionById(id: number): Promise<GlassOption | undefined> {
     return this.glassOptions.get(id);
   }
-  
+
   async createGlassOption(option: InsertGlassOption): Promise<GlassOption> {
     const id = this.glassOptionCounter++;
     const newOption: GlassOption = { ...option, id };
     this.glassOptions.set(id, newOption);
     return newOption;
   }
-  
+
   // Chat messages operations
   async getChatMessagesBySessionId(sessionId: string): Promise<ChatMessage[]> {
     return this.chatMessages.filter(msg => msg.sessionId === sessionId);
   }
-  
+
   async createChatMessage(message: InsertChatMessage): Promise<ChatMessage> {
     const id = this.chatMessageCounter++;
     const timestamp = new Date().toISOString();
@@ -215,7 +215,7 @@ export class MemStorage implements IStorage {
     this.chatMessages.push(newMessage);
     return newMessage;
   }
-  
+
   // Initialize sample data
   private initializeSampleData() {
     // Create admin user
@@ -226,7 +226,7 @@ export class MemStorage implements IStorage {
       isAdmin: true
     };
     this.users.set(adminUser.id, adminUser);
-    
+
     // Create frame options
     const frameOptions: InsertFrameOption[] = [
       {
@@ -314,12 +314,12 @@ export class MemStorage implements IStorage {
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
       }
     ];
-    
+
     frameOptions.forEach(option => {
       const id = this.frameOptionCounter++;
       this.frameOptions.set(id, { ...option, id });
     });
-    
+
     // Create mat options
     const matOptions: InsertMatOption[] = [
       {
@@ -413,12 +413,12 @@ export class MemStorage implements IStorage {
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
       }
     ];
-    
+
     matOptions.forEach(option => {
       const id = this.matOptionCounter++;
       this.matOptions.set(id, { ...option, id });
     });
-    
+
     // Create glass options
     const glassOptions: InsertGlassOption[] = [
       {
@@ -442,12 +442,12 @@ export class MemStorage implements IStorage {
         price: 3500 // $35.00
       }
     ];
-    
+
     glassOptions.forEach(option => {
       const id = this.glassOptionCounter++;
       this.glassOptions.set(id, { ...option, id });
     });
-    
+
     // Create products
     const products: InsertProduct[] = [
       {
@@ -494,7 +494,7 @@ export class MemStorage implements IStorage {
         description: "Our proprietary, patented museum mounting method that preserves your artwork for generations.",
         price: 4500, // $45.00
         category: "moonmount",
-        imageUrl: "https://images.unsplash.com/photo-1577083553330-2b96be7af8fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
         details: {
           dimensions: "8\" × 10\"",
           type: "Museum Mount Only",
@@ -506,7 +506,7 @@ export class MemStorage implements IStorage {
         description: "Our proprietary, patented museum mounting method that preserves your artwork for generations.",
         price: 5500, // $55.00
         category: "moonmount",
-        imageUrl: "https://images.unsplash.com/photo-1577083553330-2b96be7af8fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
         details: {
           dimensions: "11\" × 14\"",
           type: "Museum Mount Only",
@@ -518,7 +518,7 @@ export class MemStorage implements IStorage {
         description: "Our proprietary, patented museum mounting method that preserves your artwork for generations.",
         price: 6500, // $65.00
         category: "moonmount",
-        imageUrl: "https://images.unsplash.com/photo-1577083553330-2b96be7af8fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
         details: {
           dimensions: "16\" × 20\"",
           type: "Museum Mount Only",
@@ -526,12 +526,12 @@ export class MemStorage implements IStorage {
         }
       }
     ];
-    
+
     products.forEach(product => {
       const id = this.productCounter++;
       this.products.set(id, { ...product, id });
     });
-    
+
     // Create sample orders
     const orders: InsertOrder[] = [
       {
@@ -558,7 +558,7 @@ export class MemStorage implements IStorage {
         notes: "Customer wants it ready by end of next week if possible."
       }
     ];
-    
+
     orders.forEach(order => {
       const id = this.orderCounter++;
       const createdAt = new Date().toISOString();
