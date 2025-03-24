@@ -463,6 +463,7 @@ export class MemStorage implements IStorage {
           glassOptions: [1, 2, 3, 4]
         }
       },
+      // Black Shadowboxes
       {
         name: "Shadowbox - Black (16×20)",
         description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
@@ -511,6 +512,112 @@ export class MemStorage implements IStorage {
         details: {
           dimensions: "36\" × 48\" × 2\"",
           color: "Black",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      // White Shadowboxes
+      {
+        name: "Shadowbox - White (16×20)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 22500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "16\" × 20\" × 2\"",
+          color: "White",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - White (18×24)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 24500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "18\" × 24\" × 2\"",
+          color: "White",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - White (24×36)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 29500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "24\" × 36\" × 2\"",
+          color: "White",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - White (36×48)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 34500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "36\" × 48\" × 2\"",
+          color: "White",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      // Brown Shadowboxes
+      {
+        name: "Shadowbox - Brown (16×20)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 22500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "16\" × 20\" × 2\"",
+          color: "Brown",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - Brown (18×24)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 24500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "18\" × 24\" × 2\"",
+          color: "Brown",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - Brown (24×36)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 29500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "24\" × 36\" × 2\"",
+          color: "Brown",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - Brown (36×48)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 34500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "36\" × 48\" × 2\"",
+          color: "Brown",
           material: "Wood",
           glassType: "UV Protection"
         }
