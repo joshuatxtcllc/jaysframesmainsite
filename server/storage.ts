@@ -245,7 +245,7 @@ export class MemStorage implements IStorage {
       },
       {
         name: "Matte Black",
-        color: "#2C3E50",
+        color: "#000000",
         material: "Wood",
         pricePerInch: 125, // $1.25 per inch
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
@@ -342,7 +342,7 @@ export class MemStorage implements IStorage {
       },
       {
         name: "Black",
-        color: "#2C3E50",
+        color: "#000000",
         price: 4000, // $40.00
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
       },
