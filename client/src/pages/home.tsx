@@ -249,17 +249,24 @@ const Home = () => {
             {/* Moonmounts Card */}
             {moonmount && (
               <Card className="bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-xl">
-                <div className="w-full h-64 overflow-hidden">
+                <div className="w-full h-64 overflow-hidden relative">
                   <img 
                     src={moonmount.imageUrl} 
                     alt="Moonmounts" 
                     className="w-full h-full object-cover"
                   />
+                  <div className="absolute bottom-4 right-4 bg-white/90 rounded-lg p-2 shadow-lg">
+                    <img 
+                      src="https://images.unsplash.com/photo-1586191582151-f73872dfd182?w=200&q=80" 
+                      alt="Moonmount Magnets" 
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                  </div>
                 </div>
                 <CardContent className="p-6">
                   <h3 className="text-xl font-heading font-bold mb-2 text-primary">Moonmounts™</h3>
                   <p className="text-neutral-500 mb-4">
-                    Our proprietary, patented museum mounting method that preserves your artwork for generations.
+                    Our proprietary, patented museum mounting method using disk-shaped magnets that preserves your artwork for generations.
                   </p>
                   <Link href="/products?category=moonmount">
                     <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
