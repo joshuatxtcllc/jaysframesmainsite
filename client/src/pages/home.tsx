@@ -213,9 +213,9 @@ const Home = () => {
                   <p className="text-neutral-500 mb-4">
                     Tailor-made frames designed for your specific artwork with expert guidance from our AI assistant.
                   </p>
-                  <Link href="/custom-framing">
+                  <Link href="/products?category=frame">
                     <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
-                      Start Designing
+                      View Frame Options
                     </Button>
                   </Link>
                 </CardContent>
@@ -235,11 +235,11 @@ const Home = () => {
                 <CardContent className="p-6">
                   <h3 className="text-xl font-heading font-bold mb-2 text-primary">Shadowboxes</h3>
                   <p className="text-neutral-500 mb-4">
-                    Showcase memorabilia, 3D objects, and keepsakes in our custom or ready-made shadowbox frames.
+                    Available in black, white, and brown finishes across multiple sizes to showcase your memorabilia perfectly.
                   </p>
                   <Link href="/products?category=shadowbox">
                     <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
-                      Explore Options
+                      Browse Shadowboxes
                     </Button>
                   </Link>
                 </CardContent>
