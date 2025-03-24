@@ -44,19 +44,29 @@
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@layer base {
+  body {
+    @apply antialiased text-gray-800 bg-gray-50;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+
 @layer components {
-  /* Primary color (blue) */
   .bg-primary {
-    @apply bg-[#2C3E50];
+    @apply bg-[#1a365d];
   }
   
   .text-primary {
-    @apply text-[#2C3E50];
+    @apply text-[#1a365d];
   }
   
-  /* Secondary color (orange) */
   .bg-secondary {
-    @apply bg-[#e67e22];
+    @apply bg-[#f97316];
   }
   
   .text-secondary {
