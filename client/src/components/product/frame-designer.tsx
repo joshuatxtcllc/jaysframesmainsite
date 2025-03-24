@@ -170,7 +170,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     if (!frame || !mat) return {};
     
     return {
-      boxShadow: `0 0 0 20px ${mat.color}, 0 0 0 26px ${frame.color}`,
+      border: '5px solid white',
+      boxShadow: `0 0 0 30px ${mat.color}, 0 0 0 40px ${frame.color}`,
       borderRadius: '2px',
       transition: 'all 0.3s ease-in-out'
     };
