@@ -9,7 +9,7 @@ const processSteps = [
     icon: <Cpu className="h-8 w-8 text-white" />,
     title: "Design Consultation",
     description: "Our AI-powered design assistant analyzes your artwork and helps you find the perfect frame and mat combination to complement your piece.",
-    color: "from-secondary to-yellow-500"
+    color: "from-secondary/90 to-orange-500"
   },
   {
     step: 2,

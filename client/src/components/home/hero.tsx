@@ -4,7 +4,7 @@ import { Wand2, Award, ShieldCheck, Heart, ArrowRight, Sparkles } from "lucide-r
 
 const Hero = () => {
   return (
-    <section className="relative bg-gradient-to-br from-primary/5 via-neutral-100 to-white py-32 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-primary/10 via-neutral-50 to-white py-40 overflow-hidden">
       {/* Background with enhanced contrast */}
       <div className="absolute inset-0">
         {/* Dark overlay to enhance contrast - significantly darker now */}
