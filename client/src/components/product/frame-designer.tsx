@@ -208,6 +208,71 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             )}
           </div>
           
+          {/* Frame Selection - Moved to here */}
+          <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-lg font-serif font-bold text-primary">Frame Style</h3>
+              {selectedFrame && (
+                <span className="text-sm text-secondary font-medium">
+                  Selected: {getSelectedFrameOption()?.name}
+                </span>
+              )}
+            </div>
+            <div className="grid grid-cols-4 gap-3">
+              {frameOptions.map((frame) => (
+                <div 
+                  key={frame.id}
+                  className={`frame-option cursor-pointer bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 ${
+                    selectedFrame === frame.id 
+                      ? 'ring-2 ring-accent scale-105 shadow-md' 
+                      : 'hover:shadow-md hover:scale-105 border border-neutral-200'
+                  }`}
+                  onClick={() => setSelectedFrame(frame.id)}
+                >
+                  <div 
+                    className="h-16 border-b"
+                    style={{ backgroundColor: frame.color }}
+                  ></div>
+                  <div className="p-2">
+                    <p className="text-xs font-medium text-center line-clamp-1">{frame.name}</p>
+                    <p className="text-xs text-center text-neutral-500">{frame.material}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mat Selection - Moved to here */}
+          <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-lg font-serif font-bold text-primary">Mat Color</h3>
+              {selectedMat && (
+                <span className="text-sm text-secondary font-medium">
+                  Selected: {getSelectedMatOption()?.name}
+                </span>
+              )}
+            </div>
+            <div className="grid grid-cols-6 gap-3">
+              {matOptions.map((mat) => (
+                <div 
+                  key={mat.id}
+                  className={`cursor-pointer transition-all duration-300 ${
+                    selectedMat === mat.id 
+                      ? 'ring-2 ring-accent scale-105' 
+                      : 'hover:scale-105'
+                  }`}
+                  onClick={() => setSelectedMat(mat.id)}
+                >
+                  <div 
+                    className={`h-12 w-12 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
+                    style={{ backgroundColor: mat.color }}
+                  ></div>
+                  <p className="text-xs mt-2 text-center line-clamp-1">{mat.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white rounded-lg p-5 shadow-sm">
               <h3 className="text-lg font-serif font-bold mb-4 text-primary flex items-center">
@@ -292,11 +357,58 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         </div>
       </div>
       
-      {/* Frame Options */}
+      {/* Right Sidebar Options */}
       <div className="bg-gradient-to-tr from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant">
         <div className="bg-white rounded-lg p-4 shadow-sm mb-6 text-center">
           <h3 className="text-xl font-serif font-bold text-primary mb-1">Customize Your Frame</h3>
           <p className="text-sm text-neutral-500">Choose options to create your perfect custom frame</p>
+        </div>
+        
+        {/* Glass Selection - Still on right column */}
+        <div className="mb-8 bg-white p-6 shadow-sm rounded-lg">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-lg font-serif font-bold text-primary">Glass Type</h3>
+            {selectedGlass && (
+              <span className="text-sm text-secondary font-medium">
+                Selected: {getSelectedGlassOption()?.name}
+              </span>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {glassOptions.map((glass) => (
+              <div 
+                key={glass.id}
+                className={`cursor-pointer bg-white rounded-lg overflow-hidden transition-all duration-300 ${
+                  selectedGlass === glass.id 
+                    ? 'ring-2 ring-accent shadow-md' 
+                    : 'border border-neutral-200 hover:border-accent hover:shadow-sm'
+                }`}
+                onClick={() => setSelectedGlass(glass.id)}
+              >
+                <div className="flex items-center p-3">
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 ${
+                    selectedGlass === glass.id ? 'bg-accent text-white' : 'bg-neutral-100'
+                  }`}>
+                    {selectedGlass === glass.id && (
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.33332 2.5L3.74999 7.08333L1.66666 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium">{glass.name}</h4>
+                    <p className="text-xs text-neutral-500">{glass.description}</p>
+                  </div>
+                  
+                  <div className="ml-auto text-sm font-medium text-primary">
+                    {formatPrice(glass.price)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         
         {/* AI Designer */}
@@ -389,163 +501,31 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
           </div>
         </div>
         
-        {/* Frame Selection */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-3">
-            <Label className="text-sm font-bold text-primary">Frame Style</Label>
-            {selectedFrame && (
-              <span className="text-xs text-secondary font-medium">
-                {getSelectedFrameOption()?.name}
-              </span>
-            )}
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {frameOptions.map((frame) => (
-              <div 
-                key={frame.id}
-                className={`frame-option cursor-pointer bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 ${
-                  selectedFrame === frame.id 
-                    ? 'ring-2 ring-accent scale-105 shadow-md' 
-                    : 'hover:shadow-md hover:scale-105'
-                }`}
-                onClick={() => setSelectedFrame(frame.id)}
-              >
-                <div 
-                  className="h-14 border-b"
-                  style={{ backgroundColor: frame.color }}
-                ></div>
-                <div className="p-2">
-                  <p className="text-xs font-medium text-center line-clamp-1">{frame.name}</p>
-                  <p className="text-xs text-center text-neutral-500">{frame.material}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Mat Selection */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-3">
-            <Label className="text-sm font-bold text-primary">Mat Color</Label>
-            {selectedMat && (
-              <span className="text-xs text-secondary font-medium">
-                {getSelectedMatOption()?.name}
-              </span>
-            )}
-          </div>
-          <div className="grid grid-cols-4 gap-3">
-            {matOptions.map((mat) => (
-              <div 
-                key={mat.id}
-                className={`cursor-pointer transition-all duration-300 ${
-                  selectedMat === mat.id 
-                    ? 'ring-2 ring-accent scale-105' 
-                    : 'hover:scale-105'
-                }`}
-                onClick={() => setSelectedMat(mat.id)}
-              >
-                <div 
-                  className={`h-12 w-12 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
-                  style={{ backgroundColor: mat.color }}
-                ></div>
-                <p className="text-xs mt-2 text-center line-clamp-1">{mat.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Glass Selection */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-3">
-            <Label className="text-sm font-bold text-primary">Glass Type</Label>
-            {selectedGlass && (
-              <span className="text-xs text-secondary font-medium">
-                {getSelectedGlassOption()?.name}
-              </span>
-            )}
-          </div>
-          
-          <div className="grid grid-cols-1 gap-3">
-            {glassOptions.map((glass) => (
-              <div 
-                key={glass.id}
-                className={`cursor-pointer bg-white rounded-lg overflow-hidden transition-all duration-300 ${
-                  selectedGlass === glass.id 
-                    ? 'ring-2 ring-accent shadow-md' 
-                    : 'border border-neutral-200 hover:border-accent hover:shadow-sm'
-                }`}
-                onClick={() => setSelectedGlass(glass.id)}
-              >
-                <div className="flex items-center p-3">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 ${
-                    selectedGlass === glass.id ? 'bg-accent text-white' : 'bg-neutral-100'
-                  }`}>
-                    {selectedGlass === glass.id && (
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8.33332 2.5L3.74999 7.08333L1.66666 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    )}
-                  </div>
-                  <div className="flex-grow">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm text-primary">{glass.name}</span>
-                      <span className="text-xs font-bold text-secondary">
-                        {glass.price > 0 ? `+${formatPrice(glass.price)}` : "Included"}
-                      </span>
-                    </div>
-                    <p className="text-xs text-neutral-500 mt-1 line-clamp-2">
-                      {glass.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Size Selection */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-3">
-            <Label className="text-sm font-bold text-primary">Artwork Dimensions</Label>
-            <span className="text-xs text-secondary font-medium">{width}" × {height}"</span>
-          </div>
-          
-          <div className="bg-white rounded-lg p-4 border border-neutral-200">
-            <div className="flex items-center justify-center gap-6 mb-4">
-              <div className="text-center">
-                <span className="text-3xl font-medium text-primary">{width}"</span>
-                <p className="text-xs text-neutral-500">Width</p>
-              </div>
-              <div className="text-neutral-300">×</div>
-              <div className="text-center">
-                <span className="text-3xl font-medium text-primary">{height}"</span>
-                <p className="text-xs text-neutral-500">Height</p>
-              </div>
+        {/* Dimensions */}
+        <div className="mb-8 bg-white p-6 shadow-sm rounded-lg">
+          <h3 className="text-lg font-serif font-bold mb-3 text-primary">Artwork Dimensions</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="block text-xs mb-1 text-neutral-500">Width (inches)</Label>
+              <Input 
+                type="number" 
+                value={width}
+                min={1}
+                max={60}
+                onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
+                className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+              />
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="block text-xs mb-1 text-neutral-500">Width (inches)</Label>
-                <Input 
-                  type="number" 
-                  value={width}
-                  min={1}
-                  max={60}
-                  onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
-                  className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              <div>
-                <Label className="block text-xs mb-1 text-neutral-500">Height (inches)</Label>
-                <Input 
-                  type="number" 
-                  value={height}
-                  min={1}
-                  max={60}
-                  onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
-                  className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-              </div>
+            <div>
+              <Label className="block text-xs mb-1 text-neutral-500">Height (inches)</Label>
+              <Input 
+                type="number" 
+                value={height}
+                min={1}
+                max={60}
+                onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
+                className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+              />
             </div>
           </div>
         </div>
