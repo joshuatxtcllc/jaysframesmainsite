@@ -263,6 +263,55 @@ export class MemStorage implements IStorage {
         material: "Wood",
         pricePerInch: 150, // $1.50 per inch
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Cherry Wood",
+        color: "#6E2C00",
+        material: "Wood",
+        pricePerInch: 165, // $1.65 per inch
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Brushed Silver",
+        color: "#C0C0C0",
+        material: "Metal",
+        pricePerInch: 195, // $1.95 per inch
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Mahogany",
+        color: "#4E1500",
+        material: "Wood",
+        pricePerInch: 175, // $1.75 per inch
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Bronze",
+        color: "#CD7F32",
+        material: "Metal",
+        pricePerInch: 185, // $1.85 per inch
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Distressed Blue",
+        color: "#4A6D8C",
+        material: "Wood",
+        pricePerInch: 160, // $1.60 per inch
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Espresso Dark",
+        color: "#3C2A21",
+        material: "Wood",
+        pricePerInch: 155, // $1.55 per inch
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Midnight Blue",
+        color: "#191970",
+        material: "Metal",
+        pricePerInch: 170, // $1.70 per inch
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
       }
     ];
     
@@ -301,6 +350,66 @@ export class MemStorage implements IStorage {
         name: "Ivory",
         color: "#FFFFF0",
         price: 3500, // $35.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Cream",
+        color: "#FFF8DC",
+        price: 3500, // $35.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Light Beige",
+        color: "#F5F5DC",
+        price: 3500, // $35.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Charcoal",
+        color: "#36454F",
+        price: 4000, // $40.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Navy Blue",
+        color: "#000080",
+        price: 4200, // $42.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Forest Green",
+        color: "#228B22",
+        price: 4200, // $42.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Burgundy",
+        color: "#800020",
+        price: 4200, // $42.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Sage Green",
+        color: "#8A9A5B",
+        price: 4000, // $40.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Slate Blue",
+        color: "#6A5ACD",
+        price: 4200, // $42.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Blush Pink",
+        color: "#FFB6C1",
+        price: 4000, // $40.00
+        imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "Light Taupe",
+        color: "#B9AB9C",
+        price: 3800, // $38.00
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
       }
     ];
