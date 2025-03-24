@@ -7,15 +7,15 @@ const Hero = () => {
     <section className="relative bg-gradient-to-br from-primary/5 via-neutral-100 to-white py-32 overflow-hidden">
       {/* Background with enhanced contrast */}
       <div className="absolute inset-0">
-        {/* Dark overlay to enhance contrast */}
-        <div className="absolute inset-0 bg-primary/30 mix-blend-multiply z-10"></div>
+        {/* Dark overlay to enhance contrast - significantly darker now */}
+        <div className="absolute inset-0 bg-primary/60 mix-blend-multiply z-10"></div>
         
         {/* Hero image with better quality and contrast */}
         <div 
           className="absolute inset-0 bg-cover bg-center z-0" 
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')`,
-            filter: 'contrast(1.1) brightness(0.9)'
+            filter: 'contrast(1.1) brightness(0.85)'
           }}
         ></div>
       </div>
@@ -26,8 +26,8 @@ const Hero = () => {
       <div className="absolute top-1/3 left-1/4 w-56 h-56 bg-white/20 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "1.5s" }}></div>
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "2s" }}></div>
       
-      {/* Semi-transparent light overlay for improved text contrast */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/40 to-transparent z-30"></div>
+      {/* Adjusted semi-transparent overlay for improved text contrast */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-transparent z-30"></div>
       
       <div className="container mx-auto px-4 relative z-40">
         <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
@@ -37,14 +37,14 @@ const Hero = () => {
               <p className="text-white font-semibold tracking-wider text-sm">AI-POWERED CUSTOM FRAMING</p>
             </div>
             
-            <h1 className="heading-xl text-white mb-8 leading-tight drop-shadow-sm">
+            <h1 className="heading-xl text-white mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
               Custom Framing <span className="text-secondary italic relative font-bold">
                 Reimagined
                 <span className="absolute -bottom-3 left-0 w-full h-1.5 bg-secondary/70 rounded-full"></span>
               </span> with AI
             </h1>
             
-            <p className="body-lg text-white/90 mb-10 max-w-xl font-medium drop-shadow-sm">
+            <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
               Introducing a revolutionary approach to custom framing — powered by cutting-edge AI technology, 
               designed for precision and perfection, and crafted with care by expert artisans.
             </p>
@@ -75,10 +75,10 @@ const Hero = () => {
                 { icon: <Heart className="h-5 w-5" />, text: "Made with Love" }
               ].map((feature, i) => (
                 <div key={i} className="flex items-center fade-in hover-lift" style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}>
-                  <div className="flex-shrink-0 mr-3 bg-secondary/30 p-2.5 rounded-full text-white shadow-sm">
+                  <div className="flex-shrink-0 mr-3 bg-secondary/40 p-2.5 rounded-full text-white shadow-md">
                     {feature.icon}
                   </div>
-                  <p className="text-white text-sm font-medium drop-shadow-sm">{feature.text}</p>
+                  <p className="text-white text-sm font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.4)' }}>{feature.text}</p>
                 </div>
               ))}
             </div>
