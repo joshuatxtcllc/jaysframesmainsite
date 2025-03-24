@@ -18,11 +18,11 @@ const CustomFraming = () => {
               Our AI-powered design assistant will help you create the perfect frame for your artwork.
             </p>
           </div>
-          
+
           <FrameDesigner />
         </div>
       </section>
-      
+
       <section className="py-12 bg-neutral-100">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -36,7 +36,7 @@ const CustomFraming = () => {
                   </div>
                   <h2 className="text-2xl font-heading font-bold text-primary">Our Custom Framing Process</h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <div className="flex items-start mb-2">
@@ -48,7 +48,7 @@ const CustomFraming = () => {
                     <p className="text-neutral-500 mb-6 ml-8">
                       Use our AI-powered frame designer to find the perfect combination of frame, mat, and glass for your artwork. Our system analyzes your artwork description to recommend the most complementary options.
                     </p>
-                    
+
                     <div className="flex items-start mb-2">
                       <div className="bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
                         <span className="text-sm font-medium">2</span>
@@ -59,7 +59,7 @@ const CustomFraming = () => {
                       Once you place your order, our skilled craftspeople will carefully cut and assemble your custom frame by hand, ensuring precision and quality at every step.
                     </p>
                   </div>
-                  
+
                   <div>
                     <div className="flex items-start mb-2">
                       <div className="bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
@@ -70,7 +70,7 @@ const CustomFraming = () => {
                     <p className="text-neutral-500 mb-6 ml-8">
                       Your artwork is mounted using our proprietary Moonmount™ method, which ensures archival preservation while providing a perfect presentation.
                     </p>
-                    
+
                     <div className="flex items-start mb-2">
                       <div className="bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
                         <span className="text-sm font-medium">4</span>
@@ -82,7 +82,7 @@ const CustomFraming = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="mt-8 pt-6 border-t border-neutral-200">
                   <div className="bg-secondary/10 p-4 rounded-lg">
                     <div className="flex items-center mb-2">
@@ -101,7 +101,7 @@ const CustomFraming = () => {
           </div>
         </div>
       </section>
-      
+
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -146,7 +146,7 @@ const CustomFraming = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Chatbot */}
       <div className="fixed bottom-6 right-6 z-50">
         <Chatbot />
