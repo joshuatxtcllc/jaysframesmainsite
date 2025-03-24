@@ -187,15 +187,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
           <div className="bg-white p-6 shadow-highlight rounded-lg mb-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100/50 to-transparent z-0"></div>
             <div className="relative z-10">
-              <div className="aspect-w-4 aspect-h-3 relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    alt="Artwork preview"
-                    className="max-w-full max-h-full shadow-xl"
-                    style={getFrameStyle()}
-                  />
-                </div>
+              <div className="h-[400px] flex items-center justify-center py-10">
+                <img
+                  src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                  alt="Artwork preview"
+                  className="max-h-full shadow-xl object-contain"
+                  style={getFrameStyle()}
+                />
               </div>
             </div>
             
