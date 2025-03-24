@@ -464,27 +464,53 @@ export class MemStorage implements IStorage {
         }
       },
       {
-        name: "Shadowbox - Black",
+        name: "Shadowbox - Black (16×20)",
         description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
-        price: 22500, // $225.00
+        price: 22500,
         category: "shadowbox",
         imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
         details: {
-          dimensions: "12\" × 12\" × 2\"",
+          dimensions: "16\" × 20\" × 2\"",
           color: "Black",
           material: "Wood",
           glassType: "UV Protection"
         }
       },
       {
-        name: "Shadowbox - Walnut",
+        name: "Shadowbox - Black (18×24)",
         description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
-        price: 22500, // $225.00
+        price: 24500,
         category: "shadowbox",
         imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
         details: {
-          dimensions: "12\" × 12\" × 2\"",
-          color: "Walnut",
+          dimensions: "18\" × 24\" × 2\"",
+          color: "Black",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - Black (24×36)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 29500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "24\" × 36\" × 2\"",
+          color: "Black",
+          material: "Wood",
+          glassType: "UV Protection"
+        }
+      },
+      {
+        name: "Shadowbox - Black (36×48)",
+        description: "Showcase memorabilia, 3D objects, and keepsakes in our custom shadowbox frames.",
+        price: 34500,
+        category: "shadowbox",
+        imageUrl: "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        details: {
+          dimensions: "36\" × 48\" × 2\"",
+          color: "Black",
           material: "Wood",
           glassType: "UV Protection"
         }
