@@ -179,11 +179,41 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Frame Preview */}
+      {/* Frame Preview and Left Column */}
       <div className="lg:col-span-2">
         <div className="bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-xl p-8 shadow-elegant h-full">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-primary">Frame Preview</h2>
+          <h2 className="text-2xl font-serif font-bold mb-6 text-primary">Custom Frame Designer</h2>
           
+          {/* Dimensions - Moved above the preview */}
+          <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
+            <h3 className="text-lg font-serif font-bold mb-3 text-primary">Artwork Dimensions</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="block text-xs mb-1 text-neutral-500">Width (inches)</Label>
+                <Input 
+                  type="number" 
+                  value={width}
+                  min={1}
+                  max={60}
+                  onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
+                  className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                />
+              </div>
+              <div>
+                <Label className="block text-xs mb-1 text-neutral-500">Height (inches)</Label>
+                <Input 
+                  type="number" 
+                  value={height}
+                  min={1}
+                  max={60}
+                  onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
+                  className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Frame Preview */}
           <div className="bg-white p-6 shadow-highlight rounded-lg mb-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100/50 to-transparent z-0"></div>
             <div className="relative z-10">
@@ -208,7 +238,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             )}
           </div>
           
-          {/* Frame Selection - Moved to here */}
+          {/* Frame Selection - Below preview */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-lg font-serif font-bold text-primary">Frame Style</h3>
@@ -242,7 +272,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
 
-          {/* Mat Selection - Moved to here */}
+          {/* Mat Selection - Below frame options */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-lg font-serif font-bold text-primary">Mat Color</h3>
@@ -273,86 +303,91 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-lg p-5 shadow-sm">
-              <h3 className="text-lg font-serif font-bold mb-4 text-primary flex items-center">
-                <span className="w-6 h-6 rounded-full bg-primary text-white inline-flex items-center justify-center text-xs mr-2">1</span>
-                Frame Specifications
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Artwork Size:</span>
-                  <span className="font-medium text-primary">{width}" × {height}"</span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Frame Style:</span>
-                  <div className="flex items-center">
-                    {selectedFrame && (
-                      <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedFrameOption()?.color }}></span>
-                    )}
-                    <span className="font-medium text-primary">{getSelectedFrameOption()?.name || "Loading..."}</span>
-                  </div>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Mat Color:</span>
-                  <div className="flex items-center">
-                    {selectedMat && (
-                      <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedMatOption()?.color }}></span>
-                    )}
-                    <span className="font-medium text-primary">{getSelectedMatOption()?.name || "Loading..."}</span>
-                  </div>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Glass Type:</span>
-                  <span className="font-medium text-primary">{getSelectedGlassOption()?.name || "Loading..."}</span>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span className="text-neutral-500 text-sm">Mounting:</span>
-                  <span className="font-medium text-primary">Premium Mounting</span>
-                </li>
-              </ul>
+          {/* Glass Selection - Moved to left column */}
+          <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-lg font-serif font-bold text-primary">Glass Type</h3>
+              {selectedGlass && (
+                <span className="text-sm text-secondary font-medium">
+                  Selected: {getSelectedGlassOption()?.name}
+                </span>
+              )}
             </div>
             
-            <div className="bg-white rounded-lg p-5 shadow-sm">
-              <h3 className="text-lg font-serif font-bold mb-4 text-primary flex items-center">
-                <span className="w-6 h-6 rounded-full bg-secondary text-white inline-flex items-center justify-center text-xs mr-2">2</span>
-                Price Breakdown
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Frame:</span>
-                  <span className="font-medium text-primary">
-                    {selectedFrame && getSelectedFrameOption() 
-                      ? formatPrice(2 * (width + height) * getSelectedFrameOption()!.pricePerInch) 
-                      : "$0.00"}
-                  </span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Matting:</span>
-                  <span className="font-medium text-primary">
-                    {selectedMat && getSelectedMatOption() 
-                      ? formatPrice(getSelectedMatOption()!.price) 
-                      : "$0.00"}
-                  </span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Glass:</span>
-                  <span className="font-medium text-primary">
-                    {selectedGlass && getSelectedGlassOption() 
-                      ? formatPrice(getSelectedGlassOption()!.price) 
-                      : "$0.00"}
-                  </span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                  <span className="text-neutral-500 text-sm">Mounting:</span>
-                  <span className="font-medium text-primary">$25.00</span>
-                </li>
-                <li className="flex justify-between items-center pt-2">
-                  <span className="font-bold text-lg text-primary">Total:</span>
-                  <span className="font-bold text-lg text-secondary">{formatPrice(calculatePrice())}</span>
-                </li>
-              </ul>
+            <div className="grid grid-cols-1 gap-3">
+              {glassOptions.map((glass) => (
+                <div 
+                  key={glass.id}
+                  className={`cursor-pointer bg-white rounded-lg overflow-hidden transition-all duration-300 ${
+                    selectedGlass === glass.id 
+                      ? 'ring-2 ring-accent shadow-md' 
+                      : 'border border-neutral-200 hover:border-accent hover:shadow-sm'
+                  }`}
+                  onClick={() => setSelectedGlass(glass.id)}
+                >
+                  <div className="flex items-center p-3">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 ${
+                      selectedGlass === glass.id ? 'bg-accent text-white' : 'bg-neutral-100'
+                    }`}>
+                      {selectedGlass === glass.id && (
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M8.33332 2.5L3.74999 7.08333L1.66666 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-medium">{glass.name}</h4>
+                      <p className="text-xs text-neutral-500">{glass.description}</p>
+                    </div>
+                    
+                    <div className="ml-auto text-sm font-medium text-primary">
+                      {formatPrice(glass.price)}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
+          </div>
+          
+          {/* Frame Specifications */}
+          <div className="bg-white rounded-lg p-5 shadow-sm mb-8">
+            <h3 className="text-lg font-serif font-bold mb-4 text-primary flex items-center">
+              <span className="w-6 h-6 rounded-full bg-primary text-white inline-flex items-center justify-center text-xs mr-2">1</span>
+              Frame Specifications
+            </h3>
+            <ul className="space-y-3">
+              <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                <span className="text-neutral-500 text-sm">Artwork Size:</span>
+                <span className="font-medium text-primary">{width}" × {height}"</span>
+              </li>
+              <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                <span className="text-neutral-500 text-sm">Frame Style:</span>
+                <div className="flex items-center">
+                  {selectedFrame && (
+                    <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedFrameOption()?.color }}></span>
+                  )}
+                  <span className="font-medium text-primary">{getSelectedFrameOption()?.name || "Loading..."}</span>
+                </div>
+              </li>
+              <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                <span className="text-neutral-500 text-sm">Mat Color:</span>
+                <div className="flex items-center">
+                  {selectedMat && (
+                    <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedMatOption()?.color }}></span>
+                  )}
+                  <span className="font-medium text-primary">{getSelectedMatOption()?.name || "Loading..."}</span>
+                </div>
+              </li>
+              <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                <span className="text-neutral-500 text-sm">Glass Type:</span>
+                <span className="font-medium text-primary">{getSelectedGlassOption()?.name || "Loading..."}</span>
+              </li>
+              <li className="flex justify-between items-center">
+                <span className="text-neutral-500 text-sm">Mounting:</span>
+                <span className="font-medium text-primary">Premium Mounting</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -360,55 +395,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       {/* Right Sidebar Options */}
       <div className="bg-gradient-to-tr from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant">
         <div className="bg-white rounded-lg p-4 shadow-sm mb-6 text-center">
-          <h3 className="text-xl font-serif font-bold text-primary mb-1">Customize Your Frame</h3>
-          <p className="text-sm text-neutral-500">Choose options to create your perfect custom frame</p>
-        </div>
-        
-        {/* Glass Selection - Still on right column */}
-        <div className="mb-8 bg-white p-6 shadow-sm rounded-lg">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="text-lg font-serif font-bold text-primary">Glass Type</h3>
-            {selectedGlass && (
-              <span className="text-sm text-secondary font-medium">
-                Selected: {getSelectedGlassOption()?.name}
-              </span>
-            )}
-          </div>
-          
-          <div className="grid grid-cols-1 gap-3">
-            {glassOptions.map((glass) => (
-              <div 
-                key={glass.id}
-                className={`cursor-pointer bg-white rounded-lg overflow-hidden transition-all duration-300 ${
-                  selectedGlass === glass.id 
-                    ? 'ring-2 ring-accent shadow-md' 
-                    : 'border border-neutral-200 hover:border-accent hover:shadow-sm'
-                }`}
-                onClick={() => setSelectedGlass(glass.id)}
-              >
-                <div className="flex items-center p-3">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 ${
-                    selectedGlass === glass.id ? 'bg-accent text-white' : 'bg-neutral-100'
-                  }`}>
-                    {selectedGlass === glass.id && (
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8.33332 2.5L3.74999 7.08333L1.66666 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-medium">{glass.name}</h4>
-                    <p className="text-xs text-neutral-500">{glass.description}</p>
-                  </div>
-                  
-                  <div className="ml-auto text-sm font-medium text-primary">
-                    {formatPrice(glass.price)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <h3 className="text-xl font-serif font-bold text-primary mb-1">Design Assistance</h3>
+          <p className="text-sm text-neutral-500">Get expert help for your perfect frame</p>
         </div>
         
         {/* AI Designer */}
@@ -501,33 +489,46 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
           </div>
         </div>
         
-        {/* Dimensions */}
-        <div className="mb-8 bg-white p-6 shadow-sm rounded-lg">
-          <h3 className="text-lg font-serif font-bold mb-3 text-primary">Artwork Dimensions</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="block text-xs mb-1 text-neutral-500">Width (inches)</Label>
-              <Input 
-                type="number" 
-                value={width}
-                min={1}
-                max={60}
-                onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
-                className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <Label className="block text-xs mb-1 text-neutral-500">Height (inches)</Label>
-              <Input 
-                type="number" 
-                value={height}
-                min={1}
-                max={60}
-                onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
-                className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-              />
-            </div>
-          </div>
+        {/* Price Breakdown - Moved to bottom of right sidebar */}
+        <div className="bg-white rounded-lg p-5 shadow-sm mb-6">
+          <h3 className="text-lg font-serif font-bold mb-4 text-primary flex items-center">
+            <span className="w-6 h-6 rounded-full bg-secondary text-white inline-flex items-center justify-center text-xs mr-2">2</span>
+            Price Breakdown
+          </h3>
+          <ul className="space-y-3">
+            <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+              <span className="text-neutral-500 text-sm">Frame:</span>
+              <span className="font-medium text-primary">
+                {selectedFrame && getSelectedFrameOption() 
+                  ? formatPrice(2 * (width + height) * getSelectedFrameOption()!.pricePerInch) 
+                  : "$0.00"}
+              </span>
+            </li>
+            <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+              <span className="text-neutral-500 text-sm">Matting:</span>
+              <span className="font-medium text-primary">
+                {selectedMat && getSelectedMatOption() 
+                  ? formatPrice(getSelectedMatOption()!.price) 
+                  : "$0.00"}
+              </span>
+            </li>
+            <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+              <span className="text-neutral-500 text-sm">Glass:</span>
+              <span className="font-medium text-primary">
+                {selectedGlass && getSelectedGlassOption() 
+                  ? formatPrice(getSelectedGlassOption()!.price) 
+                  : "$0.00"}
+              </span>
+            </li>
+            <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+              <span className="text-neutral-500 text-sm">Mounting:</span>
+              <span className="font-medium text-primary">$25.00</span>
+            </li>
+            <li className="flex justify-between items-center pt-2">
+              <span className="font-bold text-lg text-primary">Total:</span>
+              <span className="font-bold text-lg text-secondary">{formatPrice(calculatePrice())}</span>
+            </li>
+          </ul>
         </div>
         
         {/* Add to Cart */}
