@@ -170,7 +170,9 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     if (!frame || !mat) return {};
     
     return {
-      boxShadow: `0 0 0 20px ${mat.color}, 0 0 0 23px ${frame.color}`
+      boxShadow: `0 0 0 20px ${mat.color}, 0 0 0 26px ${frame.color}`,
+      borderRadius: '2px',
+      transition: 'all 0.3s ease-in-out'
     };
   };
 
@@ -301,44 +303,65 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         </div>
         
         {/* Frame Selection */}
-        <div className="mb-6">
-          <Label className="block text-sm font-bold mb-2">Frame Style</Label>
-          <div className="grid grid-cols-3 gap-2">
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-3">
+            <Label className="text-sm font-bold text-primary">Frame Style</Label>
+            {selectedFrame && (
+              <span className="text-xs text-secondary font-medium">
+                {getSelectedFrameOption()?.name}
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-3 gap-3">
             {frameOptions.map((frame) => (
               <div 
                 key={frame.id}
-                className={`frame-option cursor-pointer bg-white rounded p-2 border-2 ${
-                  selectedFrame === frame.id ? 'border-accent' : 'border-transparent hover:border-accent'
+                className={`frame-option cursor-pointer bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 ${
+                  selectedFrame === frame.id 
+                    ? 'ring-2 ring-accent scale-105 shadow-md' 
+                    : 'hover:shadow-md hover:scale-105'
                 }`}
                 onClick={() => setSelectedFrame(frame.id)}
               >
                 <div 
-                  className="h-12 rounded"
+                  className="h-14 border-b"
                   style={{ backgroundColor: frame.color }}
                 ></div>
-                <p className="text-xs mt-1 text-center">{frame.name}</p>
+                <div className="p-2">
+                  <p className="text-xs font-medium text-center line-clamp-1">{frame.name}</p>
+                  <p className="text-xs text-center text-neutral-500">{frame.material}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
         
         {/* Mat Selection */}
-        <div className="mb-6">
-          <Label className="block text-sm font-bold mb-2">Mat Color</Label>
-          <div className="grid grid-cols-3 gap-2">
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-3">
+            <Label className="text-sm font-bold text-primary">Mat Color</Label>
+            {selectedMat && (
+              <span className="text-xs text-secondary font-medium">
+                {getSelectedMatOption()?.name}
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-4 gap-3">
             {matOptions.map((mat) => (
               <div 
                 key={mat.id}
-                className={`frame-option cursor-pointer bg-white rounded p-2 border-2 ${
-                  selectedMat === mat.id ? 'border-accent' : 'border-transparent hover:border-accent'
+                className={`cursor-pointer transition-all duration-300 ${
+                  selectedMat === mat.id 
+                    ? 'ring-2 ring-accent scale-105' 
+                    : 'hover:scale-105'
                 }`}
                 onClick={() => setSelectedMat(mat.id)}
               >
                 <div 
-                  className={`h-12 rounded ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
+                  className={`h-12 w-12 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
                   style={{ backgroundColor: mat.color }}
                 ></div>
-                <p className="text-xs mt-1 text-center">{mat.name}</p>
+                <p className="text-xs mt-2 text-center line-clamp-1">{mat.name}</p>
               </div>
             ))}
           </div>

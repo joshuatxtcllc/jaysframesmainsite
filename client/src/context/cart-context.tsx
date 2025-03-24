@@ -110,6 +110,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     setCartItems([]);
+    
+    toast({
+      title: "Cart cleared",
+      description: "All items have been removed from your cart",
+    });
   };
 
   const getCartTotal = () => {

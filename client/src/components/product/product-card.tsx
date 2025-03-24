@@ -4,6 +4,8 @@ import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { Link } from "wouter";
 import { Product } from "@/types";
+import { ShoppingCart, ArrowRight, Heart } from "lucide-react";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +13,8 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleAddToCart = () => {
     addToCart({
@@ -24,35 +28,82 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     });
   };
 
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFavorite(!isFavorite);
+  };
+
+  // Use a default image if none is provided
+  const imageUrl = product.imageUrl || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+
   return (
-    <Card className="bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-xl">
-      {product.imageUrl && (
-        <div className="w-full h-64 overflow-hidden">
-          <img 
-            src={product.imageUrl} 
-            alt={product.name} 
-            className="w-full h-full object-cover"
-          />
+    <Card 
+      className="bg-white rounded-xl overflow-hidden shadow-elegant hover-lift h-full flex flex-col"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative">
+        {/* Category tag */}
+        <div className="absolute top-4 left-4 z-10">
+          <div className="bg-white/80 backdrop-blur-sm text-primary text-xs font-medium py-1 px-3 rounded-full">
+            {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+          </div>
         </div>
-      )}
-      <CardContent className="p-6">
-        <h3 className="text-xl font-heading font-bold mb-2 text-primary">{product.name}</h3>
-        <p className="text-neutral-500 mb-2">
-          {product.description}
-        </p>
-        <div className="flex justify-between items-center mt-4">
-          <span className="font-bold text-lg">{formatPrice(product.price)}</span>
+        
+        {/* Favorite button */}
+        <button 
+          onClick={toggleFavorite}
+          className="absolute top-4 right-4 z-10 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors"
+          aria-label="Add to favorites"
+        >
+          <Heart 
+            className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-neutral-500'}`} 
+          />
+        </button>
+        
+        {/* Image with overlay and zoom effect */}
+        <div className="w-full h-72 overflow-hidden">
+          <div 
+            className={`w-full h-full bg-cover bg-center transition-transform duration-700 ${isHovered ? 'scale-110' : 'scale-100'}`}
+            style={{ backgroundImage: `url(${imageUrl})` }}
+          >
+            <div className="w-full h-full bg-gradient-to-t from-black/30 to-transparent"></div>
+          </div>
+        </div>
+      </div>
+      
+      <CardContent className="p-6 flex-1 flex flex-col">
+        <div className="flex-1">
+          <h3 className="text-xl font-serif font-bold mb-3 text-primary">{product.name}</h3>
+          <p className="text-neutral-600 mb-4 line-clamp-2">
+            {product.description}
+          </p>
+        </div>
+        
+        <div className="mt-auto">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-bold text-xl text-primary">{formatPrice(product.price)}</span>
+            {product.category !== "frame" && (
+              <div className="flex items-center text-xs text-neutral-500">
+                <span className="mr-1">In Stock</span>
+                <div className="w-2 h-2 rounded-full bg-accent"></div>
+              </div>
+            )}
+          </div>
+          
           {product.category === "frame" ? (
-            <Link href="/custom-framing">
-              <Button className="bg-secondary hover:bg-secondary-light text-white">
+            <Link href="/custom-framing" className="block w-full">
+              <Button className="btn-secondary w-full py-2.5 group">
                 Start Designing
+                <ArrowRight className="h-4 w-4 ml-2 transform group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           ) : (
             <Button 
-              className="bg-secondary hover:bg-secondary-light text-white"
+              className="btn-secondary w-full py-2.5 group"
               onClick={handleAddToCart}
             >
+              <ShoppingCart className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />
               Add to Cart
             </Button>
           )}
