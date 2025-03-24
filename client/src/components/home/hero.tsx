@@ -5,13 +5,13 @@ import { Wand2, Award, ShieldCheck, Heart } from "lucide-react";
 const Hero = () => {
   return (
     <section className="relative bg-gradient-to-br from-neutral-50 to-neutral-100 py-28 overflow-hidden">
-      {/* Background image with overlay */}
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')] opacity-5 bg-cover bg-center"></div>
+      {/* Background image with minimal overlay */}
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')] opacity-3 bg-cover bg-center"></div>
       
-      {/* Soft decorative elements */}
-      <div className="absolute top-20 right-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 left-20 w-56 h-56 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
-      <div className="absolute top-1/3 left-1/4 w-36 h-36 bg-neutral-300/30 rounded-full blur-2xl animate-pulse" style={{ animationDelay: "1.5s" }}></div>
+      {/* Reduced soft decorative elements */}
+      <div className="absolute top-20 right-20 w-80 h-80 bg-secondary/5 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 left-20 w-56 h-56 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+      <div className="absolute top-1/3 left-1/4 w-36 h-36 bg-neutral-300/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: "1.5s" }}></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
@@ -83,10 +83,10 @@ const Hero = () => {
                   <img 
                     src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
                     alt="Frame Design Preview" 
-                    className="absolute inset-0 w-full h-full object-cover opacity-70"
+                    className="absolute inset-0 w-full h-full object-cover opacity-85"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/50 to-transparent"></div>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-medium text-center bg-primary/30 backdrop-blur-sm p-4 rounded-lg border border-white/20 shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-medium text-center bg-primary/20 backdrop-blur-sm p-4 rounded-lg border border-white/10 shadow-lg">
                     <div className="text-secondary font-bold mb-2">AI Frame Designer</div>
                     <div className="text-sm text-white">Analyzing your artwork...</div>
                   </div>
