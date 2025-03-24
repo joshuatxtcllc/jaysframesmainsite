@@ -257,7 +257,7 @@ const Home = () => {
                   />
                   <div className="absolute bottom-4 right-4 bg-white/90 rounded-lg p-2 shadow-lg">
                     <img 
-                      src="/images/moonmount-magnets.jpg" 
+                      src="/attached_assets/IMG_7665.png" 
                       alt="Moonmount Magnets" 
                       className="w-16 h-16 object-cover rounded"
                     />
