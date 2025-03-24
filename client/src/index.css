@@ -2,13 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @layer base {
+  :root {
+    --font-sans: 'Montserrat', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+  }
+
   * {
     @apply border-border;
   }
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
   }
 }
 
@@ -59,13 +70,61 @@
   .bg-accent\/20 {
     @apply bg-[#27ae60]/20;
   }
-  
-  /* Improve button text contrast */
-  .bg-secondary.text-white {
-    @apply font-medium;
+
+  /* Custom shadows */
+  .shadow-elegant {
+    @apply shadow-[0_10px_25px_-5px_rgba(44,62,80,0.1),0_8px_10px_-6px_rgba(44,62,80,0.05)];
   }
   
-  .bg-\[\#e67e22\].text-white {
-    @apply font-medium;
+  .shadow-highlight {
+    @apply shadow-[0_10px_15px_-3px_rgba(230,126,34,0.2),0_4px_6px_-4px_rgba(230,126,34,0.1)];
+  }
+
+  /* Card and component styling */
+  .card-gradient {
+    @apply bg-gradient-to-b from-white to-gray-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-elegant;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary/90 text-white font-medium py-2 px-6 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-highlight;
+  }
+  
+  .btn-outline {
+    @apply bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium py-2 px-6 rounded-md transition duration-300 ease-in-out;
+  }
+  
+  /* Typography enhancements */
+  .heading-xl {
+    @apply font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+  }
+  
+  .heading-lg {
+    @apply font-serif text-3xl md:text-4xl font-bold leading-tight;
+  }
+  
+  .heading-md {
+    @apply font-serif text-2xl md:text-3xl font-bold leading-tight;
+  }
+  
+  .body-lg {
+    @apply text-lg leading-relaxed;
+  }
+
+  /* Animation utilities */
+  .hover-lift {
+    @apply transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg;
+  }
+  
+  .fade-in {
+    @apply opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards];
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }

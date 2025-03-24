@@ -1,32 +1,37 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Wand2, Award, ShieldCheck } from "lucide-react";
+import { Wand2, Award, ShieldCheck, Heart } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative bg-primary py-24 overflow-hidden">
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')] opacity-15 bg-cover bg-center"></div>
+    <section className="relative bg-primary py-28 overflow-hidden">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')] opacity-10 bg-cover bg-center"></div>
       
       {/* Decorative elements */}
-      <div className="absolute top-10 right-10 w-64 h-64 bg-secondary/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 left-10 w-40 h-40 bg-accent/20 rounded-full blur-2xl"></div>
+      <div className="absolute top-20 right-20 w-80 h-80 bg-secondary/20 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 left-20 w-56 h-56 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+      <div className="absolute top-1/3 left-1/4 w-36 h-36 bg-primary/30 rounded-full blur-2xl animate-pulse" style={{ animationDelay: "1.5s" }}></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 max-w-6xl mx-auto">
-          <div className="lg:w-3/5">
-            <div className="inline-block px-4 py-1 bg-secondary/20 rounded-full mb-5">
-              <p className="text-secondary text-sm font-medium">AI-Powered Custom Framing</p>
+        <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
+          <div className="lg:w-3/5 fade-in" style={{ animationDelay: "0.2s" }}>
+            <div className="inline-block px-6 py-1.5 bg-secondary/20 rounded-full mb-6 backdrop-blur-sm">
+              <p className="text-secondary text-sm font-medium tracking-wide">AI-POWERED CUSTOM FRAMING</p>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6 leading-tight">
+            
+            <h1 className="heading-xl text-white mb-8">
               Custom Framing <span className="text-secondary">Reimagined</span> with AI
             </h1>
-            <p className="text-neutral-200 text-lg md:text-xl mb-8 leading-relaxed">
-              Introducing a revolutionary approach to custom framing - powered by AI technology, designed for perfection, and crafted with care.
+            
+            <p className="body-lg text-neutral-200 mb-10">
+              Introducing a revolutionary approach to custom framing — powered by cutting-edge AI technology, 
+              designed for precision and perfection, and crafted with care by expert artisans.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-6 mb-12">
               <Link href="/custom-framing">
-                <Button size="lg" className="bg-secondary hover:bg-secondary/80 text-white font-bold py-3 px-8 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 text-center">
+                <Button size="lg" className="btn-secondary font-medium py-3 px-8 text-base">
                   Start Framing
                 </Button>
               </Link>
@@ -34,49 +39,73 @@ const Hero = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-bold py-3 px-8 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 text-center"
+                  className="bg-transparent border-2 border-white/80 text-white hover:bg-white hover:text-primary font-medium py-3 px-8 text-base rounded-md transition-all duration-300"
                 >
                   Learn Our Process
                 </Button>
               </Link>
             </div>
             
-            <div className="grid grid-cols-3 gap-4 mt-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-8">
               {[
                 { icon: <Wand2 className="h-5 w-5" />, text: "AI-Powered Designs" },
                 { icon: <Award className="h-5 w-5" />, text: "Handcrafted Quality" },
-                { icon: <ShieldCheck className="h-5 w-5" />, text: "100% Satisfaction" }
+                { icon: <ShieldCheck className="h-5 w-5" />, text: "100% Satisfaction" },
+                { icon: <Heart className="h-5 w-5" />, text: "Made with Love" }
               ].map((feature, i) => (
-                <div key={i} className="flex items-center">
-                  <div className="flex-shrink-0 mr-2 bg-secondary/20 p-1.5 rounded-full text-secondary">
+                <div key={i} className="flex items-center fade-in" style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}>
+                  <div className="flex-shrink-0 mr-3 bg-secondary/20 p-2 rounded-full text-secondary">
                     {feature.icon}
                   </div>
-                  <p className="text-white text-sm">{feature.text}</p>
+                  <p className="text-white text-sm font-medium">{feature.text}</p>
                 </div>
               ))}
             </div>
           </div>
           
-          <div className="lg:w-2/5 relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 to-accent/20 rounded-2xl blur-md transform rotate-6"></div>
-            <div className="relative bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 shadow-lg transform -rotate-3">
-              <div className="bg-white/5 p-2 rounded-lg border border-white/10 mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                  <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  <div className="bg-white/10 h-4 rounded-md w-32 ml-2"></div>
+          <div className="lg:w-2/5 relative mt-12 lg:mt-0 fade-in" style={{ animationDelay: "0.6s" }}>
+            {/* Card glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 to-accent/30 rounded-2xl blur-xl transform rotate-6"></div>
+            
+            {/* Main card */}
+            <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+              {/* Window-like header */}
+              <div className="bg-white/5 p-3 rounded-lg border border-white/10 mb-5 backdrop-blur-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <div className="bg-white/10 h-5 rounded-md w-40 ml-3"></div>
                 </div>
-                <div className="h-44 bg-white/5 rounded-md flex items-center justify-center">
-                  <div className="text-white/50 text-sm">AI Frame Designer Preview</div>
+                
+                {/* Designer preview */}
+                <div className="relative h-52 bg-white/5 rounded-md flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                    alt="Frame Design Preview" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-40"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-medium text-center">
+                    <div className="text-secondary font-bold mb-2">AI Frame Designer</div>
+                    <div className="text-sm text-white/70">Analyzing your artwork...</div>
+                  </div>
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="h-3 bg-white/10 rounded-full w-3/4"></div>
-                <div className="h-3 bg-white/10 rounded-full w-1/2"></div>
-                <div className="h-3 bg-white/10 rounded-full w-5/6"></div>
-                <div className="h-3 bg-white/10 rounded-full w-2/3"></div>
-                <div className="h-8 bg-secondary/30 rounded-md w-1/3 mt-4"></div>
+              
+              {/* Text lines */}
+              <div className="space-y-3 mb-6">
+                <div className="h-3 bg-white/15 rounded-full w-full"></div>
+                <div className="h-3 bg-white/15 rounded-full w-5/6"></div>
+                <div className="h-3 bg-white/15 rounded-full w-3/4"></div>
+                <div className="h-3 bg-white/15 rounded-full w-5/6"></div>
+              </div>
+              
+              {/* Button */}
+              <div className="flex justify-start">
+                <div className="h-9 bg-secondary/40 rounded-md w-1/3 flex items-center justify-center text-white/90 text-xs font-medium backdrop-blur-sm border border-secondary/30">
+                  View Results
+                </div>
               </div>
             </div>
           </div>
