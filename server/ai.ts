@@ -3,6 +3,13 @@ import OpenAI from "openai";
 // The newest OpenAI model is "gpt-4o" which was released May 13, 2024. Do not change this unless explicitly requested by the user
 const model = "gpt-4o";
 
+// Check if OpenAI API key is available
+if (!process.env.OPENAI_API_KEY) {
+  console.error("\x1b[31mError: OPENAI_API_KEY environment variable is not set.\x1b[0m");
+  console.error("The AI features require a valid OpenAI API key to function properly.");
+  console.error("Please set the OPENAI_API_KEY environment variable before starting the application.");
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -30,6 +37,12 @@ Frame and mat styles must always feel tailored and aesthetically aligned with th
  */
 export async function askFrameAssistant(userMessage: string): Promise<string> {
   try {
+    // Check if API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("Error: OPENAI_API_KEY not available when calling Frame Design Assistant");
+      return "I apologize, but the AI service is not properly configured. Please contact the site administrator.";
+    }
+
     const response = await openai.chat.completions.create({
       model,
       messages: [
@@ -88,6 +101,14 @@ export async function handleChatRequest(
   orders?: OrderInfo[]
 ): Promise<ChatResponse> {
   try {
+    // Check if API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("Error: OPENAI_API_KEY not available when calling Chat API");
+      return { 
+        message: "I apologize, but the AI service is not properly configured. Please contact the site administrator."
+      };
+    }
+
     const systemPrompt = {
       role: "system",
       content: `You are the Frame Design Assistant, a creative tool that helps users explore and select visual designs for framing their images or artwork. You assist with matboard and frame selection using real-world catalogs such as Larson-Juhl and Crescent. Suggest frame types, mat color combinations, and pricing tiers based on user needs. When in paid mode, you offer premium features like AR previews, detailed quotes, and access to full frame/mat catalogs.
@@ -155,6 +176,16 @@ export async function getFrameRecommendations(
   matOptions: any[]
 ): Promise<any> {
   try {
+    // Check if API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("Error: OPENAI_API_KEY not available when calling Frame Recommendations API");
+      return { 
+        recommendedFrames: [], 
+        recommendedMats: [], 
+        explanation: "I apologize, but the AI service is not properly configured. Please contact the site administrator."
+      };
+    }
+
     const response = await openai.chat.completions.create({
       model,
       messages: [
