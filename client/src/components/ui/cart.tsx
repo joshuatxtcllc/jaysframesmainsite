@@ -163,10 +163,14 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
               </div>
 
               <div className="space-y-3">
-                <Button className="btn-secondary w-full py-3">
-                  Proceed to Checkout
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <SheetClose asChild>
+                  <Link href="/checkout">
+                    <Button className="btn-secondary w-full py-3">
+                      Proceed to Checkout
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </SheetClose>
                 <SheetClose asChild>
                   <Button
                     variant="outline"
