@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { z } from "zod";
 import { insertOrderSchema, insertChatMessageSchema } from "@shared/schema";
 import { handleChatRequest, getFrameRecommendations, askFrameAssistant, type ChatMessage } from "./ai";
+import { sendNewOrderNotification, sendOrderConfirmationEmail, initEmailTransporter, OrderItem, ExtendedOrder } from "./services/notification";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API Routes
@@ -60,6 +61,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const orderData = insertOrderSchema.parse(req.body);
       const order = await storage.createOrder(orderData);
+      
+      // Initialize email transporter if needed
+      await initEmailTransporter();
+      
+      // Send notifications asynchronously (don't await to avoid delaying response)
+      // Cast order to the extended type expected by the notification service
+      const extendedOrder: ExtendedOrder = {
+        ...order, 
+        items: Array.isArray(order.items) ? order.items as OrderItem[] : []
+      };
+      
+      sendNewOrderNotification(extendedOrder).catch(err => {
+        console.error('Failed to send order notification:', err);
+      });
+      
+      // Send confirmation email if customer email is available
+      if (order.customerEmail) {
+        // Order ID and email is all that's needed as the function fetches order details internally
+        sendOrderConfirmationEmail(order.id, order.customerEmail).catch(err => {
+          console.error('Failed to send order confirmation email:', err);
+        });
+      }
+      
       res.status(201).json(order);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -161,11 +185,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       // Get recommended products if any
-      let recommendedProducts = [];
+      let recommendedProducts: any[] = [];
       if (chatResponse.productRecommendations && chatResponse.productRecommendations.length > 0) {
         recommendedProducts = await Promise.all(
-          chatResponse.productRecommendations.map(async (id) => {
-            return await storage.getProductById(id);
+          chatResponse.productRecommendations.map(async (product) => {
+            // If it's just an ID (number), fetch the product
+            if (typeof product === 'number') {
+              return await storage.getProductById(product);
+            }
+            // If it's already a product object with an ID, fetch the full product
+            else if (product && typeof product.id === 'number') {
+              return await storage.getProductById(product.id);
+            }
+            return undefined;
           })
         );
         
@@ -204,13 +236,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get detailed frame and mat options for the recommendations
       const recommendedFrames = await Promise.all(
-        recommendations.recommendedFrames.map(async (id) => {
+        recommendations.recommendedFrames.map(async (id: number) => {
           return await storage.getFrameOptionById(id);
         })
       );
       
       const recommendedMats = await Promise.all(
-        recommendations.recommendedMats.map(async (id) => {
+        recommendations.recommendedMats.map(async (id: number) => {
           return await storage.getMatOptionById(id);
         })
       );

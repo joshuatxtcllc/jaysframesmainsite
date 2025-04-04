@@ -78,7 +78,7 @@ type OrderInfo = {
   customerName: string;
   status: string;
   currentStage: string;
-  createdAt: string;
+  createdAt: Date | string | null;
 };
 
 export type ChatMessage = {
