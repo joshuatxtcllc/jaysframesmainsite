@@ -4,8 +4,15 @@ import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { Link } from "wouter";
 import { Product } from "@/types";
-import { ShoppingCart, ArrowRight, Heart } from "lucide-react";
-import { useState } from "react";
+import { ShoppingCart, ArrowRight, Heart, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ProductCardProps {
   product: Product;
@@ -15,8 +22,37 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+
+  // Extract size options from product details
+  const getSizeOptions = () => {
+    if (product.category === "shadowbox" || product.category === "moonmount") {
+      // For shadowboxes, get dimensions from details
+      return product.details?.dimensions ? [product.details.dimensions] : [];
+    } else if (product.category === "frame" && product.details?.sizes) {
+      // For frames, get sizes array
+      return product.details.sizes;
+    }
+    return [];
+  };
+
+  const sizeOptions = getSizeOptions();
+  const hasSizeOptions = Array.isArray(sizeOptions) && sizeOptions.length > 0;
+
+  // Auto-select the first size option if available
+  useEffect(() => {
+    if (hasSizeOptions && !selectedSize) {
+      setSelectedSize(sizeOptions[0]);
+    }
+  }, [hasSizeOptions, selectedSize, sizeOptions]);
 
   const handleAddToCart = () => {
+    // Include selected size in the details if applicable
+    const details = { 
+      ...product.details,
+      ...(selectedSize && { selectedSize }) 
+    };
+
     addToCart({
       id: `${product.id}-${Date.now()}`,
       productId: product.id,
@@ -24,13 +60,25 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       price: product.price,
       quantity: 1,
       imageUrl: product.imageUrl,
-      details: product.details
+      details
     });
   };
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsFavorite(!isFavorite);
+  };
+
+  // Get displayable product name (removing size if it's in the name)
+  const getDisplayName = () => {
+    if (product.category === "shadowbox" || product.category === "moonmount") {
+      // For products with size in the name, show the base name
+      const nameParts = product.name.split("(");
+      if (nameParts.length > 1) {
+        return nameParts[0].trim();
+      }
+    }
+    return product.name;
   };
 
   // Use a default image if none is provided
@@ -74,7 +122,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       
       <CardContent className="p-6 flex-1 flex flex-col">
         <div className="flex-1">
-          <h3 className="text-xl font-serif font-bold mb-3 text-primary">{product.name}</h3>
+          <h3 className="text-xl font-serif font-bold mb-3 text-primary">{getDisplayName()}</h3>
           <p className="text-neutral-600 mb-4 line-clamp-2">
             {product.description}
           </p>
@@ -91,6 +139,26 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             )}
           </div>
           
+          {hasSizeOptions && product.category !== "frame" && (
+            <div className="mb-4">
+              <Select 
+                value={selectedSize || undefined} 
+                onValueChange={setSelectedSize}
+              >
+                <SelectTrigger className="w-full text-sm">
+                  <SelectValue placeholder="Select size" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sizeOptions.map((size, index) => (
+                    <SelectItem key={index} value={size}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          
           {product.category === "frame" ? (
             <Link href="/custom-framing" className="block w-full">
               <Button className="btn-secondary w-full py-2.5 group">
@@ -102,6 +170,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <Button 
               className="btn-secondary w-full py-2.5 group"
               onClick={handleAddToCart}
+              disabled={hasSizeOptions && !selectedSize}
             >
               <ShoppingCart className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />
               Add to Cart
