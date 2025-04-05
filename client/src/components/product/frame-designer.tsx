@@ -14,6 +14,7 @@ import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { Lightbulb, ShoppingCart } from "lucide-react";
+import { DynamicFramePreview } from "./dynamic-frame-preview";
 
 interface FrameDesignerProps {
   initialWidth?: number;
@@ -213,29 +214,15 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
           
-          {/* Frame Preview */}
-          <div className="bg-white p-6 shadow-highlight rounded-lg mb-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100/50 to-transparent z-0"></div>
-            <div className="relative z-10">
-              <div className="h-[400px] flex items-center justify-center py-10">
-                <img
-                  src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                  alt="Artwork preview"
-                  className="max-h-full shadow-xl object-contain"
-                  style={getFrameStyle()}
-                />
-              </div>
-            </div>
-            
-            {selectedFrame && selectedMat && (
-              <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-md py-1 px-3 text-xs font-medium shadow-sm border border-neutral-100">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getSelectedFrameOption()?.color }}></div>
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getSelectedMatOption()?.color }}></div>
-                  <span>{getSelectedFrameOption()?.name} frame, {getSelectedMatOption()?.name} mat</span>
-                </div>
-              </div>
-            )}
+          {/* Dynamic Frame Preview with AR capabilities */}
+          <div className="mb-8">
+            <DynamicFramePreview
+              width={width}
+              height={height}
+              selectedFrame={getSelectedFrameOption() || null}
+              selectedMat={getSelectedMatOption() || null}
+              selectedGlass={getSelectedGlassOption() || null}
+            />
           </div>
           
           {/* Frame Selection - Below preview */}
@@ -532,27 +519,21 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         </div>
         
         {/* Add to Cart */}
-        <div className="sticky bottom-0 left-0 right-0 pt-4">
-          <div className="bg-white rounded-lg p-4 shadow-elegant">
-            <div className="flex justify-between items-center mb-3">
-              <div>
-                <p className="text-xs text-neutral-500">Total Price</p>
-                <p className="text-xl font-bold text-secondary">{formatPrice(calculatePrice())}</p>
-              </div>
-              <Button 
-                className="btn-secondary py-3 px-6 flex items-center gap-2"
-                onClick={handleAddToCart}
-                disabled={!selectedFrame || !selectedMat || !selectedGlass}
-              >
-                <ShoppingCart className="h-4 w-4" />
-                Add to Cart
-              </Button>
+        <div className="sticky top-4">
+          <Button 
+            variant="default" 
+            className="w-full py-6 text-base font-medium bg-primary hover:bg-primary/90 group"
+            onClick={handleAddToCart}
+            disabled={!selectedFrame || !selectedMat || !selectedGlass}
+          >
+            <div className="flex items-center">
+              <ShoppingCart className="h-5 w-5 mr-2" />
+              <span>Add to Cart - {formatPrice(calculatePrice())}</span>
             </div>
-            
-            <p className="text-xs text-neutral-500 text-center">
-              Free shipping & 30-day money-back guarantee
-            </p>
-          </div>
+          </Button>
+          <p className="text-xs text-center mt-2 text-neutral-500">
+            Not ready to buy? Design now, order later - we'll save your design.
+          </p>
         </div>
       </div>
     </div>
