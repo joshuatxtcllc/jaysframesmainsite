@@ -141,12 +141,21 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   // AI Recommendation mutation
   const aiRecommendationMutation = useMutation({
     mutationFn: async (description: string) => {
-      const res = await apiRequest("POST", "/api/frame-recommendations", {
-        artworkDescription: description
-      });
-      return res.json();
+      console.log("Sending API request to /api/frame-recommendations");
+      try {
+        const res = await apiRequest("POST", "/api/frame-recommendations", {
+          artworkDescription: description
+        });
+        const data = await res.json();
+        console.log("API response:", data);
+        return data;
+      } catch (error) {
+        console.error("Error getting frame recommendations:", error);
+        throw error;
+      }
     },
     onSuccess: (data) => {
+      console.log("Setting recommendations:", data);
       setAiRecommendations(data);
       // Auto-select the first recommendations
       if (data.frames.length > 0) {
@@ -155,11 +164,15 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       if (data.mats.length > 0) {
         setSelectedMat(data.mats[0].id);
       }
+    },
+    onError: (error) => {
+      console.error("Mutation error:", error);
     }
   });
 
   const getAiRecommendations = () => {
     if (!artworkDescription.trim()) return;
+    console.log("Getting AI recommendations for:", artworkDescription);
     aiRecommendationMutation.mutate(artworkDescription);
   };
 
@@ -522,7 +535,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         <div className="sticky top-4">
           <Button 
             variant="default" 
-            className="w-full py-6 text-base font-medium bg-primary hover:bg-primary/90 group"
+            className="w-full py-6 text-base font-medium bg-primary hover:bg-primary/90 text-white group"
             onClick={handleAddToCart}
             disabled={!selectedFrame || !selectedMat || !selectedGlass}
           >
