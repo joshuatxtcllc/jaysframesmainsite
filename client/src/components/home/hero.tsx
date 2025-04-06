@@ -33,20 +33,21 @@ const Hero = () => {
         <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
           <div className="lg:w-3/5 fade-in" style={{ animationDelay: "0.2s" }}>
             <div className="inline-flex items-center px-6 py-2 bg-secondary/30 rounded-full mb-6 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-white mr-2" />
-              <p className="text-white font-semibold tracking-wider text-sm">AI-POWERED CUSTOM FRAMING</p>
+              <Award className="h-4 w-4 text-white mr-2" />
+              <p className="text-white font-semibold tracking-wider text-sm">VOTED BEST FRAME SHOP IN HOUSTON</p>
             </div>
             
             <h1 className="heading-xl text-white mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-              Custom Framing <span className="text-secondary italic relative font-bold">
-                Reimagined
+              Houston's Premier <span className="text-secondary italic relative font-bold">
+                Custom Framing
                 <span className="absolute -bottom-3 left-0 w-full h-1.5 bg-secondary/70 rounded-full"></span>
-              </span> with AI
+              </span> Experts
             </h1>
             
             <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              Introducing a revolutionary approach to custom framing — powered by cutting-edge AI technology, 
-              designed for precision and perfection, and crafted with care by expert artisans.
+              Jay's Frames brings award-winning custom framing services to Houston's Heights neighborhood. 
+              Featured in Papercity Magazine and voted "Best Frame Shop in Houston" by The Houston A-List voters, 
+              we combine AI-powered design with expert craftsmanship for unmatched quality.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 mb-12">

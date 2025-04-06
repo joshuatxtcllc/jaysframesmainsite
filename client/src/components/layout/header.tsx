@@ -8,8 +8,17 @@ import {
   Menu,
   X,
   Phone,
-  ChevronRight
+  ChevronRight,
+  Bell
 } from "lucide-react";
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import Cart from "@/components/ui/cart";
 
 const Header = () => {
@@ -18,7 +27,11 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
   const { cartItems } = useCart();
+  const { toast } = useToast();
+  const [notifications, setNotifications] = useState<JFNotification[]>([]);
+  const [hasUnread, setHasUnread] = useState(false);
 
+  // Handle scrolling effects
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -27,6 +40,38 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  // Setup notification listeners
+  useEffect(() => {
+    // Listen for notification events from the unified system
+    const handleNotification = (event: CustomEvent<JFNotification>) => {
+      const newNotification = event.detail;
+      setNotifications(prev => [newNotification, ...prev.slice(0, 9)]); // Keep last 10
+      setHasUnread(true);
+      
+      // Show toast for new notifications
+      toast({
+        title: newNotification.title,
+        description: newNotification.description,
+        variant: newNotification.type as any || 'default',
+      });
+    };
+    
+    // Register global event listener
+    window.addEventListener('jf-notification' as any, handleNotification as any);
+    
+    // Register with the notification system if available
+    if (window.jfNotifications) {
+      window.jfNotifications.onNotification((notification: JFNotification) => {
+        setNotifications(prev => [notification, ...prev.slice(0, 9)]); // Keep last 10
+        setHasUnread(true);
+      });
+    }
+    
+    return () => {
+      window.removeEventListener('jf-notification' as any, handleNotification as any);
+    };
+  }, [toast]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -105,6 +150,80 @@ const Header = () => {
               <button className="text-primary hover:text-secondary transition-colors" aria-label="Search">
                 <Search className="h-5 w-5" />
               </button>
+              
+              {/* Notifications Bell */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button 
+                    className="text-primary hover:text-secondary transition-colors relative" 
+                    aria-label="Notifications"
+                    onClick={() => setHasUnread(false)}
+                  >
+                    <Bell className="h-5 w-5" />
+                    {hasUnread && (
+                      <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center shadow-sm animate-pulse"></span>
+                    )}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-0" align="end">
+                  <div className="p-4 border-b border-neutral-100">
+                    <h3 className="font-bold text-primary">Notifications</h3>
+                    <p className="text-xs text-neutral-500">Stay updated with order status and news</p>
+                  </div>
+                  
+                  {notifications.length === 0 ? (
+                    <div className="p-6 text-center">
+                      <div className="mx-auto w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center mb-3">
+                        <Bell className="h-5 w-5 text-neutral-400" />
+                      </div>
+                      <p className="text-sm text-neutral-500">No notifications yet</p>
+                      <p className="text-xs text-neutral-400 mt-1">We'll notify you about order updates and promotions</p>
+                    </div>
+                  ) : (
+                    <div className="max-h-72 overflow-y-auto">
+                      {notifications.map((notification, index) => (
+                        <div 
+                          key={notification.id || index} 
+                          className="p-3 border-b border-neutral-100 last:border-0 hover:bg-neutral-50"
+                        >
+                          <div className="flex items-start">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-2 flex-shrink-0
+                              ${notification.type === 'success' ? 'bg-green-100' : 
+                                notification.type === 'warning' ? 'bg-amber-100' :
+                                notification.type === 'error' ? 'bg-red-100' : 'bg-primary/10'}`}
+                            >
+                              <Bell className={`h-4 w-4 
+                                ${notification.type === 'success' ? 'text-green-600' : 
+                                  notification.type === 'warning' ? 'text-amber-600' :
+                                  notification.type === 'error' ? 'text-red-600' : 'text-primary'}`} 
+                              />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">{notification.title}</p>
+                              <p className="text-xs text-neutral-500 mt-0.5 line-clamp-2">{notification.description}</p>
+                              <p className="text-xs text-neutral-400 mt-1">
+                                {new Date(notification.timestamp).toLocaleString()}
+                              </p>
+                              {notification.actionable && notification.link && (
+                                <Link href={notification.link}>
+                                  <Badge className="mt-2 text-xs bg-secondary hover:bg-secondary/80" variant="secondary">
+                                    View Details
+                                  </Badge>
+                                </Link>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="p-3 bg-neutral-50 border-t border-neutral-100">
+                    <Link href="/notifications" className="text-xs text-secondary font-medium hover:underline">
+                      View all notifications
+                    </Link>
+                  </div>
+                </PopoverContent>
+              </Popover>
               
               <button 
                 className="text-primary hover:text-secondary transition-colors relative" 

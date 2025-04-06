@@ -28,23 +28,24 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Jay's Frames - Custom Picture Framing with AI-Powered Design</title>
-        <meta name="description" content="Houston's premier custom framing shop offering AI-powered frame design, expert consultation, and preservation-quality framing for art, photography, and memorabilia." />
-        <meta name="keywords" content="custom framing, picture frames, art framing, frame shop Houston, AI frame design, shadowbox, diploma framing" />
+        <title>Jay's Frames - Best Custom Picture Framing in Houston | Voted Houston's Best</title>
+        <meta name="description" content="Award-winning custom framing in Houston's Heights. Voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine. Expert custom framing with AI-powered design for art, photography, and memorabilia." />
+        <meta name="keywords" content="custom framing Houston, picture frames Houston Heights, best frame shop Houston, award-winning framing, Houston A-List best frame shop, AI frame design, Houston custom framing, Houston Heights framer, Papercity Magazine frame shop" />
         <link rel="canonical" href="https://jaysframes.com" />
         
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Jay's Frames - Custom Picture Framing with AI-Powered Design" />
-        <meta property="og:description" content="Houston's premier custom framing shop offering AI-powered frame design, expert consultation, and preservation-quality framing." />
+        <meta property="og:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Voted Houston's Best" />
+        <meta property="og:description" content="Award-winning custom framing in Houston's Heights. Voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine." />
         <meta property="og:url" content="https://jaysframes.com" />
         <meta property="og:image" content="/images/og-image.jpg" />
         <meta property="og:site_name" content="Jay's Frames" />
+        <meta property="og:locale" content="en_US" />
         
         {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Jay's Frames - Custom Picture Framing with AI-Powered Design" />
-        <meta name="twitter:description" content="Houston's premier custom framing shop offering AI-powered frame design, expert consultation, and preservation-quality framing." />
+        <meta name="twitter:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Voted Houston's Best" />
+        <meta name="twitter:description" content="Award-winning custom framing in Houston's Heights. Voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine." />
         <meta name="twitter:image" content="/images/og-image.jpg" />
         
         {/* Structured data */}
@@ -53,6 +54,7 @@ const Home = () => {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Jay's Frames",
+            "description": "Award-winning custom framing shop in Houston Heights, voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine.",
             "image": "/images/og-image.jpg",
             "telephone": "+18328933794",
             "email": "info@jaysframes.com",
@@ -71,6 +73,15 @@ const Home = () => {
             },
             "url": "https://jaysframes.com",
             "priceRange": "$$",
+            "areaServed": {
+              "@type": "GeoCircle",
+              "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": "29.7604",
+                "longitude": "-95.3698"
+              },
+              "geoRadius": "30000"
+            },
             "openingHoursSpecification": [
               {
                 "@type": "OpeningHoursSpecification",
@@ -88,7 +99,35 @@ const Home = () => {
             "sameAs": [
               "https://www.facebook.com/jaysframes",
               "https://www.instagram.com/jaysframes"
-            ]
+            ],
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Custom Framing Services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Custom Picture Framing"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Shadowbox Framing"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "AI-Powered Frame Design"
+                  }
+                }
+              ]
+            },
+            "award": "Voted 'Best Frame Shop in Houston' by The Houston A-List"
           }
         `}</script>
       </Helmet>

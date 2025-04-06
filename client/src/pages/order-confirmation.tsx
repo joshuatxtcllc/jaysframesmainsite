@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { formatPrice } from "@/lib/utils";
-import { CheckCircle2, Package, Copy, ArrowRight, Clock } from "lucide-react";
+import { CheckCircle2, Package, Copy, ArrowRight, Clock, Bell } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Order } from "@/types";
 
@@ -14,6 +14,7 @@ const OrderConfirmation = () => {
   const orderId = params?.orderId ? parseInt(params.orderId) : undefined;
   const [emailSent, setEmailSent] = useState(true);
   const [depositProcessed, setDepositProcessed] = useState(true);
+  const [notificationSent, setNotificationSent] = useState(false);
   
   // Query order details
   const { data: order, isLoading, error } = useQuery<Order>({
@@ -23,14 +24,71 @@ const OrderConfirmation = () => {
 
   useEffect(() => {
     // Simulate async operations completion
-    const timer1 = setTimeout(() => setEmailSent(true), 3000);
-    const timer2 = setTimeout(() => setDepositProcessed(true), 5000);
+    const timer1 = setTimeout(() => setEmailSent(true), 2000);
+    const timer2 = setTimeout(() => setDepositProcessed(true), 3000);
+    
+    // Send order confirmation notification to unified notification system
+    if (order && !notificationSent) {
+      const sendOrderNotification = async () => {
+        try {
+          // Check if the global notification system is available
+          if (window.jfNotifications && window.jfNotifications.connected) {
+            // Send the notification using the unified system
+            const success = await window.jfNotifications.sendNotification(
+              `New Order #${order.id}`, 
+              `New order placed by ${order.customerName} for $${(order.totalAmount/100).toFixed(2)}`,
+              'success',
+              {
+                sourceId: order.id.toString(),
+                actionable: true,
+                link: `/admin/orders/${order.id}`,
+                smsEnabled: true, // Enable SMS for high-priority order notifications
+                smsRecipient: "+18328933794" // Business phone number
+              }
+            );
+            
+            if (success) {
+              console.log('Order notification sent to unified system');
+              setNotificationSent(true);
+            }
+          } else {
+            // Fallback to API if the global system isn't available
+            const response = await fetch('/api/notifications', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                title: `New Order #${order.id}`,
+                description: `New order placed by ${order.customerName} for $${(order.totalAmount/100).toFixed(2)}`,
+                source: 'jaysframes-website',
+                sourceId: order.id.toString(),
+                type: 'success',
+                actionable: true,
+                link: `/admin/orders/${order.id}`,
+                smsEnabled: true,
+                smsRecipient: "+18328933794"
+              })
+            });
+            
+            if (response.ok) {
+              console.log('Order notification sent via API');
+              setNotificationSent(true);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to send order notification:', error);
+        }
+      };
+      
+      sendOrderNotification();
+    }
     
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, []);
+  }, [order, notificationSent]);
 
   const handleCopyOrderId = () => {
     if (orderId) {
@@ -215,6 +273,24 @@ const OrderConfirmation = () => {
               <div>
                 <p className="font-medium">Order Processing</p>
                 <p className="text-sm text-neutral-500">Your order is now being processed by our team.</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start">
+              <div className={`w-8 h-8 rounded-full ${notificationSent ? 'bg-green-100' : 'bg-neutral-100'} flex items-center justify-center mr-3 flex-shrink-0`}>
+                {notificationSent ? (
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                ) : (
+                  <Bell className="h-4 w-4 text-neutral-500 animate-pulse" />
+                )}
+              </div>
+              <div>
+                <p className="font-medium">Business Notification</p>
+                <p className="text-sm text-neutral-500">
+                  {notificationSent 
+                    ? 'Our team has been notified about your order.' 
+                    : 'Notifying our team about your order...'}
+                </p>
               </div>
             </div>
           </div>

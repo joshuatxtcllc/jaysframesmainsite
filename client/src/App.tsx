@@ -9,6 +9,9 @@ import CustomFraming from "@/pages/custom-framing";
 import OrderStatus from "@/pages/order-status";
 import AdminDashboard from "@/pages/admin/dashboard";
 import FrameAssistantTest from "@/pages/frame-assistant-test";
+import Notifications from "@/pages/notifications";
+import NotificationTest from "@/pages/notification-test";
+import NotificationEmbed from "@/pages/developer/notification-embed";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { CartProvider } from "@/context/cart-context";
@@ -22,6 +25,9 @@ function Router() {
       <Route path="/order-status" component={OrderStatus} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
+      <Route path="/notifications" component={Notifications} />
+      <Route path="/notification-test" component={NotificationTest} />
+      <Route path="/developer/notification-embed" component={NotificationEmbed} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
