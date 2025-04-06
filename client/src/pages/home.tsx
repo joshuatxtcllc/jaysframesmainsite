@@ -8,16 +8,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Lightbulb, MessageSquare, Wand2 } from "lucide-react";
 import FrameDesigner from "@/components/product/frame-designer";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   // Fetch featured products
-  const { data: products = [] } = useQuery({
+  const { data: products = [] } = useQuery<any[]>({
     queryKey: ["/api/products"],
   });
 
   // Get one product from each category for showcase
   const getProductsByCategory = (category: string) => {
-    return products.find((product: any) => product.category === category);
+    return products.find((product) => product.category === category);
   };
 
   const customFrame = getProductsByCategory("frame");
@@ -26,6 +27,72 @@ const Home = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Jay's Frames - Custom Picture Framing with AI-Powered Design</title>
+        <meta name="description" content="Houston's premier custom framing shop offering AI-powered frame design, expert consultation, and preservation-quality framing for art, photography, and memorabilia." />
+        <meta name="keywords" content="custom framing, picture frames, art framing, frame shop Houston, AI frame design, shadowbox, diploma framing" />
+        <link rel="canonical" href="https://jaysframes.com" />
+        
+        {/* Open Graph tags */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Jay's Frames - Custom Picture Framing with AI-Powered Design" />
+        <meta property="og:description" content="Houston's premier custom framing shop offering AI-powered frame design, expert consultation, and preservation-quality framing." />
+        <meta property="og:url" content="https://jaysframes.com" />
+        <meta property="og:image" content="/images/og-image.jpg" />
+        <meta property="og:site_name" content="Jay's Frames" />
+        
+        {/* Twitter Card tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Jay's Frames - Custom Picture Framing with AI-Powered Design" />
+        <meta name="twitter:description" content="Houston's premier custom framing shop offering AI-powered frame design, expert consultation, and preservation-quality framing." />
+        <meta name="twitter:image" content="/images/og-image.jpg" />
+        
+        {/* Structured data */}
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Jay's Frames",
+            "image": "/images/og-image.jpg",
+            "telephone": "+18328933794",
+            "email": "info@jaysframes.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "1440 1/2 Yale St.",
+              "addressLocality": "Houston",
+              "addressRegion": "TX",
+              "postalCode": "77008",
+              "addressCountry": "US"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "29.7904",
+              "longitude": "-95.3988"
+            },
+            "url": "https://jaysframes.com",
+            "priceRange": "$$",
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "09:00",
+                "closes": "18:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Saturday",
+                "opens": "10:00",
+                "closes": "16:00"
+              }
+            ],
+            "sameAs": [
+              "https://www.facebook.com/jaysframes",
+              "https://www.instagram.com/jaysframes"
+            ]
+          }
+        `}</script>
+      </Helmet>
+      
       {/* Hero Section */}
       <Hero />
       

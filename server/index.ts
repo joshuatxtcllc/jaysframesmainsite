@@ -1,10 +1,33 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import compression from "compression";
 
 const app = express();
+// Enable compression middleware
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// HTTP to HTTPS redirect and www handling middleware for production
+app.use((req, res, next) => {
+  // Only apply in production environment
+  if (process.env.NODE_ENV === 'production') {
+    // Check if it's HTTP (not HTTPS)
+    if (req.headers['x-forwarded-proto'] === 'http') {
+      // Redirect to HTTPS
+      return res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
+
+    // Standardize on www or non-www (in this case, we're standardizing on non-www)
+    const host = req.headers.host || '';
+    if (host.startsWith('www.')) {
+      // Redirect from www to non-www
+      return res.redirect(301, `https://${host.substring(4)}${req.url}`);
+    }
+  }
+  next();
+});
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -55,6 +78,11 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
+  
+  // Handle 404 for API routes - must come after all API route definitions
+  app.use('/api/*', (req, res) => {
+    res.status(404).json({ message: "API endpoint not found" });
+  });
 
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client.
