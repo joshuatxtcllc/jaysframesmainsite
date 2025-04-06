@@ -65,14 +65,14 @@ export function RecommendationCarousel() {
             placeholder="Describe your artwork (e.g., 'A vibrant watercolor landscape with blue and green hues')"
             className="flex-1"
           />
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} className="bg-primary text-white hover:bg-primary/90">
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Getting recommendations...
+                <span className="text-white">Getting recommendations...</span>
               </>
             ) : (
-              "Get Recommendations"
+              <span className="text-white">Get Recommendations</span>
             )}
           </Button>
         </div>
