@@ -3,8 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import FrameDesigner from "@/components/product/frame-designer";
 import Chatbot from "@/components/ui/chatbot";
 import { RecommendationCarousel } from "@/components/product/recommendation-carousel";
-import { MessageSquare, Wand2, PaintBucket } from "lucide-react";
+import { MessageSquare, Wand2, PaintBucket, Camera, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 const CustomFraming = () => {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -128,6 +129,75 @@ const CustomFraming = () => {
         </div>
       </section>
       
+      {/* AR Frame Fitting Assistant Section */}
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <div className="inline-block p-3 rounded-full bg-primary/20 mb-4">
+                <Camera className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl font-bold mb-4">Try Our AR Frame Fitting Assistant</h2>
+              <p className="text-neutral-600 mb-6">
+                See how your artwork will look framed on your wall in real-time with our 
+                augmented reality tool. Try different frame styles and colors directly through 
+                your camera to find the perfect match for your space.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div className="bg-white p-4 rounded-lg shadow-sm">
+                  <h3 className="font-medium text-primary mb-2">Visualize on Your Wall</h3>
+                  <p className="text-sm text-neutral-500">
+                    Point your camera at your wall and see frames in real-time
+                  </p>
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-sm">
+                  <h3 className="font-medium text-primary mb-2">Try Different Styles</h3>
+                  <p className="text-sm text-neutral-500">
+                    Switch between frame styles, colors, and sizes instantly
+                  </p>
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-sm">
+                  <h3 className="font-medium text-primary mb-2">Capture & Share</h3>
+                  <p className="text-sm text-neutral-500">
+                    Save screenshots of your favorite combinations
+                  </p>
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-sm">
+                  <h3 className="font-medium text-primary mb-2">Scale Accurately</h3>
+                  <p className="text-sm text-neutral-500">
+                    See true-to-size frame dimensions in your space
+                  </p>
+                </div>
+              </div>
+              
+              <Button asChild className="w-full md:w-auto" size="lg">
+                <Link href="/ar-frame-assistant">
+                  Try AR Frame Assistant
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="order-1 lg:order-2 relative">
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <img 
+                  src="/images/ar-frame-preview.jpg" 
+                  alt="AR Frame Preview" 
+                  className="w-full h-auto"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+                  }}
+                />
+                <div className="absolute top-4 right-4 bg-primary text-white text-xs px-2 py-1 rounded">
+                  NEW FEATURE
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
