@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import FrameDesigner from "@/components/product/frame-designer";
 import Chatbot from "@/components/ui/chatbot";
@@ -6,6 +7,12 @@ import { MessageSquare, Wand2, PaintBucket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CustomFraming = () => {
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+
+  const toggleChatbot = () => {
+    setIsChatbotOpen(!isChatbotOpen);
+  };
+
   return (
     <div className="bg-white">
       <section className="py-16 bg-white">
@@ -156,7 +163,10 @@ const CustomFraming = () => {
                   </div>
                 </div>
                 <div className="flex justify-center">
-                  <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium px-8 py-2">
+                  <Button 
+                    className="bg-secondary hover:bg-secondary/80 text-white font-medium px-8 py-2"
+                    onClick={toggleChatbot}
+                  >
                     Ask Our AI Assistant
                   </Button>
                 </div>
@@ -168,7 +178,7 @@ const CustomFraming = () => {
 
       {/* Chatbot */}
       <div className="fixed bottom-6 right-6 z-50">
-        <Chatbot />
+        <Chatbot initialIsOpen={isChatbotOpen} setIsOpen={setIsChatbotOpen} />
       </div>
     </div>
   );

@@ -466,15 +466,21 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <div className="flex items-center justify-center gap-6 bg-neutral-50 rounded-md p-3">
                     <div className="text-center">
                       <div 
-                        className="w-10 h-10 mx-auto rounded-md mb-1"
-                        style={{ backgroundColor: aiRecommendations.frames[0]?.color }}
+                        className="w-10 h-10 mx-auto rounded-md mb-1 border border-neutral-300"
+                        style={{ 
+                          backgroundColor: aiRecommendations.frames[0]?.color,
+                          opacity: 0.8 
+                        }}
                       ></div>
                       <span className="text-xs text-neutral-500">{aiRecommendations.frames[0]?.name}</span>
                     </div>
                     <div className="text-center">
                       <div 
-                        className="w-10 h-10 mx-auto rounded-full mb-1"
-                        style={{ backgroundColor: aiRecommendations.mats[0]?.color }}
+                        className="w-10 h-10 mx-auto rounded-full mb-1 border border-neutral-300"
+                        style={{ 
+                          backgroundColor: aiRecommendations.mats[0]?.color,
+                          opacity: 0.8 
+                        }}
                       ></div>
                       <span className="text-xs text-neutral-500">{aiRecommendations.mats[0]?.name}</span>
                     </div>

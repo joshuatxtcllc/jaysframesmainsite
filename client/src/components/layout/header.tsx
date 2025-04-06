@@ -120,7 +120,7 @@ const Header = () => {
               </button>
               
               <Link href="/custom-framing" className="hidden md:block">
-                <Button className="btn-secondary text-sm">
+                <Button className="bg-secondary hover:bg-secondary/80 text-white text-sm">
                   Start Framing
                 </Button>
               </Link>
@@ -155,7 +155,7 @@ const Header = () => {
                   </Link>
                 ))}
                 <Link href="/custom-framing">
-                  <Button className="btn-secondary w-full mt-2 text-sm">
+                  <Button className="bg-secondary hover:bg-secondary/80 text-white w-full mt-2 text-sm">
                     Start Framing
                   </Button>
                 </Link>

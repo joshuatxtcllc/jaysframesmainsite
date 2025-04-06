@@ -16,8 +16,13 @@ interface ChatMessage {
   orderInfo?: any;
 }
 
-const Chatbot = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface ChatbotProps {
+  initialIsOpen?: boolean;
+  setIsOpen?: (isOpen: boolean) => void;
+}
+
+const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: ChatbotProps) => {
+  const [isOpen, setIsOpen] = useState(initialIsOpen);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +45,12 @@ const Chatbot = () => {
         }
       ]);
     }
-  }, []);
+  }, [sessionId, messages.length]);
+
+  // React to external changes in isOpen state
+  useEffect(() => {
+    setIsOpen(initialIsOpen);
+  }, [initialIsOpen]);
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -51,8 +61,13 @@ const Chatbot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Update the isOpen state in this component and in the parent component
   const toggleChat = () => {
-    setIsOpen(!isOpen);
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    if (externalSetIsOpen) {
+      externalSetIsOpen(newIsOpen);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
