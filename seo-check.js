@@ -237,6 +237,16 @@ function checkMobileResponsiveness() {
   
   let hasMediaQueries = false;
   
+  // Also check main.css directly
+  const mainCssPath = path.join(srcDir, 'main.css');
+  if (fs.existsSync(mainCssPath)) {
+    const content = fs.readFileSync(mainCssPath, 'utf8');
+    if (/@media\s+/.test(content)) {
+      hasMediaQueries = true;
+      console.log('✅ Media queries found in main.css');
+    }
+  }
+  
   cssFiles.forEach(file => {
     const content = fs.readFileSync(file, 'utf8');
     if (/@media\s*\(/.test(content)) {

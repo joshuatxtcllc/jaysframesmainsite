@@ -191,8 +191,9 @@ const Home = () => {
                 <div className="aspect-video bg-neutral-100 rounded flex items-center justify-center mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                    alt="Frame Design Preview" 
+                    alt="Frame Design Preview with AI recommendations" 
                     className="max-h-full rounded"
+                    loading="lazy"
                   />
                 </div>
                 <div className="grid grid-cols-3 gap-2">
@@ -310,8 +311,9 @@ const Home = () => {
                 <div className="w-full h-64 overflow-hidden">
                   <img 
                     src={customFrame.imageUrl} 
-                    alt="Custom Framing" 
+                    alt="Custom Framing - Tailor-made frames designed for your artwork" 
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
                 <CardContent className="p-6">
@@ -334,8 +336,9 @@ const Home = () => {
                 <div className="w-full h-64 overflow-hidden">
                   <img 
                     src={shadowbox.imageUrl} 
-                    alt="Shadowboxes" 
+                    alt="Shadowboxes - For displaying memorabilia, jerseys, and 3D objects" 
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
                 <CardContent className="p-6">
@@ -358,8 +361,9 @@ const Home = () => {
                 <div className="w-full h-64 overflow-hidden relative">
                   <img 
                     src={moonmount.imageUrl} 
-                    alt="Moonmounts" 
+                    alt="Moonmounts - Patented magnetic mounting system by Jay's Frames" 
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                   <div className="absolute bottom-4 right-4 bg-white/90 rounded-lg p-2 shadow-lg">
                     <img 

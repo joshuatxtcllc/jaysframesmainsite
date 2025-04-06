@@ -1,0 +1,128 @@
+/* Main CSS with media queries for better SEO */
+
+/* Base mobile-first styles */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Small screens (mobile) */
+@media screen and (max-width: 640px) {
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  
+  .mobile-text-center {
+    text-align: center !important;
+  }
+  
+  .mobile-hidden {
+    display: none !important;
+  }
+  
+  .mobile-pt-4 {
+    padding-top: 1rem !important;
+  }
+  
+  .mobile-py-8 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  .mobile-pb-6 {
+    padding-bottom: 1.5rem !important;
+  }
+}
+
+/* Medium screens (tablets) */
+@media screen and (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  .tablet-py-12 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+  
+  .tablet-px-6 {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* Large screens (desktop) */
+@media screen and (min-width: 1025px) {
+  .desktop-grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  
+  .desktop-py-16 {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+  
+  .desktop-gap-8 {
+    gap: 2rem !important;
+  }
+}
+
+/* Print styles for better accessibility */
+@media print {
+  body {
+    color: #000;
+    background-color: #fff;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: #000;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .page-break {
+    page-break-before: always;
+  }
+}
+
+/* Loading indicators for better user experience */
+.lazy-load-image-background {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.lazy-load-image-loaded {
+  opacity: 1;
+}
+
+/* Accessibility improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}

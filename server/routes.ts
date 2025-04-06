@@ -364,8 +364,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid notification type" });
       }
       
-      // Here we would send to a notification service, email service, or SMS gateway
-      // For now, we'll just return success to support the notification widget
+      // Create the notification object
+      const notification = {
+        id: Date.now().toString(),
+        title,
+        description,
+        source: source || 'jaysframes-api',
+        sourceId: sourceId || '',
+        type: type || 'info',
+        timestamp: new Date().toISOString(),
+        actionable: actionable || false,
+        link: link || '',
+        smsEnabled: smsEnabled || false,
+        smsRecipient: smsRecipient || ''
+      };
       
       // Log the notification
       console.log(`Notification received: ${title} - ${description}`);
@@ -373,20 +385,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Return a success response with a notification ID
       res.status(201).json({ 
         success: true, 
-        notification: {
-          id: Date.now().toString(),
-          title,
-          description,
-          source: source || 'jaysframes-api',
-          sourceId: sourceId || '',
-          type: type || 'info',
-          timestamp: new Date().toISOString(),
-          actionable: actionable || false,
-          link: link || '',
-          smsEnabled: smsEnabled || false,
-          smsRecipient: smsRecipient || ''
-        }
+        notification
       });
+      
+      // Import WebSocket service dynamically to avoid circular imports
+      const { getWebSocketServer } = await import('./services/websocket');
+      
+      // Broadcast notification to all connected WebSocket clients
+      // This will be available after the server is fully initialized
+      try {
+        const wsServer = getWebSocketServer(httpServer);
+        wsServer.broadcastNotification(notification);
+      } catch (wsError) {
+        console.error("Error broadcasting notification:", wsError);
+      }
     } catch (error) {
       console.error("Notification error:", error);
       res.status(500).json({ message: "Failed to process notification" });
