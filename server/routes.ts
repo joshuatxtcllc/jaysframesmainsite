@@ -29,12 +29,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid product ID" });
     }
-    
+
     const product = await storage.getProductById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    
+
     res.json(product);
   });
 
@@ -61,21 +61,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const orderData = insertOrderSchema.parse(req.body);
       const order = await storage.createOrder(orderData);
-      
+
       // Initialize email transporter if needed
       await initEmailTransporter();
-      
+
       // Send notifications asynchronously (don't await to avoid delaying response)
       // Cast order to the extended type expected by the notification service
       const extendedOrder: ExtendedOrder = {
         ...order, 
         items: Array.isArray(order.items) ? order.items as OrderItem[] : []
       };
-      
+
       sendNewOrderNotification(extendedOrder).catch(err => {
         console.error('Failed to send order notification:', err);
       });
-      
+
       // Send confirmation email if customer email is available
       if (order.customerEmail) {
         // Order ID and email is all that's needed as the function fetches order details internally
@@ -83,7 +83,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to send order confirmation email:', err);
         });
       }
-      
+
       res.status(201).json(order);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -99,12 +99,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid order ID" });
     }
-    
+
     const order = await storage.getOrderById(id);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-    
+
     res.json(order);
   });
 
@@ -114,23 +114,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid order ID" });
     }
-    
+
     const { status, stage } = req.body;
     if (!status) {
       return res.status(400).json({ message: "Status is required" });
     }
-    
+
     const order = await storage.updateOrderStatus(id, status, stage);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-    
+
     // Send a notification about the order status update (if customer email is available)
     if (order.customerEmail) {
       // Get a user-friendly status message based on the stage
       let statusMessage = "Your order status has been updated.";
       let statusType = "info";
-      
+
       if (stage) {
         switch (stage) {
           case "preparing":
@@ -159,10 +159,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             statusMessage = `Your order is now in the ${stage} stage.`;
         }
       }
-      
+
       // Log the notification for now - in production, this would be sent to an email or SMS service
       console.log(`Order status notification for #${order.id}: ${statusMessage}`);
-      
+
       // Add to the notification API to show in the web UI notification system
       try {
         const notificationData = {
@@ -174,17 +174,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           actionable: true,
           link: `/order-status?orderId=${order.id}`
         };
-        
+
         // Use the WebSocket directly rather than making a fetch request to self
         try {
           const { getWebSocketServer } = await import('./services/websocket');
-          const wsServer = getWebSocketServer();
-          wsServer.broadcastNotification({
-            id: Date.now().toString(),
-            ...notificationData,
-            timestamp: new Date().toISOString(),
-            smsEnabled: false
-          });
+          const wsServer = getWebSocketServer(); // Server parameter not needed here
+          if (wsServer) {
+            wsServer.broadcastNotification({
+              id: Date.now().toString(),
+              ...notificationData,
+              timestamp: new Date().toISOString(),
+              smsEnabled: false
+            });
+          } else {
+            console.warn("WebSocket server not initialized yet");
+          }
         } catch (wsError) {
           console.error("Error broadcasting notification via WebSocket:", wsError);
         }
@@ -192,7 +196,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Error sending notification:', error);
       }
     }
-    
+
     res.json(order);
   });
 
@@ -206,11 +210,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/chat", async (req: Request, res: Response) => {
     try {
       const { sessionId, message, orderNumber } = req.body;
-      
+
       if (!sessionId || !message) {
         return res.status(400).json({ message: "Session ID and message are required" });
       }
-      
+
       // Save user message
       const userMessage: ChatMessage = { role: "user", content: message };
       await storage.createChatMessage({
@@ -218,7 +222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         role: "user",
         content: message
       });
-      
+
       // Get order info if orderNumber is provided
       let orderInfo = undefined;
       if (orderNumber) {
@@ -227,31 +231,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
           orderInfo = await storage.getOrderById(id);
         }
       }
-      
+
       // Get message history
       const messageHistory = await storage.getChatMessagesBySessionId(sessionId);
       const chatHistory: ChatMessage[] = messageHistory.map(msg => ({
         role: msg.role === "user" ? "user" : "assistant",
         content: msg.content
       }));
-      
+
       // Get products for recommendations
       const products = await storage.getProducts();
-      
+
       // Process with AI
       const chatResponse = await handleChatRequest(
         [...chatHistory.slice(-10), userMessage], // Use last 10 messages + current
         products,
         orderInfo ? [orderInfo] : undefined
       );
-      
+
       // Save assistant message
       await storage.createChatMessage({
         sessionId,
         role: "assistant",
         content: chatResponse.message
       });
-      
+
       // Get recommended products if any
       let recommendedProducts: any[] = [];
       if (chatResponse.productRecommendations && chatResponse.productRecommendations.length > 0) {
@@ -268,11 +272,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
             return undefined;
           })
         );
-        
+
         // Filter out undefined products
         recommendedProducts = recommendedProducts.filter(p => p !== undefined);
       }
-      
+
       res.json({
         message: chatResponse.message,
         recommendations: recommendedProducts,
@@ -288,33 +292,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/frame-recommendations", async (req: Request, res: Response) => {
     try {
       const { artworkDescription } = req.body;
-      
+
       if (!artworkDescription) {
         return res.status(400).json({ message: "Artwork description is required" });
       }
-      
+
       const frameOptions = await storage.getFrameOptions();
       const matOptions = await storage.getMatOptions();
-      
+
       const recommendations = await getFrameRecommendations(
         artworkDescription,
         frameOptions,
         matOptions
       );
-      
+
       // Get detailed frame and mat options for the recommendations
       const recommendedFrames = await Promise.all(
         recommendations.recommendedFrames.map(async (id: number) => {
           return await storage.getFrameOptionById(id);
         })
       );
-      
+
       const recommendedMats = await Promise.all(
         recommendations.recommendedMats.map(async (id: number) => {
           return await storage.getMatOptionById(id);
         })
       );
-      
+
       res.json({
         frames: recommendedFrames.filter(f => f !== undefined),
         mats: recommendedMats.filter(m => m !== undefined),
@@ -330,11 +334,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/frame-assistant", async (req: Request, res: Response) => {
     try {
       const { message } = req.body;
-      
+
       if (!message) {
         return res.status(400).json({ message: "Message is required" });
       }
-      
+
       const response = await askFrameAssistant(message);
       res.json({ response });
     } catch (error) {
@@ -359,17 +363,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         smsEnabled, 
         smsRecipient 
       } = req.body;
-      
+
       if (!title || !description) {
         return res.status(400).json({ message: "Title and description are required" });
       }
-      
+
       // Validate notification type
       const validTypes = ['info', 'success', 'warning', 'error'];
       if (type && !validTypes.includes(type)) {
         return res.status(400).json({ message: "Invalid notification type" });
       }
-      
+
       // Create the notification object
       const notification = {
         id: Date.now().toString(),
@@ -384,24 +388,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         smsEnabled: smsEnabled || false,
         smsRecipient: smsRecipient || ''
       };
-      
+
       // Log the notification
       console.log(`Notification received: ${title} - ${description}`);
-      
+
       // Return a success response with a notification ID
       res.status(201).json({ 
         success: true, 
         notification
       });
-      
+
       // Import WebSocket service dynamically to avoid circular imports
       const { getWebSocketServer } = await import('./services/websocket');
-      
+
       // Broadcast notification to all connected WebSocket clients
       // This will be available after the server is fully initialized
       try {
-        const wsServer = getWebSocketServer(httpServer);
-        wsServer.broadcastNotification(notification);
+        const wsServer = getWebSocketServer(); //httpServer parameter removed
+        if (wsServer) {
+          wsServer.broadcastNotification(notification);
+        } else {
+          console.warn("WebSocket server not initialized yet");
+        }
       } catch (wsError) {
         console.error("Error broadcasting notification:", wsError);
       }
