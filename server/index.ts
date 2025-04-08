@@ -16,14 +16,14 @@ app.use((req, res, next) => {
     // Check if it's HTTP (not HTTPS)
     if (req.headers['x-forwarded-proto'] === 'http') {
       // Redirect to HTTPS
-      return res.redirect(301, `https://${req.headers.host}${req.url}`);
+      return res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
     }
 
     // Standardize on www or non-www (in this case, we're standardizing on non-www)
     const host = req.headers.host || '';
     if (host.startsWith('www.')) {
       // Redirect from www to non-www
-      return res.redirect(301, `https://${host.substring(4)}${req.url}`);
+      return res.redirect(301, `https://${host.substring(4)}${req.originalUrl}`);
     }
   }
   next();

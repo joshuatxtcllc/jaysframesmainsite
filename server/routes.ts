@@ -165,22 +165,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Add to the notification API to show in the web UI notification system
       try {
-        fetch('http://localhost:' + (process.env.PORT || 3000) + '/api/notifications', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            title: `Order #${order.id} Update`,
-            description: statusMessage,
-            source: 'jaysframes-api',
-            sourceId: order.id.toString(),
-            type: statusType,
-            actionable: true,
-            link: `/order-status?orderId=${order.id}`
-          })
-        }).catch(err => {
-          console.error('Failed to send status notification:', err);
+        const notificationData = {
+          title: `Order #${order.id} Update`,
+          description: statusMessage,
+          source: 'jaysframes-api',
+          sourceId: order.id.toString(),
+          type: statusType,
+          actionable: true,
+          link: `/order-status?orderId=${order.id}`
+        };
+        
+        // Use the WebSocket directly rather than making a fetch request to self
+        const { getWebSocketServer } = await import('./services/websocket');
+        const wsServer = getWebSocketServer();
+        wsServer.broadcastNotification({
+          id: Date.now().toString(),
+          ...notificationData,
+          timestamp: new Date().toISOString(),
+          smsEnabled: false
         });
       } catch (error) {
         console.error('Error sending notification:', error);
