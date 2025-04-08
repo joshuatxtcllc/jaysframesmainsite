@@ -63,9 +63,13 @@ app.use((req, res, next) => {
   const server = await registerRoutes(app);
   
   // Initialize WebSocket server
-  const { getWebSocketServer } = await import('./services/websocket');
-  getWebSocketServer(server);
-  log('WebSocket notification system initialized');
+  try {
+    const { getWebSocketServer } = await import('./services/websocket');
+    getWebSocketServer(server);
+    log('WebSocket notification system initialized');
+  } catch (err) {
+    log('Failed to initialize WebSocket server: ' + err, 'error');
+  }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

@@ -176,14 +176,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
         
         // Use the WebSocket directly rather than making a fetch request to self
-        const { getWebSocketServer } = await import('./services/websocket');
-        const wsServer = getWebSocketServer();
-        wsServer.broadcastNotification({
-          id: Date.now().toString(),
-          ...notificationData,
-          timestamp: new Date().toISOString(),
-          smsEnabled: false
-        });
+        try {
+          const { getWebSocketServer } = await import('./services/websocket');
+          const wsServer = getWebSocketServer();
+          wsServer.broadcastNotification({
+            id: Date.now().toString(),
+            ...notificationData,
+            timestamp: new Date().toISOString(),
+            smsEnabled: false
+          });
+        } catch (wsError) {
+          console.error("Error broadcasting notification via WebSocket:", wsError);
+        }
       } catch (error) {
         console.error('Error sending notification:', error);
       }
