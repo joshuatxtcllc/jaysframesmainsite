@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jay's Frames Notification System Demo</title>
+  <style>
+    :root {
+      --primary: #1a365d;
+      --primary-light: #2c5282;
+      --primary-dark: #143055;
+      --success: #38a169;
+      --warning: #d69e2e;
+      --error: #e53e3e;
+      --info: #3182ce;
+      --background: #f7fafc;
+      --text: #1a202c;
+      --text-light: #4a5568;
+      --border: #e2e8f0;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+    
+    nav a {
+      text-decoration: none;
+      color: var(--primary-light);
+    }
+    
+    nav a:hover {
+      text-decoration: underline;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    h1, h2, h3 {
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    
+    p {
+      margin-bottom: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 16px;
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background: var(--primary-light);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .secondary-button {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .secondary-button:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Notification System Styles */
+    .notification-bell {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      padding: 8px;
+    }
+    
+    .notification-icon {
+      width: 24px;
+      height: 24px;
+      fill: var(--primary);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--error);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+    }
+    
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 320px;
+      max-height: 400px;
+      overflow-y: auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      display: none;
+    }
+    
+    .notification-dropdown.show {
+      display: block;
+    }
+    
+    .notification-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .notification-title {
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    .notification-clear {
+      font-size: 12px;
+      color: var(--text-light);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 4px 8px;
+    }
+    
+    .notification-clear:hover {
+      text-decoration: underline;
+      background: transparent;
+    }
+    
+    .notification-list {
+      padding: 8px 0;
+    }
+    
+    .notification-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+    
+    .notification-item:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .notification-item.unread {
+      background-color: rgba(49, 130, 206, 0.1);
+    }
+    
+    .notification-item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    
+    .notification-item-title {
+      font-weight: bold;
+      color: var(--text);
+    }
+    
+    .notification-item-time {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    
+    .notification-item-content {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .notification-item-source {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    
+    .notification-empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--text-light);
+    }
+    
+    .notification-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .notification-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .notification-footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .notification-badge {
+      display: none;
+    }
+    
+    .notification-badge.show {
+      display: flex;
+    }
+    
+    /* Toast notification styles */
+    .toast-container {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 9999;
+    }
+    
+    .toast {
+      margin-top: 8px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: flex-start;
+      max-width: 320px;
+      animation: slideIn 0.3s ease-out forwards;
+    }
+    
+    .toast.removing {
+      animation: slideOut 0.3s ease-out forwards;
+    }
+    
+    .toast-icon {
+      margin-right: 12px;
+      font-size: 20px;
+    }
+    
+    .toast-content {
+      flex: 1;
+    }
+    
+    .toast-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    
+    .toast-message {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+    
+    .toast-close {
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0 4px;
+      margin-left: 8px;
+    }
+    
+    .toast-success {
+      border-left: 4px solid var(--success);
+    }
+    
+    .toast-success .toast-icon {
+      color: var(--success);
+    }
+    
+    .toast-warning {
+      border-left: 4px solid var(--warning);
+    }
+    
+    .toast-warning .toast-icon {
+      color: var(--warning);
+    }
+    
+    .toast-error {
+      border-left: 4px solid var(--error);
+    }
+    
+    .toast-error .toast-icon {
+      color: var(--error);
+    }
+    
+    .toast-info {
+      border-left: 4px solid var(--info);
+    }
+    
+    .toast-info .toast-icon {
+      color: var(--info);
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    
+    .log-container {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .log-time {
+      color: #666;
+      font-size: 12px;
+    }
+    
+    /* Make the page responsive */
+    @media (max-width: 768px) {
+      .notification-dropdown {
+        width: 280px;
+      }
+      
+      .card {
+        padding: 16px;
+      }
+      
+      h1 {
+        font-size: 22px;
+      }
+      
+      h2 {
+        font-size: 18px;
+      }
+    }
+    
+    /* Column layout */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+    }
+    
+    .col {
+      flex: 1;
+      padding: 0 10px;
+      min-width: 300px;
+    }
+    
+    /* Checkboxes */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">Jay's Frames</div>
+      <div style="display: flex; align-items: center;">
+        <nav>
+          <a href="#">Home</a>
+          <a href="#">Products</a>
+          <a href="#">Custom Framing</a>
+          <a href="#">Contact</a>
+        </nav>
+        
+        <!-- Notification Bell -->
+        <div class="notification-bell" id="notification-bell">
+          <svg class="notification-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z" />
+          </svg>
+          <span class="notification-badge" id="notification-badge">0</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notification-dropdown">
+            <div class="notification-header">
+              <span class="notification-title">Notifications</span>
+              <button class="notification-clear" id="clear-notifications">Clear All</button>
+            </div>
+            <div class="notification-list" id="notification-list">
+              <div class="notification-empty">No notifications</div>
+            </div>
+            <div class="notification-footer">
+              <a href="#">View all notifications</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <h1>Jay's Frames Notification System Demo</h1>
+          <p>This page demonstrates the functionality of the Jay's Frames unified notification system. You can create and test different types of notifications without requiring a backend server.</p>
+        </div>
+        
+        <div class="card">
+          <h2>Create Notification</h2>
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" value="New Order Received">
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description">A new custom frame order has been placed for 8x10 standard frame.</textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="type">Type</label>
+            <select id="type">
+              <option value="info">Info</option>
+              <option value="success" selected>Success</option>
+              <option value="warning">Warning</option>
+              <option value="error">Error</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="source">Source</label>
+            <input type="text" id="source" value="orders-app">
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="actionable">
+            <label for="actionable">Actionable</label>
+          </div>
+          
+          <div class="form-group">
+            <label for="link">Action Link (if actionable)</label>
+            <input type="text" id="link" placeholder="https://example.com/action" value="/orders/123456">
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="toast">
+            <label for="toast">Show as Toast</label>
+          </div>
+          
+          <div class="button-group">
+            <button id="send-btn">Create Notification</button>
+            <button id="demo-btn" class="secondary-button">Run Demo Sequence</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col">
+        <div class="card">
+          <h2>System Log</h2>
+          <div class="log-container" id="log-container"></div>
+          <button id="clear-log" class="secondary-button" style="margin-top: 10px;">Clear Log</button>
+        </div>
+        
+        <div class="card">
+          <h2>About the Notification System</h2>
+          <p>The Jay's Frames notification system provides real-time notifications across all applications in the Jay's Frames ecosystem. It features:</p>
+          <ul style="margin-left: 20px; margin-bottom: 16px;">
+            <li>Real-time WebSocket communication</li>
+            <li>Multiple notification types (info, success, warning, error)</li>
+            <li>Actionable notifications with links</li>
+            <li>Badge counters for unread notifications</li>
+            <li>Toast notifications for immediate visibility</li>
+            <li>Embeddable client for third-party applications</li>
+          </ul>
+          <p>This demo simulates the client-side functionality of the notification system.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+  
+  <script>
+    // Notification System Implementation
+    (function() {
+      // Store notifications
+      let notifications = [];
+      let notificationCount = 0;
+      
+      // DOM Elements
+      const notificationBell = document.getElementById('notification-bell');
+      const notificationBadge = document.getElementById('notification-badge');
+      const notificationDropdown = document.getElementById('notification-dropdown');
+      const notificationList = document.getElementById('notification-list');
+      const clearNotificationsBtn = document.getElementById('clear-notifications');
+      const toastContainer = document.getElementById('toast-container');
+      const logContainer = document.getElementById('log-container');
+      
+      // UI Elements
+      const sendBtn = document.getElementById('send-btn');
+      const demoBtn = document.getElementById('demo-btn');
+      const clearLogBtn = document.getElementById('clear-log');
+      
+      // Initialize
+      function init() {
+        // Event Listeners
+        notificationBell.addEventListener('click', toggleNotificationDropdown);
+        clearNotificationsBtn.addEventListener('click', clearNotifications);
+        sendBtn.addEventListener('click', createNotification);
+        demoBtn.addEventListener('click', runDemoSequence);
+        clearLogBtn.addEventListener('click', clearLog);
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!notificationBell.contains(event.target)) {
+            notificationDropdown.classList.remove('show');
+          }
+        });
+        
+        log('Notification system initialized');
+      }
+      
+      // Toggle notification dropdown
+      function toggleNotificationDropdown(event) {
+        event.stopPropagation();
+        notificationDropdown.classList.toggle('show');
+      }
+      
+      // Clear all notifications
+      function clearNotifications() {
+        notifications = [];
+        notificationCount = 0;
+        updateNotificationUI();
+        log('Notifications cleared');
+      }
+      
+      // Update notification UI
+      function updateNotificationUI() {
+        // Update badge
+        notificationBadge.textContent = notificationCount;
+        if (notificationCount > 0) {
+          notificationBadge.classList.add('show');
+        } else {
+          notificationBadge.classList.remove('show');
+        }
+        
+        // Update notification list
+        if (notifications.length === 0) {
+          notificationList.innerHTML = '<div class="notification-empty">No notifications</div>';
+        } else {
+          notificationList.innerHTML = '';
+          
+          // Sort notifications by timestamp (newest first)
+          const sortedNotifications = [...notifications].sort((a, b) => {
+            return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+          });
+          
+          sortedNotifications.forEach(notification => {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'notification-item';
+            if (!notification.read) {
+              notificationItem.classList.add('unread');
+            }
+            
+            // Make notification actionable if it has a link
+            if (notification.actionable && notification.link) {
+              notificationItem.style.cursor = 'pointer';
+              notificationItem.addEventListener('click', () => {
+                log(`Notification action clicked: ${notification.title} (${notification.link})`);
+                markNotificationAsRead(notification.id);
+                // In a real app, this would navigate to the link
+                alert(`In a real app, this would navigate to: ${notification.link}`);
+              });
+            }
+            
+            const header = document.createElement('div');
+            header.className = 'notification-item-header';
+            
+            const title = document.createElement('div');
+            title.className = 'notification-item-title';
+            title.textContent = notification.title;
+            
+            const time = document.createElement('div');
+            time.className = 'notification-item-time';
+            time.textContent = formatTimestamp(notification.timestamp);
+            
+            header.appendChild(title);
+            header.appendChild(time);
+            
+            const content = document.createElement('div');
+            content.className = 'notification-item-content';
+            content.textContent = notification.description;
+            
+            const source = document.createElement('div');
+            source.className = 'notification-item-source';
+            source.textContent = notification.source;
+            
+            notificationItem.appendChild(header);
+            notificationItem.appendChild(content);
+            notificationItem.appendChild(source);
+            
+            notificationList.appendChild(notificationItem);
+          });
+        }
+      }
+      
+      // Format timestamp
+      function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        
+        const diffMs = now.getTime() - date.getTime();
+        const diffMins = Math.round(diffMs / 60000);
+        
+        if (diffMins < 1) {
+          return 'Just now';
+        } else if (diffMins < 60) {
+          return `${diffMins}m ago`;
+        } else if (diffMins < 1440) {
+          return `${Math.round(diffMins / 60)}h ago`;
+        } else {
+          return date.toLocaleDateString();
+        }
+      }
+      
+      // Create a notification from form
+      function createNotification() {
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const type = document.getElementById('type').value;
+        const source = document.getElementById('source').value;
+        const actionable = document.getElementById('actionable').checked;
+        const link = document.getElementById('link').value;
+        const showAsToast = document.getElementById('toast').checked;
+        
+        if (!title || !description) {
+          alert('Title and description are required');
+          return;
+        }
+        
+        const notification = {
+          id: Date.now().toString(),
+          title,
+          description,
+          type,
+          source,
+          actionable,
+          link: actionable ? link : '',
+          timestamp: new Date().toISOString(),
+          read: false
+        };
+        
+        addNotification(notification);
+        
+        if (showAsToast) {
+          showToast(notification);
+        }
+        
+        log(`Created ${type} notification: ${title}`);
+      }
+      
+      // Add a notification to the system
+      function addNotification(notification) {
+        notifications.push(notification);
+        notificationCount++;
+        updateNotificationUI();
+      }
+      
+      // Mark a notification as read
+      function markNotificationAsRead(id) {
+        const notification = notifications.find(n => n.id === id);
+        if (notification && !notification.read) {
+          notification.read = true;
+          notificationCount = Math.max(0, notificationCount - 1);
+          updateNotificationUI();
+        }
+      }
+      
+      // Show a toast notification
+      function showToast(notification) {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${notification.type}`;
+        
+        let iconSymbol = '';
+        switch (notification.type) {
+          case 'success':
+            iconSymbol = '✓';
+            break;
+          case 'warning':
+            iconSymbol = '⚠';
+            break;
+          case 'error':
+            iconSymbol = '✕';
+            break;
+          default: // info
+            iconSymbol = 'ℹ';
+        }
+        
+        toast.innerHTML = `
+          <div class="toast-icon">${iconSymbol}</div>
+          <div class="toast-content">
+            <div class="toast-title">${notification.title}</div>
+            <div class="toast-message">${notification.description}</div>
+          </div>
+          <button class="toast-close">×</button>
+        `;
+        
+        // Add to container
+        toastContainer.appendChild(toast);
+        
+        // Add event listener to close button
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => {
+          removeToast(toast);
+        });
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          removeToast(toast);
+        }, 5000);
+        
+        // Make toast actionable if it has a link
+        if (notification.actionable && notification.link) {
+          toast.style.cursor = 'pointer';
+          toast.addEventListener('click', (event) => {
+            if (event.target !== closeBtn) {
+              log(`Toast action clicked: ${notification.title} (${notification.link})`);
+              // In a real app, this would navigate to the link
+              alert(`In a real app, this would navigate to: ${notification.link}`);
+            }
+          });
+        }
+      }
+      
+      // Remove a toast
+      function removeToast(toast) {
+        toast.classList.add('removing');
+        setTimeout(() => {
+          toastContainer.removeChild(toast);
+        }, 300);
+      }
+      
+      // Log a message to the console
+      function log(message) {
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        
+        const time = new Date().toLocaleTimeString();
+        logEntry.innerHTML = `<span class="log-time">[${time}]</span> ${message}`;
+        
+        logContainer.appendChild(logEntry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+      }
+      
+      // Clear the log
+      function clearLog() {
+        logContainer.innerHTML = '';
+      }
+      
+      // Run a demo sequence of notifications
+      function runDemoSequence() {
+        log('Starting demo sequence...');
+        
+        // Info notification
+        setTimeout(() => {
+          const notification = {
+            id: Date.now().toString(),
+            title: 'System Update',
+            description: 'Jay\'s Frames system is scheduled for maintenance tonight at 11 PM EST.',
+            type: 'info',
+            source: 'system',
+            actionable: false,
+            link: '',
+            timestamp: new Date().toISOString(),
+            read: false
+          };
+          
+          addNotification(notification);
+          showToast(notification);
+          log('Demo: Info notification added');
+        }, 1000);
+        
+        // Success notification
+        setTimeout(() => {
+          const notification = {
+            id: Date.now().toString(),
+            title: 'Order #12345 Completed',
+            description: 'Custom 16x20 frame with acid-free matting has been completed and is ready for pickup.',
+            type: 'success',
+            source: 'production',
+            actionable: true,
+            link: '/orders/12345',
+            timestamp: new Date().toISOString(),
+            read: false
+          };
+          
+          addNotification(notification);
+          showToast(notification);
+          log('Demo: Success notification added');
+        }, 3000);
+        
+        // Warning notification
+        setTimeout(() => {
+          const notification = {
+            id: Date.now().toString(),
+            title: 'Low Inventory Alert',
+            description: 'Only 5 units of 8x10 black frames remain in stock. Please reorder soon.',
+            type: 'warning',
+            source: 'inventory',
+            actionable: true,
+            link: '/inventory/reorder',
+            timestamp: new Date().toISOString(),
+            read: false
+          };
+          
+          addNotification(notification);
+          showToast(notification);
+          log('Demo: Warning notification added');
+        }, 5000);
+        
+        // Error notification
+        setTimeout(() => {
+          const notification = {
+            id: Date.now().toString(),
+            title: 'Payment Processing Error',
+            description: 'Unable to process payment for order #54321. Please contact customer to resolve payment issue.',
+            type: 'error',
+            source: 'payment-system',
+            actionable: true,
+            link: '/orders/54321/payment',
+            timestamp: new Date().toISOString(),
+            read: false
+          };
+          
+          addNotification(notification);
+          showToast(notification);
+          log('Demo: Error notification added');
+        }, 7000);
+        
+        log('Demo sequence scheduled');
+      }
+      
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', init);
+      
+      // For immediate initialization if DOM is already loaded
+      if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
