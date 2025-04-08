@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jay's Frames Notification System Demo</title>
+  <style>
+    :root {
+      --primary: #1a365d;
+      --primary-light: #2c5282;
+      --primary-dark: #143055;
+      --success: #38a169;
+      --warning: #d69e2e;
+      --error: #e53e3e;
+      --info: #3182ce;
+      --background: #f7fafc;
+      --text: #1a202c;
+      --text-light: #4a5568;
+      --border: #e2e8f0;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+    
+    nav a {
+      text-decoration: none;
+      color: var(--primary-light);
+    }
+    
+    nav a:hover {
+      text-decoration: underline;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    h1, h2, h3 {
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    
+    p {
+      margin-bottom: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 16px;
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background: var(--primary-light);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .secondary-button {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .secondary-button:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Notification System Styles */
+    .notification-bell {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      padding: 8px;
+    }
+    
+    .notification-icon {
+      width: 24px;
+      height: 24px;
+      fill: var(--primary);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--error);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+    }
+    
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 320px;
+      max-height: 400px;
+      overflow-y: auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      display: none;
+    }
+    
+    .notification-dropdown.show {
+      display: block;
+    }
+    
+    .notification-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .notification-title {
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    .notification-clear {
+      font-size: 12px;
+      color: var(--text-light);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 4px 8px;
+    }
+    
+    .notification-clear:hover {
+      text-decoration: underline;
+      background: transparent;
+    }
+    
+    .notification-list {
+      padding: 8px 0;
+    }
+    
+    .notification-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+    
+    .notification-item:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .notification-item.unread {
+      background-color: rgba(49, 130, 206, 0.1);
+    }
+    
+    .notification-item.info {
+      border-left: 3px solid var(--info);
+    }
+    
+    .notification-item.success {
+      border-left: 3px solid var(--success);
+    }
+    
+    .notification-item.warning {
+      border-left: 3px solid var(--warning);
+    }
+    
+    .notification-item.error {
+      border-left: 3px solid var(--error);
+    }
+    
+    .notification-item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    
+    .notification-item-title {
+      font-weight: bold;
+      color: var(--text);
+    }
+    
+    .notification-item-time {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    
+    .notification-item-content {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .notification-item-source {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    
+    .notification-empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--text-light);
+    }
+    
+    .notification-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .notification-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .notification-footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .notification-badge {
+      display: none;
+    }
+    
+    .notification-badge.show {
+      display: flex;
+    }
+    
+    /* Toast notification styles */
+    .toast-container {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 9999;
+    }
+    
+    .toast {
+      margin-top: 8px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: flex-start;
+      max-width: 320px;
+      animation: slideIn 0.3s ease-out forwards;
+    }
+    
+    .toast.removing {
+      animation: slideOut 0.3s ease-out forwards;
+    }
+    
+    .toast-icon {
+      margin-right: 12px;
+      font-size: 20px;
+    }
+    
+    .toast-content {
+      flex: 1;
+    }
+    
+    .toast-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    
+    .toast-message {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+    
+    .toast-close {
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0 4px;
+      margin-left: 8px;
+    }
+    
+    .toast-success {
+      border-left: 4px solid var(--success);
+    }
+    
+    .toast-success .toast-icon {
+      color: var(--success);
+    }
+    
+    .toast-warning {
+      border-left: 4px solid var(--warning);
+    }
+    
+    .toast-warning .toast-icon {
+      color: var(--warning);
+    }
+    
+    .toast-error {
+      border-left: 4px solid var(--error);
+    }
+    
+    .toast-error .toast-icon {
+      color: var(--error);
+    }
+    
+    .toast-info {
+      border-left: 4px solid var(--info);
+    }
+    
+    .toast-info .toast-icon {
+      color: var(--info);
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    
+    .log-container {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .log-time {
+      color: #666;
+      font-size: 12px;
+    }
+    
+    /* Make the page responsive */
+    @media (max-width: 768px) {
+      .notification-dropdown {
+        width: 280px;
+      }
+      
+      .card {
+        padding: 16px;
+      }
+      
+      h1 {
+        font-size: 22px;
+      }
+      
+      h2 {
+        font-size: 18px;
+      }
+    }
+    
+    /* Column layout */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+    }
+    
+    .col {
+      flex: 1;
+      padding: 0 10px;
+      min-width: 300px;
+    }
+    
+    /* Checkboxes */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    /* Tab styles */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Code highlight styles */
+    .code-block {
+      font-family: monospace;
+      background: #f5f5f5;
+      padding: 16px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+
+    /* Copy button */
+    .copy-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    .code-container {
+      position: relative;
+    }
+
+    /* Status indicator */
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .status-connected {
+      background-color: var(--success);
+    }
+
+    .status-disconnected {
+      background-color: var(--error);
+    }
+
+    .status-connecting {
+      background-color: var(--warning);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    .mb-2 {
+      margin-bottom: 8px;
+    }
+
+    /* Example section */
+    .example-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .example-button {
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">Jay's Frames</div>
+      <div style="display: flex; align-items: center;">
+        <nav>
+          <a href="#">Home</a>
+          <a href="#">Products</a>
+          <a href="#">Custom Framing</a>
+          <a href="#">Contact</a>
+        </nav>
+        
+        <!-- Notification Bell -->
+        <div class="notification-bell" id="notification-bell">
+          <svg class="notification-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z" />
+          </svg>
+          <span class="notification-badge" id="notification-badge">0</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notification-dropdown">
+            <div class="notification-header">
+              <span class="notification-title">Notifications</span>
+              <button class="notification-clear" id="clear-notifications">Clear All</button>
+            </div>
+            <div class="notification-list" id="notification-list">
+              <div class="notification-empty">No notifications</div>
+            </div>
+            <div class="notification-footer">
+              <a href="#">View all notifications</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <div class="card">
+      <h1>Jay's Frames Unified Notification System</h1>
+      <p>This demo showcases the notification system that allows real-time notifications across all Jay's Frames applications. The system includes both client and server components, with a WebSocket-based communication layer for real-time updates.</p>
+      
+      <div class="tabs">
+        <div class="tab active" data-tab="demo">Demo</div>
+        <div class="tab" data-tab="implementation">Implementation Guide</div>
+        <div class="tab" data-tab="api">API Reference</div>
+      </div>
+      
+      <div class="tab-content active" data-tab-content="demo">
+        <div class="row">
+          <div class="col">
+            <div class="card">
+              <h2>Create Notification</h2>
+              <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" value="New Order Received">
+              </div>
+              
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description">A new custom frame order has been placed for 8x10 standard frame.</textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="type">Type</label>
+                <select id="type">
+                  <option value="info">Info</option>
+                  <option value="success" selected>Success</option>
+                  <option value="warning">Warning</option>
+                  <option value="error">Error</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="source">Source</label>
+                <input type="text" id="source" value="orders-app">
+              </div>
+              
+              <div class="checkbox-group">
+                <input type="checkbox" id="actionable">
+                <label for="actionable">Actionable</label>
+              </div>
+              
+              <div class="form-group">
+                <label for="link">Action Link (if actionable)</label>
+                <input type="text" id="link" placeholder="https://example.com/action" value="/orders/123456">
+              </div>
+              
+              <div class="checkbox-group">
+                <input type="checkbox" id="toast" checked>
+                <label for="toast">Show as Toast</label>
+              </div>
+              
+              <div class="button-group">
+                <button id="send-btn">Create Notification</button>
+                <button id="demo-btn" class="secondary-button">Run Demo Sequence</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Example Notifications</h2>
+              <p>Click on any of these examples to create common notification types:</p>
+              
+              <div class="example-section">
+                <h3>Order Notifications</h3>
+                <button class="example-button" data-example="new-order">New Order</button>
+                <button class="example-button" data-example="order-shipped">Order Shipped</button>
+                <button class="example-button" data-example="order-delayed">Order Delayed</button>
+                <button class="example-button" data-example="payment-failed">Payment Failed</button>
+              </div>
+              
+              <div class="example-section">
+                <h3>Inventory Notifications</h3>
+                <button class="example-button" data-example="low-stock">Low Stock</button>
+                <button class="example-button" data-example="restock">Restock Complete</button>
+              </div>
+              
+              <div class="example-section">
+                <h3>Customer Service</h3>
+                <button class="example-button" data-example="support-request">Support Request</button>
+                <button class="example-button" data-example="customer-review">New Review</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="card">
+              <h2>Connection Status</h2>
+              <p class="mb-2">
+                <span class="status-indicator status-disconnected" id="connection-status"></span>
+                <span id="connection-text">Disconnected</span>
+              </p>
+              <button id="connect-btn">Connect</button>
+              <button id="disconnect-btn" class="secondary-button" style="display: none;">Disconnect</button>
+            </div>
+            
+            <div class="card">
+              <h2>System Log</h2>
+              <div class="log-container" id="log-container"></div>
+              <button id="clear-log" class="secondary-button" style="margin-top: 10px;">Clear Log</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tab-content" data-tab-content="implementation">
+        <h2>Implementation Guide</h2>
+        <p>Follow these steps to integrate the notification system into your Jay's Frames application:</p>
+        
+        <h3>Step 1: Include the Client Script</h3>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>&lt;script src="path/to/jf-notification-client.js"&gt;&lt;/script&gt;</code></pre>
+          </div>
+          <button class="copy-button" data-copy="<script src='path/to/jf-notification-client.js'></script>">Copy</button>
+        </div>
+        
+        <h3>Step 2: Initialize the Client</h3>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>&lt;script&gt;
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the notification system
+    window.jfNotifications.init('your-app-id', {
+      onConnect: function() {
+        console.log('Connected to notification system');
+      },
+      onDisconnect: function() {
+        console.log('Disconnected from notification system');
+      }
+    });
+    
+    // Register notification handler
+    window.jfNotifications.onNotification(function(notification) {
+      console.log('Received notification:', notification);
+      // Handle notification here
+    });
+  });
+&lt;/script&gt;</code></pre>
+          </div>
+          <button class="copy-button" data-copy="<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the notification system
+    window.jfNotifications.init('your-app-id', {
+      onConnect: function() {
+        console.log('Connected to notification system');
+      },
+      onDisconnect: function() {
+        console.log('Disconnected from notification system');
+      }
+    });
+    
+    // Register notification handler
+    window.jfNotifications.onNotification(function(notification) {
+      console.log('Received notification:', notification);
+      // Handle notification here
+    });
+  });
+</script>">Copy</button>
+        </div>
+        
+        <h3>Step 3: Send a Notification</h3>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>// Send a notification
+window.jfNotifications.sendNotification(
+  'New Order Received',             // Title
+  'Customer ordered a custom frame', // Description
+  'success',                        // Type: info, success, warning, error
+  {
+    sourceId: 'ORDER-123',          // Optional: ID from source system
+    actionable: true,               // Optional: Is this actionable?
+    link: '/orders/123'             // Optional: Link for actionable notifications
+  }
+);</code></pre>
+          </div>
+          <button class="copy-button" data-copy="// Send a notification
+window.jfNotifications.sendNotification(
+  'New Order Received',             // Title
+  'Customer ordered a custom frame', // Description
+  'success',                        // Type: info, success, warning, error
+  {
+    sourceId: 'ORDER-123',          // Optional: ID from source system
+    actionable: true,               // Optional: Is this actionable?
+    link: '/orders/123'             // Optional: Link for actionable notifications
+  }
+);">Copy</button>
+        </div>
+        
+        <h3>Step 4: Listen for Notifications</h3>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>// Method 1: Using the onNotification handler
+const unsubscribe = window.jfNotifications.onNotification(function(notification) {
+  console.log('Received:', notification);
+  // Do something with the notification
+});
+
+// Method 2: Using event listeners
+window.addEventListener('jf-notification', function(event) {
+  const notification = event.detail;
+  console.log('Event received:', notification);
+  // Do something with the notification
+});</code></pre>
+          </div>
+          <button class="copy-button" data-copy="// Method 1: Using the onNotification handler
+const unsubscribe = window.jfNotifications.onNotification(function(notification) {
+  console.log('Received:', notification);
+  // Do something with the notification
+});
+
+// Method 2: Using event listeners
+window.addEventListener('jf-notification', function(event) {
+  const notification = event.detail;
+  console.log('Event received:', notification);
+  // Do something with the notification
+});">Copy</button>
+        </div>
+      </div>
+      
+      <div class="tab-content" data-tab-content="api">
+        <h2>API Reference</h2>
+        
+        <h3>Client API</h3>
+        <p>The notification client provides the following methods:</p>
+        
+        <h4>init(appId, options)</h4>
+        <p>Initializes the notification system with the specified application ID.</p>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>jfNotifications.init('your-app-id', {
+  // Options
+  dashboardUrl: 'https://jaysframes.com', // Optional: Dashboard URL (default: current domain)
+  onConnect: function() {}, // Optional: Callback when connected
+  onDisconnect: function() {}, // Optional: Callback when disconnected
+  fallbackMode: true, // Optional: Use fallback mode if WebSocket fails
+  onFallback: function() {} // Optional: Callback when switched to fallback mode
+});</code></pre>
+          </div>
+        </div>
+        
+        <h4>sendNotification(title, description, type, options)</h4>
+        <p>Sends a notification to the unified system.</p>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>jfNotifications.sendNotification(
+  'Notification Title',
+  'Notification Description',
+  'info', // 'info', 'success', 'warning', 'error'
+  {
+    sourceId: 'ID-123', // Optional: Source-specific ID
+    actionable: true, // Optional: Is this notification actionable?
+    link: '/path/to/action', // Optional: Link for actionable notifications
+    smsEnabled: false, // Optional: Enable SMS notification
+    smsRecipient: '+1234567890' // Optional: SMS recipient number
+  }
+);</code></pre>
+          </div>
+        </div>
+        
+        <h4>onNotification(handler)</h4>
+        <p>Registers a handler function that will be called when a new notification is received.</p>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>const unsubscribe = jfNotifications.onNotification(function(notification) {
+  console.log('Received notification:', notification);
+  // Handle notification
+});
+
+// To unsubscribe
+unsubscribe();</code></pre>
+          </div>
+        </div>
+        
+        <h3>Server API</h3>
+        <p>The server-side API provides endpoints for sending and receiving notifications:</p>
+        
+        <h4>POST /api/notifications</h4>
+        <p>Creates a new notification and broadcasts it to all connected clients.</p>
+        <div class="code-container">
+          <div class="code-block">
+            <pre><code>// Request
+{
+  "title": "Notification Title",
+  "description": "Notification Description",
+  "source": "app-name", // Source application
+  "sourceId": "ID-123", // Optional: Source-specific ID
+  "type": "info", // "info", "success", "warning", "error"
+  "actionable": true, // Optional: Is this notification actionable?
+  "link": "/path/to/action", // Optional: Link for actionable notifications
+  "smsEnabled": false, // Optional: Enable SMS notification
+  "smsRecipient": "+1234567890" // Optional: SMS recipient number
+}
+
+// Response
+{
+  "success": true,
+  "notification": {
+    "id": "1681234567890",
+    "title": "Notification Title",
+    "description": "Notification Description",
+    "source": "app-name",
+    "sourceId": "ID-123",
+    "type": "info",
+    "timestamp": "2023-04-11T12:34:56.789Z",
+    "actionable": true,
+    "link": "/path/to/action",
+    "smsEnabled": false,
+    "smsRecipient": "+1234567890"
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+  
+  <!-- Include the notification client script -->
+  <script src="jf-notification-client.js"></script>
+  
+  <script>
+    // Notification System Demo Implementation
+    (function() {
+      // Store notifications
+      let notifications = [];
+      let notificationCount = 0;
+      let connected = false;
+      
+      // DOM Elements
+      const notificationBell = document.getElementById('notification-bell');
+      const notificationBadge = document.getElementById('notification-badge');
+      const notificationDropdown = document.getElementById('notification-dropdown');
+      const notificationList = document.getElementById('notification-list');
+      const clearNotificationsBtn = document.getElementById('clear-notifications');
+      const toastContainer = document.getElementById('toast-container');
+      const logContainer = document.getElementById('log-container');
+      const connectionStatus = document.getElementById('connection-status');
+      const connectionText = document.getElementById('connection-text');
+      const connectBtn = document.getElementById('connect-btn');
+      const disconnectBtn = document.getElementById('disconnect-btn');
+      
+      // UI Elements
+      const sendBtn = document.getElementById('send-btn');
+      const demoBtn = document.getElementById('demo-btn');
+      const clearLogBtn = document.getElementById('clear-log');
+      const exampleButtons = document.querySelectorAll('.example-button');
+      
+      // Tab Elements
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const copyButtons = document.querySelectorAll('.copy-button');
+      
+      // Initialize
+      function init() {
+        // Event Listeners
+        notificationBell.addEventListener('click', toggleNotificationDropdown);
+        clearNotificationsBtn.addEventListener('click', clearNotifications);
+        sendBtn.addEventListener('click', createNotification);
+        demoBtn.addEventListener('click', runDemoSequence);
+        clearLogBtn.addEventListener('click', clearLog);
+        connectBtn.addEventListener('click', connect);
+        disconnectBtn.addEventListener('click', disconnect);
+        
+        // Example notification buttons
+        exampleButtons.forEach(button => {
+          button.addEventListener('click', () => createExampleNotification(button.dataset.example));
+        });
+        
+        // Tab navigation
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            const tabId = tab.dataset.tab;
+            // Set active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            // Show active content
+            tabContents.forEach(content => {
+              content.classList.remove('active');
+              if (content.dataset.tabContent === tabId) {
+                content.classList.add('active');
+              }
+            });
+          });
+        });
+        
+        // Copy buttons
+        copyButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const text = button.dataset.copy;
+            navigator.clipboard.writeText(text).then(() => {
+              const originalText = button.textContent;
+              button.textContent = 'Copied!';
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 2000);
+            });
+          });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!notificationBell.contains(event.target)) {
+            notificationDropdown.classList.remove('show');
+          }
+        });
+        
+        log('Notification system demo initialized');
+      }
+      
+      // Connect to notification system
+      function connect() {
+        updateConnectionStatus('connecting');
+        log('Connecting to notification system...');
+        
+        // Initialize notification client in demo mode
+        window.jfNotifications.init('jaysframes-demo', {
+          demoMode: true, // Use demo mode
+          fallbackMode: true, // Use fallback mode if WebSocket fails
+          onConnect: function() {
+            updateConnectionStatus('connected');
+            log('Connected to notification system');
+            // Add some initial notifications
+            // loadDemoNotifications();
+          },
+          onDisconnect: function() {
+            updateConnectionStatus('disconnected');
+            log('Disconnected from notification system');
+          },
+          onFallback: function() {
+            log('Switched to fallback mode (API only)');
+            updateConnectionStatus('connected');
+          }
+        });
+        
+        // Register notification handler
+        window.jfNotifications.onNotification(function(notification) {
+          log(`Received notification: "${notification.title}"`);
+          addNotification(notification);
+        });
+        
+        connectBtn.style.display = 'none';
+        disconnectBtn.style.display = 'inline-block';
+      }
+      
+      // Disconnect from notification system
+      function disconnect() {
+        updateConnectionStatus('disconnected');
+        log('Disconnected from notification system');
+        connected = false;
+        
+        connectBtn.style.display = 'inline-block';
+        disconnectBtn.style.display = 'none';
+      }
+      
+      // Update connection status indicator
+      function updateConnectionStatus(status) {
+        connectionStatus.className = 'status-indicator';
+        
+        switch (status) {
+          case 'connected':
+            connectionStatus.classList.add('status-connected');
+            connectionText.textContent = 'Connected';
+            connected = true;
+            break;
+          case 'disconnected':
+            connectionStatus.classList.add('status-disconnected');
+            connectionText.textContent = 'Disconnected';
+            connected = false;
+            break;
+          case 'connecting':
+            connectionStatus.classList.add('status-connecting');
+            connectionText.textContent = 'Connecting...';
+            connected = false;
+            break;
+        }
+      }
+      
+      // Toggle notification dropdown
+      function toggleNotificationDropdown(event) {
+        event.stopPropagation();
+        notificationDropdown.classList.toggle('show');
+        
+        // Reset badge count when dropdown is opened
+        if (notificationDropdown.classList.contains('show')) {
+          notificationCount = 0;
+          updateNotificationBadge();
+        }
+      }
+      
+      // Create a notification from form inputs
+      function createNotification() {
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const type = document.getElementById('type').value;
+        const source = document.getElementById('source').value;
+        const actionable = document.getElementById('actionable').checked;
+        const link = document.getElementById('link').value;
+        const showToast = document.getElementById('toast').checked;
+        
+        if (!title || !description) {
+          alert('Title and description are required');
+          return;
+        }
+        
+        log(`Creating notification: "${title}" (${type})`);
+        
+        // Create notification
+        if (connected) {
+          // Using the notification system
+          window.jfNotifications.sendNotification(title, description, type, {
+            source: source,
+            actionable: actionable,
+            link: link,
+            demoMode: true // Pass demo mode flag
+          }).then(notification => {
+            if (notification) {
+              log(`Notification created with ID: ${notification.id}`);
+              // Add to list immediately for better UX in demo
+              addNotification(notification);
+              
+              // Show toast if checked
+              if (showToast) {
+                showToastNotification(notification);
+              }
+            } else {
+              log('Failed to create notification');
+            }
+          });
+        } else {
+          // Direct creation for demo purposes
+          const notification = {
+            id: Date.now().toString(),
+            title: title,
+            description: description,
+            source: source,
+            sourceId: '',
+            type: type,
+            timestamp: new Date().toISOString(),
+            actionable: actionable,
+            link: link
+          };
+          
+          log('Notification created locally (demo mode)');
+          addNotification(notification);
+          
+          // Show toast if checked
+          if (showToast) {
+            showToastNotification(notification);
+          }
+        }
+      }
+      
+      // Create example notification based on preset
+      function createExampleNotification(example) {
+        let notification;
+        
+        switch (example) {
+          case 'new-order':
+            notification = {
+              title: 'New Order Received',
+              description: 'A new custom frame order has been placed for 8x10 standard frame.',
+              type: 'success',
+              source: 'orders-app',
+              actionable: true,
+              link: '/orders/12345'
+            };
+            break;
+          case 'order-shipped':
+            notification = {
+              title: 'Order Shipped',
+              description: 'Order #54321 has been shipped via UPS. Tracking: 1Z999AA10123456784',
+              type: 'success',
+              source: 'shipping-app',
+              actionable: true,
+              link: '/orders/54321/tracking'
+            };
+            break;
+          case 'order-delayed':
+            notification = {
+              title: 'Order Delayed',
+              description: 'Order #33456 has been delayed due to material shortage. New ETA: 5/15/2023',
+              type: 'warning',
+              source: 'production-app',
+              actionable: true,
+              link: '/orders/33456'
+            };
+            break;
+          case 'payment-failed':
+            notification = {
+              title: 'Payment Processing Failed',
+              description: 'Unable to process payment for Order #78901. Please contact customer.',
+              type: 'error',
+              source: 'payment-app',
+              actionable: true,
+              link: '/payments/failed/78901'
+            };
+            break;
+          case 'low-stock':
+            notification = {
+              title: 'Low Inventory Alert',
+              description: 'Black metal frame (16x20) is running low. Current stock: 5 units',
+              type: 'warning',
+              source: 'inventory-app',
+              actionable: true,
+              link: '/inventory/restock'
+            };
+            break;
+          case 'restock':
+            notification = {
+              title: 'Restock Complete',
+              description: 'Inventory restock complete. 50 items added to inventory.',
+              type: 'info',
+              source: 'inventory-app',
+              actionable: false
+            };
+            break;
+          case 'support-request':
+            notification = {
+              title: 'Customer Support Request',
+              description: 'John Smith has a question about order #33456',
+              type: 'info',
+              source: 'support-app',
+              actionable: true,
+              link: '/support/tickets/2345'
+            };
+            break;
+          case 'customer-review':
+            notification = {
+              title: 'New Customer Review',
+              description: 'A customer left a 5-star review for custom framing service.',
+              type: 'success',
+              source: 'reviews-app',
+              actionable: true,
+              link: '/reviews/latest'
+            };
+            break;
+          default:
+            return;
+        }
+        
+        log(`Creating example notification: "${notification.title}"`);
+        
+        if (connected) {
+          // Using the notification system
+          window.jfNotifications.sendNotification(
+            notification.title, 
+            notification.description, 
+            notification.type, 
+            {
+              source: notification.source,
+              actionable: notification.actionable,
+              link: notification.link,
+              demoMode: true // Pass demo mode flag
+            }
+          ).then(result => {
+            if (result) {
+              log(`Example notification created with ID: ${result.id}`);
+              // Show toast for example notifications
+              showToastNotification(result);
+            } else {
+              log('Failed to create example notification');
+            }
+          });
+        } else {
+          // Direct creation for demo purposes
+          const newNotification = {
+            id: Date.now().toString(),
+            title: notification.title,
+            description: notification.description,
+            source: notification.source,
+            sourceId: '',
+            type: notification.type,
+            timestamp: new Date().toISOString(),
+            actionable: notification.actionable,
+            link: notification.link
+          };
+          
+          log('Example notification created locally (demo mode)');
+          addNotification(newNotification);
+          showToastNotification(newNotification);
+        }
+      }
+      
+      // Add notification to the notification list
+      function addNotification(notification) {
+        notifications.unshift(notification);
+        notificationCount++;
+        updateNotificationBadge();
+        renderNotifications();
+      }
+      
+      // Update notification badge count
+      function updateNotificationBadge() {
+        if (notificationCount > 0) {
+          notificationBadge.textContent = notificationCount > 9 ? '9+' : notificationCount;
+          notificationBadge.classList.add('show');
+        } else {
+          notificationBadge.classList.remove('show');
+        }
+      }
+      
+      // Render notification list
+      function renderNotifications() {
+        if (notifications.length === 0) {
+          notificationList.innerHTML = '<div class="notification-empty">No notifications</div>';
+          return;
+        }
+        
+        notificationList.innerHTML = '';
+        
+        notifications.forEach(notification => {
+          const item = document.createElement('div');
+          item.className = `notification-item ${notification.type}`;
+          
+          const itemHeader = document.createElement('div');
+          itemHeader.className = 'notification-item-header';
+          
+          const itemTitle = document.createElement('div');
+          itemTitle.className = 'notification-item-title';
+          itemTitle.textContent = notification.title;
+          
+          const itemTime = document.createElement('div');
+          itemTime.className = 'notification-item-time';
+          itemTime.textContent = formatTimestamp(notification.timestamp);
+          
+          itemHeader.appendChild(itemTitle);
+          itemHeader.appendChild(itemTime);
+          
+          const itemContent = document.createElement('div');
+          itemContent.className = 'notification-item-content';
+          itemContent.textContent = notification.description;
+          
+          const itemSource = document.createElement('div');
+          itemSource.className = 'notification-item-source';
+          itemSource.textContent = notification.source;
+          
+          item.appendChild(itemHeader);
+          item.appendChild(itemContent);
+          item.appendChild(itemSource);
+          
+          // Add click handler for actionable notifications
+          if (notification.actionable && notification.link) {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', function() {
+              log(`Clicked on notification: "${notification.title}"`);
+              if (notification.link.startsWith('http')) {
+                window.open(notification.link, '_blank');
+              } else {
+                alert(`Would navigate to: ${notification.link}`);
+              }
+            });
+          }
+          
+          notificationList.appendChild(item);
+        });
+      }
+      
+      // Clear all notifications
+      function clearNotifications() {
+        notifications = [];
+        notificationCount = 0;
+        updateNotificationBadge();
+        renderNotifications();
+        log('Cleared all notifications');
+      }
+      
+      // Run demo sequence of notifications
+      function runDemoSequence() {
+        log('Starting demo notification sequence...');
+        
+        const demoSequence = [
+          {
+            title: 'New Order Received',
+            description: 'A new custom frame order has been placed for 8x10 standard frame.',
+            type: 'success',
+            source: 'orders-app',
+            actionable: true,
+            link: '/orders/12345',
+            delay: 0
+          },
+          {
+            title: 'Low Inventory Alert',
+            description: 'Black metal frame (16x20) is running low. Current stock: 5 units',
+            type: 'warning',
+            source: 'inventory-app',
+            actionable: true,
+            link: '/inventory/restock',
+            delay: 2000
+          },
+          {
+            title: 'Customer Support Request',
+            description: 'John Smith has a question about order #33456',
+            type: 'info',
+            source: 'support-app',
+            actionable: true,
+            link: '/support/tickets/2345',
+            delay: 4000
+          },
+          {
+            title: 'Payment Processing Failed',
+            description: 'Unable to process payment for Order #78901. Please contact customer.',
+            type: 'error',
+            source: 'payment-app',
+            actionable: true,
+            link: '/payments/failed/78901',
+            delay: 6000
+          }
+        ];
+        
+        demoSequence.forEach((item, index) => {
+          setTimeout(() => {
+            if (connected) {
+              window.jfNotifications.sendNotification(
+                item.title, 
+                item.description, 
+                item.type, 
+                {
+                  source: item.source,
+                  actionable: item.actionable,
+                  link: item.link,
+                  demoMode: true
+                }
+              ).then(notification => {
+                if (notification) {
+                  showToastNotification(notification);
+                }
+              });
+            } else {
+              const notification = {
+                id: Date.now().toString() + index,
+                title: item.title,
+                description: item.description,
+                source: item.source,
+                sourceId: '',
+                type: item.type,
+                timestamp: new Date().toISOString(),
+                actionable: item.actionable,
+                link: item.link
+              };
+              
+              addNotification(notification);
+              showToastNotification(notification);
+            }
+          }, item.delay);
+        });
+      }
+      
+      // Show toast notification
+      function showToastNotification(notification) {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${notification.type}`;
+        
+        let iconChar = '';
+        switch (notification.type) {
+          case 'success':
+            iconChar = '✓';
+            break;
+          case 'warning':
+            iconChar = '⚠';
+            break;
+          case 'error':
+            iconChar = '✗';
+            break;
+          default:
+            iconChar = 'ℹ';
+        }
+        
+        toast.innerHTML = `
+          <div class="toast-icon">${iconChar}</div>
+          <div class="toast-content">
+            <div class="toast-title">${notification.title}</div>
+            <div class="toast-message">${notification.description}</div>
+          </div>
+          <button class="toast-close">×</button>
+        `;
+        
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => {
+          removeToast(toast);
+        });
+        
+        if (notification.actionable && notification.link) {
+          toast.style.cursor = 'pointer';
+          toast.addEventListener('click', function(event) {
+            if (event.target !== closeBtn) {
+              log(`Clicked on toast notification: "${notification.title}"`);
+              if (notification.link.startsWith('http')) {
+                window.open(notification.link, '_blank');
+              } else {
+                alert(`Would navigate to: ${notification.link}`);
+              }
+              removeToast(toast);
+            }
+          });
+        }
+        
+        toastContainer.appendChild(toast);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          if (toastContainer.contains(toast)) {
+            removeToast(toast);
+          }
+        }, 5000);
+      }
+      
+      // Remove toast with animation
+      function removeToast(toast) {
+        toast.classList.add('removing');
+        setTimeout(() => {
+          if (toastContainer.contains(toast)) {
+            toastContainer.removeChild(toast);
+          }
+        }, 300);
+      }
+      
+      // Format timestamp for display
+      function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSec = Math.floor(diffMs / 1000);
+        const diffMin = Math.floor(diffSec / 60);
+        const diffHour = Math.floor(diffMin / 60);
+        const diffDay = Math.floor(diffHour / 24);
+        
+        if (diffSec < 60) {
+          return 'just now';
+        } else if (diffMin < 60) {
+          return `${diffMin}m ago`;
+        } else if (diffHour < 24) {
+          return `${diffHour}h ago`;
+        } else if (diffDay < 7) {
+          return `${diffDay}d ago`;
+        } else {
+          return date.toLocaleDateString();
+        }
+      }
+      
+      // Add log entry
+      function log(message) {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.innerHTML = `<span class="log-time">[${timeString}]</span> ${message}`;
+        
+        logContainer.appendChild(logEntry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+      }
+      
+      // Clear log
+      function clearLog() {
+        logContainer.innerHTML = '';
+        log('Log cleared');
+      }
+      
+      // Initialize on load
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
