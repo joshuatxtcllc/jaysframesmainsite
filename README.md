@@ -1,39 +1,97 @@
-# Jay's Frames
+# Jay's Frames - Custom Framing E-commerce Platform
 
-A cutting-edge e-commerce platform for Jay's Frames that provides an intelligent and interactive frame design experience through advanced AI technologies and user-centric design.
+A modern e-commerce platform for Jay's Frames that leverages AI and modern web technologies to provide an innovative, user-centric frame design and purchasing experience.
 
 ## Features
 
-- **AI-Powered Frame Recommendation**: Get personalized frame suggestions based on your artwork and preferences
-- **Augmented Reality Preview**: Visualize how frames will look on your wall before purchasing
-- **AI Design Assistant**: Chat with our intelligent assistant to get expert framing advice
-- **Custom Framing**: Choose from a wide selection of premium frames, mats, and glass options
-- **Local Houston Business**: Visit our physical store at 1440 1/2 Yale St., Houston, TX 77008
+- AI-powered frame design assistant
+- Custom framing design interface
+- Product catalog with multiple categories
+- Order management system
+- Intelligent chatbot assistant
+- Responsive design for mobile and desktop
 
-## How to Use This Demo
+## Tech Stack
 
-Simply open the HTML files directly in your web browser to explore the different features:
+- **Frontend**: React, TypeScript, TailwindCSS, Shadcn UI
+- **Backend**: Express.js, TypeScript
+- **Database**: In-memory storage (production-ready for PostgreSQL)
+- **AI**: OpenAI's GPT-4o integration
 
-1. `index.html` - Main website homepage
-2. `demo.html` - AI Frame Recommendation Demo
-3. `ai-design-assistant.html` - Interactive chatbot for framing advice
-4. `augmented-reality-demo.html` - AR preview of frames on your walls
+## Getting Started
 
-## Development Notes
+### Prerequisites
 
-This demo version provides static HTML files that showcase the key functionality of Jay's Frames' e-commerce platform. In a production environment, these would be connected to:
+- Node.js 18+ or 20+
+- OpenAI API Key for AI features
 
-- A secure backend for user accounts and order processing
-- OpenAI API integration for AI-powered recommendations
-- Database for product inventory and customer data
-- Payment gateway for secure transactions
+### Environment Variables
 
-## Contact
+Create a `.env` file in the root directory with the following variables:
 
-- Phone: (832) 893-3794
-- Address: 1440 1/2 Yale St., Houston, TX 77008
-- Hours: Monday-Friday 9am-6pm, Saturday 10am-4pm
+```
+OPENAI_API_KEY=your_openai_api_key
+```
 
-## Award-Winning Service
+### Installation
 
-Recognized as "Best Frame Shop in Houston" by The Houston A-List
+1. Clone the repository
+2. Install the dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at http://localhost:5000.
+
+## Deployment Instructions
+
+### Using Replit Deployments
+
+1. Make sure your OpenAI API key is added to the Replit Secrets with the key name `OPENAI_API_KEY`
+2. Click the "Deploy" button in the Replit interface
+3. Configure your deployment settings if needed
+4. Deploy the application
+
+### Manual Deployment
+
+For deploying to other platforms:
+
+1. Build the application:
+
+```bash
+npm run build
+```
+
+2. Set up your environment variables on your hosting platform
+3. Start the server:
+
+```bash
+npm start
+```
+
+## API Endpoints
+
+See the [API Documentation](API_DOCUMENTATION.md) for details about available endpoints.
+
+## AI Features
+
+The application integrates with OpenAI's GPT-4o model to provide:
+
+1. **Frame Design Assistant**: Get personalized frame design recommendations
+2. **Chatbot**: Answer customer questions and provide product recommendations
+3. **Frame Recommendations**: Receive frame and mat suggestions based on artwork descriptions
+
+## License
+
+This project is proprietary and belongs to Jay's Frames. All rights reserved.
+
+## Support
+
+For any issues or questions, please contact the development team or open an issue on the repository.

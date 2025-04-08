@@ -1,143 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-  <!-- Homepage -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jaysframes.com/</loc>
-    <lastmod>2023-04-06</lastmod>
+    <lastmod>2025-04-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://jaysframes.com/img/jaysframes-storefront.svg</image:loc>
-      <image:title>Jay's Frames Storefront in Houston Heights</image:title>
-      <image:caption>Award-winning custom framing shop located in Houston's Heights neighborhood</image:caption>
-    </image:image>
   </url>
-
-  <!-- Custom Framing Page -->
   <url>
     <loc>https://jaysframes.com/custom-framing</loc>
-    <lastmod>2023-04-06</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2025-04-06</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://jaysframes.com/img/custom-framing.jpg</image:loc>
-      <image:title>Custom Framing Services</image:title>
-      <image:caption>Expert custom framing options for artwork, photos, and memorabilia</image:caption>
-    </image:image>
   </url>
-
-  <!-- AR Frame Assistant Page -->
   <url>
-    <loc>https://jaysframes.com/ar-frame-assistant</loc>
-    <lastmod>2023-04-06</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://jaysframes.com/products</loc>
+    <lastmod>2025-04-06</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://jaysframes.com/img/ar-frame-assistant.jpg</image:loc>
-      <image:title>Augmented Reality Frame Assistant</image:title>
-      <image:caption>Try frames on your walls using our AR technology</image:caption>
-    </image:image>
   </url>
-
-  <!-- Frame Assistant Test Page -->
   <url>
-    <loc>https://jaysframes.com/frame-assistant-test</loc>
-    <lastmod>2023-04-06</lastmod>
+    <loc>https://jaysframes.com/order-status</loc>
+    <lastmod>2025-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- Products Category: Frames -->
   <url>
     <loc>https://jaysframes.com/products?category=frame</loc>
-    <lastmod>2023-04-06</lastmod>
+    <lastmod>2025-04-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Products Category: Shadowboxes -->
   <url>
     <loc>https://jaysframes.com/products?category=shadowbox</loc>
-    <lastmod>2023-04-06</lastmod>
+    <lastmod>2025-04-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Products Category: Moonmounts -->
   <url>
     <loc>https://jaysframes.com/products?category=moonmount</loc>
-    <lastmod>2023-04-06</lastmod>
+    <lastmod>2025-04-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Notifications Page -->
   <url>
-    <loc>https://jaysframes.com/notifications</loc>
-    <lastmod>2023-04-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- About Page -->
-  <url>
-    <loc>https://jaysframes.com/about</loc>
-    <lastmod>2023-04-06</lastmod>
+    <loc>https://jaysframes.com/checkout</loc>
+    <lastmod>2025-04-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://jaysframes.com/img/about-jays-frames.jpg</image:loc>
-      <image:title>About Jay's Frames</image:title>
-      <image:caption>Learn about our history and commitment to quality framing</image:caption>
-    </image:image>
+    <priority>0.5</priority>
   </url>
-
-  <!-- Contact Page -->
   <url>
-    <loc>https://jaysframes.com/contact</loc>
-    <lastmod>2023-04-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- FAQ Page -->
-  <url>
-    <loc>https://jaysframes.com/faq</loc>
-    <lastmod>2023-04-06</lastmod>
+    <loc>https://jaysframes.com/frame-assistant-test</loc>
+    <lastmod>2025-04-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
-  <!-- Terms and Conditions -->
-  <url>
-    <loc>https://jaysframes.com/terms</loc>
-    <lastmod>2023-04-06</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Privacy Policy -->
-  <url>
-    <loc>https://jaysframes.com/privacy</loc>
-    <lastmod>2023-04-06</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  
-  <!-- 404 Page -->
-  <url>
-    <loc>https://jaysframes.com/404</loc>
-    <lastmod>2023-04-06</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.1</priority>
-  </url>
-
 </urlset>

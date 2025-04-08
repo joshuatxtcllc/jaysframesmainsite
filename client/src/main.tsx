@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import "./main.css"; // Import main CSS with media queries for better SEO
 import { toast } from "@/hooks/use-toast";
 
 // Export the toast function to the window object for the notification system

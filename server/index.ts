@@ -16,14 +16,14 @@ app.use((req, res, next) => {
     // Check if it's HTTP (not HTTPS)
     if (req.headers['x-forwarded-proto'] === 'http') {
       // Redirect to HTTPS
-      return res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
+      return res.redirect(301, `https://${req.headers.host}${req.url}`);
     }
 
     // Standardize on www or non-www (in this case, we're standardizing on non-www)
     const host = req.headers.host || '';
     if (host.startsWith('www.')) {
       // Redirect from www to non-www
-      return res.redirect(301, `https://${host.substring(4)}${req.originalUrl}`);
+      return res.redirect(301, `https://${host.substring(4)}${req.url}`);
     }
   }
   next();
@@ -61,15 +61,6 @@ app.use((req, res, next) => {
 
 (async () => {
   const server = await registerRoutes(app);
-  
-  // Initialize WebSocket server
-  try {
-    const { getWebSocketServer } = await import('./services/websocket');
-    getWebSocketServer(server);
-    log('WebSocket notification system initialized');
-  } catch (err) {
-    log('Failed to initialize WebSocket server: ' + err, 'error');
-  }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

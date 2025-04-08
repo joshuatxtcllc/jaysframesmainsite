@@ -109,21 +109,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           />
         </button>
         
-        {/* Image with overlay and zoom effect - Using img tag with proper alt for SEO */}
-        <div className="w-full h-72 overflow-hidden relative">
-          {/* Hidden image with proper alt text for SEO */}
-          <img 
-            src={imageUrl} 
-            alt={`${product.name} - ${product.category} by Jay's Frames`} 
-            className="sr-only"
-            loading="lazy"
-          />
-          {/* Visual display with zoom effect */}
+        {/* Image with overlay and zoom effect */}
+        <div className="w-full h-72 overflow-hidden">
           <div 
             className={`w-full h-full bg-cover bg-center transition-transform duration-700 ${isHovered ? 'scale-110' : 'scale-100'}`}
             style={{ backgroundImage: `url(${imageUrl})` }}
-            role="img"
-            aria-label={`${product.name} - ${product.category} by Jay's Frames`}
           >
             <div className="w-full h-full bg-gradient-to-t from-black/30 to-transparent"></div>
           </div>
