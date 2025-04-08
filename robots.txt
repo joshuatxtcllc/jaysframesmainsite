@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /*.json$
+Disallow: /notification-demo.html
+Disallow: /jf-notification-demo.html
+Disallow: /notification-standalone.html
+
+Sitemap: https://jaysframes.com/sitemap.xml

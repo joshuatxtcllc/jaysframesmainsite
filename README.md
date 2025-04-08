@@ -1,65 +1,39 @@
-# Jay's Frames Notification System
+# Jay's Frames
 
-This repository contains a standalone notification system for Jay's Frames e-commerce platform. The system provides real-time notifications for various events such as order updates, stock alerts, and system messages.
+A cutting-edge e-commerce platform for Jay's Frames that provides an intelligent and interactive frame design experience through advanced AI technologies and user-centric design.
 
-## Standalone HTML Demos
+## Features
 
-This notification system has been designed to work independently of server components, allowing you to test and use the functionality without requiring a full server setup.
+- **AI-Powered Frame Recommendation**: Get personalized frame suggestions based on your artwork and preferences
+- **Augmented Reality Preview**: Visualize how frames will look on your wall before purchasing
+- **AI Design Assistant**: Chat with our intelligent assistant to get expert framing advice
+- **Custom Framing**: Choose from a wide selection of premium frames, mats, and glass options
+- **Local Houston Business**: Visit our physical store at 1440 1/2 Yale St., Houston, TX 77008
 
-### Available Demos:
+## How to Use This Demo
 
-1. **Main Demo Page**: Open `index.html` to see the available demo options
-2. **Standalone Demo**: Open `notification-standalone.html` to see a full demo with no server dependencies
-3. **Embed Demo**: Open `jf-notification-demo.html` to see how to embed the notification system in other applications
-4. **Simple Demo**: Open `demo.html` to see a minimal implementation of the notification system
+Simply open the HTML files directly in your web browser to explore the different features:
 
-## Components
+1. `index.html` - Main website homepage
+2. `demo.html` - AI Frame Recommendation Demo
+3. `ai-design-assistant.html` - Interactive chatbot for framing advice
+4. `augmented-reality-demo.html` - AR preview of frames on your walls
 
-The notification system consists of several components:
+## Development Notes
 
-### 1. Client Library (`jf-notification-client.js`)
+This demo version provides static HTML files that showcase the key functionality of Jay's Frames' e-commerce platform. In a production environment, these would be connected to:
 
-A JavaScript library that provides the client-side functionality for the notification system. It includes:
+- A secure backend for user accounts and order processing
+- OpenAI API integration for AI-powered recommendations
+- Database for product inventory and customer data
+- Payment gateway for secure transactions
 
-- Real-time notification reception
-- Notification display with badge counters
-- Toast notifications
-- Notification history
-- Mark as read functionality
+## Contact
 
-### 2. Server Implementation (`jf-notification-server.js`)
+- Phone: (832) 893-3794
+- Address: 1440 1/2 Yale St., Houston, TX 77008
+- Hours: Monday-Friday 9am-6pm, Saturday 10am-4pm
 
-A reference server implementation that can be used to send notifications to connected clients. It includes:
+## Award-Winning Service
 
-- WebSocket server for real-time communication
-- RESTful API for notification management
-- Persistence of notification history
-- User targeting and filtering
-
-### Usage
-
-To use the notification system in your own applications, include the `jf-notification-client.js` script and initialize it:
-
-```javascript
-// Initialize the notification client
-const client = new JFNotificationClient({
-  apiKey: 'your-api-key',        // Your API key for authentication (if required)
-  autoConnect: true,             // Automatically connect on initialization (default: true)
-  serverUrl: 'wss://example.com' // WebSocket server URL (default: auto-detect)
-});
-
-// Create a notification bell in a specific element
-client.createNotificationBell(document.getElementById('notification-placeholder'));
-
-// Listen for notifications
-client.onNotification(function(notification) {
-  console.log('New notification:', notification);
-});
-```
-
-## Contact Information
-
-For more information about Jay's Frames, visit our store or contact us:
-
-- **Address**: 1440 1/2 Yale St. Houston TX 77008
-- **Phone**: (832) 893-3794
+Recognized as "Best Frame Shop in Houston" by The Houston A-List

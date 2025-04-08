@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found | Jay's Frames - Custom Framing in Houston</title>
+  <meta name="description" content="We couldn't find the page you're looking for. Jay's Frames offers premium custom framing services in Houston, TX.">
+  <style>
+    :root {
+      --primary: #1a365d;
+      --primary-light: #2a4a7d;
+      --secondary: #718096;
+      --accent: #f6ad55;
+      --background: #f7fafc;
+      --text: #2d3748;
+      --light-text: #a0aec0;
+      --white: #ffffff;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header */
+    header {
+      background-color: var(--white);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .logo span {
+      color: var(--accent);
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-links li {
+      margin-left: 1.5rem;
+    }
+    
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+    
+    /* Main Content */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .error-container {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+    }
+    
+    .error-code {
+      font-size: 6rem;
+      font-weight: bold;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    
+    .error-message {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .error-description {
+      color: var(--secondary);
+      margin-bottom: 2rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .btn-primary {
+      background-color: var(--accent);
+      color: var(--primary);
+    }
+    
+    .btn-primary:hover {
+      background-color: #e69e43;
+    }
+    
+    .error-links {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .error-links a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .error-links a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    
+    /* Footer */
+    footer {
+      background-color: #2d3748;
+      color: var(--white);
+      padding: 1.5rem 0;
+    }
+    
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .footer-content p {
+      margin: 0;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">Jay's <span>Frames</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#products">Products</a></li>
+          <li><a href="demo.html">Frame Recommendation</a></li>
+          <li><a href="ai-design-assistant.html">Design Assistant</a></li>
+          <li><a href="augmented-reality-demo.html">AR Preview</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <div class="error-container">
+        <div class="error-code">404</div>
+        <h1 class="error-message">Page Not Found</h1>
+        <p class="error-description">We couldn't find the page you're looking for. It might have been moved, deleted, or never existed in the first place.</p>
+        <a href="index.html" class="btn btn-primary">Go Home</a>
+        
+        <div class="error-links">
+          <a href="index.html#products">Browse Frames</a>
+          <a href="demo.html">Try Our Frame Recommendation Tool</a>
+          <a href="index.html#contact">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <p>&copy; 2025 Jay's Frames. All rights reserved. | 1440 1/2 Yale St., Houston, TX 77008 | (832) 893-3794</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
