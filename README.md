@@ -1,97 +1,65 @@
-# Jay's Frames - Custom Framing E-commerce Platform
+# Jay's Frames Notification System
 
-A modern e-commerce platform for Jay's Frames that leverages AI and modern web technologies to provide an innovative, user-centric frame design and purchasing experience.
+This repository contains a standalone notification system for Jay's Frames e-commerce platform. The system provides real-time notifications for various events such as order updates, stock alerts, and system messages.
 
-## Features
+## Standalone HTML Demos
 
-- AI-powered frame design assistant
-- Custom framing design interface
-- Product catalog with multiple categories
-- Order management system
-- Intelligent chatbot assistant
-- Responsive design for mobile and desktop
+This notification system has been designed to work independently of server components, allowing you to test and use the functionality without requiring a full server setup.
 
-## Tech Stack
+### Available Demos:
 
-- **Frontend**: React, TypeScript, TailwindCSS, Shadcn UI
-- **Backend**: Express.js, TypeScript
-- **Database**: In-memory storage (production-ready for PostgreSQL)
-- **AI**: OpenAI's GPT-4o integration
+1. **Main Demo Page**: Open `index.html` to see the available demo options
+2. **Standalone Demo**: Open `notification-standalone.html` to see a full demo with no server dependencies
+3. **Embed Demo**: Open `jf-notification-demo.html` to see how to embed the notification system in other applications
+4. **Simple Demo**: Open `demo.html` to see a minimal implementation of the notification system
 
-## Getting Started
+## Components
 
-### Prerequisites
+The notification system consists of several components:
 
-- Node.js 18+ or 20+
-- OpenAI API Key for AI features
+### 1. Client Library (`jf-notification-client.js`)
 
-### Environment Variables
+A JavaScript library that provides the client-side functionality for the notification system. It includes:
 
-Create a `.env` file in the root directory with the following variables:
+- Real-time notification reception
+- Notification display with badge counters
+- Toast notifications
+- Notification history
+- Mark as read functionality
 
-```
-OPENAI_API_KEY=your_openai_api_key
-```
+### 2. Server Implementation (`jf-notification-server.js`)
 
-### Installation
+A reference server implementation that can be used to send notifications to connected clients. It includes:
 
-1. Clone the repository
-2. Install the dependencies:
+- WebSocket server for real-time communication
+- RESTful API for notification management
+- Persistence of notification history
+- User targeting and filtering
 
-```bash
-npm install
-```
+### Usage
 
-3. Start the development server:
+To use the notification system in your own applications, include the `jf-notification-client.js` script and initialize it:
 
-```bash
-npm run dev
-```
+```javascript
+// Initialize the notification client
+const client = new JFNotificationClient({
+  apiKey: 'your-api-key',        // Your API key for authentication (if required)
+  autoConnect: true,             // Automatically connect on initialization (default: true)
+  serverUrl: 'wss://example.com' // WebSocket server URL (default: auto-detect)
+});
 
-The application will be available at http://localhost:5000.
+// Create a notification bell in a specific element
+client.createNotificationBell(document.getElementById('notification-placeholder'));
 
-## Deployment Instructions
-
-### Using Replit Deployments
-
-1. Make sure your OpenAI API key is added to the Replit Secrets with the key name `OPENAI_API_KEY`
-2. Click the "Deploy" button in the Replit interface
-3. Configure your deployment settings if needed
-4. Deploy the application
-
-### Manual Deployment
-
-For deploying to other platforms:
-
-1. Build the application:
-
-```bash
-npm run build
+// Listen for notifications
+client.onNotification(function(notification) {
+  console.log('New notification:', notification);
+});
 ```
 
-2. Set up your environment variables on your hosting platform
-3. Start the server:
+## Contact Information
 
-```bash
-npm start
-```
+For more information about Jay's Frames, visit our store or contact us:
 
-## API Endpoints
-
-See the [API Documentation](API_DOCUMENTATION.md) for details about available endpoints.
-
-## AI Features
-
-The application integrates with OpenAI's GPT-4o model to provide:
-
-1. **Frame Design Assistant**: Get personalized frame design recommendations
-2. **Chatbot**: Answer customer questions and provide product recommendations
-3. **Frame Recommendations**: Receive frame and mat suggestions based on artwork descriptions
-
-## License
-
-This project is proprietary and belongs to Jay's Frames. All rights reserved.
-
-## Support
-
-For any issues or questions, please contact the development team or open an issue on the repository.
+- **Address**: 1440 1/2 Yale St. Houston TX 77008
+- **Phone**: (832) 893-3794

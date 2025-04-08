@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jay's Frames Notification Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #1a365d;
+    }
+    button {
+      background: #1a365d;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2c5282;
+    }
+    .notification-container {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jay's Frames Notification System</h1>
+  <p>This is a simple demo page to test the notification system.</p>
+  
+  <div>
+    <button id="info-btn">Show Info Notification</button>
+    <button id="success-btn">Show Success Notification</button>
+    <button id="warning-btn">Show Warning Notification</button>
+    <button id="error-btn">Show Error Notification</button>
+  </div>
+  
+  <div id="notification-placeholder"></div>
+  
+  <script src="jf-notification-client.js"></script>
+  <script>
+    // Initialize the notification client
+    const client = new JFNotificationClient({
+      demoMode: true, // Use demo mode since we don't have a server
+      autoConnect: true
+    });
+    
+    // Create a notification bell
+    client.createNotificationBell(document.getElementById('notification-placeholder'));
+    
+    // Listen for notifications
+    client.onNotification(function(notification) {
+      console.log('New notification:', notification);
+    });
+    
+    // Add event listeners for the buttons
+    document.getElementById('info-btn').addEventListener('click', function() {
+      client.createNotification({
+        type: 'info',
+        title: 'Information',
+        description: 'This is an information notification.',
+        timestamp: new Date()
+      });
+    });
+    
+    document.getElementById('success-btn').addEventListener('click', function() {
+      client.createNotification({
+        type: 'success',
+        title: 'Success',
+        description: 'This is a success notification.',
+        timestamp: new Date()
+      });
+    });
+    
+    document.getElementById('warning-btn').addEventListener('click', function() {
+      client.createNotification({
+        type: 'warning',
+        title: 'Warning',
+        description: 'This is a warning notification.',
+        timestamp: new Date()
+      });
+    });
+    
+    document.getElementById('error-btn').addEventListener('click', function() {
+      client.createNotification({
+        type: 'error',
+        title: 'Error',
+        description: 'This is an error notification.',
+        timestamp: new Date()
+      });
+    });
+  </script>
+</body>
+</html>
