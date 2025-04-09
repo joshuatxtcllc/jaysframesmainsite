@@ -7,6 +7,8 @@ import Home from "@/pages/home";
 import Products from "@/pages/products";
 import CustomFraming from "@/pages/custom-framing";
 import OrderStatus from "@/pages/order-status";
+import Checkout from "@/pages/checkout";
+import OrderConfirmation from "@/pages/order-confirmation";
 import AdminDashboard from "@/pages/admin/dashboard";
 import FrameAssistantTest from "@/pages/frame-assistant-test";
 import Notifications from "@/pages/notifications";
@@ -23,6 +25,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/products" component={Products} />
       <Route path="/custom-framing" component={CustomFraming} />
+      <Route path="/checkout" component={Checkout} />
+      <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
       <Route path="/order-status" component={OrderStatus} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
