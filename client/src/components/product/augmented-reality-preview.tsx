@@ -286,7 +286,7 @@ export const AugmentedRealityPreview = ({
                       style={getFrameStyle()}
                     >
                       <div 
-                        className="w-full h-full bg-white/50"
+                        className="w-full h-full bg-transparent"
                       >
                         <div className="w-full h-full p-2 flex items-center justify-center">
                           <p className="text-center text-sm opacity-70">Your artwork here</p>

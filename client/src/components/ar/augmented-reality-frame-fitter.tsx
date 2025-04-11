@@ -260,7 +260,7 @@ export const AugmentedRealityFrameFitter = ({
       left: '50%',
       top: '50%',
       position: 'absolute' as const,
-      backgroundColor: 'white',
+      backgroundColor: 'transparent', // Make it transparent
       maxWidth: '60%',
       maxHeight: '60%',
       width: aspectRatio > 1 ? '300px' : 'auto',

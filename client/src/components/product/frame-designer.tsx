@@ -184,10 +184,11 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     if (!frame || !mat) return {};
     
     return {
-      border: '5px solid white',
+      border: '5px solid transparent',
       boxShadow: `0 0 0 30px ${mat.color}, 0 0 0 40px ${frame.color}`,
       borderRadius: '0', // Sharp square corners
-      transition: 'all 0.3s ease-in-out'
+      transition: 'all 0.3s ease-in-out',
+      backgroundColor: 'transparent' // Ensure transparency
     };
   };
 

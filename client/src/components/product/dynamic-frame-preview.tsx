@@ -52,12 +52,13 @@ export const DynamicFramePreview = ({
     if (!selectedFrame || !selectedMat) return {};
     
     return {
-      border: userImage ? '5px solid white' : '15px solid white',
+      border: userImage ? '5px solid transparent' : '15px solid transparent',
       boxShadow: userImage 
         ? `0 0 0 20px ${selectedMat.color}, 0 0 0 30px ${selectedFrame.color}`
         : `0 0 0 30px ${selectedMat.color}, 0 0 0 40px ${selectedFrame.color}`,
       borderRadius: '0', // Sharp square corners
-      transition: 'all 0.3s ease-in-out'
+      transition: 'all 0.3s ease-in-out',
+      backgroundColor: 'transparent' // Make sure the background is transparent
     };
   }, [selectedFrame, selectedMat, userImage]);
   
