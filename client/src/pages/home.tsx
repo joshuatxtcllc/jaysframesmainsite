@@ -60,7 +60,7 @@ const Home = () => {
             "email": "info@jaysframes.com",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "1440 1/2 Yale St.",
+              "streetAddress": "1440 Yale St.",
               "addressLocality": "Houston",
               "addressRegion": "TX",
               "postalCode": "77008",

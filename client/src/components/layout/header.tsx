@@ -9,7 +9,8 @@ import {
   X,
   Phone,
   ChevronRight,
-  Bell
+  Bell,
+  MapPin
 } from "lucide-react";
 import { 
   Popover,
@@ -103,6 +104,10 @@ const Header = () => {
               <div className="flex items-center mr-6">
                 <Phone className="h-3.5 w-3.5 mr-2 text-secondary" />
                 <span>(832) 893-3794</span>
+              </div>
+              <div className="flex items-center mr-6">
+                <MapPin className="h-3.5 w-3.5 mr-2 text-secondary" />
+                <span>1440 Yale St, Houston</span>
               </div>
               <span className="text-white/70">Mon-Sat: 10am-6pm · Sunday: Closed</span>
             </div>
