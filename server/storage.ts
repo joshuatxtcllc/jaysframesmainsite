@@ -5,7 +5,9 @@ import {
   frameOptions, type FrameOption, type InsertFrameOption,
   matOptions, type MatOption, type InsertMatOption,
   glassOptions, type GlassOption, type InsertGlassOption,
-  chatMessages, type ChatMessage, type InsertChatMessage
+  chatMessages, type ChatMessage, type InsertChatMessage,
+  blogCategories, type BlogCategory, type InsertBlogCategory,
+  blogPosts, type BlogPost, type InsertBlogPost
 } from "@shared/schema";
 
 export interface IStorage {
@@ -44,6 +46,25 @@ export interface IStorage {
   // Chat messages operations
   getChatMessagesBySessionId(sessionId: string): Promise<ChatMessage[]>;
   createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
+  
+  // Blog Category operations
+  getBlogCategories(): Promise<BlogCategory[]>;
+  getBlogCategoryById(id: number): Promise<BlogCategory | undefined>;
+  getBlogCategoryBySlug(slug: string): Promise<BlogCategory | undefined>;
+  createBlogCategory(category: InsertBlogCategory): Promise<BlogCategory>;
+  updateBlogCategory(id: number, category: Partial<InsertBlogCategory>): Promise<BlogCategory | undefined>;
+  deleteBlogCategory(id: number): Promise<boolean>;
+  
+  // Blog Post operations
+  getBlogPosts(limit?: number, offset?: number): Promise<BlogPost[]>;
+  getBlogPostById(id: number): Promise<BlogPost | undefined>;
+  getBlogPostBySlug(slug: string): Promise<BlogPost | undefined>;
+  getBlogPostsByCategory(categoryId: number, limit?: number, offset?: number): Promise<BlogPost[]>;
+  getBlogPostsByStatus(status: string, limit?: number, offset?: number): Promise<BlogPost[]>;
+  createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
+  updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<BlogPost | undefined>;
+  deleteBlogPost(id: number): Promise<boolean>;
+  publishBlogPost(id: number): Promise<BlogPost | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -54,6 +75,8 @@ export class MemStorage implements IStorage {
   private matOptions: Map<number, MatOption>;
   private glassOptions: Map<number, GlassOption>;
   private chatMessages: ChatMessage[];
+  private blogCategories: Map<number, BlogCategory>;
+  private blogPosts: Map<number, BlogPost>;
 
   private userCounter: number;
   private productCounter: number;
@@ -62,6 +85,8 @@ export class MemStorage implements IStorage {
   private matOptionCounter: number;
   private glassOptionCounter: number;
   private chatMessageCounter: number;
+  private blogCategoryCounter: number;
+  private blogPostCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -71,6 +96,8 @@ export class MemStorage implements IStorage {
     this.matOptions = new Map();
     this.glassOptions = new Map();
     this.chatMessages = [];
+    this.blogCategories = new Map();
+    this.blogPosts = new Map();
 
     this.userCounter = 1;
     this.productCounter = 1;
@@ -79,6 +106,8 @@ export class MemStorage implements IStorage {
     this.matOptionCounter = 1;
     this.glassOptionCounter = 1;
     this.chatMessageCounter = 1;
+    this.blogCategoryCounter = 1;
+    this.blogPostCounter = 1;
 
     // Initialize with sample data
     this.initializeSampleData();
@@ -214,6 +243,146 @@ export class MemStorage implements IStorage {
     const newMessage: ChatMessage = { ...message, id, timestamp };
     this.chatMessages.push(newMessage);
     return newMessage;
+  }
+
+  // Blog Category operations
+  async getBlogCategories(): Promise<BlogCategory[]> {
+    return Array.from(this.blogCategories.values());
+  }
+
+  async getBlogCategoryById(id: number): Promise<BlogCategory | undefined> {
+    return this.blogCategories.get(id);
+  }
+
+  async getBlogCategoryBySlug(slug: string): Promise<BlogCategory | undefined> {
+    return Array.from(this.blogCategories.values()).find(
+      (category) => category.slug === slug
+    );
+  }
+
+  async createBlogCategory(category: InsertBlogCategory): Promise<BlogCategory> {
+    const id = this.blogCategoryCounter++;
+    const createdAt = new Date().toISOString();
+    const newCategory: BlogCategory = { ...category, id, createdAt };
+    this.blogCategories.set(id, newCategory);
+    return newCategory;
+  }
+
+  async updateBlogCategory(id: number, categoryUpdate: Partial<InsertBlogCategory>): Promise<BlogCategory | undefined> {
+    const category = this.blogCategories.get(id);
+    if (!category) return undefined;
+
+    const updatedCategory: BlogCategory = { ...category, ...categoryUpdate };
+    this.blogCategories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+
+  async deleteBlogCategory(id: number): Promise<boolean> {
+    return this.blogCategories.delete(id);
+  }
+  
+  // Blog Post operations
+  async getBlogPosts(limit?: number, offset?: number): Promise<BlogPost[]> {
+    let posts = Array.from(this.blogPosts.values());
+    
+    if (offset !== undefined) {
+      posts = posts.slice(offset);
+    }
+    
+    if (limit !== undefined) {
+      posts = posts.slice(0, limit);
+    }
+    
+    return posts;
+  }
+
+  async getBlogPostById(id: number): Promise<BlogPost | undefined> {
+    return this.blogPosts.get(id);
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
+    return Array.from(this.blogPosts.values()).find(
+      (post) => post.slug === slug
+    );
+  }
+
+  async getBlogPostsByCategory(categoryId: number, limit?: number, offset?: number): Promise<BlogPost[]> {
+    let posts = Array.from(this.blogPosts.values()).filter(
+      (post) => post.categoryId === categoryId
+    );
+    
+    if (offset !== undefined) {
+      posts = posts.slice(offset);
+    }
+    
+    if (limit !== undefined) {
+      posts = posts.slice(0, limit);
+    }
+    
+    return posts;
+  }
+
+  async getBlogPostsByStatus(status: string, limit?: number, offset?: number): Promise<BlogPost[]> {
+    let posts = Array.from(this.blogPosts.values()).filter(
+      (post) => post.status === status
+    );
+    
+    if (offset !== undefined) {
+      posts = posts.slice(offset);
+    }
+    
+    if (limit !== undefined) {
+      posts = posts.slice(0, limit);
+    }
+    
+    return posts;
+  }
+
+  async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
+    const id = this.blogPostCounter++;
+    const now = new Date().toISOString();
+    const newPost: BlogPost = { 
+      ...post, 
+      id, 
+      createdAt: now, 
+      updatedAt: now,
+      publishedAt: post.status === 'published' ? now : null
+    };
+    this.blogPosts.set(id, newPost);
+    return newPost;
+  }
+
+  async updateBlogPost(id: number, postUpdate: Partial<InsertBlogPost>): Promise<BlogPost | undefined> {
+    const post = this.blogPosts.get(id);
+    if (!post) return undefined;
+
+    const now = new Date().toISOString();
+    const updatedPost: BlogPost = { 
+      ...post, 
+      ...postUpdate,
+      updatedAt: now
+    };
+    this.blogPosts.set(id, updatedPost);
+    return updatedPost;
+  }
+
+  async deleteBlogPost(id: number): Promise<boolean> {
+    return this.blogPosts.delete(id);
+  }
+
+  async publishBlogPost(id: number): Promise<BlogPost | undefined> {
+    const post = this.blogPosts.get(id);
+    if (!post) return undefined;
+
+    const now = new Date().toISOString();
+    const publishedPost: BlogPost = { 
+      ...post, 
+      status: 'published',
+      publishedAt: now,
+      updatedAt: now
+    };
+    this.blogPosts.set(id, publishedPost);
+    return publishedPost;
   }
 
   // Initialize sample data
