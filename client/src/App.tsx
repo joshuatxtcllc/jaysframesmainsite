@@ -15,6 +15,9 @@ import Notifications from "@/pages/notifications";
 import NotificationTest from "@/pages/notification-test";
 import NotificationEmbed from "@/pages/developer/notification-embed";
 import ARFrameAssistant from "@/pages/ar-frame-assistant";
+// Blog Pages
+import Blog from "@/pages/blog";
+import BlogPost from "@/pages/blog/[slug]";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { CartProvider } from "@/context/cart-context";
@@ -34,6 +37,9 @@ function Router() {
       <Route path="/notification-test" component={NotificationTest} />
       <Route path="/developer/notification-embed" component={NotificationEmbed} />
       <Route path="/ar-frame-assistant" component={ARFrameAssistant} />
+      {/* Blog Routes */}
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

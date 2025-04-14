@@ -90,6 +90,7 @@ const Header = () => {
     { href: "/", label: "Home" },
     { href: "/products", label: "Products" },
     { href: "/custom-framing", label: "Custom Framing" },
+    { href: "/blog", label: "Blog" },
     { href: "/order-status", label: "Order Status" },
     { href: "#about", label: "About Us" }
   ];
