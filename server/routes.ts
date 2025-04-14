@@ -1,8 +1,13 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
-import { insertOrderSchema, insertChatMessageSchema } from "@shared/schema";
+import { 
+  insertOrderSchema, 
+  insertChatMessageSchema, 
+  insertBlogCategorySchema, 
+  insertBlogPostSchema 
+} from "@shared/schema";
 import { handleChatRequest, getFrameRecommendations, askFrameAssistant, type ChatMessage } from "./ai";
 import { sendNewOrderNotification, sendOrderConfirmationEmail, initEmailTransporter, OrderItem, ExtendedOrder } from "./services/notification";
 
@@ -390,6 +395,281 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Notification error:", error);
       res.status(500).json({ message: "Failed to process notification" });
+    }
+  });
+
+  // Blog Category endpoints
+  app.get("/api/blog/categories", async (req: Request, res: Response) => {
+    try {
+      const categories = await storage.getBlogCategories();
+      res.json(categories);
+    } catch (error) {
+      console.error("Error fetching blog categories:", error);
+      res.status(500).json({ message: "Failed to fetch blog categories" });
+    }
+  });
+
+  app.get("/api/blog/categories/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+      
+      const category = await storage.getBlogCategoryById(id);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json(category);
+    } catch (error) {
+      console.error("Error fetching blog category:", error);
+      res.status(500).json({ message: "Failed to fetch blog category" });
+    }
+  });
+
+  app.get("/api/blog/categories/slug/:slug", async (req: Request, res: Response) => {
+    try {
+      const { slug } = req.params;
+      const category = await storage.getBlogCategoryBySlug(slug);
+      
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json(category);
+    } catch (error) {
+      console.error("Error fetching blog category by slug:", error);
+      res.status(500).json({ message: "Failed to fetch blog category" });
+    }
+  });
+
+  app.post("/api/blog/categories", async (req: Request, res: Response) => {
+    try {
+      const categoryData = insertBlogCategorySchema.parse(req.body);
+      const category = await storage.createBlogCategory(categoryData);
+      res.status(201).json(category);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid category data", errors: error.errors });
+      }
+      console.error("Error creating blog category:", error);
+      res.status(500).json({ message: "Failed to create blog category" });
+    }
+  });
+
+  app.patch("/api/blog/categories/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+      
+      const categoryUpdate = req.body;
+      const category = await storage.updateBlogCategory(id, categoryUpdate);
+      
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json(category);
+    } catch (error) {
+      console.error("Error updating blog category:", error);
+      res.status(500).json({ message: "Failed to update blog category" });
+    }
+  });
+
+  app.delete("/api/blog/categories/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+      
+      const success = await storage.deleteBlogCategory(id);
+      if (!success) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting blog category:", error);
+      res.status(500).json({ message: "Failed to delete blog category" });
+    }
+  });
+
+  // Blog Post endpoints
+  app.get("/api/blog/posts", async (req: Request, res: Response) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+      const status = req.query.status as string;
+      
+      let posts;
+      if (status) {
+        posts = await storage.getBlogPostsByStatus(status, limit, offset);
+      } else {
+        posts = await storage.getBlogPosts(limit, offset);
+      }
+      
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.get("/api/blog/posts/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+      
+      const post = await storage.getBlogPostById(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  app.get("/api/blog/posts/slug/:slug", async (req: Request, res: Response) => {
+    try {
+      const { slug } = req.params;
+      const post = await storage.getBlogPostBySlug(slug);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      console.error("Error fetching blog post by slug:", error);
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  app.get("/api/blog/posts/category/:categoryId", async (req: Request, res: Response) => {
+    try {
+      const categoryId = parseInt(req.params.categoryId);
+      if (isNaN(categoryId)) {
+        return res.status(400).json({ message: "Invalid category ID" });
+      }
+      
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+      
+      const posts = await storage.getBlogPostsByCategory(categoryId, limit, offset);
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching blog posts by category:", error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.post("/api/blog/posts", async (req: Request, res: Response) => {
+    try {
+      const postData = insertBlogPostSchema.parse(req.body);
+      const post = await storage.createBlogPost(postData);
+      res.status(201).json(post);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid post data", errors: error.errors });
+      }
+      console.error("Error creating blog post:", error);
+      res.status(500).json({ message: "Failed to create blog post" });
+    }
+  });
+
+  app.patch("/api/blog/posts/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+      
+      const postUpdate = req.body;
+      const post = await storage.updateBlogPost(id, postUpdate);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      console.error("Error updating blog post:", error);
+      res.status(500).json({ message: "Failed to update blog post" });
+    }
+  });
+
+  app.delete("/api/blog/posts/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+      
+      const success = await storage.deleteBlogPost(id);
+      if (!success) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting blog post:", error);
+      res.status(500).json({ message: "Failed to delete blog post" });
+    }
+  });
+
+  app.post("/api/blog/posts/:id/publish", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+      
+      const post = await storage.publishBlogPost(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      console.error("Error publishing blog post:", error);
+      res.status(500).json({ message: "Failed to publish blog post" });
+    }
+  });
+  
+  // Automated blog content generation endpoint
+  app.post("/api/blog/generate", async (req: Request, res: Response) => {
+    try {
+      const { keyword, categoryId, title } = req.body;
+      
+      if (!keyword) {
+        return res.status(400).json({ message: "Keyword is required for content generation" });
+      }
+      
+      // In a future implementation, this would use the OpenAI API to generate content
+      // For now, let's just return a message that would normally be handled by the client
+      
+      res.json({
+        success: true,
+        message: "Content generation request received",
+        data: {
+          keyword,
+          categoryId,
+          title,
+          status: "pending" // In a real implementation, this would be stored in a queue
+        }
+      });
+    } catch (error) {
+      console.error("Error in blog content generation:", error);
+      res.status(500).json({ message: "Failed to process content generation request" });
     }
   });
 
