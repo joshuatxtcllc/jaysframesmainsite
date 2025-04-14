@@ -6,6 +6,7 @@ import { RecommendationCarousel } from "@/components/product/recommendation-caro
 import { MessageSquare, Wand2, PaintBucket, Camera, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { Helmet } from "react-helmet";
 
 const CustomFraming = () => {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -16,6 +17,89 @@ const CustomFraming = () => {
 
   return (
     <div className="bg-white">
+      <Helmet>
+        <title>Custom Framing in Houston, TX | Expert Frame Design & Preservation | Jay's Frames</title>
+        <meta name="description" content="Experience the art of custom framing in Houston with Jay's Frames. We collaborate with you throughout the entire framing process using museum-quality materials and preservation techniques to ensure your artwork lasts for generations." />
+        <meta name="keywords" content="custom framing Houston, picture frame preservation, museum-quality framing, art preservation techniques, Houston custom frame design, collaborative framing process" />
+        <link rel="canonical" href="https://jaysframes.com/custom-framing" />
+        
+        {/* Open Graph tags for better social sharing */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Custom Framing in Houston, TX | Expert Frame Design & Preservation" />
+        <meta property="og:description" content="Experience the art of custom framing in Houston with Jay's Frames. We collaborate with you throughout the entire framing process using museum-quality materials and preservation techniques." />
+        <meta property="og:url" content="https://jaysframes.com/custom-framing" />
+        <meta property="og:image" content="/images/custom-framing-og.jpg" />
+        <meta property="og:site_name" content="Jay's Frames" />
+        <meta property="og:locale" content="en_US" />
+        
+        {/* Twitter Card tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Custom Framing in Houston, TX | Expert Frame Design & Preservation" />
+        <meta name="twitter:description" content="Experience the art of custom framing in Houston with Jay's Frames. We collaborate with you throughout the entire framing process using museum-quality materials." />
+        <meta name="twitter:image" content="/images/custom-framing-og.jpg" />
+        
+        {/* Structured data for local business with custom framing services */}
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Jay's Frames",
+            "description": "Award-winning custom framing shop in Houston Heights, specializing in museum-quality preservation and collaborative framing process.",
+            "image": "/images/og-image.jpg",
+            "telephone": "+18328933794",
+            "email": "info@jaysframes.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "1440 Yale St.",
+              "addressLocality": "Houston",
+              "addressRegion": "TX",
+              "postalCode": "77008",
+              "addressCountry": "US"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "29.7904",
+              "longitude": "-95.3988"
+            },
+            "url": "https://jaysframes.com/custom-framing",
+            "priceRange": "$$",
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Custom Framing Services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Custom Picture Framing",
+                    "description": "Expert custom framing with museum-quality materials and preservation techniques"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Art Installation Services",
+                    "description": "Professional art installation ensuring correct and safe display to enhance presentation"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Art Preservation",
+                    "description": "Museum-quality preservation techniques for long-term protection of your valuable artwork"
+                  }
+                }
+              ]
+            },
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": "https://jaysframes.com/custom-framing"
+            }
+          }
+        `}</script>
+      </Helmet>
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -74,10 +158,10 @@ const CustomFraming = () => {
                       <div className="bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
                         <span className="text-sm font-medium">3</span>
                       </div>
-                      <h3 className="font-bold text-lg">Museum-Quality Mounting</h3>
+                      <h3 className="font-bold text-lg">Museum-Quality Preservation</h3>
                     </div>
                     <p className="text-neutral-500 mb-6 ml-8">
-                      Your artwork is mounted using our proprietary Moonmount™ method, which ensures archival preservation while providing a perfect presentation.
+                      Your artwork is mounted using our proprietary Moonmount™ method with acid-free materials and UV-protective glass. We use museum-quality preservation techniques to ensure your valuable art is protected from environmental damage and will last for generations to come.
                     </p>
 
                     <div className="flex items-start mb-2">
