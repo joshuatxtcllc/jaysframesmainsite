@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Lightbulb, MessageSquare, Wand2 } from "lucide-react";
+import { Lightbulb, MessageSquare, Wand2, ShieldCheck } from "lucide-react";
 import FrameDesigner from "@/components/product/frame-designer";
 import { Helmet } from "react-helmet";
 
@@ -28,15 +28,15 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Jay's Frames - Best Custom Picture Framing in Houston | Voted Houston's Best</title>
-        <meta name="description" content="Award-winning custom framing in Houston's Heights. Voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine. Expert custom framing with AI-powered design for art, photography, and memorabilia." />
-        <meta name="keywords" content="custom framing Houston, picture frames Houston Heights, best frame shop Houston, award-winning framing, Houston A-List best frame shop, AI frame design, Houston custom framing, Houston Heights framer, Papercity Magazine frame shop" />
+        <title>Jay's Frames - Best Custom Picture Framing in Houston | Museum-Quality Preservation</title>
+        <meta name="description" content="Award-winning custom framing in Houston's Heights. We collaborate closely with you throughout the entire framing process using museum-quality materials and preservation techniques to ensure your artwork lasts for generations." />
+        <meta name="keywords" content="custom framing Houston, picture frames Houston Heights, art preservation techniques, museum-quality framing, Houston A-List best frame shop, collaborative framing process, Houston custom framing, art installation services, frame preservation" />
         <link rel="canonical" href="https://jaysframes.com" />
         
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Voted Houston's Best" />
-        <meta property="og:description" content="Award-winning custom framing in Houston's Heights. Voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine." />
+        <meta property="og:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Museum-Quality Preservation" />
+        <meta property="og:description" content="Award-winning custom framing in Houston's Heights. We collaborate closely with you throughout the entire framing process using museum-quality materials and preservation techniques." />
         <meta property="og:url" content="https://jaysframes.com" />
         <meta property="og:image" content="/images/og-image.jpg" />
         <meta property="og:site_name" content="Jay's Frames" />
@@ -44,8 +44,8 @@ const Home = () => {
         
         {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Voted Houston's Best" />
-        <meta name="twitter:description" content="Award-winning custom framing in Houston's Heights. Voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine." />
+        <meta name="twitter:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Museum-Quality Preservation" />
+        <meta name="twitter:description" content="Award-winning custom framing in Houston's Heights. We collaborate closely with you throughout the entire framing process using museum-quality materials and preservation techniques." />
         <meta name="twitter:image" content="/images/og-image.jpg" />
         
         {/* Structured data */}
@@ -54,7 +54,7 @@ const Home = () => {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Jay's Frames",
-            "description": "Award-winning custom framing shop in Houston Heights, voted 'Best Frame Shop in Houston' by The Houston A-List and featured in Papercity Magazine.",
+            "description": "Award-winning custom framing shop in Houston Heights offering museum-quality preservation and a collaborative framing process. We provide expert art installation services and use preservation techniques to protect your valuable artwork.",
             "image": "/images/og-image.jpg",
             "telephone": "+18328933794",
             "email": "info@jaysframes.com",
@@ -108,21 +108,40 @@ const Home = () => {
                   "@type": "Offer",
                   "itemOffered": {
                     "@type": "Service",
-                    "name": "Custom Picture Framing"
+                    "name": "Custom Picture Framing",
+                    "description": "Expert custom framing with collaborative consultation process"
                   }
                 },
                 {
                   "@type": "Offer",
                   "itemOffered": {
                     "@type": "Service",
-                    "name": "Shadowbox Framing"
+                    "name": "Museum-Quality Art Preservation",
+                    "description": "Long-term protection for your artwork using acid-free materials and UV-protective glass"
                   }
                 },
                 {
                   "@type": "Offer",
                   "itemOffered": {
                     "@type": "Service",
-                    "name": "AI-Powered Frame Design"
+                    "name": "Art Installation Services",
+                    "description": "Professional installation ensuring correct and safe display to enhance presentation"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Shadowbox Framing",
+                    "description": "Custom shadowboxes for memorabilia and 3D objects with museum-quality preservation"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "AI-Powered Frame Design",
+                    "description": "Intelligent frame recommendations using advanced AI technology"
                   }
                 }
               ]
@@ -382,6 +401,129 @@ const Home = () => {
                 </CardContent>
               </Card>
             )}
+          </div>
+        </div>
+      </section>
+      
+      {/* Art Preservation & Installation Section */}
+      <section className="py-16 bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="inline-block p-3 rounded-full bg-primary/20 mb-4">
+              <ShieldCheck className="h-8 w-8 text-primary" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Museum-Quality Preservation & Installation</h2>
+            <p className="text-neutral-500 max-w-2xl mx-auto">
+              We provide comprehensive art care solutions to ensure your valuable pieces are protected and beautifully displayed.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 className="text-2xl font-bold text-primary mb-6">Art Preservation Techniques</h3>
+              <p className="text-neutral-600 mb-6">
+                At Jay's Frames, we take pride in the picture frames we produce. We use museum-quality materials and preservation 
+                techniques to ensure our custom frames last for many years to come while protecting your valuable artwork.
+              </p>
+              
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start">
+                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="font-medium">Acid-Free Materials</span>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      All our matting materials, backing boards, and mounting elements are acid-free to prevent deterioration.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="font-medium">UV-Protective Glass</span>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      Our conservation and museum glass blocks up to 99% of harmful UV rays that cause fading and deterioration.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="font-medium">Archival Mounting Methods</span>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      Our proprietary Moonmount™ system secures artwork without damaging it, allowing for reversible mounting.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-bold text-primary mb-6">Professional Art Installation</h3>
+              <p className="text-neutral-600 mb-6">
+                Our art installation services ensure your framed pieces are displayed safely and beautifully in your home or office. 
+                We respond to our customers' needs by providing comprehensive hanging and positioning services.
+              </p>
+              
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start">
+                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="font-medium">Expert Positioning</span>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      Our installers determine the optimal height and arrangement for visual impact and accessibility.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="font-medium">Secure Mounting Hardware</span>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      We use appropriate anchors and hardware based on wall type and artwork weight for long-term stability.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="font-medium">Gallery-Style Arrangements</span>
+                    <p className="text-sm text-neutral-500 mt-1">
+                      Create professional-looking gallery walls with our expert arrangement and installation services.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+              
+              <Link href="/custom-framing">
+                <Button className="bg-primary hover:bg-primary/90 text-white w-full md:w-auto font-medium">
+                  Learn More About Our Services
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

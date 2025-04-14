@@ -1,42 +1,42 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, Shield, DollarSign, Lightbulb, ArrowRight, Cpu, Scissors, Frame } from "lucide-react";
+import { Clock, Shield, DollarSign, Lightbulb, ArrowRight, Users, Scissors, Frame, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
 const processSteps = [
   {
     step: 1,
-    icon: <Cpu className="h-8 w-8 text-white" />,
-    title: "Design Consultation",
-    description: "Our AI-powered design assistant analyzes your artwork and helps you find the perfect frame and mat combination to complement your piece.",
+    icon: <Users className="h-8 w-8 text-white" />,
+    title: "Collaborative Consultation",
+    description: "We work closely with you to understand your vision, preferences, and unique needs, combining your insights with our AI-assisted recommendations.",
     color: "from-secondary/90 to-orange-500"
   },
   {
     step: 2,
     icon: <Scissors className="h-8 w-8 text-white" />,
     title: "Precise Production",
-    description: "Our skilled craftspeople cut and assemble your custom frame with precision tools and techniques for a perfect fit and finish.",
+    description: "Our skilled craftspeople cut and assemble your custom frame with precision tools and techniques for a perfect fit and finish, keeping you updated throughout.",
     color: "from-primary to-blue-600"
   },
   {
     step: 3,
-    icon: <Frame className="h-8 w-8 text-white" />,
-    title: "Museum Mounting",
-    description: "Your artwork is mounted using our proprietary Moonmount™ method, ensuring preservation and perfect presentation for generations.",
+    icon: <ShieldCheck className="h-8 w-8 text-white" />,
+    title: "Museum-Quality Preservation",
+    description: "Your artwork is mounted using archival materials and our proprietary Moonmount™ method, ensuring preservation and perfect presentation for generations.",
     color: "from-accent to-teal-500"
   }
 ];
 
 const benefits = [
   {
-    icon: <Clock className="h-12 w-12 text-secondary" />,
-    title: "Faster Turnaround",
-    description: "Cut your waiting time in half with our streamlined AI-assisted production process."
+    icon: <Users className="h-12 w-12 text-secondary" />,
+    title: "Collaborative Approach",
+    description: "We involve you at every step of the framing process to ensure your vision is perfectly executed."
   },
   {
-    icon: <Shield className="h-12 w-12 text-secondary" />,
-    title: "Museum Quality",
-    description: "Archival materials and techniques protect your art for generations to come."
+    icon: <ShieldCheck className="h-12 w-12 text-secondary" />,
+    title: "Museum-Quality Preservation",
+    description: "Acid-free, archival materials and UV-protective glass ensure your artwork lasts for generations."
   },
   {
     icon: <DollarSign className="h-12 w-12 text-secondary" />,
@@ -45,8 +45,8 @@ const benefits = [
   },
   {
     icon: <Lightbulb className="h-12 w-12 text-secondary" />,
-    title: "Expert Design",
-    description: "Our AI assistant has been trained on thousands of professional framing projects."
+    title: "Expert Installation",
+    description: "Professional art installation services ensure your framed pieces are displayed beautifully and securely."
   }
 ];
 
