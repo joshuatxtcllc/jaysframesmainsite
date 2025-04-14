@@ -159,7 +159,7 @@ export default function BlogPage() {
           {filteredPosts?.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPosts.map((post: BlogPost) => {
-                const category = categories?.find((c: BlogCategory) => c.id === post.categoryId);
+                const category = categories && categories.find((c: BlogCategory) => c.id === post.categoryId);
                 const readingTime = calculateReadingTime(post.content);
                 
                 return (
