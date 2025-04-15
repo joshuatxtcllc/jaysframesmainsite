@@ -1,0 +1,598 @@
+import { Helmet } from "react-helmet";
+import { Link } from "wouter";
+import { ArrowRight, Bot, Clock, Cpu, MailIcon, MessageCircle, Phone, Rocket, ShoppingCart, Sparkles, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Footer from "@/components/layout/footer";
+import Header from "@/components/layout/header";
+import Chatbot from "@/components/ui/chatbot";
+
+export default function ReinventedPage() {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Helmet>
+        <title>Jay's Frames Reinvented - Grand Reopening</title>
+        <meta name="description" content="Experience Jay's Frames Reinvented - streamlined operations, AI-powered design assistance, and faster turnaround times. Custom framing reimagined for the modern era." />
+      </Helmet>
+      
+      <Navbar />
+      
+      <main className="flex-1">
+        {/* Hero section */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{ 
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: '30px 30px',
+            }} />
+          </div>
+          
+          <div className="container px-4 py-20 md:py-32 mx-auto relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Jay's Frames <span className="text-secondary font-serif">Reinvented</span>
+              </h1>
+              <div className="inline-block px-4 py-1 bg-secondary/10 border border-secondary/20 rounded-full text-secondary mb-8">
+                Grand Reopening 2025
+              </div>
+              <p className="text-xl md:text-2xl mb-10 text-white/80 max-w-3xl mx-auto">
+                We've transformed custom framing with AI-powered design assistance, 
+                streamlined workflows, and enhanced craftsmanship — all to serve you better.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" asChild>
+                  <Link href="/custom-framing">
+                    Start Framing <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="border-white/30 hover:bg-white/10" asChild>
+                  <Link href="#benefits">
+                    See What's New
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent"></div>
+        </section>
+        
+        {/* Benefits section */}
+        <section id="benefits" className="py-20 px-4">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">How We've Reinvented Framing</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                With our modernized approach, we've streamlined every aspect of the custom framing process, 
+                focusing on efficiency, quality, and customer satisfaction.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Card 1 */}
+              <Card className="border-primary/10 bg-primary/5 overflow-hidden transition-all hover:shadow-md hover:-translate-y-1 duration-300">
+                <div className="h-2 bg-primary"></div>
+                <CardContent className="pt-6">
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Bot className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">AI-Powered Design Assistant</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Our cutting-edge Frame Design Assistant offers personalized recommendations for your artwork, 
+                    suggesting the perfect frame styles, mat combinations, and design options.
+                  </p>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Personalized frame & mat recommendations</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Expert-level guidance 24/7</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Real-time price estimates</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+              
+              {/* Card 2 */}
+              <Card className="border-primary/10 bg-primary/5 overflow-hidden transition-all hover:shadow-md hover:-translate-y-1 duration-300">
+                <div className="h-2 bg-primary"></div>
+                <CardContent className="pt-6">
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Cpu className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Streamlined Workflow</h3>
+                  <p className="text-muted-foreground mb-4">
+                    We've reinvented our production process from start to finish, implementing 
+                    automation and digital tracking for faster, more reliable service.
+                  </p>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>50% reduction in production time</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Real-time order tracking & updates</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Automated quality control checks</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+              
+              {/* Card 3 */}
+              <Card className="border-primary/10 bg-primary/5 overflow-hidden transition-all hover:shadow-md hover:-translate-y-1 duration-300">
+                <div className="h-2 bg-primary"></div>
+                <CardContent className="pt-6">
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Zap className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Enhanced Communications</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Stay informed at every step with our multi-channel notification system 
+                    and AI-powered customer support.
+                  </p>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Automated email & SMS notifications</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>24/7 AI chat support</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Transparent process updates</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+        
+        {/* Feature highlight */}
+        <section className="py-20 bg-gradient-to-r from-secondary/5 to-transparent border-y border-secondary/10">
+          <div className="container mx-auto max-w-6xl px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Faster Turnaround Times</h2>
+                <p className="text-lg mb-6 text-muted-foreground">
+                  Our reinvented workflow automation and streamlined production processes have 
+                  dramatically reduced wait times without compromising on quality.
+                </p>
+                
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start">
+                    <div className="rounded-full bg-green-100 p-1 mr-4 mt-1">
+                      <Clock className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-lg">Standard Framing</h3>
+                      <p className="text-muted-foreground">Now 7-10 days (previously 14-21 days)</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="rounded-full bg-green-100 p-1 mr-4 mt-1">
+                      <Clock className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-lg">Rush Orders</h3>
+                      <p className="text-muted-foreground">Now 3-5 days (previously 7-10 days)</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="rounded-full bg-green-100 p-1 mr-4 mt-1">
+                      <Clock className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-lg">Museum-Quality Conservation</h3>
+                      <p className="text-muted-foreground">Now 10-14 days (previously 21-28 days)</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <Button size="lg" asChild>
+                  <Link href="/custom-framing">
+                    Get Started Today
+                  </Link>
+                </Button>
+              </div>
+              
+              <div className="p-4 bg-white rounded-lg shadow-xl">
+                <div className="aspect-square rounded-lg overflow-hidden bg-neutral-100 relative flex items-center justify-center">
+                  <svg width="100%" height="100%" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="diagonalHatch" patternUnits="userSpaceOnUse" width="10" height="10">
+                        <path d="M-1,1 l2,-2 M0,10 l10,-10 M9,11 l2,-2" stroke="rgba(0,0,0,0.1)" strokeWidth="1" />
+                      </pattern>
+                    </defs>
+                    
+                    {/* Background */}
+                    <rect width="800" height="800" fill="#f8f8f8" />
+                    
+                    {/* Frame background */}
+                    <rect x="100" y="100" width="600" height="600" fill="white" stroke="#e0e0e0" strokeWidth="2" />
+                    
+                    {/* Frame outer border */}
+                    <rect x="50" y="50" width="700" height="700" fill="none" stroke="#333" strokeWidth="20" />
+                    
+                    {/* Frame inner border */}
+                    <rect x="100" y="100" width="600" height="600" fill="none" stroke="#444" strokeWidth="10" />
+                    
+                    {/* Mat */}
+                    <rect x="150" y="150" width="500" height="500" fill="#f5f5f5" stroke="#e0e0e0" strokeWidth="1" />
+                    
+                    {/* Picture */}
+                    <rect x="200" y="200" width="400" height="400" fill="url(#diagonalHatch)" />
+                    
+                    {/* Text */}
+                    <text x="400" y="400" fontFamily="sans-serif" fontSize="32" textAnchor="middle" fill="#333">FASTER</text>
+                    <text x="400" y="440" fontFamily="sans-serif" fontSize="32" textAnchor="middle" fill="#333">TURNAROUND</text>
+                    
+                    {/* Decorative elements */}
+                    <circle cx="400" cy="300" r="50" fill="none" stroke="#999" strokeWidth="2" />
+                    <rect x="350" y="500" width="100" height="20" fill="#999" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* AI Design Assistant section */}
+        <section className="py-20 px-4">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Our AI Design Assistant</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Expert framing advice at your fingertips 24/7. Our AI assistant helps you find the perfect frame 
+                design for your artwork by analyzing your preferences and needs.
+              </p>
+            </div>
+            
+            <Tabs defaultValue="design" className="max-w-4xl mx-auto">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="design">Design Consultation</TabsTrigger>
+                <TabsTrigger value="recommend">Frame Recommendations</TabsTrigger>
+                <TabsTrigger value="pricing">Pricing Estimates</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="design" className="p-6 border rounded-lg mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">Personalized Design Consultation</h3>
+                    <p className="mb-4 text-muted-foreground">
+                      Our AI assistant guides you through the design process with expert knowledge of frame styles, 
+                      mat combinations, and design principles.
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Trained on thousands of successful frame designs</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Considers artwork style, colors, and display environment</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Available anytime, anywhere on your device</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="bg-neutral-100 rounded-lg p-6">
+                    <div className="bg-white rounded-lg p-4 shadow-md">
+                      <div className="flex items-start mb-4">
+                        <div className="bg-primary/10 rounded-full p-2 mr-3">
+                          <Bot className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="bg-primary/5 rounded-lg p-3 text-sm">
+                          <p>Welcome to Jay's Frames Design Assistant! Tell me about the artwork you'd like to frame, and I'll help you create the perfect custom frame design.</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start mb-4">
+                        <div className="bg-neutral-100 rounded-full p-2 mr-3">
+                          <MessageCircle className="h-5 w-5 text-neutral-600" />
+                        </div>
+                        <div className="bg-neutral-100 rounded-lg p-3 text-sm">
+                          <p>I have a watercolor painting of a coastal scene, about 12×16 inches. I want something that complements the blues and grays but doesn't overwhelm the subtle colors.</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="bg-primary/10 rounded-full p-2 mr-3">
+                          <Bot className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="bg-primary/5 rounded-lg p-3 text-sm">
+                          <p>For your coastal watercolor, I'd recommend a thin silver or light driftwood frame that echoes the natural beachy feel. A pale blue-gray double mat with a slightly darker inner mat would create depth without overwhelming the delicate colors...</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="recommend" className="p-6 border rounded-lg mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">Intelligent Frame Recommendations</h3>
+                    <p className="mb-4 text-muted-foreground">
+                      Leveraging our extensive catalog and design knowledge, our AI provides specific 
+                      product recommendations tailored to your artwork and preferences.
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Recommends from our premium Larson-Juhl frame catalog</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Suggests complementary mat colors from Crescent</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Offers multiple options across different price points</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                      <div className="h-36 bg-neutral-200"></div>
+                      <div className="p-3">
+                        <h4 className="font-medium text-sm">Driftwood Silver</h4>
+                        <p className="text-xs text-muted-foreground">Distressed finish with silver accents</p>
+                        <div className="mt-1 text-xs font-medium text-primary">Recommended</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                      <div className="h-36 bg-neutral-200"></div>
+                      <div className="p-3">
+                        <h4 className="font-medium text-sm">Coastal Blue</h4>
+                        <p className="text-xs text-muted-foreground">Weathered blue with natural grain</p>
+                        <div className="mt-1 text-xs font-medium text-primary">Recommended</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                      <div className="h-36 bg-neutral-200"></div>
+                      <div className="p-3">
+                        <h4 className="font-medium text-sm">Whisper White</h4>
+                        <p className="text-xs text-muted-foreground">Clean white with subtle texture</p>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                      <div className="h-36 bg-neutral-200"></div>
+                      <div className="p-3">
+                        <h4 className="font-medium text-sm">Metal Silver</h4>
+                        <p className="text-xs text-muted-foreground">Contemporary brushed finish</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="pricing" className="p-6 border rounded-lg mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">Instant Pricing Estimates</h3>
+                    <p className="mb-4 text-muted-foreground">
+                      Get transparent price estimates in real-time as you explore different framing options, 
+                      with no surprises at checkout.
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Real-time pricing updates as you customize</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Transparent breakdown of material costs</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="rounded-full bg-primary/10 p-1 mr-3 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <span>Options across budget ranges with clear value comparison</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div className="p-4 border-b">
+                      <h4 className="font-bold text-lg">Price Estimate</h4>
+                    </div>
+                    <div className="p-4 space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">12×16 Frame (Driftwood Silver)</span>
+                        <span>$85.00</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Double Mat (Blue-Gray)</span>
+                        <span>$45.00</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Conservation Glass</span>
+                        <span>$35.00</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Mounting</span>
+                        <span>$15.00</span>
+                      </div>
+                      <div className="flex justify-between border-t pt-2 font-bold">
+                        <span>Total Estimate</span>
+                        <span>$180.00</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground italic">
+                        Final price may vary based on exact dimensions and services.
+                      </div>
+                      <Button className="w-full">
+                        <ShoppingCart className="h-4 w-4 mr-2" /> Add to Cart
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </section>
+        
+        {/* Notification system */}
+        <section className="py-20 px-4 bg-gradient-to-r from-secondary/5 to-transparent border-y border-secondary/10">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Real-Time Order Updates</h2>
+                <p className="text-lg mb-6 text-muted-foreground">
+                  Our enhanced notification system keeps you informed at every step of your order's journey, 
+                  with updates delivered through your preferred communication channels.
+                </p>
+                
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start">
+                    <div className="rounded-full bg-primary/10 p-1 mr-4 mt-1">
+                      <MailIcon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-lg">Email Notifications</h3>
+                      <p className="text-muted-foreground">Detailed updates with order information</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="rounded-full bg-primary/10 p-1 mr-4 mt-1">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-lg">SMS Alerts</h3>
+                      <p className="text-muted-foreground">Quick text messages for important status changes</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start">
+                    <div className="rounded-full bg-primary/10 p-1 mr-4 mt-1">
+                      <Rocket className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-lg">Order Timeline</h3>
+                      <p className="text-muted-foreground">Visual progress tracker in your account dashboard</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <Button size="lg" asChild>
+                  <Link href="/order-status">
+                    Track Your Order
+                  </Link>
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg shadow-md p-4 transform transition-transform hover:translate-y-[-4px]">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="bg-green-100 rounded-full p-1">
+                      <Rocket className="h-4 w-4 text-green-600" />
+                    </div>
+                    <h4 className="font-bold">Order Confirmation</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    Thank you for your order #12345! We've received your custom framing request and will begin processing it right away.
+                  </p>
+                  <div className="text-xs text-neutral-400 mt-2">Today, 2:15 PM</div>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow-md p-4 transform transition-transform hover:translate-y-[-4px]">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="bg-blue-100 rounded-full p-1">
+                      <Rocket className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <h4 className="font-bold">Materials Ordered</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    We've ordered the materials for your custom frame. Once they arrive, we'll begin crafting your piece within 24-48 hours.
+                  </p>
+                  <div className="text-xs text-neutral-400 mt-2">Today, 4:30 PM</div>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow-md p-4 transform transition-transform hover:translate-y-[-4px]">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="bg-purple-100 rounded-full p-1">
+                      <MessageCircle className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <h4 className="font-bold">Chat Message</h4>
+                  </div>
+                  <p className="text-sm text-neutral-600">
+                    Hello! Just wanted to let you know we've received some special blue-gray matting that will perfectly complement your watercolor. Would you like to see a preview?
+                  </p>
+                  <div className="text-xs text-neutral-400 mt-2">Today, 5:45 PM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* CTA section */}
+        <section className="py-20 px-4">
+          <div className="container mx-auto max-w-6xl">
+            <div className="bg-primary-900 text-white rounded-xl p-8 md:p-12 relative overflow-hidden">
+              <div className="absolute inset-0 bg-repeat opacity-10" style={{ 
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundSize: '30px 30px',
+              }} />
+              
+              <div className="relative z-10 max-w-3xl mx-auto text-center">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Experience Jay's Frames Reinvented</h2>
+                <p className="text-lg mb-8 text-white/80">
+                  Join us for our grand reopening and see how we've transformed the custom framing experience.
+                  Faster service, expert AI assistance, and the same exceptional quality you've come to expect.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button size="lg" variant="secondary" asChild>
+                    <Link href="/custom-framing">
+                      Start Your Project
+                    </Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="border-white/30 hover:bg-white/10" asChild>
+                    <Link href="/contact">
+                      Visit Our Studio
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
+      
+      {/* Chatbot component */}
+      <Chatbot />
+    </div>
+  );
+}
