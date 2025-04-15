@@ -3,10 +3,34 @@ import PDFDocument from 'pdfkit';
 import { Order } from '@shared/schema';
 import { storage } from '../storage';
 import { Readable } from 'stream';
+import twilio from 'twilio';
 
 // Email configuration
 // Note: In production, use environment variables for these sensitive values
 let transporter: nodemailer.Transporter | null = null;
+
+// Twilio configuration for SMS messaging
+let twilioClient: twilio.Twilio | null = null;
+
+/**
+ * Initialize the Twilio client for sending SMS messages
+ */
+export async function initTwilioClient() {
+  try {
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    
+    if (!accountSid || !authToken) {
+      console.log('Twilio credentials not found. SMS functionality will be disabled.');
+      return;
+    }
+    
+    twilioClient = twilio(accountSid, authToken);
+    console.log('Twilio client initialized for SMS messaging');
+  } catch (error) {
+    console.error('Failed to initialize Twilio client:', error);
+  }
+}
 
 export async function initEmailTransporter() {
   try {
@@ -305,6 +329,47 @@ export async function generateInvoicePdf(order: ExtendedOrder): Promise<Buffer> 
       reject(error);
     }
   });
+}
+
+/**
+ * Sends an SMS notification
+ * @param message The message content
+ * @param recipient The phone number to send the SMS to
+ * @returns Promise<boolean> Success status
+ */
+export async function sendSmsNotification(message: string, recipient: string): Promise<boolean> {
+  try {
+    if (!twilioClient) {
+      await initTwilioClient();
+    }
+    
+    if (!twilioClient) {
+      console.error('SMS notification could not be sent: Twilio client not initialized');
+      return false;
+    }
+    
+    // Validate phone number format (basic validation)
+    if (!recipient.match(/^\+?[1-9]\d{1,14}$/)) {
+      console.error(`Invalid phone number format: ${recipient}`);
+      return false;
+    }
+    
+    // Ensure phone number is in E.164 format (starts with +)
+    const formattedRecipient = recipient.startsWith('+') ? recipient : `+${recipient}`;
+    
+    // Send the SMS
+    const twilioMessage = await twilioClient.messages.create({
+      body: message,
+      from: process.env.TWILIO_PHONE_NUMBER || '',
+      to: formattedRecipient
+    });
+    
+    console.log(`SMS notification sent to ${recipient}. SID: ${twilioMessage.sid}`);
+    return true;
+  } catch (error) {
+    console.error('Failed to send SMS notification:', error);
+    return false;
+  }
 }
 
 /**
