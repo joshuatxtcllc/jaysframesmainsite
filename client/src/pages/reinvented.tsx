@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 import { Link } from "wouter";
-import { ArrowRight, Bot, Clock, Cpu, MailIcon, MessageCircle, Phone, Rocket, ShoppingCart, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, Award, Bot, Clock, Cpu, MailIcon, MessageCircle, Phone, Rocket, ShoppingCart, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -671,6 +671,170 @@ export default function ReinventedPage() {
                     Hello! Just wanted to let you know we've received some special blue-gray matting that will perfectly complement your watercolor. Would you like to see a preview?
                   </p>
                   <div className="text-xs text-neutral-400 mt-2">Today, 5:45 PM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Automated Review System */}
+        <section className="py-20 px-4 bg-gradient-to-b from-white to-primary/5">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Automated Review & Feedback System</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Our new automated review system completes the perfect customer journey, ensuring satisfaction 
+                and helping us maintain our reputation for excellence.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div className="order-2 md:order-1">
+                <div className="bg-white p-6 rounded-lg shadow-xl border border-primary/10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="h-14 w-14 rounded-full bg-neutral-100 flex items-center justify-center overflow-hidden">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-neutral-400">
+                        <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" fill="currentColor"/>
+                        <path d="M12 13C7.58172 13 4 16.5817 4 21H20C20 16.5817 16.4183 13 12 13Z" fill="currentColor"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Client Follow-up</h3>
+                      <p className="text-sm text-muted-foreground">Automated, yet personal</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 mb-6">
+                    <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                      <div className="flex items-center mb-2">
+                        <MailIcon className="h-5 w-5 text-green-600 mr-2" />
+                        <h4 className="font-medium">Automated Email</h4>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        "Thank you for choosing Jay's Frames Reinvented! We hope you love your new custom frame. 
+                        Would you mind taking a moment to share your experience?"
+                      </p>
+                    </div>
+
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                      <div className="flex items-center mb-2">
+                        <MessageCircle className="h-5 w-5 text-blue-600 mr-2" />
+                        <h4 className="font-medium">SMS Reminder</h4>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        "Jay's Frames: How are you enjoying your new frame? Reply with your satisfaction level (1-5) 
+                        or tap here to leave a review."
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="bg-white border border-neutral-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-red-500 mr-2">
+                          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                        </svg>
+                        <span className="font-medium">Google Review</span>
+                      </div>
+                      <div className="flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-yellow-400">
+                          <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-yellow-400">
+                          <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-yellow-400">
+                          <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-yellow-400">
+                          <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-yellow-400">
+                          <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      "Jay's Frames Reinvented completely transformed my framing experience! The AI assistant helped me select the perfect frame for my watercolor, and my order was ready in just a week. The quality is impeccable - I couldn't be happier!"
+                    </p>
+                    <div className="text-sm text-muted-foreground italic">
+                      Sarah T. • 2 days ago
+                    </div>
+                    <div className="mt-3 p-2 border border-green-100 rounded bg-green-50 text-xs text-green-700 flex items-center">
+                      <Sparkles className="h-3 w-3 mr-1" />
+                      <span>Posted to Google with one-click</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="order-1 md:order-2">
+                <h3 className="text-2xl font-bold mb-6">Complete Customer Journey</h3>
+                <p className="text-lg mb-6 text-muted-foreground">
+                  Our automated review system closes the loop on the customer experience, ensuring satisfaction 
+                  while building our reputation.
+                </p>
+
+                <div className="space-y-6 mb-8">
+                  <div className="bg-white p-5 rounded-lg shadow-sm border border-primary/10">
+                    <h4 className="font-bold text-lg flex items-center">
+                      <div className="bg-primary/10 p-1.5 rounded-full mr-3">
+                        <ShoppingCart className="h-5 w-5 text-primary" />
+                      </div>
+                      Order Completion
+                    </h4>
+                    <p className="mt-2 text-muted-foreground pl-11">
+                      When a customer's order is ready for pickup, our system automatically sends a notification via their preferred channel.
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-5 rounded-lg shadow-sm border border-secondary/10">
+                    <h4 className="font-bold text-lg flex items-center">
+                      <div className="bg-secondary/10 p-1.5 rounded-full mr-3">
+                        <MessageCircle className="h-5 w-5 text-secondary" />
+                      </div>
+                      Satisfaction Check
+                    </h4>
+                    <p className="mt-2 text-muted-foreground pl-11">
+                      Three days after pickup, customers receive an automated follow-up asking about their satisfaction level.
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-5 rounded-lg shadow-sm border border-primary/10">
+                    <h4 className="font-bold text-lg flex items-center">
+                      <div className="bg-primary/10 p-1.5 rounded-full mr-3">
+                        <Award className="h-5 w-5 text-primary" />
+                      </div>
+                      Review Generation
+                    </h4>
+                    <p className="mt-2 text-muted-foreground pl-11">
+                      Satisfied customers are invited to share their experience with a one-click posting to Google Reviews, enhancing our reputation.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                  <h4 className="font-medium text-green-800 mb-2">Business Impact:</h4>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start">
+                      <div className="rounded-full bg-green-100 p-1 mr-3 mt-0.5">
+                        <Sparkles className="h-4 w-4 text-green-600" />
+                      </div>
+                      <span>40% increase in online reviews</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="rounded-full bg-green-100 p-1 mr-3 mt-0.5">
+                        <Sparkles className="h-4 w-4 text-green-600" />
+                      </div>
+                      <span>Faster issue resolution through early feedback</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="rounded-full bg-green-100 p-1 mr-3 mt-0.5">
+                        <Sparkles className="h-4 w-4 text-green-600" />
+                      </div>
+                      <span>Zero manual follow-up effort required</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
