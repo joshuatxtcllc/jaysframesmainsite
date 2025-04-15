@@ -193,7 +193,7 @@ export default function Notifications() {
       <div className="mt-8 text-center">
         <p className="text-sm text-muted-foreground">
           Want to receive notifications via text message?{" "}
-          <Link href="#">
+          <Link href="/sms-settings">
             <span className="text-primary hover:underline">Set up SMS alerts</span>
           </Link>
         </p>

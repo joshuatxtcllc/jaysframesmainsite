@@ -9,9 +9,21 @@ import {
   insertBlogPostSchema 
 } from "@shared/schema";
 import { handleChatRequest, getFrameRecommendations, askFrameAssistant, type ChatMessage } from "./ai";
-import { sendNewOrderNotification, sendOrderConfirmationEmail, initEmailTransporter, OrderItem, ExtendedOrder } from "./services/notification";
+import { 
+  sendNewOrderNotification, 
+  sendOrderConfirmationEmail, 
+  initEmailTransporter, 
+  initTwilioClient,
+  sendSmsNotification,
+  OrderItem, 
+  ExtendedOrder 
+} from "./services/notification";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize services
+  await initEmailTransporter();
+  await initTwilioClient();
+  
   // API Routes
   const apiRouter = app.route("/api");
 
@@ -369,8 +381,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid notification type" });
       }
       
-      // Here we would send to a notification service, email service, or SMS gateway
-      // For now, we'll just return success to support the notification widget
+      // Send SMS if enabled and recipient is provided
+      if (smsEnabled && smsRecipient) {
+        const smsMessage = `${title}: ${description}`;
+        sendSmsNotification(smsMessage, smsRecipient)
+          .then(success => {
+            if (success) {
+              console.log(`SMS notification sent to ${smsRecipient}`);
+            } else {
+              console.error(`Failed to send SMS to ${smsRecipient}`);
+            }
+          })
+          .catch(error => {
+            console.error('SMS notification error:', error);
+          });
+      }
       
       // Log the notification
       console.log(`Notification received: ${title} - ${description}`);
