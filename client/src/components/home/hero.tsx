@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Wand2, Award, ShieldCheck, Heart, ArrowRight, Sparkles } from "lucide-react";
+import { Wand2, Award, ArrowRight, Sparkles } from "lucide-react";
+import { Cpu, Clock } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -34,20 +35,20 @@ const Hero = () => {
           <div className="lg:w-3/5 fade-in" style={{ animationDelay: "0.2s" }}>
             <div className="inline-flex items-center px-6 py-2 bg-secondary/30 rounded-full mb-6 backdrop-blur-sm">
               <Award className="h-4 w-4 text-white mr-2" />
-              <p className="text-white font-semibold tracking-wider text-sm">VOTED BEST FRAME SHOP IN HOUSTON</p>
+              <p className="text-white font-semibold tracking-wider text-sm">JAY'S FRAMES REINVENTED - GRAND REOPENING 2025</p>
             </div>
             
             <h1 className="heading-xl text-white mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-              Houston's Premier <span className="text-secondary italic relative font-bold">
-                Custom Framing
+              Jay's Frames <span className="text-secondary italic relative font-bold">
+                Reinvented
                 <span className="absolute -bottom-3 left-0 w-full h-1.5 bg-secondary/70 rounded-full"></span>
-              </span> Experts
+              </span>
             </h1>
             
             <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              Jay's Frames brings award-winning custom framing services to Houston's Heights neighborhood. 
-              Featured in Papercity Magazine and voted "Best Frame Shop in Houston" by The Houston A-List voters, 
-              we combine AI-powered design with expert craftsmanship for unmatched quality.
+              Jay's Frames Reinvented brings streamlined efficiencies with workflow automations and AI assistance, 
+              resulting in faster processing times, reduced labor costs, and quicker delivery of your custom framing projects.
+              Experience the future of custom framing today.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 mb-12">
@@ -71,9 +72,9 @@ const Hero = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-10">
               {[
                 { icon: <Wand2 className="h-5 w-5" />, text: "AI-Powered Designs" },
-                { icon: <Award className="h-5 w-5" />, text: "Handcrafted Quality" },
-                { icon: <ShieldCheck className="h-5 w-5" />, text: "100% Satisfaction" },
-                { icon: <Heart className="h-5 w-5" />, text: "Made with Love" }
+                { icon: <Cpu className="h-5 w-5" />, text: "Workflow Automation" },
+                { icon: <Clock className="h-5 w-5" />, text: "50% Faster Delivery" },
+                { icon: <Sparkles className="h-5 w-5" />, text: "Reinvented Process" }
               ].map((feature, i) => (
                 <div key={i} className="flex items-center fade-in hover-lift" style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}>
                   <div className="flex-shrink-0 mr-3 bg-secondary/40 p-2.5 rounded-full text-white shadow-md">
