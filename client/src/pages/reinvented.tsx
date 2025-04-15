@@ -54,6 +54,29 @@ export default function ReinventedPage() {
           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent"></div>
         </section>
         
+        {/* Promotional Announcement */}
+        <section className="py-12 bg-secondary text-white">
+          <div className="container mx-auto max-w-6xl px-4">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="md:w-3/4">
+                <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                  The Future of Custom Framing is Here – And It Saves You Time and Money!
+                </h2>
+                <p className="text-lg font-medium mb-0">
+                  <span className="underline decoration-4 decoration-white/30 underline-offset-4">BREAKING NEWS:</span> Jay's Frames Reinvented has revolutionized the framing industry! Our game-changing automation and AI integration slashes production time by 50% and eliminates common framing mistakes. With our wholesale partnerships, streamlined workflow, and digital assistants, we've reduced overhead costs while delivering superior quality. Visit our <Link href="/reinvented" className="text-white font-bold hover:underline">Jay's Frames Reinvented</Link> page to discover how our technological transformation translates to faster turnaround times, exceptional craftsmanship, and unbeatable value for your cherished artwork. Don't miss out on the framing revolution – experience it today!
+                </p>
+              </div>
+              <div className="md:w-1/4 flex justify-center">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 font-medium" asChild>
+                  <Link href="#benefits">
+                    See the Savings <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+        
         {/* Benefits section */}
         <section id="benefits" className="py-20 px-4">
           <div className="container mx-auto max-w-6xl">
@@ -241,6 +264,109 @@ export default function ReinventedPage() {
                     <circle cx="400" cy="300" r="50" fill="none" stroke="#999" strokeWidth="2" />
                     <rect x="350" y="500" width="100" height="20" fill="#999" />
                   </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Cost Savings section */}
+        <section className="py-20 px-4 bg-primary/5">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Significant Cost Savings</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Our technological transformation hasn't just improved the custom framing experience — it's revolutionized our business model, 
+                allowing us to pass on substantial savings while delivering superior quality.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h3 className="text-2xl font-bold mb-6 text-primary">The Numbers Don't Lie</h3>
+                
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between pb-4 border-b">
+                    <div>
+                      <h4 className="font-medium text-lg">Outsourced Frame Production</h4>
+                      <p className="text-muted-foreground text-sm">Professional partners with quality guarantees</p>
+                    </div>
+                    <div className="bg-green-100 text-green-800 font-bold px-4 py-2 rounded-full">
+                      $50,000/year savings
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pb-4 border-b">
+                    <div>
+                      <h4 className="font-medium text-lg">AI Design & Order Assistant</h4>
+                      <p className="text-muted-foreground text-sm">Automated consultations & inventory management</p>
+                    </div>
+                    <div className="bg-green-100 text-green-800 font-bold px-4 py-2 rounded-full">
+                      $50,000/year savings
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pb-4 border-b">
+                    <div>
+                      <h4 className="font-medium text-lg">Automated Notifications</h4>
+                      <p className="text-muted-foreground text-sm">Email & SMS updates with zero staff effort</p>
+                    </div>
+                    <div className="bg-green-100 text-green-800 font-bold px-4 py-2 rounded-full">
+                      200+ hours saved annually
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-lg">Digital Kanban Workflow</h4>
+                      <p className="text-muted-foreground text-sm">Streamlined production management</p>
+                    </div>
+                    <div className="bg-green-100 text-green-800 font-bold px-4 py-2 rounded-full">
+                      50% less production time
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-8">
+                <div className="bg-white p-6 rounded-lg border border-primary/10 shadow-sm">
+                  <h3 className="text-xl font-bold mb-4 text-primary">Streamlined Operational Flow</h3>
+                  <ol className="space-y-3 relative border-l border-primary/20 pl-6">
+                    <li className="mb-5">
+                      <div className="absolute w-4 h-4 bg-primary rounded-full -left-2"></div>
+                      <h4 className="font-bold">Customer Arrival</h4>
+                      <p className="text-muted-foreground">AI design assistant begins consultation immediately</p>
+                    </li>
+                    <li className="mb-5">
+                      <div className="absolute w-4 h-4 bg-primary/60 rounded-full -left-2"></div>
+                      <h4 className="font-bold">Design Approval</h4>
+                      <p className="text-muted-foreground">Quick staff approval of AI recommendations</p>
+                    </li>
+                    <li className="mb-5">
+                      <div className="absolute w-4 h-4 bg-primary/60 rounded-full -left-2"></div>
+                      <h4 className="font-bold">Automated Ordering</h4>
+                      <p className="text-muted-foreground">Materials auto-ordered after customer checkout</p>
+                    </li>
+                    <li className="mb-5">
+                      <div className="absolute w-4 h-4 bg-primary/60 rounded-full -left-2"></div>
+                      <h4 className="font-bold">Professional Assembly</h4>
+                      <p className="text-muted-foreground">Expert assembly with direct flow between stations</p>
+                    </li>
+                    <li>
+                      <div className="absolute w-4 h-4 bg-primary rounded-full -left-2"></div>
+                      <h4 className="font-bold">Automated Notifications</h4>
+                      <p className="text-muted-foreground">Customer alerted when order is ready for pickup</p>
+                    </li>
+                  </ol>
+                </div>
+                
+                <div className="bg-secondary/10 p-6 rounded-lg">
+                  <blockquote className="italic text-lg relative px-8">
+                    <div className="absolute top-0 left-0 text-6xl text-secondary/20">"</div>
+                    By outsourcing frame cutting and joining to wholesale specialists, we've eliminated mistakes, reduced labor costs, and streamlined our entire production flow. The result? Higher quality, faster turnaround, and more satisfied customers.
+                    <div className="absolute bottom-0 right-4 text-6xl text-secondary/20">"</div>
+                  </blockquote>
+                  <div className="mt-4 font-medium text-right">— Jay, Founder</div>
                 </div>
               </div>
             </div>
