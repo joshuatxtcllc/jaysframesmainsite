@@ -15,6 +15,7 @@ import Notifications from "@/pages/notifications";
 import NotificationTest from "@/pages/notification-test";
 import NotificationEmbed from "@/pages/developer/notification-embed";
 import ARFrameAssistant from "@/pages/ar-frame-assistant";
+import SMSSettings from "@/pages/sms-settings";
 // Blog Pages
 import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog/[slug]";
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
       <Route path="/notifications" component={Notifications} />
       <Route path="/notification-test" component={NotificationTest} />
+      <Route path="/sms-settings" component={SMSSettings} />
       <Route path="/developer/notification-embed" component={NotificationEmbed} />
       <Route path="/ar-frame-assistant" component={ARFrameAssistant} />
       {/* Blog Routes */}
