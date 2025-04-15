@@ -4,8 +4,6 @@ import { ArrowRight, Bot, Clock, Cpu, MailIcon, MessageCircle, Phone, Rocket, Sh
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header";
 import Chatbot from "@/components/ui/chatbot";
 
 export default function ReinventedPage() {
@@ -15,8 +13,6 @@ export default function ReinventedPage() {
         <title>Jay's Frames Reinvented - Grand Reopening</title>
         <meta name="description" content="Experience Jay's Frames Reinvented - streamlined operations, AI-powered design assistance, and faster turnaround times. Custom framing reimagined for the modern era." />
       </Helmet>
-      
-      <Navbar />
       
       <main className="flex-1">
         {/* Hero section */}
@@ -588,8 +584,6 @@ export default function ReinventedPage() {
           </div>
         </section>
       </main>
-      
-      <Footer />
       
       {/* Chatbot component */}
       <Chatbot />
