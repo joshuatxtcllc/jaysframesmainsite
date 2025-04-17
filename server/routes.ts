@@ -26,6 +26,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // API Routes
   const apiRouter = app.route("/api");
+  
+  // API Documentation and Integration
+  app.get("/api/docs", (req: Request, res: Response) => {
+    const apiDocs = {
+      version: "1.0.0",
+      baseUrl: `${req.protocol}://${req.get('host')}/api`,
+      authentication: "API Key (add 'X-API-Key' header to requests)",
+      endpoints: [
+        {
+          path: "/products",
+          method: "GET",
+          description: "Get all available products",
+          parameters: {}
+        },
+        {
+          path: "/products/category/:category",
+          method: "GET",
+          description: "Get products by category",
+          parameters: {
+            category: "string (frame, shadowbox, moonmount, etc.)"
+          }
+        },
+        {
+          path: "/products/:id",
+          method: "GET",
+          description: "Get product by ID",
+          parameters: {
+            id: "number"
+          }
+        },
+        {
+          path: "/frame-options",
+          method: "GET",
+          description: "Get all available frame options",
+          parameters: {}
+        },
+        {
+          path: "/mat-options",
+          method: "GET",
+          description: "Get all available mat options",
+          parameters: {}
+        },
+        {
+          path: "/glass-options",
+          method: "GET",
+          description: "Get all available glass options",
+          parameters: {}
+        },
+        {
+          path: "/orders",
+          method: "GET",
+          description: "Get all orders (requires authentication)",
+          parameters: {}
+        },
+        {
+          path: "/orders/:id",
+          method: "GET",
+          description: "Get order by ID (requires authentication)",
+          parameters: {
+            id: "number"
+          }
+        },
+        {
+          path: "/orders",
+          method: "POST",
+          description: "Create a new order",
+          parameters: {
+            customerName: "string",
+            customerEmail: "string",
+            customerPhone: "string",
+            items: "array of order items",
+            status: "string",
+            totalAmount: "number"
+          }
+        },
+        {
+          path: "/frame-recommendations",
+          method: "POST",
+          description: "Get AI frame recommendations",
+          parameters: {
+            artworkDescription: "string",
+            colors: "array of strings (optional)",
+            style: "string (optional)",
+            budget: "number (optional)"
+          }
+        }
+      ]
+    };
+    
+    res.json(apiDocs);
+  });
 
   // Get all products
   app.get("/api/products", async (req: Request, res: Response) => {
@@ -696,6 +787,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error in blog content generation:", error);
       res.status(500).json({ message: "Failed to process content generation request" });
     }
+  });
+
+  // API Integration endpoints
+  // Allows third-party apps to easily connect to Jay's Frames systems
+  app.get("/api/integration/status", (req: Request, res: Response) => {
+    res.json({
+      status: "operational",
+      version: "1.0.0",
+      serverTime: new Date().toISOString(),
+      endpoints: {
+        docs: "/api/docs",
+        products: "/api/products",
+        frameOptions: "/api/frame-options",
+        orders: "/api/orders",
+        chat: "/api/chat",
+        frameRecommendations: "/api/frame-recommendations",
+        frameAssistant: "/api/frame-assistant"
+      }
+    });
+  });
+  
+  // Webhook registration endpoint for receiving notifications
+  app.post("/api/integration/webhooks", (req: Request, res: Response) => {
+    try {
+      const { url, events, description, apiKey } = req.body;
+      
+      if (!url || !events || !Array.isArray(events) || events.length === 0) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "URL and at least one event type are required" 
+        });
+      }
+      
+      // Validate URL format
+      try {
+        new URL(url);
+      } catch (error) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Invalid URL format" 
+        });
+      }
+      
+      // Validate event types
+      const validEvents = ['order.created', 'order.updated', 'product.created', 'product.updated'];
+      const invalidEvents = events.filter(event => !validEvents.includes(event));
+      
+      if (invalidEvents.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid event types: ${invalidEvents.join(', ')}`,
+          validEvents
+        });
+      }
+      
+      // In a real implementation, we would store the webhook in a database
+      // For now, we'll just return a success response with a fake webhook ID
+      const webhookId = `wh_${Date.now()}`;
+      
+      console.log(`Webhook registered: ${url} for events: ${events.join(', ')}`);
+      
+      res.status(201).json({
+        success: true,
+        webhook: {
+          id: webhookId,
+          url,
+          events,
+          description: description || 'Third-party integration',
+          createdAt: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      console.error("Webhook registration error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to register webhook" 
+      });
+    }
+  });
+  
+  // API data sync endpoint for bulk data export
+  app.get("/api/integration/sync/:resource", (req: Request, res: Response) => {
+    const { resource } = req.params;
+    const { since, limit, format } = req.query;
+    
+    // Validate resource type
+    const validResources = ['products', 'orders', 'frame-options', 'mat-options', 'glass-options'];
+    
+    if (!validResources.includes(resource)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid resource type: ${resource}`,
+        validResources
+      });
+    }
+    
+    // In a real implementation, we would fetch the data from storage based on the parameters
+    // For now, return a simple response with sync details
+    res.json({
+      success: true,
+      resource,
+      syncDetails: {
+        timestamp: new Date().toISOString(),
+        parameters: {
+          since: since || 'all',
+          limit: limit || 'none',
+          format: format || 'json'
+        },
+        message: `This endpoint allows bulk data synchronization for ${resource}. Add appropriate query parameters to filter and format the data.`
+      }
+    });
   });
 
   const httpServer = createServer(app);
