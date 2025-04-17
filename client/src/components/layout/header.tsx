@@ -90,9 +90,11 @@ const Header = () => {
     { href: "/", label: "Home" },
     { href: "/products", label: "Products" },
     { href: "/custom-framing", label: "Custom Framing" },
+    { href: "/reinvented", label: "Reinvented" },
     { href: "/blog", label: "Blog" },
     { href: "/order-status", label: "Order Status" },
-    { href: "#about", label: "About Us" }
+    { href: "/about", label: "About Us" },
+    { href: "/contact", label: "Contact" }
   ];
 
   return (
@@ -119,7 +121,7 @@ const Header = () => {
               <Link href="#">
                 <span className="hover:text-secondary transition-colors cursor-pointer">FAQ</span>
               </Link>
-              <Link href="#">
+              <Link href="/contact">
                 <span className="hover:text-secondary transition-colors cursor-pointer">Contact</span>
               </Link>
             </div>

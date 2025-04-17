@@ -54,16 +54,16 @@ const Footer = () => {
               </div>
             </Link>
             <p className="text-neutral-300 mb-6 leading-relaxed">
-              Custom framing reimagined with AI technology, exceptional craftsmanship, and a commitment to preservation that stands the test of time.
+              Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times. Our AI-powered design assistants learn Jay's precise framing style to deliver exceptional results.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-white transition-all duration-300" aria-label="Facebook">
+              <a href="https://facebook.com/jaysframes" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-white transition-all duration-300" aria-label="Facebook">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-white transition-all duration-300" aria-label="Instagram">
+              <a href="https://instagram.com/jaysframes" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-white transition-all duration-300" aria-label="Instagram">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-white transition-all duration-300" aria-label="Twitter">
+              <a href="https://twitter.com/jaysframes" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-white transition-all duration-300" aria-label="Twitter">
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
@@ -73,21 +73,21 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-5 pb-2 border-b border-white/10">Products</h3>
             <ul className="space-y-3">
               <FooterLink href="/custom-framing" label="Custom Framing" />
+              <FooterLink href="/products?category=readymade" label="Ready-Made Frames" />
               <FooterLink href="/products?category=shadowbox" label="Shadowboxes" />
               <FooterLink href="/products?category=moonmount" label="Moonmount™ System" />
-              <FooterLink href="/products" label="Ready-Made Frames" />
-              <FooterLink href="#" label="Gift Cards" />
+              <FooterLink href="/products" label="All Products" />
             </ul>
           </div>
           
           <div className="md:col-span-2">
-            <h3 className="text-lg font-bold mb-5 pb-2 border-b border-white/10">Support</h3>
+            <h3 className="text-lg font-bold mb-5 pb-2 border-b border-white/10">Company</h3>
             <ul className="space-y-3">
+              <FooterLink href="/about" label="About Our Process" />
+              <FooterLink href="/reinvented" label="Jay's Frames Reinvented" />
+              <FooterLink href="/blog" label="Framing Blog" />
+              <FooterLink href="/contact" label="Contact Us" />
               <FooterLink href="/order-status" label="Track Your Order" />
-              <FooterLink href="#" label="Shipping & Returns" />
-              <FooterLink href="#" label="Care Instructions" />
-              <FooterLink href="#" label="FAQ" />
-              <FooterLink href="#" label="Contact Us" />
             </ul>
           </div>
           
