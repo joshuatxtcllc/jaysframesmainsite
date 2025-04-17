@@ -147,9 +147,9 @@ export default function ReinventedPage() {
               </div>
               <div className="md:w-1/4 flex justify-center">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 font-medium" asChild>
-                  <Link href="#benefits">
+                  <a href="#savings">
                     See the Savings <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </div>
@@ -379,7 +379,7 @@ export default function ReinventedPage() {
         </section>
 
         {/* Cost Savings section */}
-        <section className="py-20 px-4 bg-primary/5">
+        <section id="savings" className="py-20 px-4 bg-primary/5">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Significant Cost Savings</h2>
