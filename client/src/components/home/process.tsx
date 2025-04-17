@@ -1,52 +1,67 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, Shield, DollarSign, Lightbulb, ArrowRight, Users, Scissors, Frame, ShieldCheck } from "lucide-react";
+import { 
+  Clock, 
+  Shield, 
+  DollarSign, 
+  Lightbulb, 
+  ArrowRight, 
+  Users, 
+  Scissors, 
+  Frame, 
+  ShieldCheck, 
+  Rocket, 
+  Zap,
+  Bot,
+  TimerReset,
+  LayoutGrid
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
 const processSteps = [
   {
     step: 1,
-    icon: <Users className="h-8 w-8 text-white" />,
-    title: "Collaborative Consultation",
-    description: "We work closely with you to understand your vision, preferences, and unique needs, combining your insights with our AI-assisted recommendations.",
+    icon: <Bot className="h-8 w-8 text-white" />,
+    title: "AI-Powered Design Consultation",
+    description: "Our machine learning assistant, trained to mimic Jay's precise framing style, provides expert design recommendations tailored to your specific artwork.",
     color: "from-secondary/90 to-orange-500"
   },
   {
     step: 2,
-    icon: <Scissors className="h-8 w-8 text-white" />,
-    title: "Precise Production",
-    description: "Our skilled craftspeople cut and assemble your custom frame with precision tools and techniques for a perfect fit and finish, keeping you updated throughout.",
+    icon: <LayoutGrid className="h-8 w-8 text-white" />,
+    title: "Revolutionary Hybrid Production",
+    description: "Our unique hybrid mutant model integrates with wholesale vendors for frame cutting and building, saving 1,920 labor hours annually while maintaining quality.",
     color: "from-primary to-blue-600"
   },
   {
     step: 3,
     icon: <ShieldCheck className="h-8 w-8 text-white" />,
-    title: "Museum-Quality Preservation",
-    description: "Your artwork is mounted using archival materials and our proprietary Moonmount™ method, ensuring preservation and perfect presentation for generations.",
+    title: "42% Faster Turnaround Times",
+    description: "Our methodically structured shop and streamlined process reduces turnaround times by 42%, allowing you to enjoy your beautifully framed artwork sooner.",
     color: "from-accent to-teal-500"
   }
 ];
 
 const benefits = [
   {
-    icon: <Users className="h-12 w-12 text-secondary" />,
-    title: "Collaborative Approach",
-    description: "We involve you at every step of the framing process to ensure your vision is perfectly executed."
+    icon: <TimerReset className="h-12 w-12 text-secondary" />,
+    title: "Ready-Made One-Day Options",
+    description: "Choose from our extensive selection of Ready-Made frames with one-day turnaround at a lower price point."
   },
   {
-    icon: <ShieldCheck className="h-12 w-12 text-secondary" />,
-    title: "Museum-Quality Preservation",
-    description: "Acid-free, archival materials and UV-protective glass ensure your artwork lasts for generations."
+    icon: <Bot className="h-12 w-12 text-secondary" />,
+    title: "AI Design Assistant",
+    description: "Our AI assistant mimics Jay's precise framing style to deliver consistent expert-level recommendations for every project."
   },
   {
-    icon: <DollarSign className="h-12 w-12 text-secondary" />,
-    title: "Transparent Pricing",
-    description: "Clear, upfront pricing with no hidden fees or surprises at checkout."
+    icon: <Rocket className="h-12 w-12 text-secondary" />,
+    title: "24/7 Order Tracking",
+    description: "Real-time updates via our digital Kanban system with automatic SMS notifications as your order progresses."
   },
   {
-    icon: <Lightbulb className="h-12 w-12 text-secondary" />,
-    title: "Expert Installation",
-    description: "Professional art installation services ensure your framed pieces are displayed beautifully and securely."
+    icon: <Zap className="h-12 w-12 text-secondary" />,
+    title: "32% Increased Capacity",
+    description: "Our hybrid production model has expanded our capacity by 32% while reducing costs and maintaining superior quality."
   }
 ];
 
@@ -56,13 +71,19 @@ const Process = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
           <div className="inline-block px-6 py-2 bg-secondary/10 rounded-full mb-4">
-            <p className="text-secondary text-sm font-medium">SIMPLE 3-STEP PROCESS</p>
+            <p className="text-secondary text-sm font-medium">REVOLUTIONARY HYBRID MUTANT MODEL</p>
           </div>
-          <h2 className="heading-lg text-primary mb-6">Our AI-Powered Framing Process</h2>
+          <h2 className="heading-lg text-primary mb-6">42% Faster Turnaround Times</h2>
           <p className="body-lg text-neutral-600 max-w-3xl mx-auto">
-            We've revolutionized custom framing by combining expert craftsmanship with cutting-edge AI technology,
-            reducing turnaround times while ensuring museum-quality results.
+            Jay has developed the industry's first hybrid mutant model, saving 1,920 labor hours annually ($40,000) 
+            through wholesale partnerships, AI design assistance, and a methodically restructured workshop 
+            that delivers superior quality with a 42% faster turnaround.
           </p>
+          <Link href="/about" className="mt-4 inline-block">
+            <Button variant="outline" className="border-secondary text-secondary hover:bg-secondary/10">
+              Learn About Our Process <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
         
         {/* Timeline process with numbers */}
@@ -115,10 +136,10 @@ const Process = () => {
         
         {/* Benefits section */}
         <div className="mt-20 text-center">
-          <h3 className="heading-md mb-6 text-primary">Why Choose Our AI-Assisted Custom Framing?</h3>
+          <h3 className="heading-md mb-6 text-primary">The Hybrid Mutant Model Advantages</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-16">
-            Our unique blend of artificial intelligence and expert craftsmanship offers benefits that traditional
-            framing services simply can't match.
+            Jay's revolutionary approach has completely transformed our production workflow, cutting turnaround times
+            by 42% while increasing capacity by 32% and reducing annual labor costs by $40,000 - savings we pass on to you.
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">

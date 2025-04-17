@@ -28,15 +28,15 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Jay's Frames - Best Custom Picture Framing in Houston | Museum-Quality Preservation</title>
-        <meta name="description" content="Award-winning custom framing in Houston's Heights. We collaborate closely with you throughout the entire framing process using museum-quality materials and preservation techniques to ensure your artwork lasts for generations." />
-        <meta name="keywords" content="custom framing Houston, picture frames Houston Heights, art preservation techniques, museum-quality framing, Houston A-List best frame shop, collaborative framing process, Houston custom framing, art installation services, frame preservation" />
+        <title>Jay's Frames | Revolutionary 42% Faster Custom Framing | Houston's Premier Frame Studio</title>
+        <meta name="description" content="Award-winning custom framing with our revolutionary hybrid production model that saves 1,920 labor hours annually and provides 42% faster turnaround times. Our AI design assistant mimics Jay's precise framing style." />
+        <meta name="keywords" content="custom framing Houston, 42% faster framing, Jay's hybrid model, AI frame design, ready-made frames, one day framing, 24/7 customer service, museum-quality framing, Houston Heights frame shop, reduced turnaround time" />
         <link rel="canonical" href="https://jaysframes.com" />
         
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Museum-Quality Preservation" />
-        <meta property="og:description" content="Award-winning custom framing in Houston's Heights. We collaborate closely with you throughout the entire framing process using museum-quality materials and preservation techniques." />
+        <meta property="og:title" content="Jay's Frames | Revolutionary 42% Faster Custom Framing | Houston's Premier Frame Studio" />
+        <meta property="og:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology has cut labor by 1,920 hours annually, providing 42% faster turnaround times and exceptional quality framing." />
         <meta property="og:url" content="https://jaysframes.com" />
         <meta property="og:image" content="/images/og-image.jpg" />
         <meta property="og:site_name" content="Jay's Frames" />
@@ -44,20 +44,22 @@ const Home = () => {
         
         {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Jay's Frames - Best Custom Picture Framing in Houston | Museum-Quality Preservation" />
-        <meta name="twitter:description" content="Award-winning custom framing in Houston's Heights. We collaborate closely with you throughout the entire framing process using museum-quality materials and preservation techniques." />
+        <meta name="twitter:title" content="Jay's Frames | Revolutionary 42% Faster Custom Framing | Houston" />
+        <meta name="twitter:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology has cut labor by 1,920 hours annually, providing 42% faster turnaround times." />
         <meta name="twitter:image" content="/images/og-image.jpg" />
         
-        {/* Structured data */}
+        {/* Schema.org structured data */}
         <script type="application/ld+json">{`
           {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Jay's Frames",
-            "description": "Award-winning custom framing shop in Houston Heights offering museum-quality preservation and a collaborative framing process. We provide expert art installation services and use preservation techniques to protect your valuable artwork.",
-            "image": "/images/og-image.jpg",
+            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times and AI-powered design assistants that learn Jay's precise framing style.",
             "telephone": "+18328933794",
             "email": "info@jaysframes.com",
+            "url": "https://jaysframes.com",
+            "logo": "https://jaysframes.com/images/logo.png",
+            "image": "https://jaysframes.com/images/storefront.jpg",
             "address": {
               "@type": "PostalAddress",
               "streetAddress": "1440 Yale St.",
@@ -71,7 +73,6 @@ const Home = () => {
               "latitude": "29.7904",
               "longitude": "-95.3988"
             },
-            "url": "https://jaysframes.com",
             "priceRange": "$$",
             "areaServed": {
               "@type": "GeoCircle",
@@ -85,31 +86,34 @@ const Home = () => {
             "openingHoursSpecification": [
               {
                 "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                "opens": "09:00",
-                "closes": "18:00"
-              },
-              {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": "Saturday",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                 "opens": "10:00",
-                "closes": "16:00"
+                "closes": "18:00"
               }
             ],
             "sameAs": [
-              "https://www.facebook.com/jaysframes",
-              "https://www.instagram.com/jaysframes"
+              "https://facebook.com/jaysframes",
+              "https://instagram.com/jaysframes",
+              "https://twitter.com/jaysframes"
             ],
             "hasOfferCatalog": {
               "@type": "OfferCatalog",
-              "name": "Custom Framing Services",
+              "name": "Framing Services",
               "itemListElement": [
                 {
                   "@type": "Offer",
                   "itemOffered": {
                     "@type": "Service",
-                    "name": "Custom Picture Framing",
-                    "description": "Expert custom framing with collaborative consultation process"
+                    "name": "Custom Framing",
+                    "description": "Expert custom framing with 42% faster turnaround times"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Ready Made Framing",
+                    "description": "One-day turnaround framing options at a lower price point"
                   }
                 },
                 {
@@ -132,16 +136,8 @@ const Home = () => {
                   "@type": "Offer",
                   "itemOffered": {
                     "@type": "Service",
-                    "name": "Shadowbox Framing",
-                    "description": "Custom shadowboxes for memorabilia and 3D objects with museum-quality preservation"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
                     "name": "AI-Powered Frame Design",
-                    "description": "Intelligent frame recommendations using advanced AI technology"
+                    "description": "Intelligent frame recommendations using our AI assistant that mimics Jay's design style"
                   }
                 }
               ]
