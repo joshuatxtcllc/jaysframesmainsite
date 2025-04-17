@@ -1,29 +1,65 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Helmet } from "react-helmet";
-import { Code, Copy, CheckCircle2, Server, Webhook, Database } from "lucide-react";
+import { Code, Copy, CheckCircle2, Server, Webhook, Database, Lock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 const ApiDocsPage = () => {
+  const { toast } = useToast();
   const [copiedEndpoint, setCopiedEndpoint] = useState<string | null>(null);
   const [apiData, setApiData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // Fetch API documentation data
-    fetch('/api/docs')
-      .then(response => response.json())
-      .then(data => {
-        setApiData(data);
-        setIsLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching API documentation:', error);
-        setIsLoading(false);
+    // Check for admin session in localStorage
+    const adminSession = localStorage.getItem('admin_session');
+    if (adminSession) {
+      setIsAuthenticated(true);
+    }
+    
+    // If authenticated, fetch API documentation data
+    if (isAuthenticated) {
+      fetch('/api/docs')
+        .then(response => response.json())
+        .then(data => {
+          setApiData(data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching API documentation:', error);
+          setIsLoading(false);
+        });
+    }
+  }, [isAuthenticated]);
+  
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // In a real app, this would make an API call to validate credentials
+    // For demo purposes, we're using hardcoded admin credentials
+    if (username === "admin" && password === "admin123") {
+      setIsAuthenticated(true);
+      localStorage.setItem('admin_session', 'true');
+      toast({
+        title: "Login successful",
+        description: "Welcome to the API documentation",
       });
-  }, []);
+    } else {
+      toast({
+        title: "Authentication failed",
+        description: "Invalid username or password",
+        variant: "destructive",
+      });
+    }
+  };
 
   const copyToClipboard = (text: string, endpoint: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -64,6 +100,80 @@ const ApiDocsPage = () => {
     return snippet;
   };
 
+  // Logout function
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('admin_session');
+    setApiData(null);
+    toast({
+      title: "Logged out",
+      description: "You have been logged out of the API documentation",
+    });
+  };
+
+  // If not authenticated, show login form
+  if (!isAuthenticated) {
+    return (
+      <div className="py-16 px-4 bg-gradient-to-r from-gray-50 to-white min-h-screen">
+        <Helmet>
+          <title>Admin Login | API Documentation</title>
+          <meta name="description" content="Admin login for Jay's Frames API documentation" />
+        </Helmet>
+        
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col items-center justify-center">
+            <Card className="w-full max-w-md mx-auto">
+              <CardHeader className="space-y-1 text-center">
+                <CardTitle className="text-2xl font-bold">Admin Access Required</CardTitle>
+                <CardDescription>
+                  Please enter your administrator credentials to access the API documentation
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username</Label>
+                    <Input 
+                      id="username" 
+                      type="text" 
+                      placeholder="Enter your username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input 
+                      id="password" 
+                      type="password" 
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    <Lock className="h-4 w-4 mr-2" />
+                    Login
+                  </Button>
+                </form>
+              </CardContent>
+              <CardFooter className="border-t pt-4">
+                <Button variant="outline" className="w-full" asChild>
+                  <a href="/">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Return to Home
+                  </a>
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="py-16 px-4 bg-gradient-to-r from-gray-50 to-white">
       <Helmet>
@@ -72,26 +182,37 @@ const ApiDocsPage = () => {
       </Helmet>
       
       <div className="container mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold mb-3">Jay's Frames API Documentation</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Integrate with our platform to access our frame recommendations, order management, and more.
-          </p>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <h1 className="text-4xl font-bold mb-3">Jay's Frames API Documentation</h1>
+            <p className="text-lg text-gray-600 max-w-3xl">
+              Integrate with our platform to access our frame recommendations, order management, and more.
+            </p>
+          </div>
+          <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
+            Logout <ArrowLeft className="h-4 w-4" />
+          </Button>
         </div>
         
         <Tabs defaultValue="endpoints" className="mb-16">
-          <div className="flex justify-center mb-6">
-            <TabsList>
-              <TabsTrigger value="endpoints" className="flex items-center gap-2">
-                <Server className="h-4 w-4" /> API Endpoints
-              </TabsTrigger>
-              <TabsTrigger value="webhooks" className="flex items-center gap-2">
-                <Webhook className="h-4 w-4" /> Webhooks
-              </TabsTrigger>
-              <TabsTrigger value="sync" className="flex items-center gap-2">
-                <Database className="h-4 w-4" /> Data Sync
-              </TabsTrigger>
-            </TabsList>
+          <div className="mb-6">
+            <div className="flex justify-center mb-3">
+              <TabsList>
+                <TabsTrigger value="endpoints" className="flex items-center gap-2">
+                  <Server className="h-4 w-4" /> API Endpoints
+                </TabsTrigger>
+                <TabsTrigger value="webhooks" className="flex items-center gap-2">
+                  <Webhook className="h-4 w-4" /> Webhooks
+                </TabsTrigger>
+                <TabsTrigger value="sync" className="flex items-center gap-2">
+                  <Database className="h-4 w-4" /> Data Sync
+                </TabsTrigger>
+              </TabsList>
+            </div>
+            <div className="flex items-center justify-center gap-2 text-sm text-amber-600 bg-amber-50 py-2 px-3 rounded-md">
+              <Lock className="h-4 w-4" />
+              <span>For admin use only. This documentation is restricted and requires authentication.</span>
+            </div>
           </div>
           
           <TabsContent value="endpoints">
