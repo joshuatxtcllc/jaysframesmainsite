@@ -38,8 +38,8 @@ const Hero = () => {
               <p className="text-white font-semibold tracking-wider text-sm">JAY'S FRAMES REINVENTED - GRAND REOPENING 2025</p>
             </div>
             
-            <h1 className="heading-xl text-white mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-              Jay's Frames <span className="text-secondary italic relative font-bold">
+            <h1 className="heading-xl mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+              <span className="text-gray-900">Jay's Frames</span> <span className="text-secondary italic relative font-bold">
                 Reinvented
                 <span className="absolute -bottom-3 left-0 w-full h-1.5 bg-secondary/70 rounded-full"></span>
               </span>
@@ -54,7 +54,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-6 mb-12">
               <Link href="/custom-framing">
                 <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-8 text-base shadow-highlight group">
-                  Start Framing
+                  Get Started Today
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </Link>

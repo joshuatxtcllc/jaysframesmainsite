@@ -127,7 +127,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
   if (!isOpen) {
     return (
       <Button
-        className="fixed bottom-6 right-6 rounded-full h-14 w-14 bg-accent hover:bg-accent-light shadow-lg z-40"
+        className="fixed bottom-6 right-6 rounded-full h-14 w-14 bg-primary hover:bg-primary/90 shadow-lg z-40 border-2 border-white"
         onClick={toggleChat}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="white" viewBox="0 0 24 24" stroke="white">
@@ -139,10 +139,10 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
 
   return (
     <div className="fixed bottom-6 right-6 w-full max-w-md z-50">
-      <Card className="shadow-xl">
-        <div className="bg-accent text-white p-4 rounded-t-lg flex justify-between items-center">
+      <Card className="shadow-xl border-2 border-primary">
+        <div className="bg-primary text-white p-4 rounded-t-lg flex justify-between items-center">
           <h3 className="font-bold text-lg">Jay's Frames Assistant</h3>
-          <Button variant="ghost" size="icon" onClick={toggleChat} className="text-white hover:bg-accent-light">
+          <Button variant="ghost" size="icon" onClick={toggleChat} className="text-white hover:bg-primary/80">
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -152,7 +152,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
             {messages.map((message) => (
               <div key={message.id} className={`mb-4 flex ${message.role === 'user' ? 'justify-end' : ''}`}>
                 {message.role === "assistant" && (
-                  <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
                     <span className="text-white text-sm font-bold">JF</span>
                   </div>
                 )}
@@ -232,7 +232,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
               />
               <Button 
                 type="submit" 
-                className="bg-accent hover:bg-accent-light rounded-l-none"
+                className="bg-primary hover:bg-primary/90 text-white rounded-l-none"
                 disabled={isLoading}
               >
                 <Send className="h-5 w-5" />

@@ -161,7 +161,7 @@ const Process = () => {
           
           <div className="mt-16">
             <Link href="/custom-framing">
-              <Button className="btn-secondary px-8 py-6 text-base">
+              <Button className="bg-secondary hover:bg-secondary/90 px-8 py-6 text-base text-white">
                 Start Your Project Now
               </Button>
             </Link>
