@@ -19,6 +19,22 @@
   body {
     @apply font-sans antialiased bg-background text-foreground text-gray-800 bg-gray-50;
   }
+  
+  /* Hide 'Made on Replit' banner and any other Replit UI elements */
+  .replit-ui-floating-panel,
+  .replit-ui-floating-button,
+  [data-testid="floating-button"],
+  [class*="replit-ui-"],
+  #replit-badge,
+  .replit-badge,
+  .replit-widget,
+  [id*="replit-"],
+  [class*="replit-"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif tracking-tight;
