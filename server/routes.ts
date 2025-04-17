@@ -126,6 +126,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
             style: "string (optional)",
             budget: "number (optional)"
           }
+        },
+        {
+          path: "/frame-assistant",
+          method: "POST",
+          description: "Direct questions to the Frame Design Assistant AI",
+          parameters: {
+            message: "string - User's question about framing"
+          }
+        },
+        {
+          path: "/integration/status",
+          method: "GET",
+          description: "Check the status of the API system and available endpoints",
+          parameters: {}
+        },
+        {
+          path: "/integration/webhooks",
+          method: "POST",
+          description: "Register a webhook URL to receive notifications",
+          parameters: {
+            url: "string - The URL that will receive webhook events",
+            events: "array - Array of event types to subscribe to",
+            description: "string (optional) - Description of this webhook",
+            apiKey: "string - Your API key for authentication"
+          }
+        },
+        {
+          path: "/integration/sync/:resource",
+          method: "GET",
+          description: "Retrieve bulk data for synchronization with external systems",
+          parameters: {
+            resource: "string - Resource type (products, orders, frame-options, etc.)",
+            since: "string (optional) - ISO date to filter by creation date",
+            limit: "number (optional) - Maximum number of records to return",
+            format: "string (optional) - Response format (json or csv)"
+          }
         }
       ]
     };
