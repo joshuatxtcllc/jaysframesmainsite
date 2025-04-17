@@ -10,8 +10,79 @@ export default function ReinventedPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Helmet>
-        <title>Jay's Frames Reinvented - Grand Reopening</title>
-        <meta name="description" content="Experience Jay's Frames Reinvented - streamlined operations, AI-powered design assistance, and faster turnaround times. Custom framing reimagined for the modern era." />
+        <title>Jay's Frames Reinvented | Revolutionary Hybrid Model | 42% Faster Turnaround</title>
+        <meta name="description" content="Experience Jay's revolutionary hybrid mutant model that saves 1,920 labor hours annually, increases capacity by 32%, and provides 42% faster turnaround times. Our AI design assistant learns Jay's precise framing style." />
+        <meta name="keywords" content="Jay's Frames, custom framing Houston, hybrid production model, AI design assistant, 42% faster turnaround, custom frame shop, 24/7 customer service, ready made frames, one day framing" />
+        <link rel="canonical" href="https://jaysframes.com/reinvented" />
+        
+        {/* Open Graph tags */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Jay's Frames Reinvented | Revolutionary Hybrid Model | 42% Faster Turnaround" />
+        <meta property="og:description" content="Jay's revolutionary hybrid mutant model saves 1,920 labor hours annually, increases capacity by 32%, and provides 42% faster turnaround times. AI design assistance and 24/7 customer service." />
+        <meta property="og:url" content="https://jaysframes.com/reinvented" />
+        <meta property="og:image" content="/images/jays-frames-reinvented.jpg" />
+        <meta property="og:site_name" content="Jay's Frames" />
+        
+        {/* Schema.org structured data */}
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Jay's Frames Reinvented",
+            "description": "Jay's revolutionary hybrid production model increases capacity by 32% and provides 42% faster turnaround times through innovative process improvements and AI technology.",
+            "url": "https://jaysframes.com/reinvented",
+            "isPartOf": {
+              "@type": "WebSite",
+              "name": "Jay's Frames",
+              "url": "https://jaysframes.com"
+            },
+            "mainEntity": {
+              "@type": "LocalBusiness",
+              "name": "Jay's Frames",
+              "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times.",
+              "telephone": "+18328933794",
+              "email": "info@jaysframes.com",
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                  "opens": "10:00",
+                  "closes": "18:00"
+                }
+              ],
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "1440 Yale St.",
+                "addressLocality": "Houston",
+                "addressRegion": "TX",
+                "postalCode": "77008",
+                "addressCountry": "US"
+              },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Framing Services",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Custom Framing",
+                      "description": "Expert custom framing with 42% faster turnaround times"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Ready Made Framing",
+                      "description": "One-day turnaround framing options at a lower price point"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        `}</script>
       </Helmet>
       
       <main className="flex-1">
