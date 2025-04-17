@@ -71,13 +71,13 @@ const Process = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
           <div className="inline-block px-6 py-2 bg-secondary/10 rounded-full mb-4">
-            <p className="text-secondary text-sm font-medium">REVOLUTIONARY HYBRID MUTANT MODEL</p>
+            <p className="text-secondary text-sm font-medium">REVOLUTIONARY HYBRID PRODUCTION MODEL</p>
           </div>
-          <h2 className="heading-lg text-primary mb-6">42% Faster Turnaround Times</h2>
+          <h2 className="heading-lg text-primary mb-6">62% Faster Turnaround Times</h2>
           <p className="body-lg text-neutral-600 max-w-3xl mx-auto">
-            Jay has developed the industry's first hybrid mutant model, saving 1,920 labor hours annually ($40,000) 
+            Jay has developed the industry's first hybrid production model, saving 6,363 labor hours annually ($140,000) 
             through wholesale partnerships, AI design assistance, and a methodically restructured workshop 
-            that delivers superior quality with a 42% faster turnaround.
+            that delivers superior quality with 62% faster turnaround and 4 times the production capacity.
           </p>
           <Link href="/about" className="mt-4 inline-block">
             <Button variant="outline" className="border-secondary text-secondary hover:bg-secondary/10">
@@ -136,10 +136,11 @@ const Process = () => {
         
         {/* Benefits section */}
         <div className="mt-20 text-center">
-          <h3 className="heading-md mb-6 text-primary">The Hybrid Mutant Model Advantages</h3>
+          <h3 className="heading-md mb-6 text-primary">The Hybrid Production Model Advantages</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-16">
             Jay's revolutionary approach has completely transformed our production workflow, cutting turnaround times
-            by 42% while increasing capacity by 32% and reducing annual labor costs by $40,000 - savings we pass on to you.
+            by 62% while increasing capacity by 4x and reducing annual labor costs by $140,000 - savings we pass on to you.
+            One framer can now do what a team of 4 used to do, while ensuring Jay's high quality standards are maintained even at scale.
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">

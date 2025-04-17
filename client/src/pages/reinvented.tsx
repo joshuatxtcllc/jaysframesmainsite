@@ -10,15 +10,15 @@ export default function ReinventedPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Helmet>
-        <title>Jay's Frames Reinvented | Revolutionary Hybrid Model | 42% Faster Turnaround</title>
-        <meta name="description" content="Experience Jay's revolutionary hybrid mutant model that saves 1,920 labor hours annually, increases capacity by 32%, and provides 42% faster turnaround times. Our AI design assistant learns Jay's precise framing style." />
-        <meta name="keywords" content="Jay's Frames, custom framing Houston, hybrid production model, AI design assistant, 42% faster turnaround, custom frame shop, 24/7 customer service, ready made frames, one day framing" />
+        <title>Jay's Frames Reinvented | Revolutionary Hybrid Model | 62% Faster Turnaround</title>
+        <meta name="description" content="Experience Jay's revolutionary hybrid production model that saves 6,363 labor hours annually ($140,000), increases capacity by 4x, and provides 62% faster turnaround times. Our AI design assistant learns Jay's precise framing style." />
+        <meta name="keywords" content="Jay's Frames, custom framing Houston, hybrid production model, AI design assistant, 62% faster turnaround, custom frame shop, 24/7 customer service, ready made frames, one day framing, eco-friendly framing" />
         <link rel="canonical" href="https://jaysframes.com/reinvented" />
         
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Jay's Frames Reinvented | Revolutionary Hybrid Model | 42% Faster Turnaround" />
-        <meta property="og:description" content="Jay's revolutionary hybrid mutant model saves 1,920 labor hours annually, increases capacity by 32%, and provides 42% faster turnaround times. AI design assistance and 24/7 customer service." />
+        <meta property="og:title" content="Jay's Frames Reinvented | Revolutionary Hybrid Model | 62% Faster Turnaround" />
+        <meta property="og:description" content="Jay's revolutionary hybrid production model saves 6,363 labor hours annually ($140,000), increases capacity by 4x, and provides 62% faster turnaround times. AI design assistance and 24/7 customer service." />
         <meta property="og:url" content="https://jaysframes.com/reinvented" />
         <meta property="og:image" content="/images/jays-frames-reinvented.jpg" />
         <meta property="og:site_name" content="Jay's Frames" />
@@ -29,7 +29,7 @@ export default function ReinventedPage() {
             "@context": "https://schema.org",
             "@type": "WebPage",
             "name": "Jay's Frames Reinvented",
-            "description": "Jay's revolutionary hybrid production model increases capacity by 32% and provides 42% faster turnaround times through innovative process improvements and AI technology.",
+            "description": "Jay's revolutionary hybrid production model increases capacity by 4x and provides 62% faster turnaround times through innovative process improvements and AI technology.",
             "url": "https://jaysframes.com/reinvented",
             "isPartOf": {
               "@type": "WebSite",
@@ -39,7 +39,7 @@ export default function ReinventedPage() {
             "mainEntity": {
               "@type": "LocalBusiness",
               "name": "Jay's Frames",
-              "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times.",
+              "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times and uses eco-friendly, locally-sourced materials.",
               "telephone": "+18328933794",
               "email": "info@jaysframes.com",
               "openingHoursSpecification": [
@@ -67,7 +67,7 @@ export default function ReinventedPage() {
                     "itemOffered": {
                       "@type": "Service",
                       "name": "Custom Framing",
-                      "description": "Expert custom framing with 42% faster turnaround times"
+                      "description": "Expert custom framing with 62% faster turnaround times"
                     }
                   },
                   {
@@ -76,6 +76,14 @@ export default function ReinventedPage() {
                       "@type": "Service",
                       "name": "Ready Made Framing",
                       "description": "One-day turnaround framing options at a lower price point"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Eco-Friendly Framing",
+                      "description": "Sustainable framing using locally sourced wood from reclaimed materials"
                     }
                   }
                 ]
@@ -159,7 +167,7 @@ export default function ReinventedPage() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {/* Card 1 */}
               <Card className="border-primary/10 bg-primary/5 overflow-hidden transition-all hover:shadow-md hover:-translate-y-1 duration-300">
                 <div className="h-2 bg-primary"></div>
@@ -183,7 +191,7 @@ export default function ReinventedPage() {
                     </li>
                     <li className="flex items-start">
                       <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
-                      <span>Real-time price estimates</span>
+                      <span>Real-time pricing aligned with in-store options</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -204,7 +212,7 @@ export default function ReinventedPage() {
                   <ul className="space-y-2 mb-4">
                     <li className="flex items-start">
                       <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
-                      <span>50% reduction in production time</span>
+                      <span>62% reduction in production time</span>
                     </li>
                     <li className="flex items-start">
                       <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
@@ -242,6 +250,35 @@ export default function ReinventedPage() {
                     <li className="flex items-start">
                       <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
                       <span>Transparent process updates</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+              
+              {/* Card 4 - Eco-Friendly Materials */}
+              <Card className="border-primary/10 bg-primary/5 overflow-hidden transition-all hover:shadow-md hover:-translate-y-1 duration-300">
+                <div className="h-2 bg-primary"></div>
+                <CardContent className="pt-6">
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Award className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Eco-Friendly Materials</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Our innovative upcycling process creates beautiful, high-quality frames from locally-sourced materials 
+                    that would otherwise go to waste.
+                  </p>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Locally-sourced reclaimed wood end pieces</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Custom-milled in favorite profiles</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Sparkles className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                      <span>Lower cost, faster turnaround time</span>
                     </li>
                   </ul>
                 </CardContent>
