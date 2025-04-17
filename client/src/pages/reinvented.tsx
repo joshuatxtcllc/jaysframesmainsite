@@ -106,7 +106,7 @@ export default function ReinventedPage() {
           <div className="container px-4 py-20 md:py-32 mx-auto relative z-10">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Jay's Frames <span className="text-secondary font-serif">Reinvented</span>
+                Jay's Frames <span className="text-secondary font-serif inline-block">Reinvented</span>
               </h1>
               <div className="inline-block px-4 py-1 bg-secondary/10 border border-secondary/20 rounded-full text-secondary mb-8">
                 Grand Reopening 2025

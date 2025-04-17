@@ -125,7 +125,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-base">Phone</h3>
-                      <p className="text-muted-foreground">(832) 893-3794</p>
+                      <a href="tel:+18328933794" className="text-muted-foreground hover:text-primary transition-colors">(832) 893-3794</a>
                       <p className="text-sm text-muted-foreground mt-1">Call us directly for immediate assistance</p>
                     </div>
                   </div>
@@ -136,7 +136,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-base">Email</h3>
-                      <p className="text-muted-foreground">info@jaysframes.com</p>
+                      <a href="mailto:info@jaysframes.com" className="text-muted-foreground hover:text-primary transition-colors">info@jaysframes.com</a>
                       <p className="text-sm text-muted-foreground mt-1">We typically respond within 24 hours</p>
                     </div>
                   </div>
@@ -147,8 +147,10 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-base">Location</h3>
-                      <p className="text-muted-foreground">1440 Yale St.</p>
-                      <p className="text-muted-foreground">Houston, TX 77008</p>
+                      <a href="https://maps.google.com/?q=1440+Yale+St,+Houston,+TX+77008" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">
+                        1440 Yale St.<br/>
+                        Houston, TX 77008
+                      </a>
                       <p className="text-sm text-muted-foreground mt-1">Visit our newly redesigned shop</p>
                     </div>
                   </div>
