@@ -19,6 +19,7 @@ import SMSSettings from "@/pages/sms-settings";
 import Reinvented from "@/pages/reinvented";
 import About from "@/pages/about";
 import Contact from "@/pages/contact";
+import ApiDocs from "@/pages/api-docs";
 // Blog Pages
 import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog/[slug]";
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/reinvented" component={Reinvented} />
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
+      <Route path="/api-docs" component={ApiDocs} />
       {/* Blog Routes */}
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />

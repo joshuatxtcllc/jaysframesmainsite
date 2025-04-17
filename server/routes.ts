@@ -37,15 +37,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         {
           path: "/products",
           method: "GET",
-          description: "Get all available products",
-          parameters: {}
+          description: "Get all products",
+          parameters: {},
+          responseSchema: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: "number",
+                name: "string",
+                description: "string",
+                price: "number",
+                category: "string",
+                imageUrl: "string | null",
+                details: "object | null"
+              }
+            }
+          }
         },
         {
           path: "/products/category/:category",
           method: "GET",
           description: "Get products by category",
           parameters: {
-            category: "string (frame, shadowbox, moonmount, etc.)"
+            category: "string - Category name (e.g. 'readymade', 'custom', 'shadowbox')"
           }
         },
         {

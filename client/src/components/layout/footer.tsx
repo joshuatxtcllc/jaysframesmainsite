@@ -54,7 +54,7 @@ const Footer = () => {
               </div>
             </Link>
             <p className="text-neutral-300 mb-6 leading-relaxed">
-              Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times. Our AI-powered design assistants learn Jay's precise framing style to deliver exceptional results.
+              Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times with 4x capacity increase. Our AI-powered design assistants learn Jay's precise framing style to deliver exceptional results.
             </p>
             <div className="flex space-x-3">
               <a href="https://facebook.com/jaysframes" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-secondary hover:text-white transition-all duration-300" aria-label="Facebook">
@@ -88,6 +88,7 @@ const Footer = () => {
               <FooterLink href="/blog" label="Framing Blog" />
               <FooterLink href="/contact" label="Contact Us" />
               <FooterLink href="/order-status" label="Track Your Order" />
+              <FooterLink href="/api-docs" label="API Documentation" />
             </ul>
           </div>
           
