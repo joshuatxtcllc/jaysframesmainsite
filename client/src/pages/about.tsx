@@ -20,14 +20,14 @@ export default function About() {
   return (
     <div className="bg-white">
       <Helmet>
-        <title>About Jay's Frames | Revolutionary Hybrid Production Model | AI-Powered Design</title>
+        <title>About Jay's Frames | Houston Custom Framing | 62% Faster Turnaround | Eco-Friendly Framing</title>
         <meta name="description" content="Discover Jay's Frames, Houston's premier custom framing studio featuring our revolutionary hybrid production model that provides 62% faster turnaround times and increases capacity by 4x. Our eco-friendly framing solutions and museum-quality conservation techniques combine exceptional craftsmanship with sustainability. Visit our Houston custom frame shop for artwork framing, shadow boxes, and more." />
         <meta name="keywords" content="Jay's Frames, custom framing Houston, Houston frame shop, picture framing, hybrid production model, eco-friendly framing, museum-quality framing, shadow box framing, art framing, AI design assistant, 62% faster framing, conservation framing, 4x production capacity, custom frame shop, Heights framing studio, locally-sourced framing" />
         <link rel="canonical" href="https://jaysframes.com/about" />
         
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="About Jay's Frames | Revolutionary Hybrid Production Model | AI-Powered Design" />
+        <meta property="og:title" content="About Jay's Frames | Houston Custom Framing | 62% Faster Turnaround | Eco-Friendly Framing" />
         <meta property="og:description" content="Discover Jay's Frames, Houston's premier custom framing studio with our revolutionary hybrid production model providing 62% faster turnaround times and 4x capacity. We offer eco-friendly framing solutions, museum-quality conservation, and locally-sourced materials for artwork, photography, and memorabilia." />
         <meta property="og:url" content="https://jaysframes.com/about" />
         <meta property="og:image" content="/images/jays-frames-workshop.jpg" />
@@ -135,7 +135,7 @@ export default function About() {
                   <div>
                     <h3 className="text-lg font-bold">Capacity Increased by 400%</h3>
                     <p className="text-muted-foreground">
-                      Our hybrid production model has expanded our capacity by 4x (400%), allowing us to serve more customers without compromising quality.
+                      Our innovative hybrid production model enables one framer to accomplish what previously required a team of four, delivering 4x capacity while maintaining museum-quality craftsmanship for all Houston framing projects.
                     </p>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ export default function About() {
                   <div>
                     <h3 className="text-lg font-bold">62% Faster Turnaround Times</h3>
                     <p className="text-muted-foreground">
-                      By implementing our innovative hybrid model, we've reduced production times by 62%, getting your treasured items back to you faster.
+                      By implementing our hybrid production model in our Houston frame shop, we've reduced custom framing turnaround times by 62%, completing projects in days instead of weeks without sacrificing quality.
                     </p>
                   </div>
                 </div>
