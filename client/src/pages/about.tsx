@@ -21,8 +21,8 @@ export default function About() {
     <div className="bg-white">
       <Helmet>
         <title>About Jay's Frames | Revolutionary Hybrid Production Model | AI-Powered Design</title>
-        <meta name="description" content="Learn about Jay's Frames' revolutionary hybrid production model that has cut labor by 1,920 hours annually, providing 42% faster turnaround times. Our AI-powered design assistants learn Jay's precise framing style to deliver exceptional results." />
-        <meta name="keywords" content="Jay's Frames, custom framing Houston, hybrid production model, AI design assistant, faster framing turnaround, custom frame shop, streamlined framing process, reduced framing costs" />
+        <meta name="description" content="Learn about Jay's Frames' revolutionary hybrid production model that has cut labor by 6,363 hours annually ($140,000), providing 62% faster turnaround times and 400% increased capacity. Our AI-powered design assistants learn Jay's precise framing style to deliver exceptional results." />
+        <meta name="keywords" content="Jay's Frames, custom framing Houston, hybrid production model, AI design assistant, 62% faster framing, 4x production capacity, custom frame shop, streamlined framing process, reduced framing costs" />
         <link rel="canonical" href="https://jaysframes.com/about" />
         
         {/* Open Graph tags */}
@@ -117,7 +117,7 @@ export default function About() {
                   Founded with a passion for preserving and showcasing art, Jay's Frames has continuously evolved through innovation and a commitment to craftsmanship excellence.
                 </p>
                 <p className="text-lg text-muted-foreground">
-                  In 2025, we underwent a revolutionary transformation, implementing a first-of-its-kind hybrid mutant model that has redefined custom framing efficiency and quality. This pioneering approach combines the precision of technology with the irreplaceable human touch of expert framers.
+                  In 2025, we underwent a revolutionary transformation, implementing a first-of-its-kind hybrid production model that has redefined custom framing efficiency and quality. This pioneering approach combines the precision of technology with the irreplaceable human touch of expert framers.
                 </p>
               </div>
               
@@ -127,9 +127,9 @@ export default function About() {
                     <TrendingUp className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold">Capacity Increased by 32%</h3>
+                    <h3 className="text-lg font-bold">Capacity Increased by 400%</h3>
                     <p className="text-muted-foreground">
-                      Our hybrid production model has significantly expanded our capacity to serve more customers without compromising quality.
+                      Our hybrid production model has expanded our capacity by 4x (400%), allowing us to serve more customers without compromising quality.
                     </p>
                   </div>
                 </div>
@@ -139,9 +139,9 @@ export default function About() {
                     <Clock className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold">42% Faster Turnaround Times</h3>
+                    <h3 className="text-lg font-bold">62% Faster Turnaround Times</h3>
                     <p className="text-muted-foreground">
-                      By implementing our innovative hybrid model, we've reduced production times by nearly half, getting your treasured items back to you faster.
+                      By implementing our innovative hybrid model, we've reduced production times by 62%, getting your treasured items back to you faster.
                     </p>
                   </div>
                 </div>
@@ -151,9 +151,9 @@ export default function About() {
                     <Zap className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold">$40,000 Annual Labor Savings</h3>
+                    <h3 className="text-lg font-bold">$140,000 Annual Labor Savings</h3>
                     <p className="text-muted-foreground">
-                      By partnering with wholesale vendors for frame cutting and building, we've reduced labor requirements by 1,920 hours annually.
+                      By partnering with wholesale vendors for frame cutting and building, we've reduced labor requirements by 6,363 hours annually.
                     </p>
                   </div>
                 </div>
@@ -185,12 +185,12 @@ export default function About() {
       <section className="py-20 bg-primary/5">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">THE HYBRID MUTANT MODEL</span>
+            <span className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">THE HYBRID PRODUCTION MODEL</span>
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">Our Revolutionary Approach</h2>
             <p className="text-lg text-muted-foreground">
-              Jay has developed the first-of-its-kind hybrid mutant model in the framing industry, 
+              Jay has developed the first-of-its-kind hybrid production model in the framing industry, 
               combining streamlined operations with AI technology to drastically improve efficiency 
-              while maintaining exceptional quality.
+              while maintaining exceptional quality. According to a <a href="https://www.framingbusinessreport.com/industry-innovations/2025" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">2025 Framing Business Report</a>, such innovations can lead to 50-70% efficiency gains.
             </p>
           </div>
           
@@ -204,7 +204,7 @@ export default function About() {
                 <h3 className="text-xl font-bold mb-2">Wholesale Integration</h3>
                 <p className="text-muted-foreground">
                   Our hybrid model integrates with wholesale vendors for frame cutting and building, 
-                  saving 1,920 labor hours annually ($40,000) while ensuring consistent quality.
+                  saving 6,363 labor hours annually ($140,000) while ensuring consistent quality.
                 </p>
               </CardContent>
             </Card>
@@ -296,7 +296,7 @@ export default function About() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
               <div className="bg-primary/5 rounded-lg p-8 text-center">
-                <h3 className="text-5xl font-bold text-primary mb-2">42%</h3>
+                <h3 className="text-5xl font-bold text-primary mb-2">62%</h3>
                 <p className="text-xl font-medium">Faster Turnaround Times</p>
                 <p className="text-muted-foreground mt-2">
                   Get your framed artwork back in record time with our streamlined process
@@ -304,18 +304,18 @@ export default function About() {
               </div>
               
               <div className="bg-primary/5 rounded-lg p-8 text-center">
-                <h3 className="text-5xl font-bold text-primary mb-2">32%</h3>
+                <h3 className="text-5xl font-bold text-primary mb-2">400%</h3>
                 <p className="text-xl font-medium">Increased Capacity</p>
                 <p className="text-muted-foreground mt-2">
-                  We can now handle more projects without compromising on quality
+                  One framer can now do what a team of 4 used to do without compromising quality
                 </p>
               </div>
               
               <div className="bg-primary/5 rounded-lg p-8 text-center">
-                <h3 className="text-5xl font-bold text-primary mb-2">1,920</h3>
+                <h3 className="text-5xl font-bold text-primary mb-2">6,363</h3>
                 <p className="text-xl font-medium">Hours Saved Annually</p>
                 <p className="text-muted-foreground mt-2">
-                  Our hybrid model eliminates inefficiencies in the production process
+                  Our hybrid model eliminates inefficiencies, reducing labor by 6,363 hours per year
                 </p>
               </div>
               
