@@ -22,13 +22,13 @@ export default function About() {
       <Helmet>
         <title>About Jay's Frames | Revolutionary Hybrid Production Model | AI-Powered Design</title>
         <meta name="description" content="Discover Jay's Frames, Houston's premier custom framing studio featuring our revolutionary hybrid production model that provides 62% faster turnaround times and increases capacity by 4x. Our eco-friendly framing solutions and museum-quality conservation techniques combine exceptional craftsmanship with sustainability. Visit our Houston custom frame shop for artwork framing, shadow boxes, and more." />
-        <meta name="keywords" content="Jay's Frames, custom framing Houston, hybrid production model, AI design assistant, 62% faster framing, 4x production capacity, custom frame shop, streamlined framing process, reduced framing costs" />
+        <meta name="keywords" content="Jay's Frames, custom framing Houston, Houston frame shop, picture framing, hybrid production model, eco-friendly framing, museum-quality framing, shadow box framing, art framing, AI design assistant, 62% faster framing, conservation framing, 4x production capacity, custom frame shop, Heights framing studio, locally-sourced framing" />
         <link rel="canonical" href="https://jaysframes.com/about" />
         
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="About Jay's Frames | Revolutionary Hybrid Production Model | AI-Powered Design" />
-        <meta property="og:description" content="Learn about Jay's Frames' revolutionary hybrid production model that has cut labor by 6,363 hours annually ($140,000), providing 62% faster turnaround times and 400% increased capacity." />
+        <meta property="og:description" content="Discover Jay's Frames, Houston's premier custom framing studio with our revolutionary hybrid production model providing 62% faster turnaround times and 4x capacity. We offer eco-friendly framing solutions, museum-quality conservation, and locally-sourced materials for artwork, photography, and memorabilia." />
         <meta property="og:url" content="https://jaysframes.com/about" />
         <meta property="og:image" content="/images/jays-frames-workshop.jpg" />
         <meta property="og:site_name" content="Jay's Frames" />
@@ -39,7 +39,7 @@ export default function About() {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Jay's Frames",
-            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times, 400% increased capacity, and AI-powered design assistants.",
+            "description": "Houston's premier custom framing studio in the Heights area featuring a revolutionary hybrid production model that provides 62% faster turnaround times, 400% increased capacity, and AI-powered design assistants. We specialize in eco-friendly framing using locally-sourced materials, museum-quality conservation framing, and custom shadow boxes for memorabilia.",
             "alternateName": "Jay's Custom Frames",
             "url": "https://jaysframes.com",
             "logo": "https://jaysframes.com/images/logo.png",
@@ -69,7 +69,7 @@ export default function About() {
               }
             ],
             "award": "Best Framing Shop in Houston",
-            "specialty": "Custom Picture Framing with AI-assisted design"
+            "specialty": "Custom Picture Framing with AI-assisted design, eco-friendly framing, conservation framing, shadow box framing, museum-quality framing, and 62% faster turnaround times"
           }
         `}</script>
       </Helmet>
@@ -87,7 +87,7 @@ export default function About() {
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">Revolutionizing the Art of Custom Framing</h1>
             <p className="text-xl text-white/80 mb-8">
-              At Jay's Frames, we've completely reimagined the custom framing experience with innovative technology and streamlined processes that deliver exceptional results and faster turnaround times.
+              At Jay's Frames in Houston, we've completely reimagined the custom framing experience with our revolutionary hybrid production model. Our innovative approach combines technology and craftsmanship to deliver museum-quality frames with 62% faster turnaround times, making us the premier frame shop for artwork, photography, and memorabilia preservation in Houston.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" variant="secondary" asChild>
@@ -119,8 +119,11 @@ export default function About() {
                 <p className="text-lg text-muted-foreground mb-4">
                   In 2025, we underwent a revolutionary transformation, implementing a first-of-its-kind hybrid production model that has redefined custom framing efficiency and quality. This pioneering approach combines the precision of technology with the irreplaceable human touch of expert framers, allowing us to deliver museum-quality framing at competitive prices.
                 </p>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-lg text-muted-foreground mb-4">
                   Our eco-friendly framing options use locally-sourced materials, including reclaimed wood from Houston-area suppliers, which not only reduces our environmental footprint but also provides unique character and warmth to our custom frames. This commitment to sustainable practices, combined with our innovative production methods, has positioned Jay's Frames as the leader in Houston's custom framing industry.
+                </p>
+                <p className="text-lg text-muted-foreground">
+                  As Houston's premier custom frame shop, we understand the unique challenges of preserving artwork in our Gulf Coast climate. Our conservation framing techniques provide superior protection against humidity and UV damage, ensuring your valuable pieces remain pristine for generations. From Heights to Montrose, River Oaks to The Woodlands, we've become the trusted framing partner for Houston's most discerning art collectors and homeowners.
                 </p>
               </div>
               
@@ -312,7 +315,7 @@ export default function About() {
                 <h3 className="text-5xl font-bold text-primary mb-2">62%</h3>
                 <p className="text-xl font-medium">Faster Turnaround Times</p>
                 <p className="text-muted-foreground mt-2">
-                  Get your framed artwork back in record time with our streamlined process
+                  Get your custom framed artwork back in record time with our revolutionary hybrid production model, with turnaround times 62% faster than traditional frame shops in Houston
                 </p>
               </div>
               
@@ -320,7 +323,7 @@ export default function About() {
                 <h3 className="text-5xl font-bold text-primary mb-2">400%</h3>
                 <p className="text-xl font-medium">Increased Capacity</p>
                 <p className="text-muted-foreground mt-2">
-                  One framer can now do what a team of 4 used to do without compromising quality
+                  Our innovative hybrid production model enables one framer to accomplish what previously required a team of four, delivering 4x capacity while maintaining museum-quality craftsmanship for all Houston framing projects
                 </p>
               </div>
               
@@ -328,7 +331,7 @@ export default function About() {
                 <h3 className="text-5xl font-bold text-primary mb-2">$140K</h3>
                 <p className="text-xl font-medium">Annual Labor Savings</p>
                 <p className="text-muted-foreground mt-2">
-                  Our hybrid model eliminates inefficiencies, saving $140,000 and 6,363 labor hours annually
+                  By partnering with wholesale vendors for frame cutting and building, our innovative Houston frame shop saves 6,363 labor hours and $140,000 annually while maintaining exceptional quality and craftsmanship
                 </p>
               </div>
               
@@ -336,7 +339,7 @@ export default function About() {
                 <h3 className="text-5xl font-bold text-primary mb-2">22%</h3>
                 <p className="text-xl font-medium">Additional Efficiency Gain</p>
                 <p className="text-muted-foreground mt-2">
-                  Our methodically restructured shop provides even more time savings
+                  Our methodically restructured Houston workshop layout and optimized framing process flow provides an additional 22% efficiency gain beyond our hybrid model, further reducing wait times for custom framing projects
                 </p>
               </div>
             </div>
