@@ -216,8 +216,8 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">Wholesale Integration</h3>
                 <p className="text-muted-foreground">
-                  Our hybrid model integrates with wholesale vendors for frame cutting and building, 
-                  saving 6,363 labor hours annually ($140,000) while ensuring consistent quality.
+                  Our hybrid model partners with eco-conscious wholesale vendors for sustainable frame cutting and building, 
+                  saving 6,363 labor hours annually ($140,000) while using locally-sourced materials from the Houston area for premium custom framing.
                 </p>
               </CardContent>
             </Card>
@@ -230,8 +230,8 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">AI-Powered Design</h3>
                 <p className="text-muted-foreground">
-                  Our machine learning assistant has been trained to mimic Jay's precise framing design style,
-                  delivering consistent expert-level recommendations for every project.
+                  Our advanced AI design assistant has been trained to perfectly mirror Jay's 15+ years of Houston framing expertise, 
+                  offering Houston clients personalized conservation-grade framing recommendations that preserve artwork while enhancing its aesthetic appeal.
                 </p>
               </CardContent>
             </Card>
@@ -244,8 +244,8 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">Methodical Shop Structure</h3>
                 <p className="text-muted-foreground">
-                  Our workshop has been methodically restructured for maximum efficiency, 
-                  reducing turnaround time for all orders by an additional 22%.
+                  Our Houston Heights workshop has been methodically restructured using advanced workflow optimization principles, 
+                  reducing custom framing turnaround times by an additional 22% through improved material handling and workspace organization.
                 </p>
               </CardContent>
             </Card>
@@ -258,8 +258,8 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">Digital Kanban System</h3>
                 <p className="text-muted-foreground">
-                  Our digital production organizing Kanban board provides real-time updates 
-                  and automatic SMS notifications to customers as their order progresses.
+                  Our custom-developed digital production Kanban system streamlines the Houston framing workflow while providing customers with real-time order updates, 
+                  automated SMS notifications at each production milestone, and transparent progress tracking through our customer portal.
                 </p>
               </CardContent>
             </Card>
@@ -272,8 +272,7 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">"Ready Made" Options</h3>
                 <p className="text-muted-foreground">
-                  We now offer an extensive selection of "Ready Made" framing options available 
-                  for one-day turnaround at a lower price point for budget-conscious customers.
+                  We now offer Houston's most extensive selection of "Ready Made" framing options with guaranteed one-day turnaround times and economical pricing - perfect for budget-conscious customers who need quick professional framing solutions.
                 </p>
               </CardContent>
             </Card>
@@ -286,8 +285,7 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">24/7 Customer Service</h3>
                 <p className="text-muted-foreground">
-                  Our robust customer communications process includes 24/7 support through our 
-                  Frame Bot, which provides real-time order status and answers to common questions.
+                  Our enhanced customer communications system provides 24/7 support through the innovative Frame Bot assistant, offering Houston customers real-time order tracking, automated progress updates, and instant answers about our framing services.
                 </p>
               </CardContent>
             </Card>
