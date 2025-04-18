@@ -162,7 +162,7 @@ const Home = () => {
             </div>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">AI-Powered Frame Designer</h2>
             <p className="text-neutral-500 max-w-2xl mx-auto">
-              Try our revolutionary design assistant that helps you create the perfect frame for your artwork in minutes.
+              Try our revolutionary Houston-based design assistant that mimics Jay's 15+ years of framing expertise to help you create the perfect custom frame for your artwork in minutes, with museum-quality recommendations and eco-friendly options.
             </p>
           </div>
           
@@ -230,7 +230,7 @@ const Home = () => {
             </div>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Ask Our Frame Design Assistant</h2>
             <p className="text-neutral-500 max-w-2xl mx-auto">
-              Get expert framing advice from our AI assistant, trained on thousands of professional framing projects.
+              Get expert Houston framing advice from our AI assistant, trained to perfectly mimic Jay's 15+ years of expertise across thousands of professional framing projects, providing instant recommendations for eco-friendly, museum-quality framing.
             </p>
           </div>
           
@@ -314,7 +314,7 @@ const Home = () => {
             </div>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Our Framing Solutions</h2>
             <p className="text-neutral-500 max-w-2xl mx-auto">
-              From custom frames to ready-made options, we offer solutions for every artwork and budget.
+              From museum-quality custom frames with 62% faster turnaround times to Houston's most extensive selection of "Ready Made" options with one-day delivery, we offer eco-friendly framing solutions for every artwork and budget.
             </p>
           </div>
           
@@ -410,7 +410,7 @@ const Home = () => {
             </div>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Museum-Quality Preservation & Installation</h2>
             <p className="text-neutral-500 max-w-2xl mx-auto">
-              We provide comprehensive art care solutions to ensure your valuable pieces are protected and beautifully displayed.
+              Houston's premier frame shop provides comprehensive art care solutions including eco-friendly, locally-sourced framing materials and advanced preservation techniques to ensure your valuable pieces are protected and beautifully displayed for generations.
             </p>
           </div>
           
