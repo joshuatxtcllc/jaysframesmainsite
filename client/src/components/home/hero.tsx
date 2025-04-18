@@ -46,9 +46,9 @@ const Hero = () => {
             </h1>
             
             <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              Jay's Frames Reinvented brings streamlined efficiencies with workflow automations and AI assistance, 
-              resulting in faster processing times, reduced labor costs, and quicker delivery of your custom framing projects.
-              Experience the future of custom framing today.
+              Houston's premier custom framing studio has been reimagined with our revolutionary hybrid production model that delivers 62% faster turnaround times. 
+              Our innovative approach combines wholesale partnerships with AI-powered design expertise, enabling one framer to accomplish what previously required a team of four.
+              Visit our Heights neighborhood workshop to experience Houston's most efficient custom framing service.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 mb-12">
@@ -71,10 +71,10 @@ const Hero = () => {
             
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-10">
               {[
-                { icon: <Wand2 className="h-5 w-5" />, text: "AI-Powered Designs" },
-                { icon: <Cpu className="h-5 w-5" />, text: "Workflow Automation" },
-                { icon: <Clock className="h-5 w-5" />, text: "50% Faster Delivery" },
-                { icon: <Sparkles className="h-5 w-5" />, text: "Reinvented Process" }
+                { icon: <Wand2 className="h-5 w-5" />, text: "AI-Powered Design Assistant" },
+                { icon: <Cpu className="h-5 w-5" />, text: "4x Production Capacity" },
+                { icon: <Clock className="h-5 w-5" />, text: "62% Faster Turnaround" },
+                { icon: <Sparkles className="h-5 w-5" />, text: "Houston's Premier Frame Shop" }
               ].map((feature, i) => (
                 <div key={i} className="flex items-center fade-in hover-lift" style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}>
                   <div className="flex-shrink-0 mr-3 bg-secondary/40 p-2.5 rounded-full text-white shadow-md">

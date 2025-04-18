@@ -23,21 +23,21 @@ const processSteps = [
     step: 1,
     icon: <Bot className="h-8 w-8 text-white" />,
     title: "AI-Powered Design Consultation",
-    description: "Our machine learning assistant, trained to mimic Jay's precise framing style, provides expert design recommendations tailored to your specific artwork.",
+    description: "Our exclusive machine learning assistant trained on Jay's 15+ years of framing expertise perfectly mimics his precise framing style for Houston's most discerning art collectors. Get expert design recommendations tailored to your specific artwork.",
     color: "from-secondary/90 to-orange-500"
   },
   {
     step: 2,
     icon: <LayoutGrid className="h-8 w-8 text-white" />,
     title: "Revolutionary Hybrid Production",
-    description: "Our unique hybrid production model integrates with wholesale vendors for frame cutting and building, saving 6,363 labor hours annually while maintaining quality.",
+    description: "Our eco-friendly hybrid production model partners with local Houston frame suppliers for sustainable production, saving 6,363 labor hours annually ($140,000) while maintaining museum-quality craftsmanship and reducing environmental impact.",
     color: "from-primary to-blue-600"
   },
   {
     step: 3,
     icon: <ShieldCheck className="h-8 w-8 text-white" />,
     title: "62% Faster Turnaround Times",
-    description: "Our methodically structured shop and streamlined process reduces turnaround times by 62%, allowing you to enjoy your beautifully framed artwork sooner.",
+    description: "Our methodically restructured Houston Heights workshop delivers 62% faster turnaround times with 4x production capacity. One framer now accomplishes what previously required a team of four, while ensuring perfect craftsmanship for every project.",
     color: "from-accent to-teal-500"
   }
 ];
@@ -46,22 +46,22 @@ const benefits = [
   {
     icon: <TimerReset className="h-12 w-12 text-secondary" />,
     title: "Ready-Made One-Day Options",
-    description: "Choose from our extensive selection of Ready-Made frames with one-day turnaround at a lower price point."
+    description: "Choose from Houston's largest selection of Ready-Made frames with guaranteed one-day turnaround at economical price points - perfect for budget-conscious customers who need quick framing solutions."
   },
   {
     icon: <Bot className="h-12 w-12 text-secondary" />,
     title: "AI Design Assistant",
-    description: "Our AI assistant mimics Jay's precise framing style to deliver consistent expert-level recommendations for every project."
+    description: "Our exclusive AI assistant trained on Jay's 15+ years of framing expertise perfectly mimics his precise framing style, delivering consistent museum-quality recommendations for every Houston framing project."
   },
   {
     icon: <Rocket className="h-12 w-12 text-secondary" />,
-    title: "24/7 Order Tracking",
-    description: "Real-time updates via our digital Kanban system with automatic SMS notifications as your order progresses."
+    title: "24/7 Customer Service",
+    description: "Our enhanced communications system provides real-time updates via our digital Kanban system with automatic SMS notifications, plus 24/7 support through our innovative Frame Bot assistant for Houston customers."
   },
   {
     icon: <Zap className="h-12 w-12 text-secondary" />,
-    title: "400% Increased Capacity",
-    description: "Our hybrid production model has expanded our capacity by 4x (400%) while reducing costs and maintaining superior quality."
+    title: "Eco-Friendly Framing",
+    description: "We've expanded capacity by 400% while reducing environmental impact through locally-sourced materials, sustainable partnerships, and eco-friendly framing practices unique in the Houston Heights custom framing market."
   }
 ];
 
@@ -75,9 +75,9 @@ const Process = () => {
           </div>
           <h2 className="heading-lg text-primary mb-6">62% Faster Turnaround Times</h2>
           <p className="body-lg text-neutral-600 max-w-3xl mx-auto">
-            Jay has developed the industry's first hybrid production model, saving 6,363 labor hours annually ($140,000) 
-            through wholesale partnerships, AI design assistance, and a methodically restructured workshop 
-            that delivers superior quality with 62% faster turnaround and 4 times the production capacity.
+            Jay has developed Houston's first eco-friendly hybrid production model, saving 6,363 labor hours annually ($140,000) 
+            through local sustainable partnerships, AI design assistance, and a methodically restructured Houston Heights workshop 
+            that delivers museum-quality framing with 62% faster turnaround, one-day "Ready Made" options, and 4x production capacity.
           </p>
           <Link href="/about" className="mt-4 inline-block">
             <Button variant="outline" className="border-secondary text-secondary hover:bg-secondary/10">
@@ -138,9 +138,10 @@ const Process = () => {
         <div id="savings" className="mt-20 text-center">
           <h3 className="heading-md mb-6 text-primary">The Hybrid Production Model Advantages</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
-            Jay's revolutionary approach has completely transformed our production workflow, cutting turnaround times
-            by 62% while increasing capacity by 4x and reducing annual labor costs by $140,000 - savings we pass on to you.
-            One framer can now do what a team of 4 used to do, while ensuring Jay's high quality standards are maintained even at scale.
+            Jay's revolutionary Houston-based approach has completely transformed custom framing through eco-friendly practices, 
+            cutting turnaround times by 62% while increasing capacity by 4x and reducing annual labor costs by $140,000 - savings we pass on to you.
+            Our locally-sourced materials and sustainable partnerships enable one framer to accomplish what previously required a team of four, 
+            while maintaining the museum-quality craftsmanship that has made Jay's Frames Houston's premier custom framing destination.
           </p>
           <p className="text-sm text-neutral-500 max-w-3xl mx-auto mb-16">
             According to <a href="https://www.framersalliance.com/industry-reports/efficiency-studies" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">the Framers Business Alliance</a>, optimized production workflows can reduce operational costs by up to 40% in custom framing businesses.
