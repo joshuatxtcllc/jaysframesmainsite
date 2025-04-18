@@ -400,7 +400,7 @@ export default function ReinventedPage() {
                       <p className="text-muted-foreground text-sm">Professional partners with quality guarantees</p>
                     </div>
                     <div className="bg-green-100 text-green-800 font-bold px-4 py-2 rounded-full">
-                      $50,000/year savings
+                      $90,000/year savings
                     </div>
                   </div>
                   

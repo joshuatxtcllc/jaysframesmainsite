@@ -28,7 +28,7 @@ export default function About() {
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="About Jay's Frames | Revolutionary Hybrid Production Model | AI-Powered Design" />
-        <meta property="og:description" content="Learn about Jay's Frames' revolutionary hybrid production model that has cut labor by 1,920 hours annually, providing 42% faster turnaround times." />
+        <meta property="og:description" content="Learn about Jay's Frames' revolutionary hybrid production model that has cut labor by 6,363 hours annually ($140,000), providing 62% faster turnaround times and 400% increased capacity." />
         <meta property="og:url" content="https://jaysframes.com/about" />
         <meta property="og:image" content="/images/jays-frames-workshop.jpg" />
         <meta property="og:site_name" content="Jay's Frames" />
@@ -39,7 +39,7 @@ export default function About() {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Jay's Frames",
-            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times and AI-powered design assistants.",
+            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times, 400% increased capacity, and AI-powered design assistants.",
             "alternateName": "Jay's Custom Frames",
             "url": "https://jaysframes.com",
             "logo": "https://jaysframes.com/images/logo.png",
@@ -312,10 +312,10 @@ export default function About() {
               </div>
               
               <div className="bg-primary/5 rounded-lg p-8 text-center">
-                <h3 className="text-5xl font-bold text-primary mb-2">6,363</h3>
-                <p className="text-xl font-medium">Hours Saved Annually</p>
+                <h3 className="text-5xl font-bold text-primary mb-2">$140K</h3>
+                <p className="text-xl font-medium">Annual Labor Savings</p>
                 <p className="text-muted-foreground mt-2">
-                  Our hybrid model eliminates inefficiencies, reducing labor by 6,363 hours per year
+                  Our hybrid model eliminates inefficiencies, saving $140,000 and 6,363 labor hours annually
                 </p>
               </div>
               
