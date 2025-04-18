@@ -142,7 +142,7 @@ export default function ReinventedPage() {
                   The Future of Custom Framing is Here – And It Saves You Time and Money!
                 </h2>
                 <p className="text-lg font-medium mb-0">
-                  <span className="underline decoration-4 decoration-white/30 underline-offset-4">BREAKING NEWS:</span> Jay's Frames Reinvented has revolutionized the framing industry! Our game-changing automation and AI integration slashes production time by 50% and eliminates common framing mistakes. With our wholesale partnerships, streamlined workflow, and digital assistants, we've reduced overhead costs while delivering superior quality. Visit our <Link href="/reinvented" className="text-white font-bold hover:underline">Jay's Frames Reinvented</Link> page to discover how our technological transformation translates to faster turnaround times, exceptional craftsmanship, and unbeatable value for your cherished artwork. Don't miss out on the framing revolution – experience it today!
+                  <span className="underline decoration-4 decoration-white/30 underline-offset-4">BREAKING NEWS:</span> Jay's Frames Reinvented has revolutionized the framing industry! Our game-changing automation and AI integration slashes production time by 62% and eliminates common framing mistakes. With our wholesale partnerships, streamlined workflow, and digital assistants, we've reduced overhead costs while delivering superior quality. Visit our <Link href="/reinvented" className="text-white font-bold hover:underline">Jay's Frames Reinvented</Link> page to discover how our technological transformation translates to faster turnaround times, exceptional craftsmanship, and unbeatable value for your cherished artwork. Don't miss out on the framing revolution – experience it today!
                 </p>
               </div>
               <div className="md:w-1/4 flex justify-center">
@@ -430,7 +430,7 @@ export default function ReinventedPage() {
                       <p className="text-muted-foreground text-sm">Streamlined production management</p>
                     </div>
                     <div className="bg-green-100 text-green-800 font-bold px-4 py-2 rounded-full">
-                      50% less production time
+                      62% less production time
                     </div>
                   </div>
                 </div>
