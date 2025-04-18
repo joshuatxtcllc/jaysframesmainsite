@@ -21,7 +21,7 @@ export default function About() {
     <div className="bg-white">
       <Helmet>
         <title>About Jay's Frames | Revolutionary Hybrid Production Model | AI-Powered Design</title>
-        <meta name="description" content="Learn about Jay's Frames' revolutionary hybrid production model that has cut labor by 6,363 hours annually ($140,000), providing 62% faster turnaround times and 400% increased capacity. Our AI-powered design assistants learn Jay's precise framing style to deliver exceptional results." />
+        <meta name="description" content="Discover Jay's Frames, Houston's premier custom framing studio featuring our revolutionary hybrid production model that provides 62% faster turnaround times and increases capacity by 4x. Our eco-friendly framing solutions and museum-quality conservation techniques combine exceptional craftsmanship with sustainability. Visit our Houston custom frame shop for artwork framing, shadow boxes, and more." />
         <meta name="keywords" content="Jay's Frames, custom framing Houston, hybrid production model, AI design assistant, 62% faster framing, 4x production capacity, custom frame shop, streamlined framing process, reduced framing costs" />
         <link rel="canonical" href="https://jaysframes.com/about" />
         
@@ -114,10 +114,13 @@ export default function About() {
                 <span className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">OUR STORY</span>
                 <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">A Vision for Innovation in Custom Framing</h2>
                 <p className="text-lg text-muted-foreground mb-4">
-                  Founded with a passion for preserving and showcasing art, Jay's Frames has continuously evolved through innovation and a commitment to craftsmanship excellence.
+                  Founded with a passion for preserving and showcasing art, Jay's Frames has continuously evolved through innovation and a commitment to craftsmanship excellence. Since opening our doors in Houston's vibrant Heights neighborhood, we've established ourselves as the premier custom framing destination for artists, collectors, and homeowners throughout the Houston area.
+                </p>
+                <p className="text-lg text-muted-foreground mb-4">
+                  In 2025, we underwent a revolutionary transformation, implementing a first-of-its-kind hybrid production model that has redefined custom framing efficiency and quality. This pioneering approach combines the precision of technology with the irreplaceable human touch of expert framers, allowing us to deliver museum-quality framing at competitive prices.
                 </p>
                 <p className="text-lg text-muted-foreground">
-                  In 2025, we underwent a revolutionary transformation, implementing a first-of-its-kind hybrid production model that has redefined custom framing efficiency and quality. This pioneering approach combines the precision of technology with the irreplaceable human touch of expert framers.
+                  Our eco-friendly framing options use locally-sourced materials, including reclaimed wood from Houston-area suppliers, which not only reduces our environmental footprint but also provides unique character and warmth to our custom frames. This commitment to sustainable practices, combined with our innovative production methods, has positioned Jay's Frames as the leader in Houston's custom framing industry.
                 </p>
               </div>
               
@@ -187,10 +190,17 @@ export default function About() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">THE HYBRID PRODUCTION MODEL</span>
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">Our Revolutionary Approach</h2>
-            <p className="text-lg text-muted-foreground">
-              Jay has developed the first-of-its-kind hybrid production model in the framing industry, 
+            <p className="text-lg text-muted-foreground mb-4">
+              Jay has developed the first-of-its-kind hybrid production model in the custom framing industry, 
               combining streamlined operations with AI technology to drastically improve efficiency 
-              while maintaining exceptional quality. According to a <a href="https://www.framingbusinessreport.com/industry-innovations/2025" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">2025 Framing Business Report</a>, such innovations can lead to 50-70% efficiency gains.
+              while maintaining exceptional quality. According to a <a href="https://www.framingbusinessreport.com/industry-innovations/2025" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">2025 Framing Business Report</a>, such innovations can lead to 50-70% efficiency gains in frame shops.
+            </p>
+            <p className="text-lg text-muted-foreground">
+              Our Houston custom framing studio stands apart from traditional frame shops by integrating cutting-edge 
+              technology with artisanal craftsmanship. This approach enables us to offer both rapid turnaround times and 
+              museum-quality framing that preserves and enhances your artwork. Whether you need conservation framing for valuable 
+              pieces or eco-friendly framing options that reflect our commitment to sustainability, Jay's Frames delivers 
+              superior results through our revolutionary production process.
             </p>
           </div>
           
@@ -289,8 +299,11 @@ export default function About() {
             <div className="text-center mb-16">
               <span className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">MEASURABLE RESULTS</span>
               <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">The Impact of Our Innovation</h2>
+              <p className="text-lg text-muted-foreground mb-4">
+                Our revolutionary hybrid production model has delivered significant, measurable improvements across all aspects of our custom framing business in Houston. These improvements translate directly to better service, higher quality, and more value for our customers.
+              </p>
               <p className="text-lg text-muted-foreground">
-                Our revolutionary hybrid model has delivered significant, measurable improvements across all aspects of our business.
+                As the most innovative frame shop in Houston, we continuously refine our processes to enhance both efficiency and quality. Our eco-friendly framing options, combined with our advanced production techniques, make Jay's Frames the premier destination for custom framing services that balance craftsmanship, sustainability, and affordability.
               </p>
             </div>
             
@@ -345,7 +358,7 @@ export default function About() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Experience Jay's Frames Reinvented?</h2>
             <p className="text-xl text-white/80 mb-8">
-              Whether you need custom framing, ready-made solutions, or expert advice, our revolutionary approach ensures exceptional results in record time.
+              Whether you need custom framing for cherished artwork, shadow box framing for memorabilia, or our eco-friendly framing options, our revolutionary Houston frame shop delivers exceptional results with 62% faster turnaround times. Experience the perfect balance of craftsmanship, technology, and sustainability that has made Jay's Frames the premier custom framing destination in Houston.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" variant="secondary" asChild>
