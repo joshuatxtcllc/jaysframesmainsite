@@ -30,14 +30,14 @@ const processSteps = [
     step: 2,
     icon: <LayoutGrid className="h-8 w-8 text-white" />,
     title: "Revolutionary Hybrid Production",
-    description: "Our unique hybrid mutant model integrates with wholesale vendors for frame cutting and building, saving 1,920 labor hours annually while maintaining quality.",
+    description: "Our unique hybrid production model integrates with wholesale vendors for frame cutting and building, saving 6,363 labor hours annually while maintaining quality.",
     color: "from-primary to-blue-600"
   },
   {
     step: 3,
     icon: <ShieldCheck className="h-8 w-8 text-white" />,
-    title: "42% Faster Turnaround Times",
-    description: "Our methodically structured shop and streamlined process reduces turnaround times by 42%, allowing you to enjoy your beautifully framed artwork sooner.",
+    title: "62% Faster Turnaround Times",
+    description: "Our methodically structured shop and streamlined process reduces turnaround times by 62%, allowing you to enjoy your beautifully framed artwork sooner.",
     color: "from-accent to-teal-500"
   }
 ];
@@ -60,8 +60,8 @@ const benefits = [
   },
   {
     icon: <Zap className="h-12 w-12 text-secondary" />,
-    title: "32% Increased Capacity",
-    description: "Our hybrid production model has expanded our capacity by 32% while reducing costs and maintaining superior quality."
+    title: "400% Increased Capacity",
+    description: "Our hybrid production model has expanded our capacity by 4x (400%) while reducing costs and maintaining superior quality."
   }
 ];
 
