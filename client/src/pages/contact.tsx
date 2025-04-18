@@ -53,7 +53,7 @@ export default function Contact() {
     <div className="bg-white">
       <Helmet>
         <title>Contact Jay's Frames | Custom Framing Studio in Houston, TX</title>
-        <meta name="description" content="Contact Jay's Frames for custom framing services, inquiries, or to discuss your framing project. With our revolutionary hybrid production model and AI-powered design assistants, we provide 42% faster turnarounds and exceptional service." />
+        <meta name="description" content="Contact Jay's Frames for custom framing services, inquiries, or to discuss your framing project. With our revolutionary hybrid production model and AI-powered design assistants, we provide 62% faster turnarounds and exceptional service." />
         <meta name="keywords" content="contact Jay's Frames, custom framing Houston, frame shop contact, framing consultation, Houston frame studio, framing turnaround time, AI framing design" />
         <link rel="canonical" href="https://jaysframes.com/contact" />
         
@@ -63,7 +63,7 @@ export default function Contact() {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Jay's Frames",
-            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times and AI-powered design assistants.",
+            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times and AI-powered design assistants.",
             "url": "https://jaysframes.com",
             "telephone": "+18328933794",
             "email": "info@jaysframes.com",
