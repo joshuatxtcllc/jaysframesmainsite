@@ -475,6 +475,7 @@ export default function ReinventedPage() {
                     <div className="absolute bottom-0 right-4 text-6xl text-secondary/20">"</div>
                   </blockquote>
                   <div className="mt-4 font-medium text-right">— Jay, Founder</div>
+                  <p className="text-sm mt-4 text-muted-foreground">According to <a href="https://www.ppfa.com/industry-research/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">PPFA industry research</a>, businesses implementing hybrid production models have seen an average of 40% increase in operational efficiency.</p>
                 </div>
               </div>
             </div>
