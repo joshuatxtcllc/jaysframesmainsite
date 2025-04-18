@@ -28,15 +28,15 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Jay's Frames | Revolutionary 42% Faster Custom Framing | Houston's Premier Frame Studio</title>
-        <meta name="description" content="Award-winning custom framing with our revolutionary hybrid production model that saves 1,920 labor hours annually and provides 42% faster turnaround times. Our AI design assistant mimics Jay's precise framing style." />
-        <meta name="keywords" content="custom framing Houston, 42% faster framing, Jay's hybrid model, AI frame design, ready-made frames, one day framing, 24/7 customer service, museum-quality framing, Houston Heights frame shop, reduced turnaround time" />
+        <title>Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio</title>
+        <meta name="description" content="Award-winning custom framing with our revolutionary hybrid production model that saves $140,000 and 6,363 labor hours annually with 62% faster turnaround times. Experience 4x production capacity with our AI design assistant." />
+        <meta name="keywords" content="custom framing Houston, 62% faster framing, Jay's hybrid model, AI frame design, ready-made frames, one day framing, 24/7 customer service, museum-quality framing, Houston Heights frame shop, reduced turnaround time" />
         <link rel="canonical" href="https://jaysframes.com" />
         
         {/* Open Graph tags */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Jay's Frames | Revolutionary 42% Faster Custom Framing | Houston's Premier Frame Studio" />
-        <meta property="og:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology has cut labor by 1,920 hours annually, providing 42% faster turnaround times and exceptional quality framing." />
+        <meta property="og:title" content="Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio" />
+        <meta property="og:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology saves $140,000 and 6,363 labor hours annually, providing 62% faster turnaround times and 4x production capacity." />
         <meta property="og:url" content="https://jaysframes.com" />
         <meta property="og:image" content="/images/og-image.jpg" />
         <meta property="og:site_name" content="Jay's Frames" />
@@ -44,8 +44,8 @@ const Home = () => {
         
         {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Jay's Frames | Revolutionary 42% Faster Custom Framing | Houston" />
-        <meta name="twitter:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology has cut labor by 1,920 hours annually, providing 42% faster turnaround times." />
+        <meta name="twitter:title" content="Jay's Frames | 62% Faster Custom Framing | Houston" />
+        <meta name="twitter:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology saves $140,000 and 6,363 labor hours annually, providing 62% faster turnaround times and 4x production capacity." />
         <meta name="twitter:image" content="/images/og-image.jpg" />
         
         {/* Schema.org structured data */}
@@ -54,7 +54,7 @@ const Home = () => {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Jay's Frames",
-            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 42% faster turnaround times and AI-powered design assistants that learn Jay's precise framing style.",
+            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times, saves $140,000 annually, and includes AI-powered design assistants that learn Jay's precise framing style.",
             "telephone": "+18328933794",
             "email": "info@jaysframes.com",
             "url": "https://jaysframes.com",
@@ -105,7 +105,7 @@ const Home = () => {
                   "itemOffered": {
                     "@type": "Service",
                     "name": "Custom Framing",
-                    "description": "Expert custom framing with 42% faster turnaround times"
+                    "description": "Expert custom framing with 62% faster turnaround times"
                   }
                 },
                 {

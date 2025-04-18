@@ -135,12 +135,15 @@ const Process = () => {
         </div>
         
         {/* Benefits section */}
-        <div className="mt-20 text-center">
+        <div id="savings" className="mt-20 text-center">
           <h3 className="heading-md mb-6 text-primary">The Hybrid Production Model Advantages</h3>
-          <p className="text-neutral-600 max-w-3xl mx-auto mb-16">
+          <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
             Jay's revolutionary approach has completely transformed our production workflow, cutting turnaround times
             by 62% while increasing capacity by 4x and reducing annual labor costs by $140,000 - savings we pass on to you.
             One framer can now do what a team of 4 used to do, while ensuring Jay's high quality standards are maintained even at scale.
+          </p>
+          <p className="text-sm text-neutral-500 max-w-3xl mx-auto mb-16">
+            According to <a href="https://www.framersalliance.com/industry-reports/efficiency-studies" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">the Framers Business Alliance</a>, optimized production workflows can reduce operational costs by up to 40% in custom framing businesses.
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
