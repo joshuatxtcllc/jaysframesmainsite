@@ -18,11 +18,15 @@ import {
   OrderItem, 
   ExtendedOrder 
 } from "./services/notification";
+import { startAutoProcessingCron } from "./services/automation";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
   await initEmailTransporter();
   await initTwilioClient();
+  
+  // Start automated order processing cron job (runs every 30 minutes by default)
+  startAutoProcessingCron(app);
   
   // API Routes
   const apiRouter = app.route("/api");
@@ -351,8 +355,183 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get all orders (admin only)
   app.get("/api/orders", async (req: Request, res: Response) => {
-    const orders = await storage.getOrders();
+    // Check for query parameters for filtering
+    const { status, userId, limit } = req.query;
+    
+    let orders;
+    
+    if (status) {
+      // Get orders by status
+      orders = await storage.getOrdersByStatus(status.toString());
+    } else if (userId) {
+      // Get orders by user ID
+      const userIdNum = parseInt(userId.toString());
+      if (isNaN(userIdNum)) {
+        return res.status(400).json({ message: "Invalid user ID" });
+      }
+      orders = await storage.getOrdersByUserId(userIdNum);
+    } else if (limit) {
+      // Get recent orders with limit
+      const limitNum = parseInt(limit.toString());
+      if (isNaN(limitNum)) {
+        return res.status(400).json({ message: "Invalid limit" });
+      }
+      orders = await storage.getRecentOrders(limitNum);
+    } else {
+      // Get all orders
+      orders = await storage.getOrders();
+    }
+    
     res.json(orders);
+  });
+  
+  // Get recent orders (admin only)
+  app.get("/api/orders/recent", async (req: Request, res: Response) => {
+    const limit = req.query.limit ? parseInt(req.query.limit.toString()) : 10;
+    const orders = await storage.getRecentOrders(limit);
+    res.json(orders);
+  });
+  
+  // Auto-process orders in a batch (automated system or admin only)
+  app.post("/api/orders/auto-process", async (req: Request, res: Response) => {
+    try {
+      // Get pending orders that need processing
+      const pendingOrders = await storage.getOrdersByStatus("pending");
+      
+      // Process each order
+      const processedOrders = await Promise.all(
+        pendingOrders.map(async (order) => {
+          // 1. Update status to processing
+          const updatedOrder = await storage.updateOrderStatus(order.id, "processing", "preparing");
+          
+          // 2. Check inventory for all items in the order
+          const items = Array.isArray(order.items) ? order.items : [];
+          const inventoryCheck = await Promise.all(
+            items.map(async (item: any) => {
+              if (item.productId) {
+                const product = await storage.getProductById(item.productId);
+                if (product && product.stockQuantity !== undefined) {
+                  // If product exists and has enough stock
+                  if (product.stockQuantity >= (item.quantity || 1)) {
+                    // Update product stock
+                    await storage.updateProductStock(
+                      product.id, 
+                      -1 * (item.quantity || 1)
+                    );
+                    
+                    return { 
+                      productId: item.productId, 
+                      inStock: true, 
+                      quantity: item.quantity || 1 
+                    };
+                  } else {
+                    return { 
+                      productId: item.productId, 
+                      inStock: false, 
+                      quantity: item.quantity || 1,
+                      available: product.stockQuantity || 0
+                    };
+                  }
+                }
+              }
+              return { productId: item.productId, inStock: false, custom: true };
+            })
+          );
+          
+          // 3. Check if all items are in stock
+          const allInStock = inventoryCheck.every(item => item.inStock || item.custom);
+          const customItems = inventoryCheck.filter(item => item.custom).length > 0;
+          
+          // 4. Determine next processing step based on inventory and order type
+          let nextStatus, nextStage;
+          
+          if (allInStock && !customItems) {
+            // All standard items in stock - move to production
+            nextStatus = "processing";
+            nextStage = "in_production";
+          } else if (allInStock && customItems) {
+            // Custom items - move to design approval
+            nextStatus = "processing";
+            nextStage = "design_approval";
+          } else {
+            // Some items out of stock - move to backorder
+            nextStatus = "backorder";
+            nextStage = "waiting_for_stock";
+          }
+          
+          // 5. Update order with new status
+          const finalOrder = await storage.updateOrderStatus(order.id, nextStatus, nextStage);
+          
+          // 6. Return processing result
+          return {
+            orderId: order.id,
+            originalStatus: order.status,
+            newStatus: finalOrder?.status || nextStatus,
+            newStage: finalOrder?.currentStage || nextStage,
+            inventoryCheck,
+            outOfStock: !allInStock,
+            customItems
+          };
+        })
+      );
+      
+      // Return summary of processed orders
+      res.json({
+        processed: processedOrders.length,
+        orders: processedOrders
+      });
+    } catch (error) {
+      console.error("Auto-process error:", error);
+      res.status(500).json({ message: "Failed to auto-process orders" });
+    }
+  });
+  
+  // Update order inventory and check status
+  app.post("/api/orders/:id/inventory-check", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+      
+      // Get order
+      const order = await storage.getOrderById(id);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      // Get items from order
+      const items = Array.isArray(order.items) ? order.items : [];
+      
+      // Check inventory for all items in the order
+      const inventoryCheck = await Promise.all(
+        items.map(async (item: any) => {
+          if (item.productId) {
+            const product = await storage.getProductById(item.productId);
+            if (product && product.stockQuantity !== undefined) {
+              return { 
+                productId: item.productId, 
+                inStock: product.stockQuantity >= (item.quantity || 1), 
+                available: product.stockQuantity || 0,
+                quantity: item.quantity || 1 
+              };
+            }
+          }
+          return { productId: item.productId, inStock: false, custom: true };
+        })
+      );
+      
+      // Return inventory check results
+      res.json({
+        orderId: id,
+        items: inventoryCheck,
+        allInStock: inventoryCheck.every(item => item.inStock || item.custom),
+        customItems: inventoryCheck.filter(item => item.custom).length > 0
+      });
+    } catch (error) {
+      console.error("Inventory check error:", error);
+      res.status(500).json({ message: "Failed to check inventory" });
+    }
   });
 
   // AI Chatbot endpoint
