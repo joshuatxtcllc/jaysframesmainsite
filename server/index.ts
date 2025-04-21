@@ -2,6 +2,18 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import compression from "compression";
+import twilio from 'twilio';
+import { startAutomationSystem } from './services/automation';
+
+// Initialize Twilio client for SMS notifications
+export let twilioClient: any = null;
+if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+  twilioClient = twilio(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+  );
+  console.log('Twilio client initialized for SMS messaging');
+}
 
 const app = express();
 // Enable compression middleware
@@ -94,5 +106,8 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    
+    // Start the automation system after server is running
+    startAutomationSystem();
   });
 })();
