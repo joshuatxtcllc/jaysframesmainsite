@@ -11,6 +11,7 @@ import Checkout from "@/pages/checkout";
 import OrderConfirmation from "@/pages/order-confirmation";
 import AdminDashboard from "@/pages/admin/dashboard";
 import FrameAssistantTest from "@/pages/frame-assistant-test";
+import VoiceFrameAssistant from "@/pages/voice-frame-assistant";
 import Notifications from "@/pages/notifications";
 import NotificationTest from "@/pages/notification-test";
 import NotificationEmbed from "@/pages/developer/notification-embed";
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/order-status" component={OrderStatus} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
+      <Route path="/voice-frame-assistant" component={VoiceFrameAssistant} />
       <Route path="/notifications" component={Notifications} />
       <Route path="/notification-test" component={NotificationTest} />
       <Route path="/sms-settings" component={SMSSettings} />
