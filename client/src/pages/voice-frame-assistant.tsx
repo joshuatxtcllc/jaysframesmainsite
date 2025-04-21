@@ -277,11 +277,11 @@ export default function VoiceFrameAssistant() {
               <div className="flex gap-2">
                 <Button 
                   type="button" 
-                  variant={isListening ? "destructive" : "outline"}
+                  variant="outline"
                   onClick={toggleListening}
                   disabled={!speechSupported || isLoading}
                   title={speechSupported ? "Toggle voice input" : "Speech recognition not supported"}
-                  className="flex gap-1"
+                  className={`flex gap-1 ${isListening ? "bg-red-100 text-red-700 border-red-400 hover:bg-red-200" : "text-primary border-primary hover:bg-primary/10"}`}
                 >
                   {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                   {isListening ? "Stop" : "Start"} Listening
@@ -292,14 +292,14 @@ export default function VoiceFrameAssistant() {
                     variant="outline" 
                     onClick={() => speakResponse(response)}
                     disabled={!response}
-                    className="flex gap-1"
+                    className="flex gap-1 text-secondary border-secondary hover:bg-secondary/10"
                   >
                     <Volume2 className="h-4 w-4" />
                     Read Response
                   </Button>
                 )}
               </div>
-              <Button type="submit" disabled={isLoading} className="flex gap-1">
+              <Button type="submit" disabled={isLoading} className="flex gap-1 bg-secondary hover:bg-secondary/80 text-white">
                 <Send className="h-4 w-4" />
                 {isLoading ? 'Getting Response...' : 'Ask Assistant'}
               </Button>
