@@ -38,7 +38,7 @@ const processSteps = [
   {
     step: 3,
     icon: <ShieldCheck className="h-8 w-8 text-white" />,
-    title: "Four Times Production Capacity",
+    title: "Museum-Quality Craftsmanship",
     description: "Our methodically restructured Houston Heights workshop delivers significantly faster turnaround times with 4x production capacity. One framer now accomplishes what previously required a team of four, while ensuring perfect craftsmanship for every project.",
     color: "from-accent to-teal-500"
   }
@@ -138,7 +138,7 @@ const Process = () => {
         
         {/* Benefits section */}
         <div id="savings" className="mt-20 text-center">
-          <h3 className="heading-md mb-6 text-primary">Four Times Production Capacity</h3>
+          <h3 className="heading-md mb-6 text-primary">Revolutionary Framing Innovation</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
             Our proprietary system has quadrupled production capacity while significantly reducing turnaround times, all while maintaining the artisanal quality that defines our brand.
           </p>
