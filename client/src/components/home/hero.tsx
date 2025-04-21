@@ -56,14 +56,14 @@ const Hero = () => {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Link href="/order-status">
+              <Link href="/custom-framing">
                 <Button 
                   size="lg" 
                   variant="outline" 
                   className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white/30 font-medium py-3 px-8 text-base rounded-md transition-all duration-300 flex items-center gap-2"
                 >
-                  <PackageSearch className="h-5 w-5" />
-                  Check Order Status
+                  <Wand2 className="h-5 w-5" />
+                  Let AI Design!
                 </Button>
               </Link>
               <Link href="#process" className="hidden sm:block">

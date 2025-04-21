@@ -14,7 +14,8 @@ import {
   Bot,
   TimerReset,
   LayoutGrid,
-  PackageSearch
+  PackageSearch,
+  Wand2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -219,10 +220,10 @@ const Process = () => {
                 Start Your Project Now
               </Button>
             </Link>
-            <Link href="/order-status">
+            <Link href="/custom-framing">
               <Button variant="outline" className="border-primary text-primary hover:bg-primary/10 px-8 py-6 text-base w-full sm:w-auto flex items-center gap-2">
-                <PackageSearch className="h-5 w-5" />
-                Check Order Status
+                <Wand2 className="h-5 w-5" />
+                Let AI Design!
               </Button>
             </Link>
           </div>
