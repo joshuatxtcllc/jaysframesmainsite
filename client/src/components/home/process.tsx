@@ -138,14 +138,12 @@ const Process = () => {
         
         {/* Benefits section */}
         <div id="savings" className="mt-20 text-center">
-          <h3 className="heading-md mb-6 text-primary">The Hybrid Production Model Advantages</h3>
+          <h3 className="heading-md mb-6 text-primary">Four Times Production Capacity</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
-            In response to evolving customer needs and industry challenges, we've transformed our operations to offer faster, more efficient, and consistently high-quality framing services. Our proprietary system has reduced turnaround times by 62% and quadrupled our production capacity, all while maintaining the artisanal quality that defines our brand.
+            Our proprietary system has quadrupled production capacity while reducing turnaround times by 62%, all while maintaining the artisanal quality that defines our brand.
           </p>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
-            Jay's revolutionary Houston-based approach has completely transformed custom framing through eco-friendly practices, 
-            cutting turnaround times by 62% while increasing capacity by 4x and reducing annual labor costs by $140,000 - savings we pass on to you.
-            Our locally-sourced materials and sustainable partnerships enable one framer to accomplish what previously required a team of four, 
+            Jay's revolutionary approach enables one framer to accomplish what previously required a team of four, 
             while maintaining the museum-quality craftsmanship that has made Jay's Frames Houston's premier custom framing destination.
           </p>
           <p className="text-sm text-neutral-500 max-w-3xl mx-auto mb-8">
