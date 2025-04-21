@@ -32,14 +32,14 @@ const processSteps = [
     step: 2,
     icon: <LayoutGrid className="h-8 w-8 text-white" />,
     title: "Revolutionary Hybrid Production",
-    description: "Our eco-friendly hybrid production model partners with local Houston frame suppliers for sustainable production, saving 6,363 labor hours annually ($140,000) while maintaining museum-quality craftsmanship and reducing environmental impact.",
+    description: "Our eco-friendly hybrid production model partners with local Houston frame suppliers for sustainable production, saving thousands of labor hours annually while maintaining museum-quality craftsmanship and reducing environmental impact.",
     color: "from-primary to-blue-600"
   },
   {
     step: 3,
     icon: <ShieldCheck className="h-8 w-8 text-white" />,
-    title: "62% Faster Turnaround Times",
-    description: "Our methodically restructured Houston Heights workshop delivers 62% faster turnaround times with 4x production capacity. One framer now accomplishes what previously required a team of four, while ensuring perfect craftsmanship for every project.",
+    title: "Four Times Production Capacity",
+    description: "Our methodically restructured Houston Heights workshop delivers significantly faster turnaround times with 4x production capacity. One framer now accomplishes what previously required a team of four, while ensuring perfect craftsmanship for every project.",
     color: "from-accent to-teal-500"
   }
 ];
@@ -75,11 +75,11 @@ const Process = () => {
           <div className="inline-block px-6 py-2 bg-secondary/10 rounded-full mb-4">
             <p className="text-secondary text-sm font-medium">REVOLUTIONARY HYBRID PRODUCTION MODEL</p>
           </div>
-          <h2 className="heading-lg text-primary mb-6">62% Faster Turnaround Times</h2>
+          <h2 className="heading-lg text-primary mb-6">Four Times Production Capacity</h2>
           <p className="body-lg text-neutral-600 max-w-3xl mx-auto">
-            Jay has developed Houston's first eco-friendly hybrid production model, saving 6,363 labor hours annually ($140,000) 
+            Jay has developed Houston's first eco-friendly hybrid production model, saving thousands of labor hours annually
             through local sustainable partnerships, AI design assistance, and a methodically restructured Houston Heights workshop 
-            that delivers museum-quality framing with 62% faster turnaround, one-day "Ready Made" options, and 4x production capacity.
+            that delivers museum-quality framing with faster turnaround, one-day "Ready Made" options, and 4x production capacity.
           </p>
           <Link href="/about" className="mt-4 inline-block">
             <Button variant="outline" className="border-secondary text-secondary hover:bg-secondary/10">
@@ -140,7 +140,7 @@ const Process = () => {
         <div id="savings" className="mt-20 text-center">
           <h3 className="heading-md mb-6 text-primary">Four Times Production Capacity</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
-            Our proprietary system has quadrupled production capacity while reducing turnaround times by 62%, all while maintaining the artisanal quality that defines our brand.
+            Our proprietary system has quadrupled production capacity while significantly reducing turnaround times, all while maintaining the artisanal quality that defines our brand.
           </p>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
             Jay's revolutionary approach enables one framer to accomplish what previously required a team of four, 
