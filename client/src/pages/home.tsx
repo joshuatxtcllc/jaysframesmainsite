@@ -62,7 +62,7 @@ const Home = () => {
             "image": "https://jaysframes.com/images/storefront.jpg",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "1440 Yale St.",
+              "streetAddress": "218 E. 28th St.",
               "addressLocality": "Houston",
               "addressRegion": "TX",
               "postalCode": "77008",

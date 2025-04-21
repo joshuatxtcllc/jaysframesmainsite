@@ -39,16 +39,14 @@ const Hero = () => {
             </div>
             
             <h1 className="heading-xl mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-              <span className="text-gray-900">Jay's Frames</span> <span className="text-secondary italic relative font-bold">
+              <span className="text-white">Jay's Frames</span> <span className="text-secondary italic relative font-bold">
                 Reinvented
                 <span className="absolute -bottom-3 left-0 w-full h-1.5 bg-secondary/70 rounded-full"></span>
               </span>
             </h1>
             
             <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              Houston's premier custom framing studio has been reimagined with our revolutionary hybrid production model that delivers 62% faster turnaround times. 
-              Our innovative approach combines wholesale partnerships with AI-powered design expertise, enabling one framer to accomplish what previously required a team of four.
-              Visit our Heights neighborhood workshop to experience Houston's most efficient custom framing service.
+              Houston's premier custom framing studio with over 15 years of excellence has been reinvented to meet evolving customer needs. Our revolutionary hybrid production model delivers 62% faster turnaround times and has quadrupled our production capacity. Recognized as the Best Custom Frame Shop in Houston by the Houston A-List voters and featured in PaperCity magazine, we continue our legacy of collaboration with Houston's museums, sports teams, and art collectors.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 mb-12">

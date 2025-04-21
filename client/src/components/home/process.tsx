@@ -138,14 +138,63 @@ const Process = () => {
         <div id="savings" className="mt-20 text-center">
           <h3 className="heading-md mb-6 text-primary">The Hybrid Production Model Advantages</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
+            In response to evolving customer needs and industry challenges, we've transformed our operations to offer faster, more efficient, and consistently high-quality framing services. Our proprietary system has reduced turnaround times by 62% and quadrupled our production capacity, all while maintaining the artisanal quality that defines our brand.
+          </p>
+          <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
             Jay's revolutionary Houston-based approach has completely transformed custom framing through eco-friendly practices, 
             cutting turnaround times by 62% while increasing capacity by 4x and reducing annual labor costs by $140,000 - savings we pass on to you.
             Our locally-sourced materials and sustainable partnerships enable one framer to accomplish what previously required a team of four, 
             while maintaining the museum-quality craftsmanship that has made Jay's Frames Houston's premier custom framing destination.
           </p>
-          <p className="text-sm text-neutral-500 max-w-3xl mx-auto mb-16">
+          <p className="text-sm text-neutral-500 max-w-3xl mx-auto mb-8">
             According to <a href="https://www.framersalliance.com/industry-reports/efficiency-studies" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">the Framers Business Alliance</a>, optimized production workflows can reduce operational costs by up to 40% in custom framing businesses.
           </p>
+          
+          <div className="max-w-3xl mx-auto mb-16 bg-white rounded-xl p-8 border border-gray-100 shadow-elegant">
+            <h4 className="font-serif font-bold text-xl mb-6 text-primary">Innovative Features at Jay's Frames</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+              <div className="flex items-start">
+                <ShieldCheck className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">24/7 Frame Chat Support:</span> Stay updated on your order status anytime.</p>
+              </div>
+              <div className="flex items-start">
+                <Frame className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">Virtual Frame Designer:</span> Visualize your artwork with various framing options.</p>
+              </div>
+              <div className="flex items-start">
+                <Bot className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">AI Design Assistant:</span> Receive personalized frame suggestions.</p>
+              </div>
+              <div className="flex items-start">
+                <DollarSign className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">Automated Material Ordering:</span> Our POS system ensures timely procurement.</p>
+              </div>
+              <div className="flex items-start">
+                <Scissors className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">Precision Measurement Tools:</span> Accurate measurements eliminate double-checking.</p>
+              </div>
+              <div className="flex items-start">
+                <LayoutGrid className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">Smart Kanban Workflow:</span> Real-time order tracking with notifications.</p>
+              </div>
+              <div className="flex items-start">
+                <Shield className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">Efficient Art Storage System:</span> Organized and secure storage for artwork.</p>
+              </div>
+              <div className="flex items-start">
+                <TimerReset className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">Ready-Made Frame Options:</span> Streamlined production with standardized sizes.</p>
+              </div>
+              <div className="flex items-start">
+                <Users className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">Outsourced Frame Construction:</span> Partnerships for high-quality frame building.</p>
+              </div>
+              <div className="flex items-start">
+                <Zap className="h-5 w-5 text-secondary mt-1 mr-3" />
+                <p className="text-neutral-600"><span className="font-medium">AI Business Analyzer:</span> Predicts job durations and adjusts turnaround times.</p>
+              </div>
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {benefits.map((benefit, index) => (
