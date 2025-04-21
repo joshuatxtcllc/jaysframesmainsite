@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Wand2, Award, ArrowRight, Sparkles } from "lucide-react";
+import { Wand2, Award, ArrowRight, Sparkles, PackageSearch } from "lucide-react";
 import { Cpu, Clock } from "lucide-react";
 
 const Hero = () => {
@@ -56,7 +56,17 @@ const Hero = () => {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Link href="#process">
+              <Link href="/order-status">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white/30 font-medium py-3 px-8 text-base rounded-md transition-all duration-300 flex items-center gap-2"
+                >
+                  <PackageSearch className="h-5 w-5" />
+                  Check Order Status
+                </Button>
+              </Link>
+              <Link href="#process" className="hidden sm:block">
                 <Button 
                   size="lg" 
                   variant="outline" 

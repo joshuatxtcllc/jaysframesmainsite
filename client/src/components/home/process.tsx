@@ -13,7 +13,8 @@ import {
   Zap,
   Bot,
   TimerReset,
-  LayoutGrid
+  LayoutGrid,
+  PackageSearch
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -212,10 +213,16 @@ const Process = () => {
             ))}
           </div>
           
-          <div className="mt-16">
+          <div className="mt-16 flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/custom-framing">
-              <Button className="bg-secondary hover:bg-secondary/90 px-8 py-6 text-base text-white">
+              <Button className="bg-secondary hover:bg-secondary/90 px-8 py-6 text-base text-white w-full sm:w-auto">
                 Start Your Project Now
+              </Button>
+            </Link>
+            <Link href="/order-status">
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary/10 px-8 py-6 text-base w-full sm:w-auto flex items-center gap-2">
+                <PackageSearch className="h-5 w-5" />
+                Check Order Status
               </Button>
             </Link>
           </div>
