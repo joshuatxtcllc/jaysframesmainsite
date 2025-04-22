@@ -1155,28 +1155,60 @@ Contact Jay's Frames to schedule a professional art installation service. Our ex
 
 import { db } from "./db";
 import { eq, desc, and, like, sql, asc, lte, gte, isNull, not } from "drizzle-orm";
-import { Json } from "@shared/schema";
 
 export class DatabaseStorage implements IStorage {
+  // Helper method to check if database is available
+  private async checkDb(): Promise<boolean> {
+    if (!db) {
+      console.warn("Database connection not available");
+      return false;
+    }
+    return true;
+  }
+  
   // User operations
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    if (!await this.checkDb()) return undefined;
+    try {
+      const [user] = await db.select().from(users).where(eq(users.id, id));
+      return user;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      return undefined;
+    }
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user;
+    if (!await this.checkDb()) return undefined;
+    try {
+      const [user] = await db.select().from(users).where(eq(users.username, username));
+      return user;
+    } catch (error) {
+      console.error("Error fetching user by username:", error);
+      return undefined;
+    }
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
-    return user;
+    if (!await this.checkDb()) throw new Error("Database connection not available");
+    try {
+      const [user] = await db.insert(users).values(insertUser).returning();
+      return user;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw new Error("Failed to create user"); 
+    }
   }
 
   // Product operations
   async getProducts(): Promise<Product[]> {
-    return await db.select().from(products);
+    if (!await this.checkDb()) return [];
+    try {
+      return await db.select().from(products);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
   }
 
   async getProductById(id: number): Promise<Product | undefined> {
@@ -1230,54 +1262,79 @@ export class DatabaseStorage implements IStorage {
 
   // Order operations
   async getOrders(): Promise<Order[]> {
-    return await db.select().from(orders);
+    if (!await this.checkDb()) return [];
+    try {
+      return await db.select().from(orders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      return [];
+    }
   }
 
   async getOrderById(id: number): Promise<Order | undefined> {
-    const [order] = await db.select().from(orders).where(eq(orders.id, id));
-    return order;
+    if (!await this.checkDb()) return undefined;
+    try {
+      const [order] = await db.select().from(orders).where(eq(orders.id, id));
+      return order;
+    } catch (error) {
+      console.error(`Error fetching order by id ${id}:`, error);
+      return undefined;
+    }
   }
 
   async createOrder(order: InsertOrder): Promise<Order> {
-    const [newOrder] = await db.insert(orders).values(order).returning();
-    return newOrder;
+    if (!await this.checkDb()) throw new Error("Database connection not available");
+    try {
+      const [newOrder] = await db.insert(orders).values(order).returning();
+      return newOrder;
+    } catch (error) {
+      console.error("Error creating order:", error);
+      throw new Error("Failed to create order");
+    }
   }
 
   async updateOrderStatus(id: number, status: string, stage?: string): Promise<Order | undefined> {
-    const updateValues: Partial<Order> = { status };
-    if (stage) {
-      updateValues.currentStage = stage;
-      
-      // Add to stage history if it exists
-      const [existingOrder] = await db.select().from(orders).where(eq(orders.id, id));
-      if (existingOrder) {
-        const stageHistory = existingOrder.stageHistory as any[] || [];
-        updateValues.stageHistory = [
-          ...stageHistory,
-          {
-            stage,
-            timestamp: new Date(),
-            previousStage: existingOrder.currentStage
-          }
-        ];
+    if (!await this.checkDb()) return undefined;
+    
+    try {
+      const updateValues: Partial<Order> = { status };
+      if (stage) {
+        updateValues.currentStage = stage;
+        
+        // Add to stage history if it exists
+        const [existingOrder] = await db.select().from(orders).where(eq(orders.id, id));
+        if (existingOrder) {
+          const stageHistory = existingOrder.stageHistory as any[] || [];
+          updateValues.stageHistory = [
+            ...stageHistory,
+            {
+              stage,
+              timestamp: new Date(),
+              previousStage: existingOrder.currentStage
+            }
+          ];
+        }
       }
+      
+      // Update the updatedAt timestamp
+      updateValues.updatedAt = new Date();
+      
+      // If status is 'completed', update the completedAt date
+      if (status === 'completed' && !updateValues.completedAt) {
+        updateValues.completedAt = new Date();
+      }
+      
+      const [updatedOrder] = await db
+        .update(orders)
+        .set(updateValues)
+        .where(eq(orders.id, id))
+        .returning();
+      
+      return updatedOrder;
+    } catch (error) {
+      console.error(`Error updating order status for order ${id}:`, error);
+      return undefined;
     }
-    
-    // Update the updatedAt timestamp
-    updateValues.updatedAt = new Date();
-    
-    // If status is 'completed', update the completedAt date
-    if (status === 'completed' && !updateValues.completedAt) {
-      updateValues.completedAt = new Date();
-    }
-    
-    const [updatedOrder] = await db
-      .update(orders)
-      .set(updateValues)
-      .where(eq(orders.id, id))
-      .returning();
-    
-    return updatedOrder;
   }
   
   async getOrdersByUserId(userId: number): Promise<Order[]> {
