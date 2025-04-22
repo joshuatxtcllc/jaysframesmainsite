@@ -1155,6 +1155,7 @@ Contact Jay's Frames to schedule a professional art installation service. Our ex
 
 import { db } from "./db";
 import { eq, desc, and, like, sql, asc, lte, gte, isNull, not } from "drizzle-orm";
+import { Json } from "@shared/schema";
 
 export class DatabaseStorage implements IStorage {
   // User operations
