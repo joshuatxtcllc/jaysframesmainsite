@@ -136,19 +136,36 @@ const Hero = () => {
                 </div>
               </div>
               
-              {/* Enhanced text lines with varying widths for more realism */}
-              <div className="space-y-3 mb-6">
-                <div className="h-3 bg-neutral-200 rounded-full w-full"></div>
-                <div className="h-3 bg-neutral-200 rounded-full w-5/6"></div>
-                <div className="h-3 bg-neutral-200 rounded-full w-4/5"></div>
-                <div className="h-3 bg-neutral-200 rounded-full w-5/6"></div>
-                <div className="h-3 bg-neutral-200 rounded-full w-3/5"></div>
+              {/* Featured services information */}
+              <div className="space-y-4 mb-6">
+                <h3 className="text-lg font-semibold text-primary">Our Expert Framing Services</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
+                    <p className="text-sm text-gray-700">Custom framing for artwork, photographs & memorabilia</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
+                    <p className="text-sm text-gray-700">Museum-quality conservation & archival framing</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
+                    <p className="text-sm text-gray-700">Shadow boxes for 3D objects & keepsakes</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
+                    <p className="text-sm text-gray-700">AI-assisted design consultations</p>
+                  </div>
+                </div>
               </div>
               
-              {/* Enhanced button with better contrast */}
-              <div className="flex justify-start">
-                <div className="h-10 bg-secondary rounded-md w-2/5 flex items-center justify-center text-white text-sm font-medium shadow-highlight transition-all duration-300 hover:bg-secondary/90 hover:scale-105 cursor-pointer">
-                  View Results
+              {/* Enhanced buttons with better contrast */}
+              <div className="flex gap-4 justify-start">
+                <div className="h-10 bg-secondary rounded-md w-auto px-6 flex items-center justify-center text-white text-sm font-medium shadow-highlight transition-all duration-300 hover:bg-secondary/90 hover:scale-105 cursor-pointer">
+                  Explore Services
+                </div>
+                <div className="h-10 border border-secondary rounded-md w-auto px-6 flex items-center justify-center text-secondary text-sm font-medium transition-all duration-300 hover:bg-secondary/10 hover:scale-105 cursor-pointer">
+                  Get Quote
                 </div>
               </div>
             </div>
