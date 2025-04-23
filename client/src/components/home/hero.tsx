@@ -45,8 +45,12 @@ const Hero = () => {
               </span>
             </h1>
             
+            <p className="body-lg text-white/90 mb-6 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+              Houston's premier custom framing studio with over 15 years of excellence has been reinvented to meet evolving customer needs. Our revolutionary hybrid production model delivers 62% faster turnaround times and has quadrupled our production capacity.
+            </p>
+            
             <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              Houston's premier custom framing studio with over 15 years of excellence has been reinvented to meet evolving customer needs. Our revolutionary hybrid production model delivers 62% faster turnaround times and has quadrupled our production capacity. Recognized as the Best Custom Frame Shop in Houston by the Houston A-List voters and featured in PaperCity magazine, we continue our legacy of collaboration with Houston's museums, sports teams, and art collectors.
+              Our assistants enable us to work closer with clients when it truly matters and helps us keep the hand-crafted quality at its highest possible level. Recognized as the Best Custom Frame Shop in Houston by the Houston A-List voters and featured in PaperCity magazine, we continue our legacy of collaboration with Houston's museums, sports teams, and art collectors.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 mb-12">
