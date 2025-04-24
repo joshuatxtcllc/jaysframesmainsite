@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet";
 import { Link } from "wouter";
 import { 
   Award, 
@@ -15,24 +14,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Chatbot from "@/components/ui/chatbot";
+import { SeoHead } from "@/components/seo";
 
 export default function About() {
   return (
     <div className="bg-white">
-      <Helmet>
-        <title>About Jay's Frames | Houston Custom Framing | 62% Faster Turnaround | Eco-Friendly Framing</title>
-        <meta name="description" content="Discover Jay's Frames, Houston's premier custom framing studio featuring our revolutionary hybrid production model that provides 62% faster turnaround times and increases capacity by 4x. Our eco-friendly framing solutions and museum-quality conservation techniques combine exceptional craftsmanship with sustainability. Visit our Houston custom frame shop for artwork framing, shadow boxes, and more." />
-        <meta name="keywords" content="Jay's Frames, custom framing Houston, Houston frame shop, picture framing, hybrid production model, eco-friendly framing, museum-quality framing, shadow box framing, art framing, AI design assistant, 62% faster framing, conservation framing, 4x production capacity, custom frame shop, Heights framing studio, locally-sourced framing" />
-        <link rel="canonical" href="https://jaysframes.com/about" />
-        
-        {/* Open Graph tags */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="About Jay's Frames | Houston Custom Framing | 62% Faster Turnaround | Eco-Friendly Framing" />
-        <meta property="og:description" content="Discover Jay's Frames, Houston's premier custom framing studio with our revolutionary hybrid production model providing 62% faster turnaround times and 4x capacity. We offer eco-friendly framing solutions, museum-quality conservation, and locally-sourced materials for artwork, photography, and memorabilia." />
-        <meta property="og:url" content="https://jaysframes.com/about" />
-        <meta property="og:image" content="/images/jays-frames-workshop.jpg" />
-        <meta property="og:site_name" content="Jay's Frames" />
-        
+      <SeoHead
+        title="About Jay's Frames | Houston Custom Framing | 62% Faster Turnaround | Eco-Friendly Framing"
+        description="Discover Jay's Frames, Houston's premier custom framing studio featuring our revolutionary hybrid production model that provides 62% faster turnaround times and increases capacity by 4x. Our eco-friendly framing solutions and museum-quality conservation techniques combine exceptional craftsmanship with sustainability. Visit our Houston custom frame shop for artwork framing, shadow boxes, and more."
+        keywords="Jay's Frames, custom framing Houston, Houston frame shop, picture framing, hybrid production model, eco-friendly framing, museum-quality framing, shadow box framing, art framing, AI design assistant, 62% faster framing, conservation framing, 4x production capacity, custom frame shop, Heights framing studio, locally-sourced framing"
+        canonicalUrl="/about"
+        ogType="website"
+        ogTitle="About Jay's Frames | Houston Custom Framing | 62% Faster Turnaround | Eco-Friendly Framing"
+        ogDescription="Discover Jay's Frames, Houston's premier custom framing studio with our revolutionary hybrid production model providing 62% faster turnaround times and 4x capacity. We offer eco-friendly framing solutions, museum-quality conservation, and locally-sourced materials for artwork, photography, and memorabilia."
+        ogImage="/images/jays-frames-workshop.jpg"
+      >
         {/* Schema.org structured data */}
         <script type="application/ld+json">{`
           {
@@ -72,7 +68,7 @@ export default function About() {
             "specialty": "Custom Picture Framing with AI-assisted design, eco-friendly framing, conservation framing, shadow box framing, museum-quality framing, and 62% faster turnaround times"
           }
         `}</script>
-      </Helmet>
+      </SeoHead>
 
       {/* Hero section */}
       <section className="relative bg-primary text-white py-20 overflow-hidden">

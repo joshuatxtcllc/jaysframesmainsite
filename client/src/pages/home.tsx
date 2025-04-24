@@ -304,211 +304,174 @@ const Home = () => {
             </div>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Our Framing Solutions</h2>
             <p className="text-neutral-500 max-w-2xl mx-auto">
-              From museum-quality custom frames with 62% faster turnaround times to Houston's most extensive selection of "Ready Made" options with one-day delivery, we offer eco-friendly framing solutions for every artwork and budget.
+              Discover our range of custom framing options, from readymade frames to museum-quality conservation framing and eco-friendly solutions.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Custom Framing Card */}
-            {customFrame && (
-              <Card className="bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-xl">
-                <div className="w-full h-64 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Custom Frame Card */}
+            <Card className="overflow-hidden shadow-lg">
+              <div className="aspect-video bg-neutral-100 relative">
+                {customFrame && customFrame.imageUrl ? (
                   <img 
                     src={customFrame.imageUrl} 
-                    alt="Custom Framing" 
-                    className="w-full h-full object-cover"
+                    alt={customFrame.name} 
+                    className="object-cover w-full h-full"
                   />
+                ) : (
+                  <img 
+                    src="https://images.unsplash.com/photo-1579541591970-e5dea16942e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    alt="Custom Frame Example" 
+                    className="object-cover w-full h-full"
+                  />
+                )}
+                <div className="absolute top-3 right-3 bg-secondary text-white text-xs font-bold px-2 py-1 rounded-full">
+                  Bestseller
                 </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-heading font-bold mb-2 text-primary">Custom Framing</h3>
-                  <p className="text-neutral-500 mb-4">
-                    Tailor-made frames designed for your specific artwork with expert guidance from our AI assistant.
-                  </p>
-                  <Link href="/products?category=frame">
-                    <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
-                      View Frame Options
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">Custom Frames</h3>
+                <p className="text-neutral-500 text-sm mb-4">
+                  Tailored framing solutions with a 62% faster turnaround time using our revolutionary hybrid production model and AI design assistant.
+                </p>
+                <Link href="/custom-framing">
+                  <Button variant="outline" className="w-full">View Custom Options</Button>
+                </Link>
+              </CardContent>
+            </Card>
             
-            {/* Shadowboxes Card */}
-            {shadowbox && (
-              <Card className="bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-xl">
-                <div className="w-full h-64 overflow-hidden">
+            {/* Shadowbox Card */}
+            <Card className="overflow-hidden shadow-lg">
+              <div className="aspect-video bg-neutral-100">
+                {shadowbox && shadowbox.imageUrl ? (
                   <img 
                     src={shadowbox.imageUrl} 
-                    alt="Shadowboxes" 
-                    className="w-full h-full object-cover"
+                    alt={shadowbox.name} 
+                    className="object-cover w-full h-full"
                   />
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-heading font-bold mb-2 text-primary">Shadowboxes</h3>
-                  <p className="text-neutral-500 mb-4">
-                    Available in black, white, and brown finishes across multiple sizes to showcase your memorabilia perfectly.
-                  </p>
-                  <Link href="/products?category=shadowbox">
-                    <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
-                      Browse Shadowboxes
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <img 
+                    src="https://images.unsplash.com/photo-1552610470-98f65b5df6cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    alt="Shadowbox Example" 
+                    className="object-cover w-full h-full"
+                  />
+                )}
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">Shadowboxes</h3>
+                <p className="text-neutral-500 text-sm mb-4">
+                  Preserve and display your memorabilia, medals, sports jerseys, or 3D objects with our custom-designed shadowboxes.
+                </p>
+                <Link href="/products/category/shadowbox">
+                  <Button variant="outline" className="w-full">Explore Shadowboxes</Button>
+                </Link>
+              </CardContent>
+            </Card>
             
-            {/* Moonmounts Card */}
-            {moonmount && (
-              <Card className="bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-xl">
-                <div className="w-full h-64 overflow-hidden relative">
+            {/* Float Mount Card */}
+            <Card className="overflow-hidden shadow-lg">
+              <div className="aspect-video bg-neutral-100">
+                {moonmount && moonmount.imageUrl ? (
                   <img 
                     src={moonmount.imageUrl} 
-                    alt="Moonmounts" 
-                    className="w-full h-full object-cover"
+                    alt={moonmount.name} 
+                    className="object-cover w-full h-full"
                   />
-                  <div className="absolute bottom-4 right-4 bg-white/90 rounded-lg p-2 shadow-lg">
-                    <img 
-                      src="/attached_assets/IMG_7665.png" 
-                      alt="Moonmount Magnets" 
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-heading font-bold mb-2 text-primary">Moonmounts™</h3>
-                  <p className="text-neutral-500 mb-4">
-                    Our proprietary, patented museum mounting method using disk-shaped magnets that preserves your artwork for generations.
-                  </p>
-                  <Link href="/products?category=moonmount">
-                    <Button className="bg-secondary hover:bg-secondary/80 text-white font-medium">
-                      Learn More
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <img 
+                    src="https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    alt="Float Mount Example" 
+                    className="object-cover w-full h-full"
+                  />
+                )}
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2">Float Mounts</h3>
+                <p className="text-neutral-500 text-sm mb-4">
+                  Showcase your artwork with our float mounting option that creates the illusion of the art floating within the frame.
+                </p>
+                <Link href="/products/category/floatmount">
+                  <Button variant="outline" className="w-full">View Float Mounts</Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
       
-      {/* Art Preservation & Installation Section */}
+      {/* Art Installation Section */}
       <section className="py-16 bg-neutral-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-block p-3 rounded-full bg-primary/20 mb-4">
-              <ShieldCheck className="h-8 w-8 text-primary" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Museum-Quality Preservation & Installation</h2>
-            <p className="text-neutral-500 max-w-2xl mx-auto">
-              Houston's premier frame shop provides comprehensive art care solutions including eco-friendly, locally-sourced framing materials and advanced preservation techniques to ensure your valuable pieces are protected and beautifully displayed for generations.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-2xl font-bold text-primary mb-6">Art Preservation Techniques</h3>
-              <p className="text-neutral-600 mb-6">
-                At Jay's Frames, we take pride in the picture frames we produce. We use museum-quality materials and preservation 
-                techniques to ensure our custom frames last for many years to come while protecting your valuable artwork.
-              </p>
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="mb-6">
+                  <div className="inline-block p-3 rounded-full bg-secondary/20 mb-4">
+                    <ShieldCheck className="h-8 w-8 text-secondary" />
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Professional Art Installation</h2>
+                  <p className="text-neutral-500">
+                    Our Houston-based installation team ensures your art is displayed perfectly in your home or office, 
+                    with expert precision and care to enhance your space's aesthetic.
+                  </p>
+                </div>
+                
+                <ul className="space-y-6">
+                  <li className="flex items-start">
+                    <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                      <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-medium">Expert Positioning</span>
+                      <p className="text-sm text-neutral-500 mt-1">
+                        Our installers determine the optimal height and arrangement for visual impact and accessibility.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                      <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-medium">Secure Mounting Hardware</span>
+                      <p className="text-sm text-neutral-500 mt-1">
+                        We use appropriate anchors and hardware based on wall type and artwork weight for long-term stability.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
+                      <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-medium">Gallery-Style Arrangements</span>
+                      <p className="text-sm text-neutral-500 mt-1">
+                        Create professional-looking gallery walls with our expert arrangement and installation services.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+                
+                <Link href="/custom-framing">
+                  <Button className="bg-primary hover:bg-primary/90 text-white w-full md:w-auto font-medium mt-6">
+                    Learn More About Our Services
+                  </Button>
+                </Link>
+              </div>
               
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
-                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-medium">Acid-Free Materials</span>
-                    <p className="text-sm text-neutral-500 mt-1">
-                      All our matting materials, backing boards, and mounting elements are acid-free to prevent deterioration.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
-                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-medium">UV-Protective Glass</span>
-                    <p className="text-sm text-neutral-500 mt-1">
-                      Our conservation and museum glass blocks up to 99% of harmful UV rays that cause fading and deterioration.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
-                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-medium">Archival Mounting Methods</span>
-                    <p className="text-sm text-neutral-500 mt-1">
-                      Our proprietary Moonmount™ system secures artwork without damaging it, allowing for reversible mounting.
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-2xl font-bold text-primary mb-6">Professional Art Installation</h3>
-              <p className="text-neutral-600 mb-6">
-                Our art installation services ensure your framed pieces are displayed safely and beautifully in your home or office. 
-                We respond to our customers' needs by providing comprehensive hanging and positioning services.
-              </p>
-              
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
-                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-medium">Expert Positioning</span>
-                    <p className="text-sm text-neutral-500 mt-1">
-                      Our installers determine the optimal height and arrangement for visual impact and accessibility.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
-                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-medium">Secure Mounting Hardware</span>
-                    <p className="text-sm text-neutral-500 mt-1">
-                      We use appropriate anchors and hardware based on wall type and artwork weight for long-term stability.
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
-                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-medium">Gallery-Style Arrangements</span>
-                    <p className="text-sm text-neutral-500 mt-1">
-                      Create professional-looking gallery walls with our expert arrangement and installation services.
-                    </p>
-                  </div>
-                </li>
-              </ul>
-              
-              <Link href="/custom-framing">
-                <Button className="bg-primary hover:bg-primary/90 text-white w-full md:w-auto font-medium">
-                  Learn More About Our Services
-                </Button>
-              </Link>
+              <div className="relative h-80 md:h-full">
+                <img 
+                  src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Art Installation" 
+                  className="absolute inset-0 w-full h-full object-cover rounded-lg shadow-lg"
+                />
+              </div>
             </div>
           </div>
         </div>
