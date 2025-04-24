@@ -96,6 +96,24 @@ app.use((req, res, next) => {
     res.status(404).json({ message: "API endpoint not found" });
   });
 
+  // Add a catch-all route for client-side routing
+  // This will ensure that all non-API routes are handled by the client-side router
+  app.use('*', (req, res, next) => {
+    const path = req.originalUrl;
+    // Skip this middleware for assets and API requests
+    if (path.startsWith('/assets/') || path.startsWith('/api/')) {
+      return next();
+    }
+    // Handle client-side routing by sending the main HTML file
+    if (app.get("env") === "development") {
+      // In development, let Vite handle it
+      next();
+    } else {
+      // In production, serve the static index.html
+      res.sendFile('index.html', { root: './client/dist' });
+    }
+  });
+
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client.
   // It is the only port that is not firewalled.

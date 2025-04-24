@@ -2,23 +2,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Home, Search, Phone } from "lucide-react";
 import { Link } from "wouter";
-import { Helmet } from "react-helmet";
+import { SeoHead } from "@/components/seo";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-neutral-50">
-      <Helmet>
-        <title>Page Not Found - Jay's Frames</title>
-        <meta name="description" content="Sorry, the page you're looking for cannot be found. Return to Jay's Frames homepage for custom framing services, or contact us for assistance." />
-        <meta property="og:title" content="Page Not Found - Jay's Frames" />
-        <meta property="og:description" content="Sorry, the page you're looking for cannot be found. Return to Jay's Frames homepage for custom framing services." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://jaysframes.com/404" />
-        <meta property="og:image" content="/images/og-image.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Page Not Found - Jay's Frames" />
-        <meta name="twitter:description" content="Sorry, the page you're looking for cannot be found. Return to Jay's Frames homepage for custom framing services." />
-      </Helmet>
+      <SeoHead
+        title="Page Not Found - Jay's Frames"
+        description="Sorry, the page you're looking for cannot be found. Return to Jay's Frames homepage for custom framing services, or contact us for assistance."
+        ogType="website"
+        canonicalUrl="/404"
+      />
       
       <Card className="w-full max-w-md mx-4 shadow-lg">
         <CardContent className="p-8">

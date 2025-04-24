@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Lightbulb, MessageSquare, Wand2, ShieldCheck } from "lucide-react";
 import FrameDesigner from "@/components/product/frame-designer";
-import { Helmet } from "react-helmet";
+import { SeoHead } from "@/components/seo";
 
 const Home = () => {
   // Fetch featured products
@@ -27,27 +27,17 @@ const Home = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio</title>
-        <meta name="description" content="Award-winning custom framing with our revolutionary hybrid production model that saves $140,000 and 6,363 labor hours annually with 62% faster turnaround times. Experience 4x production capacity with our AI design assistant." />
-        <meta name="keywords" content="custom framing Houston, 62% faster framing, Jay's hybrid model, AI frame design, ready-made frames, one day framing, 24/7 customer service, museum-quality framing, Houston Heights frame shop, reduced turnaround time" />
-        <link rel="canonical" href="https://jaysframes.com" />
-        
-        {/* Open Graph tags */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio" />
-        <meta property="og:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology saves $140,000 and 6,363 labor hours annually, providing 62% faster turnaround times and 4x production capacity." />
-        <meta property="og:url" content="https://jaysframes.com" />
-        <meta property="og:image" content="/images/og-image.jpg" />
-        <meta property="og:site_name" content="Jay's Frames" />
-        <meta property="og:locale" content="en_US" />
-        
-        {/* Twitter Card tags */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Jay's Frames | 62% Faster Custom Framing | Houston" />
-        <meta name="twitter:description" content="Our revolutionary hybrid model with wholesale partnerships and AI technology saves $140,000 and 6,363 labor hours annually, providing 62% faster turnaround times and 4x production capacity." />
-        <meta name="twitter:image" content="/images/og-image.jpg" />
-        
+      <SeoHead
+        title="Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio"
+        description="Award-winning custom framing with our revolutionary hybrid production model that saves $140,000 and 6,363 labor hours annually with 62% faster turnaround times. Experience 4x production capacity with our AI design assistant."
+        keywords="custom framing Houston, 62% faster framing, Jay's hybrid model, AI frame design, ready-made frames, one day framing, 24/7 customer service, museum-quality framing, Houston Heights frame shop, reduced turnaround time"
+        canonicalUrl="/"
+        ogTitle="Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio"
+        ogDescription="Our revolutionary hybrid model with wholesale partnerships and AI technology saves $140,000 and 6,363 labor hours annually, providing 62% faster turnaround times and 4x production capacity."
+        ogImage="/images/og-image.jpg"
+        ogType="website"
+        twitterCard="summary_large_image"
+      >
         {/* Schema.org structured data */}
         <script type="application/ld+json">{`
           {
@@ -145,7 +135,7 @@ const Home = () => {
             "award": "Voted 'Best Frame Shop in Houston' by The Houston A-List"
           }
         `}</script>
-      </Helmet>
+      </SeoHead>
       
       {/* Hero Section */}
       <Hero />
