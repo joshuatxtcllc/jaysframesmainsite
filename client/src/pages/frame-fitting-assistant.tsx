@@ -15,7 +15,9 @@ import {
   Image as ImageIcon, 
   Loader2,
   Check,
-  AlertCircle
+  AlertCircle,
+  Eye,
+  Sparkles
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -27,6 +29,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { SeoHead } from "@/components/seo";
+import { AnimatedFramePreview } from "@/components/product/animated-frame-preview";
 
 interface AnalysisResult {
   artworkType: string;
@@ -68,6 +71,10 @@ const FrameFittingAssistant = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [selectedFrameOption, setSelectedFrameOption] = useState<FrameOption | null>(null);
+  const [selectedMatOption, setSelectedMatOption] = useState<MatOption | null>(null);
+  const [selectedGlassOption, setSelectedGlassOption] = useState<GlassOption | null>(null);
   const { toast } = useToast();
 
   // Get framing options from the API
@@ -412,6 +419,50 @@ const FrameFittingAssistant = () => {
                             )}
                             
                             <p className="text-neutral-600 mt-2">{frame.reason}</p>
+                            
+                            <div className="mt-4 flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => {
+                                  const frameDetail = getFrameDetails(frame.id);
+                                  const bestMatId = analysisResult?.recommendations.mats[0]?.id;
+                                  const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
+
+                                  setSelectedFrameOption(frameDetail || null);
+                                  setSelectedMatOption(bestMatId ? getMatDetails(bestMatId) : null);
+                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  setShowPreview(true);
+                                }}
+                              >
+                                <Eye className="h-4 w-4 mr-2" />
+                                Preview
+                              </Button>
+                              <Button 
+                                variant="default" 
+                                size="sm"
+                                className="flex-1 text-white"
+                                onClick={() => {
+                                  const frameDetail = getFrameDetails(frame.id);
+                                  const bestMatId = analysisResult?.recommendations.mats[0]?.id;
+                                  const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
+
+                                  setSelectedFrameOption(frameDetail || null);
+                                  setSelectedMatOption(bestMatId ? getMatDetails(bestMatId) : null);
+                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  
+                                  toast({
+                                    title: "Frame style selected",
+                                    description: `${frameDetail?.name || frame.name} has been selected as your frame style`,
+                                    duration: 3000
+                                  });
+                                }}
+                              >
+                                <Check className="h-4 w-4 mr-2" />
+                                Select
+                              </Button>
+                            </div>
                           </div>
                         );
                       })}
@@ -458,6 +509,50 @@ const FrameFittingAssistant = () => {
                             )}
                             
                             <p className="text-neutral-600 mt-2">{mat.reason}</p>
+                            
+                            <div className="mt-4 flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => {
+                                  const matDetail = getMatDetails(mat.id);
+                                  const bestFrameId = analysisResult?.recommendations.frames[0]?.id;
+                                  const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
+
+                                  setSelectedFrameOption(bestFrameId ? getFrameDetails(bestFrameId) : null);
+                                  setSelectedMatOption(matDetail || null);
+                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  setShowPreview(true);
+                                }}
+                              >
+                                <Eye className="h-4 w-4 mr-2" />
+                                Preview
+                              </Button>
+                              <Button 
+                                variant="default" 
+                                size="sm"
+                                className="flex-1 text-white"
+                                onClick={() => {
+                                  const matDetail = getMatDetails(mat.id);
+                                  const bestFrameId = analysisResult?.recommendations.frames[0]?.id;
+                                  const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
+
+                                  setSelectedFrameOption(bestFrameId ? getFrameDetails(bestFrameId) : null);
+                                  setSelectedMatOption(matDetail || null);
+                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  
+                                  toast({
+                                    title: "Mat style selected",
+                                    description: `${matDetail?.name || mat.name} has been selected as your mat style`,
+                                    duration: 3000
+                                  });
+                                }}
+                              >
+                                <Check className="h-4 w-4 mr-2" />
+                                Select
+                              </Button>
+                            </div>
                           </div>
                         );
                       })}

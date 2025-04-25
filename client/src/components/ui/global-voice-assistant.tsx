@@ -584,8 +584,9 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             onClick={() => setIsOpen(true)} 
             className="h-14 w-14 rounded-full shadow-lg flex items-center justify-center"
             variant="default"
+            aria-label="Voice Assistant"
           >
-            <Mic className="h-6 w-6" />
+            <Mic className="h-6 w-6 text-white" />
           </Button>
         </div>
       </>
