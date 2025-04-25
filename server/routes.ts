@@ -713,25 +713,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get products for recommendations
       const products = await storage.getProducts();
       
-      // Process with AI
-      const chatResponse = await handleChatRequest(
-        [...chatHistory.slice(-10), userMessage], // Use last 10 messages + current
-        products,
-        orderInfo ? [orderInfo] : undefined
-      );
+      // Process with AI using the new super assistant
+      const superResponse = await superFrameAssistant({
+        type: 'text',
+        message: message,
+        messageHistory: [...chatHistory.slice(-10)], // Use last 10 messages for context
+        products: products,
+        orders: orderInfo ? [orderInfo] : undefined
+      });
       
       // Save assistant message
       await storage.createChatMessage({
         sessionId,
         role: "assistant",
-        content: chatResponse.message
+        content: superResponse.message
       });
       
-      // Get recommended products if any
+      // Get recommended products from super assistant response if available
       let recommendedProducts: any[] = [];
-      if (chatResponse.productRecommendations && chatResponse.productRecommendations.length > 0) {
+      if (superResponse.data?.productRecommendations && superResponse.data.productRecommendations.length > 0) {
         recommendedProducts = await Promise.all(
-          chatResponse.productRecommendations.map(async (product) => {
+          superResponse.data.productRecommendations.map(async (product) => {
             // If it's just an ID (number), fetch the product
             if (typeof product === 'number') {
               return await storage.getProductById(product);
@@ -748,10 +750,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         recommendedProducts = recommendedProducts.filter(p => p !== undefined);
       }
       
+      // Return the response with the expected format
       res.json({
-        message: chatResponse.message,
+        message: superResponse.message,
         recommendations: recommendedProducts,
-        orderInfo: chatResponse.orderInfo
+        orderInfo: superResponse.data?.orderInfo
       });
     } catch (error) {
       console.error("Chat error:", error);
@@ -1480,13 +1483,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (data.type === 'voice_command') {
           console.log('Processing voice command:', data.message);
           try {
-            // Process the voice command using our AI assistant
-            const response = await askFrameAssistant(data.message);
+            // Process the voice command using our unified super assistant
+            const superResponse = await superFrameAssistant({
+              type: 'text', 
+              message: data.message
+            });
             
             // Send the response back to the client
             ws.send(JSON.stringify({
               type: 'voice_response',
-              response
+              response: superResponse.message
             }));
           } catch (aiError) {
             console.error('AI assistant error:', aiError);
@@ -1506,13 +1512,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const matOptions = await storage.getMatOptions();
             const glassOptions = await storage.getGlassOptions();
             
-            // Analyze the image using our AI function
-            const analysis = await analyzeArtworkImage(
-              data.imageData,
+            // Use our unified super assistant for image analysis
+            const superResponse = await superFrameAssistant({
+              type: 'image',
+              message: 'Please analyze this artwork image',
+              image: data.imageData,
               frameOptions,
               matOptions,
               glassOptions
-            );
+            });
+            
+            // Extract the analysis from the super assistant response
+            const analysis = superResponse.data?.imageAnalysis;
+            if (!analysis) {
+              throw new Error(superResponse.error || "Failed to analyze image");
+            }
             
             // Send the analysis results back to the client
             ws.send(JSON.stringify({
