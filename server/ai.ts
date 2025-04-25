@@ -14,6 +14,146 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+/**
+ * Analyzes an artwork image and generates frame recommendations
+ * @param imageBuffer Buffer containing the image data
+ * @param frameOptions Available frame options from the database
+ * @param matOptions Available mat options from the database
+ * @param glassOptions Available glass options from the database
+ * @returns Analysis results with recommendations
+ */
+export async function analyzeArtworkImage(
+  imageBuffer: Buffer | string,
+  frameOptions: any[],
+  matOptions: any[],
+  glassOptions: any[]
+) {
+  try {
+    // Check if API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("Error: OPENAI_API_KEY not available when calling Image Analysis API");
+      throw new Error("AI service is not properly configured");
+    }
+
+    // Convert to base64 if it's a buffer
+    let base64Image: string;
+    if (Buffer.isBuffer(imageBuffer)) {
+      base64Image = imageBuffer.toString('base64');
+    } else if (typeof imageBuffer === 'string') {
+      // Handle both regular base64 and data URL formats
+      base64Image = imageBuffer.startsWith('data:image') 
+        ? imageBuffer.split(',')[1] 
+        : imageBuffer;
+    } else {
+      throw new Error("Invalid image format provided");
+    }
+
+    // Create system message with framing guidelines
+    const systemMessage = `
+    You are an expert professional framer with decades of experience analyzing artwork and recommending the perfect framing solutions. 
+    Analyze the provided image and identify:
+    1. The type of artwork (painting, photograph, print, document, etc.)
+    2. The dominant colors (provide hex codes)
+    3. The style/period of the artwork
+    4. The mood or emotion the artwork conveys
+
+    Then, recommend:
+    - The 3 best frame options from the provided list that would complement this artwork
+    - The 3 best mat options from the provided list 
+    - The ideal glass/glazing option from the provided list
+
+    For each recommendation, provide a brief explanation of why it would work well with this specific artwork.
+    Base your recommendations on professional framing principles including color theory, aesthetic harmony, and preservation requirements.
+
+    Return your analysis in properly formatted JSON with the following structure:
+    {
+      "artworkType": string,
+      "dominantColors": string[] (hex codes),
+      "style": string,
+      "mood": string,
+      "recommendations": {
+        "frames": [
+          {
+            "id": number,
+            "name": string,
+            "score": number (1-10),
+            "reason": string
+          }
+        ],
+        "mats": [
+          {
+            "id": number,
+            "name": string,
+            "score": number (1-10),
+            "reason": string
+          }
+        ],
+        "glass": [
+          {
+            "id": number,
+            "name": string,
+            "score": number (1-10),
+            "reason": string
+          }
+        ]
+      },
+      "reasoning": string (overall rationale for recommendations)
+    }
+    `;
+
+    // Include available options in the prompt
+    const frameOptionsText = JSON.stringify(frameOptions.map(f => ({ id: f.id, name: f.name, material: f.material, width: f.width, color: f.color, finish: f.finish })));
+    const matOptionsText = JSON.stringify(matOptions.map(m => ({ id: m.id, name: m.name, color: m.color, texture: m.texture })));
+    const glassOptionsText = JSON.stringify(glassOptions.map(g => ({ id: g.id, name: g.name, features: g.features, uv_protection: g.uv_protection })));
+
+    const userMessage = `
+    Please analyze this artwork and provide framing recommendations.
+    
+    Available frame options: ${frameOptionsText}
+    
+    Available mat options: ${matOptionsText}
+    
+    Available glass options: ${glassOptionsText}
+    `;
+
+    // Call the OpenAI vision model API
+    const response = await openai.chat.completions.create({
+      model: model,
+      messages: [
+        {
+          role: "system",
+          content: systemMessage
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: userMessage
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64,${base64Image}`
+              }
+            }
+          ],
+        },
+      ],
+      response_format: { type: "json_object" },
+      max_tokens: 4000,
+    });
+
+    // Parse and return the result
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+    console.log("AI artwork analysis complete");
+    return result;
+  } catch (error) {
+    console.error("Error analyzing artwork image:", error);
+    throw new Error(`Failed to analyze artwork: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 // Frame Design Assistant system message
 const frameDesignAssistantSystemMessage = `You are the Frame Design Assistant, a creative tool that helps users explore and select visual designs for framing their images or artwork. You assist with matboard and frame selection using real-world catalogs such as Larson-Juhl and Crescent. Suggest frame types, mat color combinations, and pricing tiers based on user needs. When in paid mode, you offer premium features like AR previews, detailed quotes, and access to full frame/mat catalogs.
 
@@ -168,109 +308,8 @@ Respond in JSON format with the following structure:
 }
 
 /**
- * Analyzes an artwork image and generates frame recommendations
+ * Generates frame recommendations based on text description
  */
-export async function analyzeArtworkImage(
-  imageBase64: string,
-  frameOptions: any[],
-  matOptions: any[]
-): Promise<any> {
-  try {
-    // Check if API key is available
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("Error: OPENAI_API_KEY not available when calling Image Analysis API");
-      return { 
-        recommendedFrames: [], 
-        recommendedMats: [], 
-        explanation: "I apologize, but the AI service is not properly configured. Please contact the site administrator.",
-        imageAnalysis: "Image analysis unavailable."
-      };
-    }
-
-    // Ensure the base64 string is properly formatted for the API
-    const formattedBase64 = imageBase64.startsWith('data:image') 
-      ? imageBase64 
-      : `data:image/jpeg;base64,${imageBase64}`;
-
-    const response = await openai.chat.completions.create({
-      model,
-      messages: [
-        {
-          role: "system",
-          content: `You are the Frame Fitting Assistant, an expert in analyzing artwork and recommending custom framing options. 
-          
-Your task is to analyze the provided image of artwork and recommend the most suitable frame and mat combinations from our catalog.
-
-Please analyze the following aspects of the artwork:
-1. Color palette and dominant colors
-2. Style and genre (e.g., abstract, landscape, portrait, etc.)
-3. Mood and emotional tone
-4. Visual weight and balance
-5. Artistic period or influences (if identifiable)
-6. Texture and medium
-
-Based on this analysis, recommend optimal frame and mat options that will:
-- Complement the artwork's style and colors
-- Enhance the viewing experience without overpowering the art
-- Align with the appropriate conservation standards for the medium
-
-Available frame options: ${JSON.stringify(frameOptions)}
-Available mat options: ${JSON.stringify(matOptions)}
-
-Respond in JSON format with:
-{
-  "recommendedFrames": [array of 1-3 frame IDs],
-  "recommendedMats": [array of 1-3 mat IDs],
-  "imageAnalysis": "Detailed analysis of the artwork's visual elements",
-  "explanation": "Specific reasoning for your frame and mat recommendations"
-}`
-        },
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: "Please analyze this artwork and recommend the best framing options:"
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: formattedBase64
-              }
-            }
-          ]
-        }
-      ],
-      response_format: { type: "json_object" },
-    });
-
-    const content = response.choices[0].message.content;
-    if (!content) {
-      throw new Error("Empty response from AI");
-    }
-
-    try {
-      return JSON.parse(content);
-    } catch (e) {
-      console.error("Failed to parse AI image analysis:", content);
-      return { 
-        recommendedFrames: [], 
-        recommendedMats: [], 
-        explanation: "I'm sorry, but I couldn't analyze the image properly. Please try with a clearer image or contact our design team for personalized assistance.",
-        imageAnalysis: "Image analysis failed."
-      };
-    }
-  } catch (error) {
-    console.error("AI image analysis error:", error);
-    return { 
-      recommendedFrames: [], 
-      recommendedMats: [], 
-      explanation: "I'm sorry, but our image analysis service is temporarily unavailable. Please try again later.",
-      imageAnalysis: "Image analysis service unavailable."
-    };
-  }
-}
-
 export async function getFrameRecommendations(
   artworkDescription: string,
   frameOptions: any[],
@@ -300,18 +339,18 @@ Consider artwork style, colors, and dimensions when making recommendations.
 Available frame options: ${JSON.stringify(frameOptions)}
 Available mat options: ${JSON.stringify(matOptions)}
 
-Frame and mat styles must always feel tailored and aesthetically aligned with the user's artwork or decor style. Be inspirational, informative, and respectful of the user's creative vision.
+Frame and mat styles must always feel tailored and aesthetically aligned with the user's artwork or decor style. 
 
-Respond in JSON format with your recommendations:
+Respond in JSON format with:
 {
   "recommendedFrames": [array of 1-3 frame IDs],
   "recommendedMats": [array of 1-3 mat IDs],
-  "explanation": "Detailed explanation of your recommendations"
+  "explanation": "Detailed reasoning for your recommendations"
 }`
         },
         {
           role: "user",
-          content: `I need recommendations for framing this artwork: ${artworkDescription}`
+          content: `Please recommend framing options for this artwork: ${artworkDescription}`
         }
       ],
       response_format: { type: "json_object" },
@@ -325,19 +364,19 @@ Respond in JSON format with your recommendations:
     try {
       return JSON.parse(content);
     } catch (e) {
-      console.error("Failed to parse AI frame recommendations:", content);
+      console.error("Failed to parse AI recommendations:", content);
       return { 
         recommendedFrames: [], 
         recommendedMats: [], 
-        explanation: "I'm sorry, but I couldn't generate specific recommendations. Please contact our design team for personalized assistance."
+        explanation: "I'm sorry, but I couldn't generate recommendations based on your description. Please provide more details or contact our design team for personalized assistance."
       };
     }
   } catch (error) {
-    console.error("AI frame recommendation error:", error);
+    console.error("AI frame recommendations error:", error);
     return { 
       recommendedFrames: [], 
       recommendedMats: [], 
-      explanation: "I'm sorry, but our recommendation service is temporarily unavailable. Please try again later."
+      explanation: "I'm sorry, but our recommendations service is temporarily unavailable. Please try again later."
     };
   }
 }

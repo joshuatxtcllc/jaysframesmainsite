@@ -1,497 +1,545 @@
-import React, { useState, useRef } from 'react';
-import { Helmet } from 'react-helmet';
-import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { SeoHead } from '@/components/seo';
-import { Loader2, Image, Camera, Upload, Info, Wand2, CheckCircle2 } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
-import { FrameOption, MatOption } from '@/types';
-import { DynamicFramePreview } from '@/components/product/dynamic-frame-preview';
+import { useState, useCallback, useEffect } from "react";
+import { Helmet } from "react-helmet";
+import { 
+  Card, 
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { 
+  UploadCloud, 
+  Camera, 
+  Image as ImageIcon, 
+  Loader2,
+  Check,
+  AlertCircle
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
+import { enrichFrameData, enrichMatData } from "@/lib/ai-helper";
+import { FrameOption, MatOption, GlassOption } from "@/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { SeoHead } from "@/components/seo";
 
-export default function FrameFittingAssistant() {
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
+interface AnalysisResult {
+  artworkType: string;
+  dominantColors: string[];
+  style: string;
+  mood: string;
+  recommendations: {
+    frames: RecommendedFrame[];
+    mats: RecommendedMat[];
+    glass: RecommendedGlass[];
+  };
+  reasoning: string;
+}
+
+interface RecommendedFrame {
+  id: number;
+  name: string;
+  score: number;
+  reason: string;
+}
+
+interface RecommendedMat {
+  id: number;
+  name: string;
+  score: number;
+  reason: string;
+}
+
+interface RecommendedGlass {
+  id: number;
+  name: string;
+  score: number;
+  reason: string;
+}
+
+const FrameFittingAssistant = () => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [activeTab, setActiveTab] = useState('upload');
-  const [width, setWidth] = useState(16);
-  const [height, setHeight] = useState(20);
-  const [analysisResult, setAnalysisResult] = useState<{
-    frames: FrameOption[];
-    mats: MatOption[];
-    explanation: string;
-    imageAnalysis: string;
-  } | null>(null);
-  const [selectedFrameId, setSelectedFrameId] = useState<number | null>(null);
-  const [selectedMatId, setSelectedMatId] = useState<number | null>(null);
-  
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  // Fetch frame options
-  const { data: frameOptions = [] } = useQuery({
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  // Get framing options from the API
+  const { data: frameOptions } = useQuery({
     queryKey: ['/api/frame-options'],
+    enabled: true
   });
-  
-  // Fetch mat options
-  const { data: matOptions = [] } = useQuery({
+
+  const { data: matOptions } = useQuery({
     queryKey: ['/api/mat-options'],
+    enabled: true
   });
-  
-  // Fetch glass options
-  const { data: glassOptions = [] } = useQuery({
+
+  const { data: glassOptions } = useQuery({
     queryKey: ['/api/glass-options'],
+    enabled: true
   });
-  
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+
+  // File selection handler
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
     if (!file) return;
-    
-    if (!file.type.includes('image')) {
+
+    // Check if the file is an image
+    if (!file.type.startsWith('image/')) {
       toast({
-        title: 'Invalid file',
-        description: 'Please upload an image file',
-        variant: 'destructive',
+        title: "Invalid file format",
+        description: "Please upload an image file (JPEG, PNG, WebP, etc.)",
+        variant: "destructive"
       });
       return;
     }
-    
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImageBase64(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
-  
-  const handleCameraCapture = () => {
-    if (videoRef.current && canvasRef.current) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        setImageBase64(dataUrl);
-        
-        // Stop camera stream
-        if (video.srcObject) {
-          const stream = video.srcObject as MediaStream;
-          stream.getTracks().forEach(track => track.stop());
-          video.srcObject = null;
-        }
-      }
-    }
-  };
-  
-  const startCamera = async () => {
-    try {
-      if (videoRef.current) {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { 
-            facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }, 
-          audio: false 
-        });
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      console.error('Error accessing camera:', error);
+
+    // Check file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
       toast({
-        title: 'Camera Error',
-        description: 'Could not access your camera. Please check permissions.',
-        variant: 'destructive',
+        title: "File too large",
+        description: "Please upload an image smaller than 10MB",
+        variant: "destructive"
       });
+      return;
     }
-  };
-  
-  const resetImage = () => {
-    setImageBase64(null);
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
     setAnalysisResult(null);
-    
-    if (activeTab === 'camera' && videoRef.current) {
-      // Restart camera
-      startCamera();
-    }
+    setAnalysisError(null);
   };
-  
+
+  // Clean up preview URL when component unmounts
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  // Submit the image for analysis
   const analyzeImage = async () => {
-    if (!imageBase64) {
-      toast({
-        title: 'No image selected',
-        description: 'Please upload or capture an image first',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
+    if (!selectedFile) return;
+
     setIsAnalyzing(true);
+    setAnalysisError(null);
     
     try {
-      const response = await apiRequest('POST', '/api/frame-fitting-assistant', {
-        imageBase64
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+
+      const response = await fetch('/api/frame-fitting-assistant', {
+        method: 'POST',
+        body: formData,
       });
-      
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze image');
+      }
+
       const result = await response.json();
       setAnalysisResult(result);
       
-      if (result.frames?.length > 0) {
-        setSelectedFrameId(result.frames[0].id);
-      }
-      if (result.mats?.length > 0) {
-        setSelectedMatId(result.mats[0].id);
-      }
-      
       toast({
-        title: 'Analysis Complete',
-        description: 'Your artwork has been analyzed and framing recommendations are ready.',
-        variant: 'default',
+        title: "Analysis complete",
+        description: "We've analyzed your artwork and created personalized recommendations",
+        variant: "default"
       });
     } catch (error) {
-      console.error('Error analyzing image:', error);
+      console.error("Error analyzing image:", error);
+      setAnalysisError("We couldn't analyze this image. Please try a different image or try again later.");
+      
       toast({
-        title: 'Analysis Error',
-        description: 'Failed to analyze the image. Please try again.',
-        variant: 'destructive',
+        title: "Analysis failed",
+        description: "There was a problem analyzing your artwork",
+        variant: "destructive"
       });
     } finally {
       setIsAnalyzing(false);
     }
   };
-  
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    
-    if (value === 'camera') {
-      // Start camera when switching to camera tab
-      startCamera();
-    } else if (videoRef.current?.srcObject) {
-      // Stop camera when switching away from camera tab
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
-      videoRef.current.srcObject = null;
+
+  // Reset the form
+  const handleReset = useCallback(() => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
     }
-  };
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setAnalysisResult(null);
+    setAnalysisError(null);
+  }, [previewUrl]);
   
-  const getSelectedFrame = () => {
-    return frameOptions.find(f => f.id === selectedFrameId) || null;
+  // Enrich the frame options with catalog data
+  const enrichedFrameOptions = frameOptions ? enrichFrameData(frameOptions as FrameOption[]) : [];
+  const enrichedMatOptions = matOptions ? enrichMatData(matOptions as MatOption[]) : [];
+
+  // Find frame and mat details for recommendations
+  const getFrameDetails = (frameId: number) => {
+    return enrichedFrameOptions.find((f: any) => f.id === frameId);
   };
-  
-  const getSelectedMat = () => {
-    return matOptions.find(m => m.id === selectedMatId) || null;
+
+  const getMatDetails = (matId: number) => {
+    return enrichedMatOptions.find((m: any) => m.id === matId);
   };
-  
-  const getSelectedGlass = () => {
-    return glassOptions.length > 0 ? glassOptions[0] : null;
+
+  const getGlassDetails = (glassId: number) => {
+    return glassOptions && Array.isArray(glassOptions) 
+      ? glassOptions.find((g: any) => g.id === glassId) 
+      : null;
   };
-  
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
       <SeoHead
-        title="Frame Fitting Assistant | Jay's Frames"
-        description="Use our AI-powered Frame Fitting Assistant to analyze your artwork and get professional framing recommendations"
-        keywords="frame fitting, artwork analysis, custom framing, AI frame recommendations"
+        title="AI Frame Fitting Assistant | Jay's Frames"
+        description="Upload a photo of your artwork and get personalized framing recommendations based on AI analysis of your image's colors, style, and composition."
         canonicalUrl="/frame-fitting-assistant"
-        ogType="website"
-        ogTitle="Frame Fitting Assistant | Jay's Frames"
-        ogDescription="Upload your artwork and let our AI analyze it to recommend the perfect frame"
-        ogImage="/images/frame-fitting-assistant.jpg"
       />
-      
-      <h1 className="text-3xl font-bold mb-4">AI-Powered Frame Fitting Assistant</h1>
-      <p className="text-lg text-muted-foreground mb-8">
-        Upload a photo of your artwork and our AI will analyze it to recommend the perfect frame and mat combinations.
-      </p>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column - Image Upload/Camera */}
-        <div className="lg:col-span-7">
-          <Card>
+
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+            AI Frame Fitting Assistant
+          </h1>
+          <p className="text-lg text-neutral-600 mb-8">
+            Upload a photo of your artwork and our AI will analyze it to suggest the perfect framing options that complement its style, colors, and composition.
+          </p>
+
+          <Card className="mb-8">
             <CardHeader>
-              <CardTitle>Artwork Image</CardTitle>
+              <CardTitle>Upload Your Artwork</CardTitle>
               <CardDescription>
-                Upload or take a photo of the artwork you want to frame
+                For best results, use a clear, well-lit photo of your artwork without any existing frame.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Tabs value={activeTab} onValueChange={handleTabChange}>
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="upload">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Image
-                  </TabsTrigger>
-                  <TabsTrigger value="camera">
-                    <Camera className="h-4 w-4 mr-2" />
-                    Use Camera
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="upload">
-                  <div className="w-full aspect-video bg-muted rounded-lg overflow-hidden relative">
-                    {imageBase64 ? (
-                      <img 
-                        src={imageBase64} 
-                        alt="Uploaded artwork" 
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full p-8">
-                        <Image className="h-12 w-12 mb-4 text-muted-foreground" />
-                        <p className="text-center text-muted-foreground mb-4">
-                          Upload a photo of your artwork to get framing recommendations
-                        </p>
-                        <input 
-                          type="file" 
-                          ref={fileInputRef}
-                          onChange={handleFileUpload}
-                          accept="image/*"
+            <CardContent className="space-y-4">
+              {!previewUrl ? (
+                <div className="border-2 border-dashed border-neutral-200 rounded-lg p-12 text-center">
+                  <div className="flex flex-col items-center">
+                    <UploadCloud className="h-12 w-12 text-neutral-400 mb-4" />
+                    <h3 className="text-lg font-medium text-neutral-700 mb-2">
+                      Drop your image here or click to browse
+                    </h3>
+                    <p className="text-sm text-neutral-500 mb-6">
+                      Supports JPG, PNG, WebP (max 10MB)
+                    </p>
+                    <Button asChild>
+                      <label className="cursor-pointer">
+                        <Input 
+                          type="file"
                           className="hidden"
+                          onChange={handleFileChange}
+                          accept="image/*"
                         />
-                        <Button 
-                          onClick={() => fileInputRef.current?.click()}
-                          className="mb-2"
-                        >
-                          <Upload className="h-4 w-4 mr-2" />
+                        <div className="flex items-center">
+                          <ImageIcon className="mr-2 h-4 w-4" />
                           Select Image
-                        </Button>
-                      </div>
-                    )}
+                        </div>
+                      </label>
+                    </Button>
                   </div>
-                </TabsContent>
-                
-                <TabsContent value="camera">
-                  <div className="w-full aspect-video bg-muted rounded-lg overflow-hidden relative">
-                    {imageBase64 ? (
-                      <img 
-                        src={imageBase64} 
-                        alt="Captured artwork" 
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                    
-                    {/* Hidden canvas for capturing frames */}
-                    <canvas ref={canvasRef} className="hidden" />
-                    
-                    {!imageBase64 && (
-                      <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                        <Button 
-                          onClick={handleCameraCapture}
-                          size="lg"
-                          className="rounded-full"
-                        >
-                          <Camera className="h-4 w-4 mr-2" />
-                          Capture Photo
-                        </Button>
-                      </div>
-                    )}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="relative rounded-lg overflow-hidden border border-neutral-200">
+                    <img 
+                      src={previewUrl} 
+                      alt="Preview" 
+                      className="w-full h-auto max-h-[400px] object-contain bg-neutral-50"
+                    />
                   </div>
-                </TabsContent>
-              </Tabs>
-              
-              {imageBase64 && (
-                <div className="flex justify-between mt-4">
-                  <Button variant="outline" onClick={resetImage}>
-                    Reset
-                  </Button>
                   
-                  <Button 
-                    onClick={analyzeImage} 
-                    disabled={isAnalyzing}
-                  >
-                    {isAnalyzing ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Analyzing...
-                      </>
-                    ) : (
-                      <>
-                        <Wand2 className="h-4 w-4 mr-2" />
-                        Analyze Artwork
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex space-x-3">
+                    <Button 
+                      variant="secondary" 
+                      onClick={handleReset}
+                      className="flex items-center"
+                    >
+                      <Camera className="mr-2 h-4 w-4" />
+                      Change Image
+                    </Button>
+                    <Button 
+                      onClick={analyzeImage}
+                      disabled={isAnalyzing}
+                      className="flex-1"
+                    >
+                      {isAnalyzing ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Analyzing Artwork...
+                        </>
+                      ) : (
+                        "Get Frame Recommendations"
+                      )}
+                    </Button>
+                  </div>
+                  
+                  {isAnalyzing && (
+                    <div className="space-y-2">
+                      <p className="text-sm text-neutral-500">
+                        Our AI is analyzing your artwork to find the perfect framing options...
+                      </p>
+                      <Progress value={isAnalyzing ? 70 : 100} className="h-2" />
+                    </div>
+                  )}
+                  
+                  {analysisError && (
+                    <div className="bg-red-50 text-red-600 p-4 rounded-lg flex items-start">
+                      <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Analysis failed</p>
+                        <p className="text-sm">{analysisError}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>
           </Card>
           
           {analysisResult && (
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Artwork Analysis</CardTitle>
-                <CardDescription>
-                  Our AI has analyzed your artwork and provided the following insights
-                </CardDescription>
+            <div className="space-y-8 mb-10">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Artwork Analysis</CardTitle>
+                  <CardDescription>
+                    Here's what our AI detected about your artwork
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-sm font-medium text-neutral-500 mb-2">Artwork Type</h3>
+                      <p className="text-lg font-medium">{analysisResult.artworkType}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-neutral-500 mb-2">Style</h3>
+                      <p className="text-lg font-medium">{analysisResult.style}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-neutral-500 mb-2">Mood</h3>
+                      <p className="text-lg font-medium">{analysisResult.mood}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-neutral-500 mb-2">Dominant Colors</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {analysisResult.dominantColors.map((color, index) => (
+                          <div 
+                            key={index} 
+                            className="flex items-center"
+                          >
+                            <div 
+                              className="h-5 w-5 rounded-full mr-1.5 border border-neutral-200" 
+                              style={{ backgroundColor: color }}
+                            />
+                            <span className="text-sm">{color}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div>
+                    <h3 className="text-sm font-medium text-neutral-500 mb-2">AI Reasoning</h3>
+                    <p className="text-neutral-700">{analysisResult.reasoning}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Personalized Recommendations</CardTitle>
+                  <CardDescription>
+                    Based on your artwork, we recommend these framing options
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="frames" className="w-full">
+                    <TabsList className="mb-6">
+                      <TabsTrigger value="frames">Frames</TabsTrigger>
+                      <TabsTrigger value="mats">Mats</TabsTrigger>
+                      <TabsTrigger value="glass">Glass</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="frames" className="space-y-6">
+                      {analysisResult.recommendations.frames.map((frame, index) => {
+                        const frameDetails = getFrameDetails(frame.id);
+                        return (
+                          <div 
+                            key={index} 
+                            className="border rounded-lg p-4 hover:border-primary transition-colors"
+                          >
+                            <div className="flex justify-between items-start mb-3">
+                              <div>
+                                <h3 className="font-medium text-lg">{frameDetails?.name || frame.name}</h3>
+                                {frameDetails?.collection && (
+                                  <p className="text-sm text-neutral-500">
+                                    {frameDetails.collection} Collection
+                                  </p>
+                                )}
+                              </div>
+                              <Badge variant={index === 0 ? "default" : "outline"}>
+                                {index === 0 ? "Best Match" : "Good Match"}
+                              </Badge>
+                            </div>
+                            
+                            {frameDetails?.collectionInfo && (
+                              <div className="mb-3">
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                  <Badge variant="secondary" className="font-normal">
+                                    {frameDetails.collectionInfo.style}
+                                  </Badge>
+                                  {frameDetails.collectionInfo.features.split(',').map((feature, i) => (
+                                    <Badge key={i} variant="outline" className="font-normal">
+                                      {feature.trim()}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            
+                            <p className="text-neutral-600 mt-2">{frame.reason}</p>
+                          </div>
+                        );
+                      })}
+                    </TabsContent>
+                    
+                    <TabsContent value="mats" className="space-y-6">
+                      {analysisResult.recommendations.mats.map((mat, index) => {
+                        const matDetails = getMatDetails(mat.id);
+                        return (
+                          <div 
+                            key={index} 
+                            className="border rounded-lg p-4 hover:border-primary transition-colors"
+                          >
+                            <div className="flex justify-between items-start mb-3">
+                              <div>
+                                <h3 className="font-medium text-lg">{matDetails?.name || mat.name}</h3>
+                                {matDetails?.matType && (
+                                  <p className="text-sm text-neutral-500">
+                                    {matDetails.matType} Texture
+                                  </p>
+                                )}
+                              </div>
+                              <Badge variant={index === 0 ? "default" : "outline"}>
+                                {index === 0 ? "Best Match" : "Good Match"}
+                              </Badge>
+                            </div>
+                            
+                            {matDetails?.matInfo && (
+                              <div className="mb-3">
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                  <Badge variant="secondary" className="font-normal">
+                                    {matDetails.matInfo.texture}
+                                  </Badge>
+                                  <Badge variant="outline" className="font-normal">
+                                    {matDetails.matInfo.finish} finish
+                                  </Badge>
+                                  {matDetails.matInfo.conservation && (
+                                    <Badge variant="outline" className="font-normal text-green-600 bg-green-50 border-green-200">
+                                      conservation grade
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                            
+                            <p className="text-neutral-600 mt-2">{mat.reason}</p>
+                          </div>
+                        );
+                      })}
+                    </TabsContent>
+                    
+                    <TabsContent value="glass" className="space-y-6">
+                      {analysisResult.recommendations.glass.map((glass, index) => {
+                        const glassDetails = getGlassDetails(glass.id);
+                        return (
+                          <div 
+                            key={index} 
+                            className="border rounded-lg p-4 hover:border-primary transition-colors"
+                          >
+                            <div className="flex justify-between items-start mb-3">
+                              <div>
+                                <h3 className="font-medium text-lg">{glassDetails?.name || glass.name}</h3>
+                                {glassDetails?.features && (
+                                  <p className="text-sm text-neutral-500">
+                                    {glassDetails.features}
+                                  </p>
+                                )}
+                              </div>
+                              <Badge variant={index === 0 ? "default" : "outline"}>
+                                {index === 0 ? "Best Match" : "Good Match"}
+                              </Badge>
+                            </div>
+                            
+                            <p className="text-neutral-600 mt-2">{glass.reason}</p>
+                          </div>
+                        );
+                      })}
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+              
+              <div className="text-center">
+                <Button 
+                  variant="default" 
+                  size="lg" 
+                  className="px-8"
+                  onClick={() => window.location.href = '/custom-framing'}
+                >
+                  Start Custom Framing Project
+                </Button>
+                <p className="text-sm text-neutral-500 mt-3">
+                  Take these recommendations to our custom framing tool to complete your project
+                </p>
+              </div>
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Professional-Quality Results</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="prose prose-sm">
-                  <h3 className="text-lg font-medium mb-2">Analysis Results</h3>
-                  <p className="whitespace-pre-line">{analysisResult.imageAnalysis}</p>
-                  
-                  <h3 className="text-lg font-medium mt-4 mb-2">Framing Recommendations</h3>
-                  <p className="whitespace-pre-line">{analysisResult.explanation}</p>
-                </div>
+                <p className="text-neutral-600 text-sm">Our AI analyzes your artwork using techniques developed by professional framers with decades of experience.</p>
               </CardContent>
             </Card>
-          )}
-        </div>
-        
-        {/* Right Column - Frame Recommendations & Preview */}
-        <div className="lg:col-span-5">
-          <Card>
-            <CardHeader>
-              <CardTitle>Frame Preview</CardTitle>
-              <CardDescription>
-                {analysisResult 
-                  ? 'Recommended frames and preview based on AI analysis' 
-                  : 'Upload an image to see AI recommendations'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {!analysisResult ? (
-                <div className="w-full aspect-square bg-muted rounded-lg flex flex-col items-center justify-center p-8 text-center">
-                  <Info className="h-12 w-12 mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">
-                    Upload and analyze your artwork to see personalized framing recommendations and preview
-                  </p>
-                </div>
-              ) : (
-                <>
-                  {/* Artwork Dimensions */}
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-2">Artwork Dimensions (inches)</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="width">Width</Label>
-                        <Input 
-                          id="width"
-                          type="number"
-                          value={width}
-                          onChange={e => setWidth(Number(e.target.value))}
-                          min={1}
-                          max={60}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="height">Height</Label>
-                        <Input 
-                          id="height"
-                          type="number"
-                          value={height}
-                          onChange={e => setHeight(Number(e.target.value))}
-                          min={1}
-                          max={60}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Dynamic Frame Preview */}
-                  <div className="bg-muted rounded-lg p-4 mb-4">
-                    <DynamicFramePreview
-                      width={width}
-                      height={height}
-                      selectedFrame={getSelectedFrame()}
-                      selectedMat={getSelectedMat()}
-                      selectedGlass={getSelectedGlass()}
-                    />
-                  </div>
-                  
-                  {/* Recommended Frames */}
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-2">Recommended Frames</h3>
-                    <div className="grid grid-cols-3 gap-2">
-                      {analysisResult.frames.map(frame => (
-                        <div 
-                          key={frame.id}
-                          className={`cursor-pointer p-2 rounded-lg border transition-all ${
-                            selectedFrameId === frame.id 
-                              ? 'border-primary bg-primary/5 shadow-sm' 
-                              : 'border-muted-foreground/20 hover:border-muted-foreground/50'
-                          }`}
-                          onClick={() => setSelectedFrameId(frame.id)}
-                        >
-                          <div 
-                            className="h-12 w-full rounded-sm mb-2"
-                            style={{ backgroundColor: frame.color }}
-                          />
-                          <p className="text-xs truncate text-center">
-                            {frame.name}
-                            {selectedFrameId === frame.id && (
-                              <CheckCircle2 className="h-3 w-3 inline-block ml-1 text-primary" />
-                            )}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Recommended Mats */}
-                  <div>
-                    <h3 className="text-sm font-medium mb-2">Recommended Mats</h3>
-                    <div className="grid grid-cols-3 gap-2">
-                      {analysisResult.mats.map(mat => (
-                        <div 
-                          key={mat.id}
-                          className={`cursor-pointer p-2 rounded-lg border transition-all ${
-                            selectedMatId === mat.id 
-                              ? 'border-primary bg-primary/5 shadow-sm' 
-                              : 'border-muted-foreground/20 hover:border-muted-foreground/50'
-                          }`}
-                          onClick={() => setSelectedMatId(mat.id)}
-                        >
-                          <div 
-                            className="h-12 w-full rounded-sm mb-2"
-                            style={{ backgroundColor: mat.color }}
-                          />
-                          <p className="text-xs truncate text-center">
-                            {mat.name}
-                            {selectedMatId === mat.id && (
-                              <CheckCircle2 className="h-3 w-3 inline-block ml-1 text-primary" />
-                            )}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button 
-                variant="default" 
-                disabled={!analysisResult}
-                onClick={() => {
-                  toast({
-                    title: "Continue to Custom Framing",
-                    description: "This would take you to the full framing page with these options pre-selected",
-                  });
-                }}
-              >
-                Continue to Custom Framing
-              </Button>
-            </CardFooter>
-          </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Color Harmony Analysis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-neutral-600 text-sm">We detect dominant colors in your artwork and suggest framing materials that create perfect color harmony.</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Style-Matched Recommendations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-neutral-600 text-sm">Get frame and mat suggestions that complement the unique style and period of your artwork.</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
-}
+};
+
+export default FrameFittingAssistant;

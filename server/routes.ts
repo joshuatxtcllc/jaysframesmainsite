@@ -799,43 +799,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Frame fitting assistant with image analysis
   app.post("/api/frame-fitting-assistant", async (req: Request, res: Response) => {
     try {
-      const { imageBase64 } = req.body;
+      let imageData: string | Buffer;
       
-      if (!imageBase64) {
-        return res.status(400).json({ message: "Artwork image is required" });
+      // Check if the request is multipart/form-data (file upload)
+      if (req.is('multipart/form-data') && req.files && Object.keys(req.files).length > 0) {
+        // Handle file upload
+        const imageFile = req.files.image as any;
+        if (!imageFile) {
+          return res.status(400).json({ message: "Artwork image file is required" });
+        }
+        
+        imageData = imageFile.data; // This is a Buffer
+      } else {
+        // Handle JSON request with base64 image
+        const { imageBase64 } = req.body;
+        if (!imageBase64) {
+          return res.status(400).json({ message: "Artwork image is required" });
+        }
+        
+        imageData = imageBase64;
       }
       
+      // Get framing options from the database
       const frameOptions = await storage.getFrameOptions();
       const matOptions = await storage.getMatOptions();
+      const glassOptions = await storage.getGlassOptions();
       
+      // Analyze the image using our AI function
       const analysis = await analyzeArtworkImage(
-        imageBase64,
+        imageData,
         frameOptions,
-        matOptions
+        matOptions,
+        glassOptions
       );
       
-      // Get detailed frame and mat options for the recommendations
-      const recommendedFrames = await Promise.all(
-        analysis.recommendedFrames.map(async (id: number) => {
-          return await storage.getFrameOptionById(id);
-        })
-      );
-      
-      const recommendedMats = await Promise.all(
-        analysis.recommendedMats.map(async (id: number) => {
-          return await storage.getMatOptionById(id);
-        })
-      );
-      
-      res.json({
-        frames: recommendedFrames.filter(f => f !== undefined),
-        mats: recommendedMats.filter(m => m !== undefined),
-        explanation: analysis.explanation,
-        imageAnalysis: analysis.imageAnalysis
-      });
+      // Send the results directly back to the client
+      res.json(analysis);
     } catch (error) {
       console.error("Frame fitting assistant error:", error);
-      res.status(500).json({ message: "Failed to analyze image and generate frame recommendations" });
+      res.status(500).json({ 
+        message: "Failed to analyze image and generate frame recommendations",
+        error: error instanceof Error ? error.message : "Unknown error" 
+      });
     }
   });
 

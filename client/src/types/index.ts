@@ -16,6 +16,16 @@ export interface FrameOption {
   material: string;
   pricePerInch: number;
   imageUrl?: string;
+  // Enhanced properties from catalog data
+  collection?: string;
+  collectionInfo?: {
+    style: string;
+    features: string;
+    bestFor: string;
+    description: string;
+  };
+  width?: number;
+  finish?: string;
 }
 
 export interface MatOption {
@@ -24,6 +34,16 @@ export interface MatOption {
   color: string;
   price: number;
   imageUrl?: string;
+  // Enhanced properties from catalog data
+  matType?: string;
+  matInfo?: {
+    texture: string;
+    finish: string;
+    conservation: boolean;
+    bestFor: string;
+    description: string;
+  };
+  texture?: string;
 }
 
 export interface GlassOption {

@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import compression from "compression";
+import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
 
@@ -18,8 +19,15 @@ if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
 const app = express();
 // Enable compression middleware
 app.use(compression());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false }));
+// Setup file upload middleware
+app.use(fileUpload({
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max file size
+  abortOnLimit: true,
+  createParentPath: true,
+  useTempFiles: false
+}));
 
 // HTTP to HTTPS redirect and www handling middleware for production
 app.use((req, res, next) => {
