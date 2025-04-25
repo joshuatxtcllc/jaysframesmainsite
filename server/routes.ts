@@ -9,7 +9,11 @@ import {
   insertBlogCategorySchema, 
   insertBlogPostSchema 
 } from "@shared/schema";
-import { handleChatRequest, getFrameRecommendations, askFrameAssistant, analyzeArtworkImage, type ChatMessage } from "./ai";
+import { 
+  superFrameAssistant, handleChatRequest, getFrameRecommendations, 
+  askFrameAssistant, analyzeArtworkImage, type ChatMessage, 
+  type SuperAssistantRequest, type SuperAssistantResponse 
+} from "./ai";
 import { 
   sendNotification,
   sendEmail,
