@@ -192,18 +192,17 @@ const FrameFittingAssistant = () => {
   const enrichedMatOptions = matOptions ? enrichMatData(matOptions as MatOption[]) : [];
 
   // Find frame and mat details for recommendations
-  const getFrameDetails = (frameId: number) => {
-    return enrichedFrameOptions.find((f: any) => f.id === frameId);
+  const getFrameDetails = (frameId: number): FrameOption | null => {
+    return enrichedFrameOptions.find((f: any) => f.id === frameId) || null;
   };
 
-  const getMatDetails = (matId: number) => {
-    return enrichedMatOptions.find((m: any) => m.id === matId);
+  const getMatDetails = (matId: number): MatOption | null => {
+    return enrichedMatOptions.find((m: any) => m.id === matId) || null;
   };
 
-  const getGlassDetails = (glassId: number) => {
-    return glassOptions && Array.isArray(glassOptions) 
-      ? glassOptions.find((g: any) => g.id === glassId) 
-      : null;
+  const getGlassDetails = (glassId: number): GlassOption | null => {
+    if (!glassOptions || !Array.isArray(glassOptions)) return null;
+    return glassOptions.find((g: any) => g.id === glassId) || null;
   };
 
   return (
@@ -431,8 +430,13 @@ const FrameFittingAssistant = () => {
                                   const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
 
                                   setSelectedFrameOption(frameDetail || null);
-                                  setSelectedMatOption(bestMatId ? getMatDetails(bestMatId) : null);
-                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  
+                                  const matDetail = bestMatId ? getMatDetails(bestMatId) || null : null;
+                                  setSelectedMatOption(matDetail);
+                                  
+                                  const glassDetail = bestGlassId ? getGlassDetails(bestGlassId) || null : null;
+                                  setSelectedGlassOption(glassDetail);
+                                  
                                   setShowPreview(true);
                                 }}
                               >
@@ -448,9 +452,13 @@ const FrameFittingAssistant = () => {
                                   const bestMatId = analysisResult?.recommendations.mats[0]?.id;
                                   const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
 
-                                  setSelectedFrameOption(frameDetail || null);
-                                  setSelectedMatOption(bestMatId ? getMatDetails(bestMatId) : null);
-                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  setSelectedFrameOption(frameDetail);
+                                  
+                                  const matDetail = bestMatId ? getMatDetails(bestMatId) : null;
+                                  setSelectedMatOption(matDetail);
+                                  
+                                  const glassDetail = bestGlassId ? getGlassDetails(bestGlassId) : null;
+                                  setSelectedGlassOption(glassDetail);
                                   
                                   toast({
                                     title: "Frame style selected",
@@ -520,9 +528,13 @@ const FrameFittingAssistant = () => {
                                   const bestFrameId = analysisResult?.recommendations.frames[0]?.id;
                                   const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
 
-                                  setSelectedFrameOption(bestFrameId ? getFrameDetails(bestFrameId) : null);
-                                  setSelectedMatOption(matDetail || null);
-                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  const frameDetail = bestFrameId ? getFrameDetails(bestFrameId) : null;
+                                  setSelectedFrameOption(frameDetail);
+                                  setSelectedMatOption(matDetail);
+                                  
+                                  const glassDetail = bestGlassId ? getGlassDetails(bestGlassId) : null;
+                                  setSelectedGlassOption(glassDetail);
+                                  
                                   setShowPreview(true);
                                 }}
                               >
@@ -538,9 +550,12 @@ const FrameFittingAssistant = () => {
                                   const bestFrameId = analysisResult?.recommendations.frames[0]?.id;
                                   const bestGlassId = analysisResult?.recommendations.glass[0]?.id;
 
-                                  setSelectedFrameOption(bestFrameId ? getFrameDetails(bestFrameId) : null);
-                                  setSelectedMatOption(matDetail || null);
-                                  setSelectedGlassOption(bestGlassId ? getGlassDetails(bestGlassId) : null);
+                                  const frameDetail = bestFrameId ? getFrameDetails(bestFrameId) : null;
+                                  setSelectedFrameOption(frameDetail);
+                                  setSelectedMatOption(matDetail);
+                                  
+                                  const glassDetail = bestGlassId ? getGlassDetails(bestGlassId) : null;
+                                  setSelectedGlassOption(glassDetail);
                                   
                                   toast({
                                     title: "Mat style selected",
@@ -569,9 +584,9 @@ const FrameFittingAssistant = () => {
                             <div className="flex justify-between items-start mb-3">
                               <div>
                                 <h3 className="font-medium text-lg">{glassDetails?.name || glass.name}</h3>
-                                {glassDetails?.features && (
+                                {glassDetails?.description && (
                                   <p className="text-sm text-neutral-500">
-                                    {glassDetails.features}
+                                    {glassDetails.description}
                                   </p>
                                 )}
                               </div>
