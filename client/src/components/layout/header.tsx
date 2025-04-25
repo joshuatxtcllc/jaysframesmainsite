@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { Link, useLocation } from "wouter";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
@@ -398,7 +398,7 @@ const Header = () => {
                             <div className="pl-4 mt-2 border-l-2 border-gray-100 space-y-2 animate-in fade-in duration-300">
                               {link.children.map((child) => {
                                 const childExpanded = expandedMobileMenus[child.href] || false;
-                                const toggleChildExpanded = (e: React.MouseEvent) => {
+                                const toggleChildExpanded = (e: MouseEvent<HTMLDivElement>) => {
                                   e.stopPropagation();
                                   setExpandedMobileMenus(prev => ({
                                     ...prev,
