@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, PlayCircle, PauseCircle, RefreshCw, Sun, Moon, Sparkles, Image, Camera, ShoppingCart } from "lucide-react";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import FrameVisualizer from "./frame-visualizer";
 
 interface AnimatedFramePreviewProps {
   width: number;
