@@ -41,6 +41,7 @@ function Router() {
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
       <Route path="/voice-frame-assistant" component={VoiceFrameAssistant} />
+      <Route path="/frame-fitting-assistant" component={FrameFittingAssistant} />
       <Route path="/notifications" component={Notifications} />
       <Route path="/notification-test" component={NotificationTest} />
       <Route path="/sms-settings" component={SMSSettings} />
