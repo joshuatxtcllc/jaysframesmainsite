@@ -43,22 +43,32 @@ export const AnimatedFramePreview = ({
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
   
-  // Sample frame styles to cycle through during the "styles" animation
+  // Frame styles for selection and animation
   const frameStyles = [
-    { color: selectedFrame?.color || "#8B4513", width: 25 },
-    { color: "#000000", width: 30 },
-    { color: "#D4AF37", width: 20 },
-    { color: "#FFFFFF", width: 25 },
-    { color: "#4B3621", width: 22 }
+    { color: selectedFrame?.color || "#8B4513", width: 25, name: "Classic Walnut" },
+    { color: "#000000", width: 30, name: "Modern Black" },
+    { color: "#D4AF37", width: 20, name: "Gold Leaf" },
+    { color: "#FFFFFF", width: 25, name: "Clean White" },
+    { color: "#4B3621", width: 22, name: "Dark Oak" },
+    { color: "#3A271A", width: 28, name: "Espresso" },
+    { color: "#AB9364", width: 24, name: "Champagne" },
+    { color: "#555555", width: 18, name: "Sleek Silver" },
+    { color: "#D35400", width: 26, name: "Amber Wood" },
+    { color: "#34495E", width: 22, name: "Navy Blue" }
   ];
   
-  // Sample mat styles to cycle through during the "styles" animation
+  // Mat styles for selection and animation
   const matStyles = [
-    { color: selectedMat?.color || "#F5F5F5", width: 20 },
-    { color: "#E0E0E0", width: 25 },
-    { color: "#D3D3D3", width: 15 },
-    { color: "#F0F8FF", width: 20 },
-    { color: "#FFF8DC", width: 18 }
+    { color: selectedMat?.color || "#F5F5F5", width: 20, name: "Classic White" },
+    { color: "#E0E0E0", width: 25, name: "Light Gray" },
+    { color: "#D3D3D3", width: 15, name: "Silver Gray" },
+    { color: "#F0F8FF", width: 20, name: "Ice Blue" },
+    { color: "#FFF8DC", width: 18, name: "Cream" },
+    { color: "#FAF0E6", width: 22, name: "Linen" },
+    { color: "#FAEBD7", width: 20, name: "Antique White" },
+    { color: "#F5F5DC", width: 16, name: "Beige" },
+    { color: "#FFF0F5", width: 18, name: "Lavender Blush" },
+    { color: "#F0FFF0", width: 20, name: "Honeydew" }
   ];
   
   // Room background colors based on style
@@ -523,8 +533,48 @@ export const AnimatedFramePreview = ({
                 </div>
               </div>
               
-              {/* Animation Speed Control */}
+              {/* Frame Selection */}
               <div className="mt-4 p-3 bg-neutral-50 rounded-lg">
+                <div className="mb-3">
+                  <div className="flex justify-between mb-1">
+                    <label className="text-sm font-medium">Frame Selection</label>
+                    <span className="text-xs text-neutral-500">
+                      Choose a custom frame
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-5 gap-2 mb-2">
+                    {frameStyles.map((style, index) => (
+                      <button
+                        key={index}
+                        className={`h-10 rounded-md transition-all ${frameIndex === index ? 'ring-2 ring-primary scale-110' : 'hover:scale-105'}`}
+                        style={{ 
+                          backgroundColor: style.color,
+                          boxShadow: `inset 0 0 0 2px white, 0 2px 4px rgba(0,0,0,0.1)`
+                        }}
+                        onClick={() => setFrameIndex(index)}
+                        aria-label={`Frame style ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-5 gap-2">
+                    {matStyles.map((style, index) => (
+                      <button
+                        key={index}
+                        className={`h-6 rounded-md transition-all ${frameIndex === index ? 'ring-2 ring-primary' : 'hover:opacity-80'}`}
+                        style={{ 
+                          backgroundColor: style.color,
+                          border: "1px solid rgba(0,0,0,0.1)"
+                        }}
+                        onClick={() => setFrameIndex(index)}
+                        aria-label={`Mat style ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-2 text-xs text-center text-neutral-500">
+                    Selected: <span className="font-medium text-primary">{frameStyles[frameIndex].name}</span> frame with <span className="font-medium text-primary">{matStyles[frameIndex].name}</span> mat
+                  </div>
+                </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <div className="flex justify-between mb-1">
@@ -604,12 +654,19 @@ export const AnimatedFramePreview = ({
             <Button variant="outline" className="mr-2" onClick={onClose}>
               Close
             </Button>
-            {userImage && (
-              <Button>
-                <Sparkles className="h-4 w-4 mr-2" />
-                Confirm Selection
-              </Button>
-            )}
+            <Button 
+              onClick={() => {
+                toast({
+                  title: "Frame Style Applied",
+                  description: "Your selected frame style has been applied to your design.",
+                  duration: 3000
+                });
+                onClose?.();
+              }}
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              Apply Selected Frame
+            </Button>
           </div>
         </div>
       </div>
