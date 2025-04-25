@@ -930,14 +930,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (sessionId && type !== 'image') {
         try {
           // Save user message
-          await storage.saveMessage({
+          await storage.createChatMessage({
             sessionId: sessionId,
             role: 'user',
             content: message
           });
           
           // Save assistant response
-          await storage.saveMessage({
+          await storage.createChatMessage({
             sessionId: sessionId,
             role: 'assistant',
             content: response.message
