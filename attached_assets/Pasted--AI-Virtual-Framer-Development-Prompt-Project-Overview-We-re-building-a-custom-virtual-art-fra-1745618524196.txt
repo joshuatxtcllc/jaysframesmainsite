@@ -1,0 +1,165 @@
+# AI Virtual Framer Development Prompt
+
+## Project Overview
+
+We're building a custom virtual art framing tool inspired by "Virtual Framer" but with our own branding and enhanced with AI features. The key difference is our integration with Google Sheets as a database and an AI-powered chatbot for order status tracking.
+
+## Core Requirements
+
+1. **Interactive Frame Visualization**
+   - Upload artwork and visualize with different frame styles
+   - Real-time preview with accurate proportions
+   - Mat customization with color selection
+   - Accurate pricing calculation
+
+2. **AI Features**
+   - Chatbot for order status inquiries
+   - Frame style recommendations based on artwork analysis
+   - Complementary mat color suggestions
+
+3. **Google Sheets Integration**
+   - Store order information in Google Sheets
+   - Real-time status updates
+   - Query order details for chatbot responses
+
+## Technical Specifications
+
+### Frontend (React)
+
+- Use React with hooks for state management
+- Three.js for 3D visualization of frames
+- Responsive design for all devices
+- Modern, clean interface with our branding
+
+```javascript
+// Example component structure
+const App = () => {
+  return (
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/design" element={<FrameDesigner />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<OrderStatus />} />
+      </Routes>
+      <Footer />
+      <ChatbotWidget />
+    </Router>
+  );
+};
+```
+
+### Backend (Node.js)
+
+- Express server for API endpoints
+- Google Sheets API integration for database
+- Natural language processing for chatbot
+- Image analysis for artwork recommendations
+
+```javascript
+// Example API structure
+app.get('/api/frames', getFrameStyles);
+app.get('/api/orders/:id', getOrderById);
+app.post('/api/orders', createOrder);
+app.put('/api/orders/:id', updateOrder);
+app.post('/api/chatbot', processChatbotMessage);
+```
+
+### Google Sheets Integration
+
+- Create sheets for Orders, Frames, Mats, and Customers
+- Use service account for API authentication
+- Implement caching for performance
+
+```javascript
+// Example Google Sheets structure
+// Orders sheet columns
+[
+  "orderId", "customerName", "customerEmail", "orderDate", 
+  "artworkUrl", "frameStyle", "matColor", "dimensions",
+  "price", "status", "trackingNumber", "lastUpdated"
+]
+```
+
+### AI Chatbot
+
+- Natural language understanding for customer inquiries
+- Order status lookup in Google Sheets
+- Contextual responses based on order stage
+
+```javascript
+// Example chatbot flow
+User: "What's the status of my order #12345?"
+Chatbot: "Your order #12345 is currently in the framing stage. Our craftspeople are carefully assembling your custom frame with the black walnut finish you selected. We expect it to be shipped within 3 business days."
+```
+
+## Development Process
+
+1. **Setup Project Structure**
+   - Initialize GitHub repository
+   - Set up Replit development environment
+   - Configure Netlify deployment
+
+2. **Develop Core Components**
+   - Frame visualization engine
+   - Image upload and processing
+   - Frame and mat selection interface
+   - Pricing calculator
+
+3. **Implement Google Sheets Integration**
+   - Create sheet structure
+   - Set up API authentication
+   - Build CRUD operations
+
+4. **Develop AI Features**
+   - Train chatbot NLP model
+   - Implement order status lookup
+   - Build artwork analysis for recommendations
+
+5. **Testing and Refinement**
+   - User testing for UI/UX
+   - Chatbot response accuracy
+   - Performance optimization
+
+6. **Deployment**
+   - Deploy frontend to Netlify
+   - Set up CI/CD pipeline
+   - Monitor performance and errors
+
+## Key Files to Create
+
+1. `src/components/FrameVisualizer.js` - Three.js visualization 
+2. `server/services/GoogleSheetsService.js` - Google Sheets integration
+3. `ai/chatbot/OrderStatusChatbot.js` - Chatbot implementation
+4. `src/components/ChatbotWidget.js` - Chatbot UI component
+5. `src/services/ArtworkAnalysis.js` - AI image analysis
+
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies
+3. Set up Google Cloud project and enable Sheets API
+4. Create service account and download key
+5. Configure environment variables
+6. Run development server
+
+```bash
+# Clone repository
+git clone https://github.com/your-username/custom-virtual-framer.git
+
+# Install dependencies
+cd custom-virtual-framer
+npm install
+
+# Start development server
+npm run dev
+```
+
+## Environmental Variables
+
+```
+GOOGLE_SHEET_ID=your-google-sheet-id
+GOOGLE_SERVICE_ACCOUNT_KEY=base64-encoded-key
+REACT_APP_API_URL=https://api.your-domain.com
+```
