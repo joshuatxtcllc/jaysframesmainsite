@@ -1,8 +1,9 @@
 import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Camera, RotateCw } from "lucide-react";
+import { Upload, Camera, RotateCw, Sparkles } from "lucide-react";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { AugmentedRealityPreview } from "./augmented-reality-preview";
+import { AnimatedFramePreview } from "./animated-frame-preview";
 
 interface DynamicFramePreviewProps {
   width: number;
@@ -21,6 +22,7 @@ export const DynamicFramePreview = ({
 }: DynamicFramePreviewProps) => {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [showARPreview, setShowARPreview] = useState<boolean>(false);
+  const [showAnimatedPreview, setShowAnimatedPreview] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -72,6 +74,16 @@ export const DynamicFramePreview = ({
     setShowARPreview(false);
   };
   
+  // Open the Animated preview modal
+  const openAnimatedPreview = () => {
+    setShowAnimatedPreview(true);
+  };
+  
+  // Close the Animated preview modal
+  const closeAnimatedPreview = () => {
+    setShowAnimatedPreview(false);
+  };
+  
   return (
     <div className="relative">
       {/* Image Preview */}
@@ -114,6 +126,14 @@ export const DynamicFramePreview = ({
         )}
       </div>
       
+      {/* Feature badges */}
+      <div className="absolute top-2 right-2">
+        <span className="bg-primary text-white text-xs font-bold py-1 px-2 rounded-full flex items-center">
+          <Sparkles className="h-3 w-3 mr-1" />
+          New: Interactive Preview!
+        </span>
+      </div>
+      
       {/* Image Upload and Preview Controls */}
       <div className="mt-4 flex flex-wrap gap-2">
         <Button
@@ -153,6 +173,16 @@ export const DynamicFramePreview = ({
           <Camera className="h-4 w-4 mr-2" />
           Try on Your Wall
         </Button>
+        
+        <Button
+          variant="default"
+          size="sm"
+          onClick={openAnimatedPreview}
+          className="flex-1"
+        >
+          <Sparkles className="h-4 w-4 mr-2" />
+          Interactive AI Preview
+        </Button>
       </div>
       
       {/* AR Preview Modal */}
@@ -164,6 +194,18 @@ export const DynamicFramePreview = ({
           selectedMat={selectedMat}
           selectedGlass={selectedGlass}
           onClose={closeARPreview}
+        />
+      )}
+      
+      {/* Animated Preview Modal */}
+      {showAnimatedPreview && (
+        <AnimatedFramePreview
+          width={width}
+          height={height}
+          selectedFrame={selectedFrame}
+          selectedMat={selectedMat}
+          selectedGlass={selectedGlass}
+          onClose={closeAnimatedPreview}
         />
       )}
     </div>
