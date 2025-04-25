@@ -2,6 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
+import { WebSocketServer, WebSocket } from 'ws';
 import { 
   insertOrderSchema, 
   insertChatMessageSchema, 
@@ -1317,5 +1318,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  
+  // Create WebSocket server for real-time voice assistant communication
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  wss.on('connection', (ws: WebSocket) => {
+    console.log('WebSocket client connected');
+    
+    // Handle incoming messages
+    ws.on('message', async (message: string) => {
+      try {
+        const data = JSON.parse(message);
+        
+        // Handle voice command messages
+        if (data.type === 'voice_command') {
+          // Process the voice command using our AI assistant
+          const response = await askFrameAssistant(data.message);
+          
+          // Send the response back to the client
+          ws.send(JSON.stringify({
+            type: 'voice_response',
+            response
+          }));
+        }
+        
+        // Handle image analysis requests
+        else if (data.type === 'analyze_image' && data.imageData) {
+          // Get framing options from the database
+          const frameOptions = await storage.getFrameOptions();
+          const matOptions = await storage.getMatOptions();
+          const glassOptions = await storage.getGlassOptions();
+          
+          // Analyze the image using our AI function
+          const analysis = await analyzeArtworkImage(
+            data.imageData,
+            frameOptions,
+            matOptions,
+            glassOptions
+          );
+          
+          // Send the analysis results back to the client
+          ws.send(JSON.stringify({
+            type: 'image_analysis_result',
+            analysis
+          }));
+        }
+        
+        // Handle order status requests
+        else if (data.type === 'order_status' && data.orderNumber) {
+          try {
+            const orderId = parseInt(data.orderNumber);
+            if (!isNaN(orderId)) {
+              const order = await storage.getOrderById(orderId);
+              if (order) {
+                ws.send(JSON.stringify({
+                  type: 'order_status_result',
+                  order
+                }));
+              } else {
+                ws.send(JSON.stringify({
+                  type: 'error',
+                  message: `Order #${orderId} not found`
+                }));
+              }
+            } else {
+              ws.send(JSON.stringify({
+                type: 'error',
+                message: 'Invalid order number'
+              }));
+            }
+          } catch (error) {
+            ws.send(JSON.stringify({
+              type: 'error',
+              message: 'Error retrieving order information'
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('WebSocket message error:', error);
+        ws.send(JSON.stringify({
+          type: 'error',
+          message: 'Failed to process your request'
+        }));
+      }
+    });
+    
+    ws.on('close', () => {
+      console.log('WebSocket client disconnected');
+    });
+  });
+  
   return httpServer;
 }

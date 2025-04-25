@@ -27,6 +27,7 @@ import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog/[slug]";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import GlobalVoiceAssistant from "@/components/ui/global-voice-assistant";
 import { CartProvider } from "@/context/cart-context";
 
 function Router() {
@@ -72,6 +73,7 @@ function App() {
           <Footer />
         </div>
         <Toaster />
+        <GlobalVoiceAssistant triggerPhrase="hey echo" />
       </CartProvider>
     </QueryClientProvider>
   );
