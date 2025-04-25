@@ -578,7 +578,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error updating automation settings:", error);
       res.status(500).json({ 
         message: "Error updating automation settings", 
-        error: error.message 
+        error: error instanceof Error ? error.message : String(error)
       });
     }
   });
@@ -649,8 +649,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             if (product && product.stockQuantity !== undefined) {
               return { 
                 productId: item.productId, 
-                inStock: product.stockQuantity >= (item.quantity || 1), 
-                available: product.stockQuantity || 0,
+                inStock: (product.stockQuantity ?? 0) >= (item.quantity || 1), 
+                available: product.stockQuantity ?? 0,
                 quantity: item.quantity || 1 
               };
             }
