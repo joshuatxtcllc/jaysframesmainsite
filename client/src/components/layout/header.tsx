@@ -129,7 +129,7 @@ const Header = () => {
       ]
     },
     { 
-      href: "/custom-framing", 
+      href: "/start-framing", 
       label: "Start Framing",
       highlight: true
     }
