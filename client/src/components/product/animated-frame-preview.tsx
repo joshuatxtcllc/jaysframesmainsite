@@ -48,30 +48,30 @@ export const AnimatedFramePreview = ({
   
   // Frame styles for selection and animation
   const frameStyles = [
-    { color: selectedFrame?.color || "#8B4513", width: 25, name: selectedFrame?.name || "Classic Walnut", material: selectedFrame?.material || "Solid Wood" },
-    { color: "#000000", width: 30, name: "Modern Black", material: "Metal Finish" },
-    { color: "#D4AF37", width: 20, name: "Gold Leaf", material: "Wood with Gold Leaf" },
-    { color: "#FFFFFF", width: 25, name: "Clean White", material: "Painted Wood" },
-    { color: "#4B3621", width: 22, name: "Dark Oak", material: "Solid Hardwood" },
-    { color: "#3A271A", width: 28, name: "Espresso", material: "Premium Hardwood" },
-    { color: "#AB9364", width: 24, name: "Champagne", material: "Metal with Satin Finish" },
-    { color: "#555555", width: 18, name: "Sleek Silver", material: "Brushed Aluminum" },
-    { color: "#D35400", width: 26, name: "Amber Wood", material: "Cherry Wood" },
-    { color: "#34495E", width: 22, name: "Navy Blue", material: "Painted Hardwood" }
+    { color: selectedFrame?.color || "#8B4513", width: 25, name: selectedFrame?.name || "Classic Walnut", material: selectedFrame?.material || "Solid Wood", price: 89.99 },
+    { color: "#000000", width: 30, name: "Modern Black", material: "Metal Finish", price: 99.99 },
+    { color: "#D4AF37", width: 20, name: "Gold Leaf", material: "Wood with Gold Leaf", price: 129.99 },
+    { color: "#FFFFFF", width: 25, name: "Clean White", material: "Painted Wood", price: 79.99 },
+    { color: "#4B3621", width: 22, name: "Dark Oak", material: "Solid Hardwood", price: 109.99 },
+    { color: "#3A271A", width: 28, name: "Espresso", material: "Premium Hardwood", price: 119.99 },
+    { color: "#AB9364", width: 24, name: "Champagne", material: "Metal with Satin Finish", price: 139.99 },
+    { color: "#555555", width: 18, name: "Sleek Silver", material: "Brushed Aluminum", price: 99.99 },
+    { color: "#D35400", width: 26, name: "Amber Wood", material: "Cherry Wood", price: 109.99 },
+    { color: "#34495E", width: 22, name: "Navy Blue", material: "Painted Hardwood", price: 89.99 }
   ];
   
   // Mat styles for selection and animation
   const matStyles = [
-    { color: selectedMat?.color || "#F5F5F5", width: 20, name: selectedMat?.name || "Classic White", texture: "Smooth", finish: "Matte" },
-    { color: "#E0E0E0", width: 25, name: "Light Gray", texture: "Textured", finish: "Matte" },
-    { color: "#D3D3D3", width: 15, name: "Silver Gray", texture: "Linen", finish: "Metallic" },
-    { color: "#F0F8FF", width: 20, name: "Ice Blue", texture: "Smooth", finish: "Satin" },
-    { color: "#FFF8DC", width: 18, name: "Cream", texture: "Suede", finish: "Matte" },
-    { color: "#FAF0E6", width: 22, name: "Linen", texture: "Linen", finish: "Textured" },
-    { color: "#FAEBD7", width: 20, name: "Antique White", texture: "Cotton", finish: "Conservation" },
-    { color: "#F5F5DC", width: 16, name: "Beige", texture: "Textured", finish: "Acid-Free" },
-    { color: "#FFF0F5", width: 18, name: "Lavender Blush", texture: "Smooth", finish: "Conservation" },
-    { color: "#F0FFF0", width: 20, name: "Honeydew", texture: "Cotton", finish: "Matte" }
+    { color: selectedMat?.color || "#F5F5F5", width: 20, name: selectedMat?.name || "Classic White", texture: "Smooth", finish: "Matte", price: 29.99 },
+    { color: "#E0E0E0", width: 25, name: "Light Gray", texture: "Textured", finish: "Matte", price: 34.99 },
+    { color: "#D3D3D3", width: 15, name: "Silver Gray", texture: "Linen", finish: "Metallic", price: 39.99 },
+    { color: "#F0F8FF", width: 20, name: "Ice Blue", texture: "Smooth", finish: "Satin", price: 32.99 },
+    { color: "#FFF8DC", width: 18, name: "Cream", texture: "Suede", finish: "Matte", price: 34.99 },
+    { color: "#FAF0E6", width: 22, name: "Linen", texture: "Linen", finish: "Textured", price: 37.99 },
+    { color: "#FAEBD7", width: 20, name: "Antique White", texture: "Cotton", finish: "Conservation", price: 44.99 },
+    { color: "#F5F5DC", width: 16, name: "Beige", texture: "Textured", finish: "Acid-Free", price: 42.99 },
+    { color: "#FFF0F5", width: 18, name: "Lavender Blush", texture: "Smooth", finish: "Conservation", price: 39.99 },
+    { color: "#F0FFF0", width: 20, name: "Honeydew", texture: "Cotton", finish: "Matte", price: 32.99 }
   ];
   
   // Room background colors based on style
@@ -140,6 +140,7 @@ export const AnimatedFramePreview = ({
     setLighting("day");
     setFrameOpacity(100);
     setFrameIndex(0);
+    setMatIndex(0);
     
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -183,6 +184,7 @@ export const AnimatedFramePreview = ({
         else if (type === "styles") {
           // Cycle through frame and mat combinations
           setFrameIndex(prev => (prev + 1) % frameStyles.length);
+          setMatIndex(prev => (prev + 1) % matStyles.length);
         }
       }
       
@@ -399,7 +401,7 @@ export const AnimatedFramePreview = ({
     };
     
     drawFrame();
-  }, [userImage, selectedFrame, selectedMat, selectedGlass, roomStyle, lighting, frameIndex, currentAnimation, height, width]);
+  }, [userImage, selectedFrame, selectedMat, selectedGlass, roomStyle, lighting, frameIndex, matIndex, currentAnimation, height, width]);
   
   // Get the preview canvas size
   const getCanvasSize = useCallback(() => {
@@ -580,16 +582,16 @@ export const AnimatedFramePreview = ({
                     {matStyles.map((style, index) => (
                       <div key={index} className="flex flex-col">
                         <button
-                          className={`h-8 rounded-md transition-all ${frameIndex === index ? 'ring-2 ring-primary' : 'hover:opacity-80'}`}
+                          className={`h-8 rounded-md transition-all ${matIndex === index ? 'ring-2 ring-primary' : 'hover:opacity-80'}`}
                           style={{ 
                             backgroundColor: style.color,
                             border: "1px solid rgba(0,0,0,0.1)"
                           }}
-                          onClick={() => setFrameIndex(index)}
+                          onClick={() => setMatIndex(index)}
                           aria-label={`Mat style: ${style.name}`}
                           title={`${style.name} - ${style.texture} - ${style.finish}`}
                         />
-                        {frameIndex === index && (
+                        {matIndex === index && (
                           <div className="mt-1 text-xs text-center leading-tight">
                             <div className="font-medium">{style.name}</div>
                             <div className="text-neutral-500">{style.texture}, {style.finish}</div>
@@ -599,7 +601,7 @@ export const AnimatedFramePreview = ({
                     ))}
                   </div>
                   <div className="mt-2 text-xs text-center text-neutral-500">
-                    Selected: <span className="font-medium text-primary">{frameStyles[frameIndex].name}</span> frame with <span className="font-medium text-primary">{matStyles[frameIndex].name}</span> mat
+                    Selected: <span className="font-medium text-primary">{frameStyles[frameIndex].name}</span> frame with <span className="font-medium text-primary">{matStyles[matIndex].name}</span> mat
                   </div>
                 </div>
                 
@@ -672,31 +674,69 @@ export const AnimatedFramePreview = ({
           </div>
         </Tabs>
         
-        <div className="p-4 border-t flex justify-between">
+        <div className="p-4 border-t flex justify-between items-center">
           <Button variant="outline" onClick={resetPreview}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Reset
           </Button>
           
-          <div>
-            <Button variant="outline" className="mr-2" onClick={onClose}>
-              Close
-            </Button>
-            <Button 
-              variant="default"
-              onClick={() => {
-                toast({
-                  title: "Frame Style Applied",
-                  description: "Your selected frame style has been applied to your design.",
-                  duration: 3000
-                });
-                onClose?.();
-              }}
-              className="text-white"
-            >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Apply Selected Frame
-            </Button>
+          <div className="text-right">
+            <div className="mb-2 text-sm">
+              <div className="flex justify-end items-center gap-2 mb-1">
+                <span className="text-neutral-600">Selected Frame:</span> 
+                <span className="font-medium text-primary">{frameStyles[frameIndex].name}</span>
+                <span className="text-xs text-neutral-500">(${frameStyles[frameIndex].price})</span>
+              </div>
+              <div className="flex justify-end items-center gap-2 mb-1">
+                <span className="text-neutral-600">Selected Mat:</span> 
+                <span className="font-medium text-primary">{matStyles[matIndex].name} ({matStyles[matIndex].finish})</span>
+                <span className="text-xs text-neutral-500">(${matStyles[matIndex].price})</span>
+              </div>
+              <div className="flex justify-end items-center gap-2">
+                <span className="text-neutral-600 font-medium">Total:</span> 
+                <span className="font-bold text-lg text-primary">${(frameStyles[frameIndex].price + matStyles[matIndex].price).toFixed(2)}</span>
+              </div>
+            </div>
+            <div>
+              <Button variant="outline" className="mr-2" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button 
+                variant="default"
+                onClick={() => {
+                  if (onAddToCart) {
+                    onAddToCart(frameStyles[frameIndex], matStyles[matIndex]);
+                  }
+                  toast({
+                    title: "Added to Cart",
+                    description: `${frameStyles[frameIndex].name} frame with ${matStyles[matIndex].name} mat added to your cart.`,
+                    duration: 3000
+                  });
+                  onClose?.();
+                }}
+                className="text-white mr-2"
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Add to Cart
+              </Button>
+              <Button 
+                variant="default"
+                onClick={() => {
+                  if (onAddToCart) {
+                    onAddToCart(frameStyles[frameIndex], matStyles[matIndex]);
+                  }
+                  toast({
+                    title: "Proceeding to Checkout",
+                    description: "Your frame selection has been added to cart.",
+                    duration: 3000
+                  });
+                  window.location.href = '/checkout';
+                }}
+                className="text-white bg-green-600 hover:bg-green-700"
+              >
+                Buy Now
+              </Button>
+            </div>
           </div>
         </div>
       </div>
