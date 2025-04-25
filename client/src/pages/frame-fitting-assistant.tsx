@@ -704,54 +704,14 @@ const FrameFittingAssistant = () => {
 
       {/* Frame Preview Modal */}
       {showPreview && selectedFrameOption && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="p-4 border-b flex justify-between items-center">
-              <h3 className="text-xl font-semibold">
-                Frame Preview: {selectedFrameOption.name}
-              </h3>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-8 w-8 p-0" 
-                onClick={() => setShowPreview(false)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="p-6 flex-1 overflow-auto">
-              <AnimatedFramePreview
-                width={400}
-                height={400}
-                selectedFrame={selectedFrameOption}
-                selectedMat={selectedMatOption}
-                selectedGlass={selectedGlassOption}
-                onClose={() => setShowPreview(false)}
-              />
-            </div>
-            <div className="p-4 border-t flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setShowPreview(false)}
-              >
-                Close
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowPreview(false);
-                  toast({
-                    title: "Framing options selected",
-                    description: `Your custom framing choices have been saved.`,
-                    duration: 3000
-                  });
-                }}
-              >
-                <Sparkles className="h-4 w-4 mr-2" />
-                Use These Options
-              </Button>
-            </div>
-          </div>
-        </div>
+        <AnimatedFramePreview
+          width={400}
+          height={400}
+          selectedFrame={selectedFrameOption}
+          selectedMat={selectedMatOption}
+          selectedGlass={selectedGlassOption}
+          onClose={() => setShowPreview(false)}
+        />
       )}
     </>
   );
