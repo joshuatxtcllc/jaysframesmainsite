@@ -17,7 +17,8 @@ import {
   Check,
   AlertCircle,
   Eye,
-  Sparkles
+  Sparkles,
+  X
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -596,6 +597,58 @@ const FrameFittingAssistant = () => {
                             </div>
                             
                             <p className="text-neutral-600 mt-2">{glass.reason}</p>
+                            
+                            <div className="mt-4 flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => {
+                                  const glassDetail = getGlassDetails(glass.id);
+                                  const bestFrameId = analysisResult?.recommendations.frames[0]?.id;
+                                  const bestMatId = analysisResult?.recommendations.mats[0]?.id;
+
+                                  const frameDetail = bestFrameId ? getFrameDetails(bestFrameId) : null;
+                                  setSelectedFrameOption(frameDetail);
+                                  
+                                  const matDetail = bestMatId ? getMatDetails(bestMatId) : null;
+                                  setSelectedMatOption(matDetail);
+                                  
+                                  setSelectedGlassOption(glassDetail);
+                                  setShowPreview(true);
+                                }}
+                              >
+                                <Eye className="h-4 w-4 mr-2" />
+                                Preview
+                              </Button>
+                              <Button 
+                                variant="default" 
+                                size="sm"
+                                className="flex-1 text-white"
+                                onClick={() => {
+                                  const glassDetail = getGlassDetails(glass.id);
+                                  const bestFrameId = analysisResult?.recommendations.frames[0]?.id;
+                                  const bestMatId = analysisResult?.recommendations.mats[0]?.id;
+
+                                  const frameDetail = bestFrameId ? getFrameDetails(bestFrameId) : null;
+                                  setSelectedFrameOption(frameDetail);
+                                  
+                                  const matDetail = bestMatId ? getMatDetails(bestMatId) : null;
+                                  setSelectedMatOption(matDetail);
+                                  
+                                  setSelectedGlassOption(glassDetail);
+                                  
+                                  toast({
+                                    title: "Glass option selected",
+                                    description: `${glassDetail?.name || glass.name} has been selected as your glass option`,
+                                    duration: 3000
+                                  });
+                                }}
+                              >
+                                <Check className="h-4 w-4 mr-2" />
+                                Select
+                              </Button>
+                            </div>
                           </div>
                         );
                       })}
@@ -648,6 +701,58 @@ const FrameFittingAssistant = () => {
           </div>
         </div>
       </div>
+
+      {/* Frame Preview Modal */}
+      {showPreview && selectedFrameOption && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="text-xl font-semibold">
+                Frame Preview: {selectedFrameOption.name}
+              </h3>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 w-8 p-0" 
+                onClick={() => setShowPreview(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-6 flex-1 overflow-auto">
+              <AnimatedFramePreview
+                width={400}
+                height={400}
+                selectedFrame={selectedFrameOption}
+                selectedMat={selectedMatOption}
+                selectedGlass={selectedGlassOption}
+                onClose={() => setShowPreview(false)}
+              />
+            </div>
+            <div className="p-4 border-t flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowPreview(false)}
+              >
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowPreview(false);
+                  toast({
+                    title: "Framing options selected",
+                    description: `Your custom framing choices have been saved.`,
+                    duration: 3000
+                  });
+                }}
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Use These Options
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
