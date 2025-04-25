@@ -209,16 +209,6 @@ export async function seed() {
   }
 }
 
-// Execute the seed function
-// Only run if we're executing this file directly, not when imported by index.ts
-if (require.main === module) {
-  seed()
-    .then(() => {
-      console.log("Database seeding complete, exiting...");
-      process.exit(0);
-    })
-    .catch((err) => {
-      console.error("Error during database seeding:", err);
-      process.exit(1);
-    });
-}
+// Execute the seed function only when run directly (not when imported)
+// This is left here for manual seeding via: npx tsx server/seed.ts
+// The main app will import and call the seed function directly
