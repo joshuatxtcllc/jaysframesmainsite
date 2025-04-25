@@ -12,6 +12,7 @@ import OrderConfirmation from "@/pages/order-confirmation";
 import AdminDashboard from "@/pages/admin/dashboard";
 import FrameAssistantTest from "@/pages/frame-assistant-test";
 import VoiceFrameAssistant from "@/pages/voice-frame-assistant";
+import FrameFittingAssistant from "@/pages/frame-fitting-assistant";
 import Notifications from "@/pages/notifications";
 import NotificationTest from "@/pages/notification-test";
 import NotificationEmbed from "@/pages/developer/notification-embed";

@@ -168,8 +168,109 @@ Respond in JSON format with the following structure:
 }
 
 /**
- * Generates frame recommendations based on artwork description
+ * Analyzes an artwork image and generates frame recommendations
  */
+export async function analyzeArtworkImage(
+  imageBase64: string,
+  frameOptions: any[],
+  matOptions: any[]
+): Promise<any> {
+  try {
+    // Check if API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("Error: OPENAI_API_KEY not available when calling Image Analysis API");
+      return { 
+        recommendedFrames: [], 
+        recommendedMats: [], 
+        explanation: "I apologize, but the AI service is not properly configured. Please contact the site administrator.",
+        imageAnalysis: "Image analysis unavailable."
+      };
+    }
+
+    // Ensure the base64 string is properly formatted for the API
+    const formattedBase64 = imageBase64.startsWith('data:image') 
+      ? imageBase64 
+      : `data:image/jpeg;base64,${imageBase64}`;
+
+    const response = await openai.chat.completions.create({
+      model,
+      messages: [
+        {
+          role: "system",
+          content: `You are the Frame Fitting Assistant, an expert in analyzing artwork and recommending custom framing options. 
+          
+Your task is to analyze the provided image of artwork and recommend the most suitable frame and mat combinations from our catalog.
+
+Please analyze the following aspects of the artwork:
+1. Color palette and dominant colors
+2. Style and genre (e.g., abstract, landscape, portrait, etc.)
+3. Mood and emotional tone
+4. Visual weight and balance
+5. Artistic period or influences (if identifiable)
+6. Texture and medium
+
+Based on this analysis, recommend optimal frame and mat options that will:
+- Complement the artwork's style and colors
+- Enhance the viewing experience without overpowering the art
+- Align with the appropriate conservation standards for the medium
+
+Available frame options: ${JSON.stringify(frameOptions)}
+Available mat options: ${JSON.stringify(matOptions)}
+
+Respond in JSON format with:
+{
+  "recommendedFrames": [array of 1-3 frame IDs],
+  "recommendedMats": [array of 1-3 mat IDs],
+  "imageAnalysis": "Detailed analysis of the artwork's visual elements",
+  "explanation": "Specific reasoning for your frame and mat recommendations"
+}`
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "Please analyze this artwork and recommend the best framing options:"
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: formattedBase64
+              }
+            }
+          ]
+        }
+      ],
+      response_format: { type: "json_object" },
+    });
+
+    const content = response.choices[0].message.content;
+    if (!content) {
+      throw new Error("Empty response from AI");
+    }
+
+    try {
+      return JSON.parse(content);
+    } catch (e) {
+      console.error("Failed to parse AI image analysis:", content);
+      return { 
+        recommendedFrames: [], 
+        recommendedMats: [], 
+        explanation: "I'm sorry, but I couldn't analyze the image properly. Please try with a clearer image or contact our design team for personalized assistance.",
+        imageAnalysis: "Image analysis failed."
+      };
+    }
+  } catch (error) {
+    console.error("AI image analysis error:", error);
+    return { 
+      recommendedFrames: [], 
+      recommendedMats: [], 
+      explanation: "I'm sorry, but our image analysis service is temporarily unavailable. Please try again later.",
+      imageAnalysis: "Image analysis service unavailable."
+    };
+  }
+}
+
 export async function getFrameRecommendations(
   artworkDescription: string,
   frameOptions: any[],

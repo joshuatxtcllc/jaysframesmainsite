@@ -8,7 +8,7 @@ import {
   insertBlogCategorySchema, 
   insertBlogPostSchema 
 } from "@shared/schema";
-import { handleChatRequest, getFrameRecommendations, askFrameAssistant, type ChatMessage } from "./ai";
+import { handleChatRequest, getFrameRecommendations, askFrameAssistant, analyzeArtworkImage, type ChatMessage } from "./ai";
 import { 
   sendNotification,
   sendEmail,
@@ -793,6 +793,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Frame recommendation error:", error);
       res.status(500).json({ message: "Failed to generate frame recommendations" });
+    }
+  });
+  
+  // Frame fitting assistant with image analysis
+  app.post("/api/frame-fitting-assistant", async (req: Request, res: Response) => {
+    try {
+      const { imageBase64 } = req.body;
+      
+      if (!imageBase64) {
+        return res.status(400).json({ message: "Artwork image is required" });
+      }
+      
+      const frameOptions = await storage.getFrameOptions();
+      const matOptions = await storage.getMatOptions();
+      
+      const analysis = await analyzeArtworkImage(
+        imageBase64,
+        frameOptions,
+        matOptions
+      );
+      
+      // Get detailed frame and mat options for the recommendations
+      const recommendedFrames = await Promise.all(
+        analysis.recommendedFrames.map(async (id: number) => {
+          return await storage.getFrameOptionById(id);
+        })
+      );
+      
+      const recommendedMats = await Promise.all(
+        analysis.recommendedMats.map(async (id: number) => {
+          return await storage.getMatOptionById(id);
+        })
+      );
+      
+      res.json({
+        frames: recommendedFrames.filter(f => f !== undefined),
+        mats: recommendedMats.filter(m => m !== undefined),
+        explanation: analysis.explanation,
+        imageAnalysis: analysis.imageAnalysis
+      });
+    } catch (error) {
+      console.error("Frame fitting assistant error:", error);
+      res.status(500).json({ message: "Failed to analyze image and generate frame recommendations" });
     }
   });
 
