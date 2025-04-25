@@ -5,6 +5,7 @@ import compression from "compression";
 import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
+import { seed } from "./seed"; // Import the seed function to run on startup
 
 // Initialize Twilio client for SMS notifications
 export let twilioClient: any = null;
