@@ -1,0 +1,222 @@
+const express = require('express');
+const router = express.Router();
+const GoogleSheetsService = require('../services/GoogleSheetsService');
+const { validateOrderInput } = require('../middleware/validation');
+const logger = require('../utils/logger');
+const { authenticateUser } = require('../middleware/auth');
+
+// Initialize Google Sheets service
+const sheetsService = new GoogleSheetsService();
+
+/**
+ * @route   GET /api/orders
+ * @desc    Get all orders (admin only)
+ * @access  Private/Admin
+ */
+router.get('/', authenticateUser, async (req, res) => {
+  // Check if user is admin
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: 'Unauthorized access' });
+  }
+
+  try {
+    await sheetsService.initialize();
+    const orders = await sheetsService.getAllOrders();
+    res.json(orders);
+  } catch (error) {
+    logger.error('Error fetching all orders:', error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+/**
+ * @route   GET /api/orders/:id
+ * @desc    Get order by ID
+ * @access  Private (user can only access their own orders)
+ */
+router.get('/:id', authenticateUser, async (req, res) => {
+  try {
+    await sheetsService.initialize();
+    const order = await sheetsService.getOrderById(req.params.id);
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    // Check if order belongs to current user (unless admin)
+    if (order.customerEmail !== req.user.email && !req.user.isAdmin) {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }
+    
+    res.json(order);
+  } catch (error) {
+    logger.error(`Error fetching order ${req.params.id}:`, error);
+    res.status(500).json({ error: 'Failed to fetch order' });
+  }
+});
+
+/**
+ * @route   GET /api/orders/user/:email
+ * @desc    Get orders by user email
+ * @access  Private
+ */
+router.get('/user/:email', authenticateUser, async (req, res) => {
+  // Check if user is requesting their own orders or is admin
+  if (req.params.email !== req.user.email && !req.user.isAdmin) {
+    return res.status(403).json({ error: 'Unauthorized access' });
+  }
+  
+  try {
+    await sheetsService.initialize();
+    const orders = await sheetsService.getOrdersByEmail(req.params.email);
+    res.json(orders);
+  } catch (error) {
+    logger.error(`Error fetching orders for email ${req.params.email}:`, error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+/**
+ * @route   POST /api/orders
+ * @desc    Create a new order
+ * @access  Private
+ */
+router.post('/', authenticateUser, validateOrderInput, async (req, res) => {
+  try {
+    await sheetsService.initialize();
+    
+    // Add user email to order data
+    const orderData = {
+      ...req.body,
+      customerEmail: req.user.email
+    };
+    
+    const createdOrder = await sheetsService.createOrder(orderData);
+    res.status(201).json(createdOrder);
+  } catch (error) {
+    logger.error('Error creating order:', error);
+    res.status(500).json({ error: 'Failed to create order' });
+  }
+});
+
+/**
+ * @route   PUT /api/orders/:id
+ * @desc    Update an order
+ * @access  Private (admin or order owner only)
+ */
+router.put('/:id', authenticateUser, async (req, res) => {
+  try {
+    await sheetsService.initialize();
+    
+    // Check if order exists and belongs to user
+    const existingOrder = await sheetsService.getOrderById(req.params.id);
+    
+    if (!existingOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    // Check if user owns this order or is admin
+    if (existingOrder.customerEmail !== req.user.email && !req.user.isAdmin) {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }
+    
+    // For non-admin users, restrict which fields can be updated
+    let updateData = req.body;
+    
+    if (!req.user.isAdmin) {
+      // Regular users can only update specific fields
+      const allowedFields = ['shippingAddress', 'customerName', 'customerPhone'];
+      updateData = {};
+      allowedFields.forEach(field => {
+        if (req.body[field] !== undefined) {
+          updateData[field] = req.body[field];
+        }
+      });
+      
+      // Don't allow status updates for non-admins
+      if (req.body.status) {
+        return res.status(403).json({ error: 'Unauthorized to update order status' });
+      }
+    }
+    
+    const updatedOrder = await sheetsService.updateOrder(req.params.id, updateData);
+    res.json(updatedOrder);
+  } catch (error) {
+    logger.error(`Error updating order ${req.params.id}:`, error);
+    res.status(500).json({ error: 'Failed to update order' });
+  }
+});
+
+/**
+ * @route   PATCH /api/orders/:id/status
+ * @desc    Update order status (admin only)
+ * @access  Private/Admin
+ */
+router.patch('/:id/status', authenticateUser, async (req, res) => {
+  // Only admins can update order status
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: 'Unauthorized access' });
+  }
+  
+  const { status } = req.body;
+  
+  if (!status) {
+    return res.status(400).json({ error: 'Status is required' });
+  }
+  
+  try {
+    await sheetsService.initialize();
+    
+    // Check if order exists
+    const existingOrder = await sheetsService.getOrderById(req.params.id);
+    
+    if (!existingOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    const updatedOrder = await sheetsService.updateOrderStatus(req.params.id, status);
+    res.json(updatedOrder);
+  } catch (error) {
+    logger.error(`Error updating status for order ${req.params.id}:`, error);
+    res.status(500).json({ error: 'Failed to update order status' });
+  }
+});
+
+/**
+ * @route   DELETE /api/orders/:id
+ * @desc    Cancel an order (admin only, or user if order is new)
+ * @access  Private
+ */
+router.delete('/:id', authenticateUser, async (req, res) => {
+  try {
+    await sheetsService.initialize();
+    
+    // Check if order exists
+    const existingOrder = await sheetsService.getOrderById(req.params.id);
+    
+    if (!existingOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    // Check permissions - admin can cancel any order, users can only cancel their own orders that are 'New'
+    const isUserOrder = existingOrder.customerEmail === req.user.email;
+    const isNewOrder = existingOrder.status === 'New';
+    
+    if (!req.user.isAdmin && (!isUserOrder || !isNewOrder)) {
+      return res.status(403).json({ 
+        error: isUserOrder 
+          ? 'Orders can only be cancelled in New status' 
+          : 'Unauthorized access'
+      });
+    }
+    
+    // We don't actually delete, just update status to Cancelled
+    const updatedOrder = await sheetsService.updateOrderStatus(req.params.id, 'Cancelled');
+    res.json({ message: 'Order cancelled successfully', order: updatedOrder });
+  } catch (error) {
+    logger.error(`Error cancelling order ${req.params.id}:`, error);
+    res.status(500).json({ error: 'Failed to cancel order' });
+  }
+});
+
+module.exports = router;
