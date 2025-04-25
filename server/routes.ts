@@ -1320,52 +1320,102 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   
   // Create WebSocket server for real-time voice assistant communication
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  const wss = new WebSocketServer({ 
+    server: httpServer, 
+    path: '/ws',
+    // Explicitly set these handlers to prevent connection issues
+    verifyClient: () => true,
+    clientTracking: true
+  });
+  
+  console.log('WebSocket server initialized at path: /ws');
   
   wss.on('connection', (ws: WebSocket) => {
     console.log('WebSocket client connected');
     
+    // Send a welcome message to confirm the connection is working
+    try {
+      ws.send(JSON.stringify({
+        type: 'connection_established',
+        message: 'Voice assistant connection established'
+      }));
+    } catch (err) {
+      console.error('Error sending welcome message:', err);
+    }
+    
     // Handle incoming messages
-    ws.on('message', async (message: string) => {
+    ws.on('message', async (message) => {
+      console.log('Received WebSocket message:', message.toString().substring(0, 100) + '...');
+      
       try {
-        const data = JSON.parse(message);
+        // Parse the message as JSON
+        let data;
+        try {
+          data = JSON.parse(message.toString());
+        } catch (parseError) {
+          console.error('WebSocket message parse error:', parseError);
+          ws.send(JSON.stringify({
+            type: 'error',
+            message: 'Invalid message format. Expected JSON.'
+          }));
+          return;
+        }
         
         // Handle voice command messages
         if (data.type === 'voice_command') {
-          // Process the voice command using our AI assistant
-          const response = await askFrameAssistant(data.message);
-          
-          // Send the response back to the client
-          ws.send(JSON.stringify({
-            type: 'voice_response',
-            response
-          }));
+          console.log('Processing voice command:', data.message);
+          try {
+            // Process the voice command using our AI assistant
+            const response = await askFrameAssistant(data.message);
+            
+            // Send the response back to the client
+            ws.send(JSON.stringify({
+              type: 'voice_response',
+              response
+            }));
+          } catch (aiError) {
+            console.error('AI assistant error:', aiError);
+            ws.send(JSON.stringify({
+              type: 'error',
+              message: 'Failed to process your voice command'
+            }));
+          }
         }
         
         // Handle image analysis requests
         else if (data.type === 'analyze_image' && data.imageData) {
-          // Get framing options from the database
-          const frameOptions = await storage.getFrameOptions();
-          const matOptions = await storage.getMatOptions();
-          const glassOptions = await storage.getGlassOptions();
-          
-          // Analyze the image using our AI function
-          const analysis = await analyzeArtworkImage(
-            data.imageData,
-            frameOptions,
-            matOptions,
-            glassOptions
-          );
-          
-          // Send the analysis results back to the client
-          ws.send(JSON.stringify({
-            type: 'image_analysis_result',
-            analysis
-          }));
+          console.log('Processing image analysis request');
+          try {
+            // Get framing options from the database
+            const frameOptions = await storage.getFrameOptions();
+            const matOptions = await storage.getMatOptions();
+            const glassOptions = await storage.getGlassOptions();
+            
+            // Analyze the image using our AI function
+            const analysis = await analyzeArtworkImage(
+              data.imageData,
+              frameOptions,
+              matOptions,
+              glassOptions
+            );
+            
+            // Send the analysis results back to the client
+            ws.send(JSON.stringify({
+              type: 'image_analysis_result',
+              analysis
+            }));
+          } catch (analysisError) {
+            console.error('Image analysis error:', analysisError);
+            ws.send(JSON.stringify({
+              type: 'error',
+              message: 'Failed to analyze the image'
+            }));
+          }
         }
         
         // Handle order status requests
         else if (data.type === 'order_status' && data.orderNumber) {
+          console.log('Processing order status request for order:', data.orderNumber);
           try {
             const orderId = parseInt(data.orderNumber);
             if (!isNaN(orderId)) {
@@ -1387,25 +1437,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 message: 'Invalid order number'
               }));
             }
-          } catch (error) {
+          } catch (orderError) {
+            console.error('Order status error:', orderError);
             ws.send(JSON.stringify({
               type: 'error',
               message: 'Error retrieving order information'
             }));
           }
         }
+        
+        // Handle ping messages to keep the connection alive
+        else if (data.type === 'ping') {
+          ws.send(JSON.stringify({ type: 'pong' }));
+        }
+        
+        // Handle unknown message types
+        else {
+          console.warn('Unknown WebSocket message type:', data.type);
+          ws.send(JSON.stringify({
+            type: 'error',
+            message: 'Unknown message type'
+          }));
+        }
       } catch (error) {
-        console.error('WebSocket message error:', error);
-        ws.send(JSON.stringify({
-          type: 'error',
-          message: 'Failed to process your request'
-        }));
+        console.error('WebSocket message processing error:', error);
+        try {
+          ws.send(JSON.stringify({
+            type: 'error',
+            message: 'Failed to process your request'
+          }));
+        } catch (sendError) {
+          console.error('Error sending error message:', sendError);
+        }
       }
     });
     
-    ws.on('close', () => {
-      console.log('WebSocket client disconnected');
+    // Handle connection errors
+    ws.on('error', (error) => {
+      console.error('WebSocket connection error:', error);
     });
+    
+    // Handle connection close
+    ws.on('close', (code, reason) => {
+      console.log(`WebSocket client disconnected. Code: ${code}, Reason: ${reason}`);
+    });
+  });
+  
+  // Handle WebSocket server errors
+  wss.on('error', (error) => {
+    console.error('WebSocket server error:', error);
   });
   
   return httpServer;

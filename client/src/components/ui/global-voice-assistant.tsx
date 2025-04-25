@@ -72,77 +72,194 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws`;
+    let reconnectAttempts = 0;
+    let reconnectInterval: number | null = null;
+    let isConnecting = false;
     
+    // Function to setup the WebSocket connection with better error handling
     const setupWebSocket = () => {
-      wsRef.current = new WebSocket(wsUrl);
+      if (isConnecting) return; // Prevent multiple connection attempts
+      isConnecting = true;
       
-      wsRef.current.onopen = () => {
-        console.log('WebSocket connection established');
-      };
+      console.log(`Attempting to connect to WebSocket: ${wsUrl}`);
       
-      wsRef.current.onmessage = (event) => {
+      // Close any existing connection first
+      if (wsRef.current) {
         try {
-          const data = JSON.parse(event.data);
-          
-          // Handle different response types
-          if (data.type === 'voice_response') {
-            setResponse(data.response);
-            speakResponse(data.response);
-            setIsProcessingCommand(false);
-          }
-          else if (data.type === 'image_analysis_result') {
-            const analysisResult = data.analysis;
-            const analysisDescription = `Based on your image, I've analyzed it as a ${analysisResult.artworkType} with ${analysisResult.dominantColors.join(', ')} colors in a ${analysisResult.style} style. The mood appears to be ${analysisResult.mood}. I've selected frames and mats that would complement this artwork.`;
-            
-            setResponse(analysisDescription + '\n\n' + analysisResult.reasoning);
-            speakResponse(analysisDescription);
-            setIsAnalyzingImage(false);
-          }
-          else if (data.type === 'order_status_result') {
-            const order = data.order;
-            const statusMessage = `Order #${order.id} for ${order.customerName} is currently ${order.status}. Stage: ${order.currentStage || 'Processing'}. ${order.estimatedCompletion ? `Estimated completion on ${new Date(order.estimatedCompletion).toLocaleDateString()}.` : ''}`;
-            
-            setResponse(statusMessage);
-            speakResponse(statusMessage);
-            setIsProcessingCommand(false);
-          }
-          else if (data.type === 'error') {
-            setResponse(`Error: ${data.message}`);
-            speakResponse(`I'm sorry, there was an error: ${data.message}`);
-            setIsProcessingCommand(false);
-            setIsAnalyzingImage(false);
-          }
-        } catch (error) {
-          console.error('Error processing WebSocket message:', error);
+          wsRef.current.close();
+        } catch (e) {
+          console.warn('Error closing existing WebSocket connection:', e);
         }
-      };
+      }
       
-      wsRef.current.onerror = (error) => {
-        console.error('WebSocket error:', error);
+      try {
+        wsRef.current = new WebSocket(wsUrl);
+        
+        // Connection opened
+        wsRef.current.onopen = () => {
+          console.log('WebSocket connection established successfully');
+          reconnectAttempts = 0; // Reset reconnect attempts on successful connection
+          isConnecting = false;
+          
+          // Send a ping message to verify the connection
+          if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify({ type: 'ping' }));
+          }
+          
+          // Set up regular ping to prevent connection timeout
+          if (reconnectInterval) {
+            clearInterval(reconnectInterval);
+          }
+          
+          reconnectInterval = window.setInterval(() => {
+            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+              wsRef.current.send(JSON.stringify({ type: 'ping' }));
+            }
+          }, 30000); // Ping every 30 seconds
+        };
+        
+        // Listen for messages
+        wsRef.current.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            console.log('Received WebSocket message:', data.type);
+            
+            // Handle connection confirmation message
+            if (data.type === 'connection_established') {
+              console.log('Voice assistant connection confirmed');
+              // Don't automatically open the assistant, just confirm connection is ready
+              toast({
+                title: "Voice Assistant Ready",
+                description: "Voice assistant is now available. Click the microphone icon to use it.",
+                duration: 3000
+              });
+            }
+            // Handle voice response
+            else if (data.type === 'voice_response') {
+              setResponse(data.response);
+              speakResponse(data.response);
+              setIsProcessingCommand(false);
+            }
+            // Handle image analysis result
+            else if (data.type === 'image_analysis_result') {
+              const analysisResult = data.analysis;
+              const analysisDescription = `Based on your image, I've analyzed it as a ${analysisResult.artworkType} with ${analysisResult.dominantColors.join(', ')} colors in a ${analysisResult.style} style. The mood appears to be ${analysisResult.mood}. I've selected frames and mats that would complement this artwork.`;
+              
+              setResponse(analysisDescription + '\n\n' + analysisResult.reasoning);
+              speakResponse(analysisDescription);
+              setIsAnalyzingImage(false);
+            }
+            // Handle order status result
+            else if (data.type === 'order_status_result') {
+              const order = data.order;
+              const statusMessage = `Order #${order.id} for ${order.customerName} is currently ${order.status}. Stage: ${order.currentStage || 'Processing'}. ${order.estimatedCompletion ? `Estimated completion on ${new Date(order.estimatedCompletion).toLocaleDateString()}.` : ''}`;
+              
+              setResponse(statusMessage);
+              speakResponse(statusMessage);
+              setIsProcessingCommand(false);
+            }
+            // Handle pong response (keep-alive)
+            else if (data.type === 'pong') {
+              console.log('Received pong from server');
+            }
+            // Handle error messages
+            else if (data.type === 'error') {
+              console.error('Server reported error:', data.message);
+              setResponse(`Error: ${data.message}`);
+              speakResponse(`I'm sorry, there was an error: ${data.message}`);
+              setIsProcessingCommand(false);
+              setIsAnalyzingImage(false);
+            }
+            // Handle unknown message types
+            else {
+              console.warn('Received unknown message type:', data.type);
+            }
+          } catch (error) {
+            console.error('Error processing WebSocket message:', error);
+          }
+        };
+        
+        // Handle errors
+        wsRef.current.onerror = (error) => {
+          console.error('WebSocket error occurred:', error);
+          isConnecting = false;
+          
+          toast({
+            title: "Connection Error",
+            description: "Failed to establish voice assistant connection",
+            variant: "destructive"
+          });
+        };
+        
+        // Handle connection close
+        wsRef.current.onclose = (event) => {
+          console.log(`WebSocket connection closed. Code: ${event.code}, Reason: ${event.reason}`);
+          isConnecting = false;
+          
+          // Clear ping interval
+          if (reconnectInterval) {
+            clearInterval(reconnectInterval);
+            reconnectInterval = null;
+          }
+          
+          // Implement exponential backoff for reconnection
+          if (reconnectAttempts < 5) { // Limit to 5 attempts
+            const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000); // Max 30 second delay
+            console.log(`Attempting to reconnect in ${delay}ms (attempt ${reconnectAttempts + 1})`);
+            
+            setTimeout(() => {
+              if (document.visibilityState === 'visible') {
+                reconnectAttempts++;
+                setupWebSocket();
+              }
+            }, delay);
+          } else {
+            console.error('Maximum reconnection attempts reached');
+            toast({
+              title: "Connection Failed",
+              description: "Unable to establish a voice assistant connection. Please try again later.",
+              variant: "destructive"
+            });
+          }
+        };
+      } catch (error) {
+        console.error('Error creating WebSocket connection:', error);
+        isConnecting = false;
+        
         toast({
           title: "Connection Error",
-          description: "Failed to establish voice assistant connection",
+          description: "Failed to create voice assistant connection",
           variant: "destructive"
         });
-      };
-      
-      wsRef.current.onclose = () => {
-        console.log('WebSocket connection closed');
-        // Try to reconnect after 2 seconds
-        setTimeout(() => {
-          if (document.visibilityState === 'visible') {
-            setupWebSocket();
-          }
-        }, 2000);
-      };
+      }
     };
     
+    // Initialize the WebSocket connection
     setupWebSocket();
     
-    // Clean up WebSocket connection when component unmounts
+    // Handle visibility change to reconnect when the page becomes visible again
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && 
+          (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED)) {
+        setupWebSocket();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Clean up
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      
+      if (reconnectInterval) {
+        clearInterval(reconnectInterval);
+      }
+      
       if (wsRef.current) {
-        wsRef.current.close();
+        try {
+          wsRef.current.close();
+        } catch (e) {
+          console.warn('Error closing WebSocket connection:', e);
+        }
       }
     };
   }, []);
