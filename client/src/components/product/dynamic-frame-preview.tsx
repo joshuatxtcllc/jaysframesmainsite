@@ -4,6 +4,7 @@ import { Upload, Camera, RotateCw, Sparkles } from "lucide-react";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { AugmentedRealityPreview } from "./augmented-reality-preview";
 import { AnimatedFramePreview } from "./animated-frame-preview";
+import FrameVisualizer from "./frame-visualizer";
 
 interface DynamicFramePreviewProps {
   width: number;
@@ -91,21 +92,36 @@ export const DynamicFramePreview = ({
         <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100/50 to-transparent z-0"></div>
         <div className="relative z-10">
           <div className="h-[400px] flex items-center justify-center py-10">
-            {userImage ? (
-              <img
-                src={userImage}
-                alt="Your artwork"
-                className="max-h-full shadow-xl object-contain"
-                style={getFrameStyle()}
+            {/* 3D Frame Visualizer */}
+            <div className="w-full h-full relative">
+              <FrameVisualizer
+                artwork={userImage || undefined}
+                width={width}
+                height={height}
+                selectedFrame={selectedFrame}
+                selectedMat={selectedMat}
+                selectedGlass={selectedGlass}
               />
-            ) : (
-              <img
-                src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                alt="Sample artwork"
-                className="max-h-full shadow-xl object-contain"
-                style={getFrameStyle()}
-              />
-            )}
+            </div>
+            
+            {/* Legacy fallback for browsers that don't support WebGL */}
+            <div className="hidden">
+              {userImage ? (
+                <img
+                  src={userImage}
+                  alt="Your artwork"
+                  className="max-h-full shadow-xl object-contain"
+                  style={getFrameStyle()}
+                />
+              ) : (
+                <img
+                  src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                  alt="Sample artwork"
+                  className="max-h-full shadow-xl object-contain"
+                  style={getFrameStyle()}
+                />
+              )}
+            </div>
             
             {isLoading && (
               <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
