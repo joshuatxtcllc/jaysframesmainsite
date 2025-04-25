@@ -1,13 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { apiRequest } from '@/lib/queryClient';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Mic, MicOff, Send, Volume2, AlertCircle } from 'lucide-react';
+import { 
+  Mic, MicOff, Send, Volume2, AlertCircle, 
+  UploadCloud, Camera, Image as ImageIcon, Loader2
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
+import { useQuery } from '@tanstack/react-query';
+import { SeoHead } from '@/components/seo';
 
 // Add TypeScript types for the Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -54,6 +61,10 @@ export default function VoiceFrameAssistant() {
   const [transcript, setTranscript] = useState('');
   const [isAutoSubmit, setIsAutoSubmit] = useState(true);
   const [speechSupported, setSpeechSupported] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isAnalyzingImage, setIsAnalyzingImage] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<any | null>(null);
   
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthesisRef = useRef<SpeechSynthesis | null>(null);
@@ -189,6 +200,103 @@ export default function VoiceFrameAssistant() {
     
     synthesisRef.current.speak(utterance);
   };
+  
+  // Handle file selection for image upload
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    
+    if (!file) return;
+    
+    // Check if the file is an image
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid File Type",
+        description: "Please select an image file (JPEG, PNG, etc.)",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Set the selected file and create a preview URL
+    setSelectedFile(file);
+    const fileUrl = URL.createObjectURL(file);
+    setPreviewUrl(fileUrl);
+    
+    // Clean up previous analysis results
+    setAnalysisResult(null);
+    
+    return () => {
+      URL.revokeObjectURL(fileUrl);
+    };
+  }, []);
+  
+  // Convert a file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+  
+  // Analyze the uploaded artwork image
+  const analyzeImage = async () => {
+    if (!selectedFile) {
+      toast({
+        title: "No Image Selected",
+        description: "Please select an image of your artwork to analyze",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsAnalyzingImage(true);
+    
+    try {
+      // Convert the file to base64
+      const base64Image = await fileToBase64(selectedFile);
+      
+      // Send the image to the API
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+      
+      const response = await fetch('/api/frame-fitting-assistant', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      // Set the analysis result
+      setAnalysisResult(result);
+      
+      // Generate response text about the image analysis
+      const analysisDescription = `Based on your image, I've analyzed it as a ${result.artworkType} with ${result.dominantColors.join(', ')} colors in a ${result.style} style. The mood appears to be ${result.mood}. I've selected frames and mats that would complement this artwork.`;
+      
+      // Update response with analysis info
+      setResponse(analysisDescription + '\n\n' + result.reasoning);
+      
+      // Speak the response
+      if (synthesisRef.current) {
+        speakResponse(analysisDescription);
+      }
+      
+    } catch (error) {
+      console.error('Error analyzing image:', error);
+      toast({
+        title: "Analysis Failed",
+        description: "Failed to analyze the image. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzingImage(false);
+    }
+  };
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -227,6 +335,12 @@ export default function VoiceFrameAssistant() {
 
   return (
     <div className="container mx-auto py-12 max-w-4xl">
+      <SeoHead
+        title="Voice-Activated Frame Assistant | Jay's Frames"
+        description="Use our voice-activated AI assistant to help with custom framing, design recommendations, and artwork analysis."
+        canonicalUrl="/voice-frame-assistant"
+      />
+      
       <h1 className="text-3xl font-bold mb-4 text-center">Voice-Activated Frame Design Assistant</h1>
       <p className="text-center mb-8 text-gray-600">
         Ask the Frame Design Assistant using your voice or text about custom framing, materials, preservation techniques, or design recommendations.
@@ -244,6 +358,92 @@ export default function VoiceFrameAssistant() {
       </div>
 
       <div className="grid grid-cols-1 gap-8">
+        {/* Image Upload Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Upload Artwork for Analysis</CardTitle>
+            <CardDescription>
+              Upload a photo of your artwork to receive AI-powered framing recommendations
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-6">
+              {/* File Upload Area */}
+              <div className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center relative transition-all ${
+                previewUrl ? "border-green-500 bg-green-50" : "border-gray-300 hover:border-primary hover:bg-gray-50"
+              }`}>
+                {previewUrl ? (
+                  // Image Preview
+                  <div className="relative w-full max-h-[300px] flex justify-center overflow-hidden rounded-md">
+                    <img
+                      src={previewUrl}
+                      alt="Artwork preview"
+                      className="object-contain max-w-full max-h-[300px]"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-2 right-2 h-8 w-8 p-0"
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setPreviewUrl(null);
+                        setAnalysisResult(null);
+                      }}
+                    >
+                      &times;
+                    </Button>
+                  </div>
+                ) : (
+                  // Upload Prompt
+                  <>
+                    <div className="flex flex-col items-center justify-center space-y-2 text-center p-6">
+                      <UploadCloud className="h-12 w-12 text-gray-400" />
+                      <div className="flex text-xl font-semibold mt-2">
+                        Drag & drop or click to upload
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        JPEG, PNG or GIF images up to 10MB
+                      </p>
+                    </div>
+                    <Input
+                      id="artwork-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </>
+                )}
+              </div>
+              
+              {/* Analysis Button */}
+              {selectedFile && !isAnalyzingImage && !analysisResult && (
+                <Button
+                  type="button"
+                  onClick={analyzeImage}
+                  className="flex items-center justify-center gap-2"
+                >
+                  <ImageIcon className="h-4 w-4" />
+                  Analyze Artwork for Frame Recommendations
+                </Button>
+              )}
+              
+              {/* Loading State */}
+              {isAnalyzingImage && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                    <span>Analyzing your artwork...</span>
+                  </div>
+                  <Progress value={45} className="w-full h-2" />
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Voice/Text Question Card */}
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -307,7 +507,8 @@ export default function VoiceFrameAssistant() {
           </form>
         </Card>
 
-        {response && (
+        {/* Results Card */}
+        {(response || analysisResult) && (
           <Card>
             <CardHeader>
               <CardTitle>Frame Design Assistant Response</CardTitle>
@@ -317,6 +518,47 @@ export default function VoiceFrameAssistant() {
                 {response.split('\n').map((line, i) => (
                   <p key={i}>{line}</p>
                 ))}
+                
+                {/* Display frame recommendations if available */}
+                {analysisResult && analysisResult.recommendations && (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-2">Recommended Frames</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      {analysisResult.recommendations.frames.map((frame: any, i: number) => (
+                        <div key={`frame-${i}`} className="border rounded-md p-3 flex items-center">
+                          <div className="bg-primary/10 rounded-md p-2 mr-3">
+                            <div 
+                              className="w-8 h-8 rounded-sm" 
+                              style={{ 
+                                backgroundColor: frame.color || '#f0f0f0',
+                                backgroundImage: frame.texture ? `url(${frame.texture})` : 'none'
+                              }}
+                            ></div>
+                          </div>
+                          <div>
+                            <div className="font-medium">{frame.name}</div>
+                            <div className="text-sm text-gray-500">Match score: {Math.round(frame.score * 100)}%</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <h3 className="text-lg font-semibold mb-2">Recommended Mats</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {analysisResult.recommendations.mats.map((mat: any, i: number) => (
+                        <div key={`mat-${i}`} className="border rounded-md p-3 flex items-center">
+                          <div 
+                            className="w-6 h-6 rounded-sm mr-2" 
+                            style={{ backgroundColor: mat.color || '#ffffff' }}
+                          ></div>
+                          <div>
+                            <div className="font-medium">{mat.name}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
