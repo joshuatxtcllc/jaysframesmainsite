@@ -503,7 +503,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error in auto-processing:", error);
       res.status(500).json({ 
         message: "Error processing orders", 
-        error: error.message 
+        error: error instanceof Error ? error.message : String(error)
       });
     }
   });
@@ -533,7 +533,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error getting automation status:", error);
       res.status(500).json({ 
         message: "Error getting automation status", 
-        error: error.message 
+        error: error instanceof Error ? error.message : String(error)
       });
     }
   });
