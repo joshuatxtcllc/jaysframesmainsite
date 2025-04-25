@@ -759,7 +759,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Frame recommendations
+  // Frame recommendations (now using super assistant)
   app.post("/api/frame-recommendations", async (req: Request, res: Response) => {
     try {
       const { artworkDescription } = req.body;
@@ -771,37 +771,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const frameOptions = await storage.getFrameOptions();
       const matOptions = await storage.getMatOptions();
       
-      const recommendations = await getFrameRecommendations(
-        artworkDescription,
+      // Use the super assistant with appropriate type and context
+      const superResponse = await superFrameAssistant({
+        type: 'text',
+        message: `Please recommend framing options for this artwork: ${artworkDescription}`,
         frameOptions,
         matOptions
-      );
-      
-      // Get detailed frame and mat options for the recommendations
-      const recommendedFrames = await Promise.all(
-        recommendations.recommendedFrames.map(async (id: number) => {
-          return await storage.getFrameOptionById(id);
-        })
-      );
-      
-      const recommendedMats = await Promise.all(
-        recommendations.recommendedMats.map(async (id: number) => {
-          return await storage.getMatOptionById(id);
-        })
-      );
-      
-      res.json({
-        frames: recommendedFrames.filter(f => f !== undefined),
-        mats: recommendedMats.filter(m => m !== undefined),
-        explanation: recommendations.explanation
       });
+      
+      // Extract recommendations from the response
+      if (superResponse.data?.frameRecommendations) {
+        // Return in the format expected by the existing frontend
+        res.json({
+          frames: superResponse.data.frameRecommendations.frames,
+          mats: superResponse.data.frameRecommendations.mats,
+          explanation: superResponse.data.frameRecommendations.explanation
+        });
+      } else {
+        // Fallback in case the response doesn't have the expected format
+        console.error("Incomplete frame recommendations:", superResponse);
+        res.status(500).json({ 
+          message: "Failed to generate frame recommendations", 
+          error: superResponse.error 
+        });
+      }
     } catch (error) {
       console.error("Frame recommendation error:", error);
       res.status(500).json({ message: "Failed to generate frame recommendations" });
     }
   });
   
-  // Frame fitting assistant with image analysis
+  // Frame fitting assistant with image analysis (now using super assistant)
   app.post("/api/frame-fitting-assistant", async (req: Request, res: Response) => {
     try {
       let imageData: string | Buffer;
@@ -830,16 +830,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const matOptions = await storage.getMatOptions();
       const glassOptions = await storage.getGlassOptions();
       
-      // Analyze the image using our AI function
-      const analysis = await analyzeArtworkImage(
-        imageData,
+      // Use the super assistant instead
+      const superResponse = await superFrameAssistant({
+        type: 'image',
+        message: 'Please analyze this artwork image and recommend framing options',
+        image: imageData,
         frameOptions,
         matOptions,
         glassOptions
-      );
+      });
       
-      // Send the results directly back to the client
-      res.json(analysis);
+      // Check if we have image analysis results
+      if (superResponse.data?.imageAnalysis) {
+        // Return the image analysis data in the expected format
+        res.json(superResponse.data.imageAnalysis);
+      } else {
+        // Handle error case
+        throw new Error(superResponse.error || "Failed to analyze image");
+      }
     } catch (error) {
       console.error("Frame fitting assistant error:", error);
       res.status(500).json({ 
@@ -850,6 +858,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // New endpoint for direct Frame Design Assistant access
+  // New unified Super Frame Assistant endpoint that handles all types of requests
+  app.post("/api/super-assistant", async (req: Request, res: Response) => {
+    try {
+      const { type, message, image, sessionId, messageHistory } = req.body;
+      
+      if (!type || !message) {
+        return res.status(400).json({ 
+          message: "Request type and message are required",
+          error: "MISSING_PARAMETERS" 
+        });
+      }
+      
+      // Common options to fetch regardless of request type
+      const products = await storage.getProducts();
+      
+      // Prepare the request based on type
+      const request: SuperAssistantRequest = {
+        type: type,
+        message: message,
+        products: products,
+        sessionId: sessionId,
+        messageHistory: messageHistory
+      };
+      
+      // For image analysis requests, we need frame/mat/glass options
+      if (type === 'image') {
+        if (!image) {
+          return res.status(400).json({ 
+            message: "Image data is required for image analysis requests",
+            error: "MISSING_IMAGE" 
+          });
+        }
+        
+        // Get options from the database
+        const frameOptions = await storage.getFrameOptions();
+        const matOptions = await storage.getMatOptions();
+        const glassOptions = await storage.getGlassOptions();
+        
+        // Add to request
+        request.image = image;
+        request.frameOptions = frameOptions;
+        request.matOptions = matOptions;
+        request.glassOptions = glassOptions;
+      }
+      
+      // If the request is about orders, add order information
+      if (message.toLowerCase().includes('order') || message.toLowerCase().includes('status')) {
+        // Get recent orders for context (limit to 10 most recent)
+        const orders = await storage.getRecentOrders(10);
+        request.orders = orders;
+      }
+      
+      // For frame recommendations, we need frame and mat options
+      if (type === 'text' && message.toLowerCase().includes('recommend') && 
+         (message.toLowerCase().includes('frame') || message.toLowerCase().includes('mat'))) {
+        const frameOptions = await storage.getFrameOptions();
+        const matOptions = await storage.getMatOptions();
+        
+        request.frameOptions = frameOptions;
+        request.matOptions = matOptions;
+      }
+      
+      // Process the request with our super assistant
+      const response = await superFrameAssistant(request);
+      
+      // Save the conversation if there's a session ID
+      if (sessionId && type !== 'image') {
+        try {
+          // Save user message
+          await storage.saveMessage({
+            sessionId: sessionId,
+            role: 'user',
+            content: message
+          });
+          
+          // Save assistant response
+          await storage.saveMessage({
+            sessionId: sessionId,
+            role: 'assistant',
+            content: response.message
+          });
+        } catch (err) {
+          console.error('Error saving conversation:', err);
+          // Don't fail the request if message saving fails
+        }
+      }
+      
+      res.json(response);
+    } catch (error) {
+      console.error("Super assistant error:", error);
+      res.status(500).json({ 
+        message: "Failed to process your request. Please try again later.",
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+  
   app.post("/api/frame-assistant", async (req: Request, res: Response) => {
     try {
       const { message } = req.body;
@@ -858,8 +963,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Message is required" });
       }
       
-      const response = await askFrameAssistant(message);
-      res.json({ response });
+      // Use the new super assistant instead
+      const superResponse = await superFrameAssistant({
+        type: 'text',
+        message: message
+      });
+      
+      // Return in the format expected by the existing frontend
+      res.json({ response: superResponse.message });
     } catch (error) {
       console.error("Frame assistant error:", error);
       res.status(500).json({ 
