@@ -272,7 +272,7 @@ const FrameFittingAssistant = () => {
                     <Button 
                       onClick={analyzeImage}
                       disabled={isAnalyzing}
-                      className="flex-1"
+                      className="flex-1 text-white"
                     >
                       {isAnalyzing ? (
                         <>
@@ -498,7 +498,7 @@ const FrameFittingAssistant = () => {
                 <Button 
                   variant="default" 
                   size="lg" 
-                  className="px-8"
+                  className="px-8 text-white"
                   onClick={() => window.location.href = '/custom-framing'}
                 >
                   Start Custom Framing Project

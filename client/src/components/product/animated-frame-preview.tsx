@@ -655,6 +655,7 @@ export const AnimatedFramePreview = ({
               Close
             </Button>
             <Button 
+              variant="default"
               onClick={() => {
                 toast({
                   title: "Frame Style Applied",
@@ -663,6 +664,7 @@ export const AnimatedFramePreview = ({
                 });
                 onClose?.();
               }}
+              className="text-white"
             >
               <Sparkles className="h-4 w-4 mr-2" />
               Apply Selected Frame

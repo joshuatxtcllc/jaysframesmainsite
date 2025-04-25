@@ -178,7 +178,7 @@ export const DynamicFramePreview = ({
           variant="default"
           size="sm"
           onClick={openAnimatedPreview}
-          className="flex-1"
+          className="flex-1 text-white"
         >
           <Sparkles className="h-4 w-4 mr-2" />
           Interactive AI Preview
