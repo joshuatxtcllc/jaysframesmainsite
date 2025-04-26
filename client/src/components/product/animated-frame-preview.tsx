@@ -46,6 +46,15 @@ export const AnimatedFramePreview = ({
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
   
+  // Get total price of current selection
+  const getTotalPrice = () => {
+    const framePrice = frameStyles[frameIndex].price;
+    const matPrice = matStyles[matIndex].price;
+    const glassPrice = selectedGlass?.price || 0;
+    
+    return (framePrice + matPrice + glassPrice).toFixed(2);
+  };
+  
   // Frame styles for selection and animation
   const frameStyles = [
     { color: selectedFrame?.color || "#8B4513", width: 25, name: selectedFrame?.name || "Classic Walnut", material: selectedFrame?.material || "Solid Wood", price: 89.99 },
@@ -230,9 +239,42 @@ export const AnimatedFramePreview = ({
     }
   };
   
+  // Handle add to cart
+  const handleAddToCart = () => {
+    if (onAddToCart) {
+      onAddToCart(frameStyles[frameIndex], matStyles[matIndex]);
+    }
+    
+    toast({
+      title: "Added to Cart",
+      description: `${frameStyles[frameIndex].name} frame with ${matStyles[matIndex].name} mat added to your cart.`,
+      duration: 3000
+    });
+    
+    if (onClose) {
+      onClose();
+    }
+  };
+  
+  // Handle proceed to checkout
+  const handleProceedToCheckout = () => {
+    if (onAddToCart) {
+      onAddToCart(frameStyles[frameIndex], matStyles[matIndex]);
+    }
+    
+    toast({
+      title: "Proceeding to Checkout",
+      description: "Your frame selection has been added to cart.",
+      duration: 3000
+    });
+    
+    // Redirect to checkout page
+    window.location.href = '/checkout';
+  };
+  
   // Draw the frame to canvas for reflections and effects
   useEffect(() => {
-    if (!previewCanvasRef.current || !selectedFrame || !selectedMat) return;
+    if (!previewCanvasRef.current) return;
     
     const canvas = previewCanvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -416,11 +458,7 @@ export const AnimatedFramePreview = ({
       <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h3 className="text-lg font-bold">Interactive AI Frame Preview Animator</h3>
-          {onClose && (
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <RefreshCw className="h-5 w-5" />
-            </Button>
-          )}
+          <div className="text-xl font-bold text-primary">${getTotalPrice()}</div>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
@@ -558,12 +596,13 @@ export const AnimatedFramePreview = ({
                           }}
                           onClick={() => setFrameIndex(index)}
                           aria-label={`Frame style: ${style.name}`}
-                          title={`${style.name} - ${style.material}`}
+                          title={`${style.name} - ${style.material} - $${style.price.toFixed(2)}`}
                         />
                         {frameIndex === index && (
                           <div className="mt-1 text-xs text-center leading-tight">
                             <div className="font-medium">{style.name}</div>
                             <div className="text-neutral-500">{style.material}</div>
+                            <div className="text-primary font-medium">${style.price.toFixed(2)}</div>
                           </div>
                         )}
                       </div>
@@ -589,12 +628,13 @@ export const AnimatedFramePreview = ({
                           }}
                           onClick={() => setMatIndex(index)}
                           aria-label={`Mat style: ${style.name}`}
-                          title={`${style.name} - ${style.texture} - ${style.finish}`}
+                          title={`${style.name} - ${style.texture} - ${style.finish} - $${style.price.toFixed(2)}`}
                         />
                         {matIndex === index && (
                           <div className="mt-1 text-xs text-center leading-tight">
                             <div className="font-medium">{style.name}</div>
                             <div className="text-neutral-500">{style.texture}, {style.finish}</div>
+                            <div className="text-primary font-medium">${style.price.toFixed(2)}</div>
                           </div>
                         )}
                       </div>
@@ -703,17 +743,7 @@ export const AnimatedFramePreview = ({
               </Button>
               <Button 
                 variant="default"
-                onClick={() => {
-                  if (onAddToCart) {
-                    onAddToCart(frameStyles[frameIndex], matStyles[matIndex]);
-                  }
-                  toast({
-                    title: "Added to Cart",
-                    description: `${frameStyles[frameIndex].name} frame with ${matStyles[matIndex].name} mat added to your cart.`,
-                    duration: 3000
-                  });
-                  onClose?.();
-                }}
+                onClick={handleAddToCart}
                 className="text-white mr-2"
               >
                 <ShoppingCart className="h-4 w-4 mr-2" />
@@ -721,17 +751,7 @@ export const AnimatedFramePreview = ({
               </Button>
               <Button 
                 variant="default"
-                onClick={() => {
-                  if (onAddToCart) {
-                    onAddToCart(frameStyles[frameIndex], matStyles[matIndex]);
-                  }
-                  toast({
-                    title: "Proceeding to Checkout",
-                    description: "Your frame selection has been added to cart.",
-                    duration: 3000
-                  });
-                  window.location.href = '/checkout';
-                }}
+                onClick={handleProceedToCheckout}
                 className="text-white bg-green-600 hover:bg-green-700"
               >
                 Buy Now
