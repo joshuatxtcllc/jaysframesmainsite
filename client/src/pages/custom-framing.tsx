@@ -255,7 +255,7 @@ const CustomFraming = () => {
                 </div>
               </div>
               
-              <Button asChild className="w-full md:w-auto" size="lg">
+              <Button asChild className="w-full md:w-auto text-white" size="lg">
                 <Link href="/ar-frame-assistant">
                   Try AR Frame Assistant
                   <ExternalLink className="ml-2 h-4 w-4" />

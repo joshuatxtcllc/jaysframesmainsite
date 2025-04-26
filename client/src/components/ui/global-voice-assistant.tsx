@@ -579,7 +579,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
         )}
         
         {/* Floating assistant button */}
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-28 right-4 z-50">
           <Button 
             onClick={() => setIsOpen(true)} 
             className="h-14 w-14 rounded-full shadow-lg flex items-center justify-center"
