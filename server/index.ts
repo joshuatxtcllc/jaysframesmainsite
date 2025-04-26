@@ -5,7 +5,6 @@ import compression from "compression";
 import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
-import { seed } from "./seed"; // Import the seed function to run on startup
 
 // Initialize Twilio client for SMS notifications
 export let twilioClient: any = null;
@@ -81,14 +80,6 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Seed the database with initial data
-  try {
-    await seed();
-    console.log("Database seeded successfully");
-  } catch (error) {
-    console.error("Error seeding database:", error);
-  }
-
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

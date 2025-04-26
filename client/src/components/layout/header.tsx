@@ -1,4 +1,4 @@
-import { useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,6 @@ import {
   X,
   Phone,
   ChevronRight,
-  ChevronDown,
   Bell,
   MapPin
 } from "lucide-react";
@@ -32,7 +31,6 @@ const Header = () => {
   const { toast } = useToast();
   const [notifications, setNotifications] = useState<JFNotification[]>([]);
   const [hasUnread, setHasUnread] = useState(false);
-  const [expandedMobileMenus, setExpandedMobileMenus] = useState<Record<string, boolean>>({});
 
   // Handle scrolling effects
   useEffect(() => {
@@ -88,51 +86,17 @@ const Header = () => {
     setCartOpen(false);
   };
 
-  // Consolidated navigation structure with dropdown menus - max 5 main items
   const navLinks = [
     { href: "/", label: "Home" },
-    { 
-      href: "/products", 
-      label: "Products",
-      children: [
-        { href: "/products", label: "All Products" },
-        { href: "/products/category/frames", label: "Frames" },
-        { href: "/products/category/glass", label: "Glass" },
-        { href: "/products/category/mats", label: "Mats" },
-        { href: "/products/category/accessories", label: "Accessories" }
-      ]
-    },
-    { 
-      href: "/custom-framing", 
-      label: "Custom Framing",
-      children: [
-        { href: "/custom-framing", label: "Design Your Frame" },
-        { 
-          href: "/ai-tools", 
-          label: "AI Tools",
-          children: [
-            { href: "/frame-fitting-assistant", label: "Frame Fitting AI" },
-            { href: "/voice-frame-assistant", label: "Voice Assistant" },
-            { href: "/reinvented", label: "Our AI Technology" }
-          ]
-        }
-      ] 
-    },
-    { 
-      href: "/resources", 
-      label: "Resources",
-      children: [
-        { href: "/blog", label: "Blog" },
-        { href: "/order-status", label: "Track Order" },
-        { href: "/about", label: "About Us" },
-        { href: "/contact", label: "Contact Us" }
-      ]
-    },
-    { 
-      href: "/custom-framing", 
-      label: "Start Framing",
-      highlight: true
-    }
+    { href: "/products", label: "Products" },
+    { href: "/custom-framing", label: "Custom Framing" },
+    { href: "/frame-fitting-assistant", label: "Frame Fitting AI" },
+    { href: "/voice-frame-assistant", label: "Voice Assistant" },
+    { href: "/reinvented", label: "Reinvented" },
+    { href: "/blog", label: "Blog" },
+    { href: "/order-status", label: "Order Status" },
+    { href: "/about", label: "About Us" },
+    { href: "/contact", label: "Contact" }
   ];
 
   return (
@@ -181,64 +145,14 @@ const Header = () => {
               </Link>
             </div>
             
-            <nav className="hidden md:flex space-x-8 items-center">
+            <nav className="hidden md:flex space-x-10 items-center">
               {navLinks.map((link) => (
-                <div key={link.href} className="relative group">
-                  {link.highlight ? (
-                    <Link href={link.href}>
-                      <Button className="bg-secondary hover:bg-secondary/80 text-white text-sm">
-                        {link.label}
-                      </Button>
-                    </Link>
-                  ) : link.children ? (
-                    <>
-                      <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary transition-colors duration-200 cursor-pointer relative group flex items-center`}>
-                        {link.label}
-                        <ChevronDown className="h-4 w-4 ml-1 transition-transform duration-200 group-hover:rotate-180" />
-                        <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
-                      </div>
-                      <div className="absolute left-0 top-full mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                          {link.children.map((child) => (
-                            child.children ? (
-                              <div key={child.href} className="relative group/submenu">
-                                <div className={`${location === child.href ? 'bg-gray-100 text-secondary' : 'text-gray-700'} px-4 py-2 text-sm hover:bg-gray-100 hover:text-secondary cursor-pointer flex justify-between items-center`}>
-                                  {child.label}
-                                  <ChevronRight className="h-3.5 w-3.5 ml-2" />
-                                </div>
-                                {/* Nested submenu */}
-                                <div className="absolute left-full top-0 ml-0.5 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover/submenu:opacity-100 group-hover/submenu:visible transition-all duration-200 z-50">
-                                  <div className="py-1" role="menu">
-                                    {child.children.map((subChild) => (
-                                      <Link key={subChild.href} href={subChild.href}>
-                                        <div className={`${location === subChild.href ? 'bg-gray-100 text-secondary' : 'text-gray-700'} px-4 py-2 text-sm hover:bg-gray-100 hover:text-secondary cursor-pointer`}>
-                                          {subChild.label}
-                                        </div>
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              <Link key={child.href} href={child.href}>
-                                <div className={`${location === child.href ? 'bg-gray-100 text-secondary' : 'text-gray-700'} px-4 py-2 text-sm hover:bg-gray-100 hover:text-secondary cursor-pointer`}>
-                                  {child.label}
-                                </div>
-                              </Link>
-                            )
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <Link href={link.href}>
-                      <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary transition-colors duration-200 cursor-pointer relative group`}>
-                        {link.label}
-                        <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
-                      </div>
-                    </Link>
-                  )}
-                </div>
+                <Link key={link.href} href={link.href}>
+                  <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary transition-colors duration-200 cursor-pointer relative group`}>
+                    {link.label}
+                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
+                  </div>
+                </Link>
               ))}
             </nav>
             
@@ -334,7 +248,11 @@ const Header = () => {
                 )}
               </button>
               
-              {/* Start Framing button moved to main navigation */}
+              <Link href="/custom-framing" className="hidden md:block">
+                <Button className="bg-secondary hover:bg-secondary/80 text-white text-sm">
+                  Start Framing
+                </Button>
+              </Link>
               
               <button 
                 className="md:hidden text-primary hover:text-secondary transition-colors" 
@@ -354,116 +272,22 @@ const Header = () => {
           {mobileMenuOpen && (
             <div className="md:hidden pt-5 pb-3 border-t border-gray-100 mt-3 fade-in">
               <div className="flex flex-col space-y-4">
-                {navLinks.map((link) => {
-                  // Use the expandedMobileMenus state object to track expanded state
-                  const isExpanded = expandedMobileMenus[link.href] || false;
-                  const toggleExpanded = () => {
-                    setExpandedMobileMenus(prev => ({
-                      ...prev,
-                      [link.href]: !prev[link.href]
-                    }));
-                  };
-                  
-                  if (link.highlight) {
-                    return (
-                      <Link key={link.href} href={link.href}>
-                        <Button 
-                          className="bg-secondary hover:bg-secondary/80 text-white w-full text-sm"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {link.label}
-                        </Button>
-                      </Link>
-                    );
-                  }
-                  
-                  return (
-                    <div key={link.href} className="w-full">
-                      {link.children ? (
-                        <>
-                          <div 
-                            className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary flex justify-between items-center font-medium transition-colors duration-200 cursor-pointer w-full`}
-                            onClick={toggleExpanded}
-                          >
-                            {link.label}
-                            {isExpanded ? (
-                              <ChevronDown className="h-4 w-4 transition-transform duration-300" />
-                            ) : (
-                              <ChevronRight className="h-4 w-4 transition-transform duration-300" />
-                            )}
-                          </div>
-                          
-                          {/* Submenu with transition */}
-                          {isExpanded && (
-                            <div className="pl-4 mt-2 border-l-2 border-gray-100 space-y-2 animate-in fade-in duration-300">
-                              {link.children.map((child) => {
-                                const childExpanded = expandedMobileMenus[child.href] || false;
-                                const toggleChildExpanded = (e: MouseEvent<HTMLDivElement>) => {
-                                  e.stopPropagation();
-                                  setExpandedMobileMenus(prev => ({
-                                    ...prev,
-                                    [child.href]: !prev[child.href]
-                                  }));
-                                };
-                                
-                                return child.children ? (
-                                  <div key={child.href} className="w-full">
-                                    <div 
-                                      className={`${location === child.href ? 'text-secondary' : 'text-gray-600'} hover:text-secondary text-sm py-1 transition-colors duration-200 cursor-pointer flex justify-between items-center`}
-                                      onClick={toggleChildExpanded}
-                                    >
-                                      {child.label}
-                                      {childExpanded ? (
-                                        <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300" />
-                                      ) : (
-                                        <ChevronRight className="h-3.5 w-3.5 transition-transform duration-300" />
-                                      )}
-                                    </div>
-                                    
-                                    {/* Nested submenu */}
-                                    {childExpanded && (
-                                      <div className="pl-3 mt-1 border-l border-gray-100 space-y-1 animate-in fade-in duration-300">
-                                        {child.children.map((subChild) => (
-                                          <Link key={subChild.href} href={subChild.href}>
-                                            <div 
-                                              className={`${location === subChild.href ? 'text-secondary' : 'text-gray-500'} hover:text-secondary text-xs py-1 transition-colors duration-200 cursor-pointer`}
-                                              onClick={() => setMobileMenuOpen(false)}
-                                            >
-                                              {subChild.label}
-                                            </div>
-                                          </Link>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <Link key={child.href} href={child.href}>
-                                    <div 
-                                      className={`${location === child.href ? 'text-secondary' : 'text-gray-600'} hover:text-secondary text-sm py-1 transition-colors duration-200 cursor-pointer flex items-center`}
-                                      onClick={() => setMobileMenuOpen(false)}
-                                    >
-                                      {child.label}
-                                    </div>
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <Link href={link.href}>
-                          <div 
-                            className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary flex justify-between items-center font-medium transition-colors duration-200 cursor-pointer w-full`}
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {link.label}
-                            <ChevronRight className="h-4 w-4" />
-                          </div>
-                        </Link>
-                      )}
+                {navLinks.map((link) => (
+                  <Link key={link.href} href={link.href}>
+                    <div 
+                      className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary flex justify-between items-center font-medium transition-colors duration-200 cursor-pointer`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                      <ChevronRight className="h-4 w-4" />
                     </div>
-                  );
-                })}
+                  </Link>
+                ))}
+                <Link href="/custom-framing">
+                  <Button className="bg-secondary hover:bg-secondary/80 text-white w-full mt-2 text-sm">
+                    Start Framing
+                  </Button>
+                </Link>
               </div>
             </div>
           )}
