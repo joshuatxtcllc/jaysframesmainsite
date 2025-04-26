@@ -477,24 +477,12 @@ export const AnimatedFramePreview = ({
               </div>
               
               <div className="relative bg-neutral-100 rounded-lg overflow-hidden flex-1 flex items-center justify-center">
-                {/* 3D Frame Visualizer */}
-                <div className="w-full h-full">
-                  <FrameVisualizer
-                    artwork={userImage || undefined}
-                    width={width}
-                    height={height}
-                    selectedFrame={currentAnimation === "styles" ? frameStyles[frameIndex] as unknown as FrameOption : selectedFrame}
-                    selectedMat={currentAnimation === "styles" ? matStyles[matIndex] as unknown as MatOption : selectedMat}
-                    selectedGlass={selectedGlass}
-                  />
-                </div>
-                
-                {/* Keep canvas for 2D effects like room style and lighting */}
+                {/* Canvas for rendering frame preview with effects */}
                 <canvas
                   ref={previewCanvasRef}
                   width={getCanvasSize().width}
                   height={getCanvasSize().height}
-                  className="max-w-full max-h-full hidden"
+                  className="max-w-full max-h-full"
                 />
                 
                 {isLoading && (
