@@ -126,9 +126,9 @@ export const DynamicFramePreview = ({
         )}
       </div>
       
-      {/* Feature badges */}
-      <div className="absolute top-2 right-2">
-        <span className="bg-primary text-white text-xs font-bold py-1 px-2 rounded-full flex items-center">
+      {/* Feature badges - moved to top of card, outside of frame display area */}
+      <div className="absolute -top-3 right-0">
+        <span className="bg-primary text-white text-xs font-bold py-1 px-3 rounded-full flex items-center shadow-md">
           <Sparkles className="h-3 w-3 mr-1" />
           New: Interactive Preview!
         </span>
