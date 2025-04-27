@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, PlayCircle, PauseCircle, RefreshCw, Sun, Moon, Sparkles, Image, Camera, ShoppingCart, X, Eye, Zap } from "lucide-react";
+import { Upload, PlayCircle, PauseCircle, RefreshCw, Sun, Moon, Sparkles, Image, Camera, ShoppingCart, X, Eye } from "lucide-react";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -632,6 +632,32 @@ export const AnimatedFramePreview = ({
                       <span className="hidden xs:inline">Frame</span> Styles
                     </Button>
                   </div>
+                  
+                  {/* Accessibility toggle - moved to animation controls bar for better visibility */}
+                  <div className="mt-1 flex items-center justify-between px-1">
+                    <div className="flex items-center">
+                      <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-primary" />
+                      <span className="text-[10px] sm:text-xs">High Contrast</span>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={highContrastMode ? "default" : "outline"}
+                      className="h-6 text-[10px] min-w-[60px] px-2"
+                      onClick={() => {
+                        const newMode = !highContrastMode;
+                        setHighContrastMode(newMode);
+                        toast({
+                          title: `High Contrast Mode ${newMode ? 'Enabled' : 'Disabled'}`,
+                          description: newMode 
+                            ? "Enhanced visibility mode for improved accessibility is now active." 
+                            : "Returned to standard display mode.",
+                          duration: 3000
+                        });
+                      }}
+                    >
+                      {highContrastMode ? "On" : "Off"}
+                    </Button>
+                  </div>
                 </div>
               </div>
               
@@ -769,44 +795,7 @@ export const AnimatedFramePreview = ({
                   </div>
                 </div>
                 
-                {/* Accessibility Controls */}
-                <div className="mt-4 border-t pt-4">
-                  <div className="flex justify-between mb-2">
-                    <label className="text-sm font-medium flex items-center">
-                      <Eye className="h-4 w-4 mr-1" /> 
-                      Accessibility Options
-                    </label>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between bg-neutral-100 rounded-md p-2">
-                      <div className="flex items-center">
-                        <Zap className="h-4 w-4 mr-2 text-yellow-600" />
-                        <div>
-                          <div className="text-sm font-medium">High Contrast Mode</div>
-                          <div className="text-xs text-neutral-500">Enhanced visibility for visual impairments</div>
-                        </div>
-                      </div>
-                      <Button 
-                        variant={highContrastMode ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => {
-                          const newMode = !highContrastMode;
-                          setHighContrastMode(newMode);
-                          toast({
-                            title: `High Contrast Mode ${newMode ? 'Enabled' : 'Disabled'}`,
-                            description: newMode 
-                              ? "Enhanced visibility mode for improved accessibility is now active." 
-                              : "Returned to standard display mode.",
-                            duration: 3000
-                          });
-                        }}
-                        className="min-w-[80px]"
-                      >
-                        {highContrastMode ? "On" : "Off"}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+{/* Accessibility Controls section moved to animation controls bar for better mobile visibility */}
               </div>
             </TabsContent>
           </div>
