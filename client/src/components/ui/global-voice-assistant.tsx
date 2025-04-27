@@ -645,9 +645,10 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
               <p className="text-md">{transcript}</p>
               {!isProcessingCommand && (
                 <Button 
-                  className="mt-2 w-full" 
+                  className="mt-2 w-full text-white" 
                   size="sm" 
                   onClick={handleCommandClick}
+                  variant="default"
                 >
                   Process Command
                 </Button>
@@ -708,8 +709,9 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
                   <Button
                     type="button"
                     onClick={analyzeImage}
-                    className="absolute bottom-2 right-2 flex items-center justify-center gap-1"
+                    className="absolute bottom-2 right-2 flex items-center justify-center gap-1 text-white"
                     size="sm"
+                    variant="default"
                   >
                     <ImageIcon className="h-3 w-3" />
                     Analyze
@@ -756,7 +758,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
               <Button 
                 variant={isListening ? "destructive" : "default"}
                 onClick={isListening ? stopListening : startListening}
-                className="w-full"
+                className="w-full text-white"
               >
                 {isListening ? (
                   <>
