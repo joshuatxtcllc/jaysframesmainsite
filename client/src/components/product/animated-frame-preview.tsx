@@ -47,8 +47,8 @@ export const AnimatedFramePreview = ({
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
   
-  // Get total price of current selection
-  const getTotalPrice = () => {
+  // Calculate total price for display in footer
+  const calculateTotalPrice = () => {
     const framePrice = frameStyles[frameIndex].price;
     const matPrice = matStyles[matIndex].price;
     const glassPrice = selectedGlass?.price || 0;
@@ -493,31 +493,17 @@ export const AnimatedFramePreview = ({
   return (
     <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] sm:max-h-[80vh] overflow-y-auto flex flex-col relative">
-        <div className="sticky top-0 bg-white z-10 flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 sm:p-4 border-b">
-          <div className="flex justify-between items-center">
-            <h3 className="text-base sm:text-lg font-bold">Interactive AI Preview</h3>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onClose} 
-              className="rounded-full hover:bg-neutral-100 sm:hidden"
-              aria-label="Close preview"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="flex items-center gap-3 mt-2 sm:mt-0">
-            <div className="text-lg sm:text-xl font-bold text-primary">${getTotalPrice()}</div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onClose} 
-              className="rounded-full hover:bg-neutral-100 hidden sm:flex"
-              aria-label="Close preview"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
+        <div className="sticky top-0 bg-white z-10 flex flex-row justify-between items-center p-3 sm:p-4 border-b">
+          <h3 className="text-base sm:text-lg font-bold">Interactive AI Preview</h3>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose} 
+            className="rounded-full hover:bg-neutral-100"
+            aria-label="Close preview"
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
@@ -810,7 +796,7 @@ export const AnimatedFramePreview = ({
             
             <div className="sm:hidden bg-neutral-100 px-2 py-1 rounded-md">
               <span className="text-xs font-medium">Total: </span>
-              <span className="text-primary font-bold">${(frameStyles[frameIndex].price + matStyles[matIndex].price).toFixed(2)}</span>
+              <span className="text-primary font-bold">${calculateTotalPrice()}</span>
             </div>
           </div>
           
@@ -828,7 +814,7 @@ export const AnimatedFramePreview = ({
               </div>
               <div className="flex justify-end items-center gap-2">
                 <span className="text-neutral-600 font-medium">Total:</span> 
-                <span className="font-bold text-lg text-primary">${(frameStyles[frameIndex].price + matStyles[matIndex].price).toFixed(2)}</span>
+                <span className="font-bold text-lg text-primary">${calculateTotalPrice()}</span>
               </div>
             </div>
           </div>
