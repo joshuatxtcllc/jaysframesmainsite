@@ -454,11 +454,22 @@ export const AnimatedFramePreview = ({
   }, []);
   
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-        <div className="flex justify-between items-center p-4 border-b">
+    <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[80vh] overflow-y-auto flex flex-col relative">
+        <div className="sticky top-0 bg-white z-10 flex justify-between items-center p-4 border-b">
           <h3 className="text-lg font-bold">Interactive AI Frame Preview Animator</h3>
-          <div className="text-xl font-bold text-primary">${getTotalPrice()}</div>
+          <div className="flex items-center gap-3">
+            <div className="text-xl font-bold text-primary">${getTotalPrice()}</div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onClose} 
+              className="rounded-full hover:bg-neutral-100"
+              aria-label="Close preview"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
