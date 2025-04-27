@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, PlayCircle, PauseCircle, RefreshCw, Sun, Moon, Sparkles, Image, Camera, ShoppingCart, X } from "lucide-react";
+import { Upload, PlayCircle, PauseCircle, RefreshCw, Sun, Moon, Sparkles, Image, Camera, ShoppingCart, X, Eye, Zap } from "lucide-react";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -40,6 +40,7 @@ export const AnimatedFramePreview = ({
   const [frameOpacity, setFrameOpacity] = useState<number>(100);
   const [frameIndex, setFrameIndex] = useState<number>(0);
   const [matIndex, setMatIndex] = useState<number>(0);
+  const [highContrastMode, setHighContrastMode] = useState<boolean>(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -288,31 +289,40 @@ export const AnimatedFramePreview = ({
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
       
+      // Get lighting config reference for reuse
+      const lightingConfig = lightingConditions[lighting];
+      
       // Calculate frame position and size
       const frameWidth = canvasWidth * 0.8;
       const frameHeight = frameWidth * (height / width);
       const frameX = (canvasWidth - frameWidth) / 2;
       const frameY = (canvasHeight - frameHeight) / 2;
       
-      // Draw room background
-      ctx.fillStyle = roomStyleColors[roomStyle].wall;
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      
-      // Draw ambient lighting effect
-      const lightingConfig = lightingConditions[lighting];
-      ctx.fillStyle = lightingConfig.ambient;
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      
-      if (lighting === "spotlight") {
-        // Add spotlight gradient
-        const gradient = ctx.createRadialGradient(
-          canvasWidth / 2, canvasHeight / 2, 10,
-          canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.7
-        );
-        gradient.addColorStop(0, "rgba(255, 255, 255, 0.7)");
-        gradient.addColorStop(1, "rgba(0, 0, 0, 0.5)");
-        ctx.fillStyle = gradient;
+      // Draw room background (using high contrast if enabled)
+      if (highContrastMode) {
+        // High contrast background is always solid black or white
+        ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      } else {
+        // Normal mode - use standard room style colors
+        ctx.fillStyle = roomStyleColors[roomStyle].wall;
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        
+        // Draw ambient lighting effect (skip in high contrast mode)
+        ctx.fillStyle = lightingConfig.ambient;
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        
+        if (lighting === "spotlight") {
+          // Add spotlight gradient
+          const gradient = ctx.createRadialGradient(
+            canvasWidth / 2, canvasHeight / 2, 10,
+            canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.7
+          );
+          gradient.addColorStop(0, "rgba(255, 255, 255, 0.7)");
+          gradient.addColorStop(1, "rgba(0, 0, 0, 0.5)");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        }
       }
       
       // Get current frame and mat style (either selected or from animation cycle)
@@ -332,11 +342,33 @@ export const AnimatedFramePreview = ({
         matStyle = matStyles[matIndex];
       }
       
-      // Draw shadow
-      ctx.shadowColor = lightingConfig.shadow;
-      ctx.shadowBlur = 20;
-      ctx.shadowOffsetX = 5;
-      ctx.shadowOffsetY = 5;
+      // Apply high contrast colors if enabled
+      if (highContrastMode) {
+        // In high contrast mode, use white frame and gray mat on black background
+        frameStyle = { 
+          ...frameStyle,
+          color: "#FFFFFF"  // Use white for frame in high contrast mode
+        };
+        
+        matStyle = {
+          ...matStyle,
+          color: "#AAAAAA"  // Use gray for mat in high contrast mode
+        };
+      }
+      
+      // Draw shadow (only in normal mode)
+      if (!highContrastMode) {
+        ctx.shadowColor = lightingConditions[lighting].shadow;
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+      } else {
+        // No shadows in high contrast mode
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+      }
       
       // Draw outer frame
       ctx.fillStyle = frameStyle.color;
@@ -381,40 +413,44 @@ export const AnimatedFramePreview = ({
           
           // Add glass reflection effect if we have glass selected
           if (selectedGlass) {
-            // Create gradient for glass reflection
-            const glassGradient = ctx.createLinearGradient(
-              frameX, frameY, 
-              frameX + frameWidth, frameY + frameHeight
-            );
-            
-            const glassOpacity = 0.15 * lightingConfig.intensity;
-            
-            glassGradient.addColorStop(0, `rgba(255, 255, 255, ${glassOpacity})`);
-            glassGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
-            glassGradient.addColorStop(1, `rgba(255, 255, 255, ${glassOpacity / 2})`);
-            
-            ctx.fillStyle = glassGradient;
-            ctx.fillRect(
-              frameX + artworkPadding, 
-              frameY + artworkPadding, 
-              artworkWidth, 
-              artworkHeight
-            );
-            
-            // Add highlight/glare based on lighting
-            if (lighting === "spotlight" || lighting === "day") {
-              ctx.fillStyle = lightingConfig.highlight;
-              ctx.beginPath();
-              ctx.ellipse(
-                frameX + frameWidth * 0.3, 
-                frameY + frameHeight * 0.3,
-                artworkWidth * 0.1,
-                artworkHeight * 0.05,
-                Math.PI / 4,
-                0,
-                Math.PI * 2
+            // Skip glass effects in high contrast mode
+            if (!highContrastMode) {
+              // Create gradient for glass reflection
+              const glassGradient = ctx.createLinearGradient(
+                frameX, frameY, 
+                frameX + frameWidth, frameY + frameHeight
               );
-              ctx.fill();
+              
+              const lightingConfig = lightingConditions[lighting];
+              const glassOpacity = 0.15 * lightingConfig.intensity;
+              
+              glassGradient.addColorStop(0, `rgba(255, 255, 255, ${glassOpacity})`);
+              glassGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
+              glassGradient.addColorStop(1, `rgba(255, 255, 255, ${glassOpacity / 2})`);
+              
+              ctx.fillStyle = glassGradient;
+              ctx.fillRect(
+                frameX + artworkPadding, 
+                frameY + artworkPadding, 
+                artworkWidth, 
+                artworkHeight
+              );
+              
+              // Add highlight/glare based on lighting
+              if (lighting === "spotlight" || lighting === "day") {
+                ctx.fillStyle = lightingConfig.highlight;
+                ctx.beginPath();
+                ctx.ellipse(
+                  frameX + frameWidth * 0.3, 
+                  frameY + frameHeight * 0.3,
+                  artworkWidth * 0.1,
+                  artworkHeight * 0.05,
+                  Math.PI / 4,
+                  0,
+                  Math.PI * 2
+                );
+                ctx.fill();
+              }
             }
           }
         };
@@ -443,7 +479,7 @@ export const AnimatedFramePreview = ({
     };
     
     drawFrame();
-  }, [userImage, selectedFrame, selectedMat, selectedGlass, roomStyle, lighting, frameIndex, matIndex, currentAnimation, height, width]);
+  }, [userImage, selectedFrame, selectedMat, selectedGlass, roomStyle, lighting, frameIndex, matIndex, currentAnimation, height, width, highContrastMode]);
   
   // Get the preview canvas size
   const getCanvasSize = useCallback(() => {
