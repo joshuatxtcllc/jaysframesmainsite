@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, PlayCircle, PauseCircle, RefreshCw, Sun, Moon, Sparkles, Image, Camera, ShoppingCart } from "lucide-react";
+import { Upload, PlayCircle, PauseCircle, RefreshCw, Sun, Moon, Sparkles, Image, Camera, ShoppingCart, X } from "lucide-react";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 
@@ -454,17 +454,28 @@ export const AnimatedFramePreview = ({
   }, []);
   
   return (
-    <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[80vh] overflow-y-auto flex flex-col relative">
-        <div className="sticky top-0 bg-white z-10 flex justify-between items-center p-4 border-b">
-          <h3 className="text-lg font-bold">Interactive AI Frame Preview Animator</h3>
-          <div className="flex items-center gap-3">
-            <div className="text-xl font-bold text-primary">${getTotalPrice()}</div>
+    <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] sm:max-h-[80vh] overflow-y-auto flex flex-col relative">
+        <div className="sticky top-0 bg-white z-10 flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 sm:p-4 border-b">
+          <div className="flex justify-between items-center">
+            <h3 className="text-base sm:text-lg font-bold">Interactive AI Preview</h3>
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={onClose} 
-              className="rounded-full hover:bg-neutral-100"
+              className="rounded-full hover:bg-neutral-100 sm:hidden"
+              aria-label="Close preview"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-3 mt-2 sm:mt-0">
+            <div className="text-lg sm:text-xl font-bold text-primary">${getTotalPrice()}</div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onClose} 
+              className="rounded-full hover:bg-neutral-100 hidden sm:flex"
               aria-label="Close preview"
             >
               <X className="h-5 w-5" />
@@ -540,32 +551,32 @@ export const AnimatedFramePreview = ({
                 )}
                 
                 {/* Animation Controls */}
-                <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-lg shadow-sm">
-                  <div className="flex items-center justify-center gap-2 p-1">
+                <div className="absolute bottom-3 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 bg-white/90 backdrop-blur-sm p-1 sm:p-2 rounded-lg shadow-sm">
+                  <div className="flex items-center justify-center gap-1 sm:gap-2 p-1">
                     <Button 
                       size="sm" 
                       variant={currentAnimation === "room" && isAnimating ? "default" : "outline"}
-                      className="flex-1"
+                      className="flex-1 text-[10px] sm:text-xs h-8 px-1 sm:px-2"
                       onClick={() => toggleAnimation("room")}
                     >
                       {currentAnimation === "room" && isAnimating ? (
-                        <PauseCircle className="h-4 w-4 mr-1" />
+                        <PauseCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       ) : (
-                        <PlayCircle className="h-4 w-4 mr-1" />
+                        <PlayCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       )}
-                      Room Styles
+                      <span className="hidden xs:inline">Room</span> Styles
                     </Button>
                     
                     <Button 
                       size="sm" 
                       variant={currentAnimation === "lighting" && isAnimating ? "default" : "outline"}
-                      className="flex-1"
+                      className="flex-1 text-[10px] sm:text-xs h-8 px-1 sm:px-2"
                       onClick={() => toggleAnimation("lighting")}
                     >
                       {currentAnimation === "lighting" && isAnimating ? (
-                        <PauseCircle className="h-4 w-4 mr-1" />
+                        <PauseCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       ) : (
-                        <PlayCircle className="h-4 w-4 mr-1" />
+                        <PlayCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       )}
                       Lighting
                     </Button>
@@ -573,15 +584,15 @@ export const AnimatedFramePreview = ({
                     <Button 
                       size="sm" 
                       variant={currentAnimation === "styles" && isAnimating ? "default" : "outline"}
-                      className="flex-1"
+                      className="flex-1 text-[10px] sm:text-xs h-8 px-1 sm:px-2"
                       onClick={() => toggleAnimation("styles")}
                     >
                       {currentAnimation === "styles" && isAnimating ? (
-                        <PauseCircle className="h-4 w-4 mr-1" />
+                        <PauseCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       ) : (
-                        <PlayCircle className="h-4 w-4 mr-1" />
+                        <PlayCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       )}
-                      Frame Styles
+                      <span className="hidden xs:inline">Frame</span> Styles
                     </Button>
                   </div>
                 </div>
@@ -596,11 +607,11 @@ export const AnimatedFramePreview = ({
                       Choose a custom frame
                     </span>
                   </div>
-                  <div className="grid grid-cols-5 gap-2 mb-2">
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mb-2">
                     {frameStyles.map((style, index) => (
                       <div key={index} className="flex flex-col">
                         <button
-                          className={`h-10 rounded-md transition-all ${frameIndex === index ? 'ring-2 ring-primary scale-110' : 'hover:scale-105'}`}
+                          className={`h-10 rounded-md transition-all ${frameIndex === index ? 'ring-2 ring-primary scale-105 sm:scale-110' : 'hover:scale-105'}`}
                           style={{ 
                             backgroundColor: style.color,
                             boxShadow: `inset 0 0 0 2px white, 0 2px 4px rgba(0,0,0,0.1)`
@@ -612,7 +623,7 @@ export const AnimatedFramePreview = ({
                         {frameIndex === index && (
                           <div className="mt-1 text-xs text-center leading-tight">
                             <div className="font-medium">{style.name}</div>
-                            <div className="text-neutral-500">{style.material}</div>
+                            <div className="text-neutral-500 text-[10px] sm:text-xs">{style.material}</div>
                             <div className="text-primary font-medium">${style.price.toFixed(2)}</div>
                           </div>
                         )}
@@ -628,11 +639,11 @@ export const AnimatedFramePreview = ({
                       Choose a mat color and texture
                     </span>
                   </div>
-                  <div className="grid grid-cols-5 gap-2">
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                     {matStyles.map((style, index) => (
                       <div key={index} className="flex flex-col">
                         <button
-                          className={`h-8 rounded-md transition-all ${matIndex === index ? 'ring-2 ring-primary' : 'hover:opacity-80'}`}
+                          className={`h-8 rounded-md transition-all ${matIndex === index ? 'ring-2 ring-primary scale-105 sm:scale-110' : 'hover:opacity-80'}`}
                           style={{ 
                             backgroundColor: style.color,
                             border: "1px solid rgba(0,0,0,0.1)"
@@ -644,7 +655,7 @@ export const AnimatedFramePreview = ({
                         {matIndex === index && (
                           <div className="mt-1 text-xs text-center leading-tight">
                             <div className="font-medium">{style.name}</div>
-                            <div className="text-neutral-500">{style.texture}, {style.finish}</div>
+                            <div className="text-neutral-500 text-[10px] sm:text-xs">{style.texture}, {style.finish}</div>
                             <div className="text-primary font-medium">${style.price.toFixed(2)}</div>
                           </div>
                         )}
@@ -725,49 +736,59 @@ export const AnimatedFramePreview = ({
           </div>
         </Tabs>
         
-        <div className="p-4 border-t flex justify-between items-center">
-          <Button variant="outline" onClick={resetPreview}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Reset
-          </Button>
+        <div className="sticky bottom-0 p-3 sm:p-4 border-t bg-white flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+          <div className="flex justify-between items-center">
+            <Button variant="outline" size="sm" onClick={resetPreview} className="text-xs sm:text-sm">
+              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Reset
+            </Button>
+            
+            <div className="sm:hidden bg-neutral-100 px-2 py-1 rounded-md">
+              <span className="text-xs font-medium">Total: </span>
+              <span className="text-primary font-bold">${(frameStyles[frameIndex].price + matStyles[matIndex].price).toFixed(2)}</span>
+            </div>
+          </div>
           
-          <div className="text-right">
+          <div className="hidden sm:block text-right">
             <div className="mb-2 text-sm">
               <div className="flex justify-end items-center gap-2 mb-1">
                 <span className="text-neutral-600">Selected Frame:</span> 
                 <span className="font-medium text-primary">{frameStyles[frameIndex].name}</span>
-                <span className="text-xs text-neutral-500">(${frameStyles[frameIndex].price})</span>
+                <span className="text-xs text-neutral-500">(${frameStyles[frameIndex].price.toFixed(2)})</span>
               </div>
               <div className="flex justify-end items-center gap-2 mb-1">
                 <span className="text-neutral-600">Selected Mat:</span> 
-                <span className="font-medium text-primary">{matStyles[matIndex].name} ({matStyles[matIndex].finish})</span>
-                <span className="text-xs text-neutral-500">(${matStyles[matIndex].price})</span>
+                <span className="font-medium text-primary">{matStyles[matIndex].name}</span>
+                <span className="text-xs text-neutral-500">(${matStyles[matIndex].price.toFixed(2)})</span>
               </div>
               <div className="flex justify-end items-center gap-2">
                 <span className="text-neutral-600 font-medium">Total:</span> 
                 <span className="font-bold text-lg text-primary">${(frameStyles[frameIndex].price + matStyles[matIndex].price).toFixed(2)}</span>
               </div>
             </div>
-            <div>
-              <Button variant="outline" className="mr-2" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button 
-                variant="default"
-                onClick={handleAddToCart}
-                className="text-white mr-2"
-              >
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                Add to Cart
-              </Button>
-              <Button 
-                variant="default"
-                onClick={handleProceedToCheckout}
-                className="text-white bg-green-600 hover:bg-green-700"
-              >
-                Buy Now
-              </Button>
-            </div>
+          </div>
+          
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" size="sm" className="text-xs sm:text-sm" onClick={onClose}>
+              Close
+            </Button>
+            <Button 
+              variant="default"
+              size="sm"
+              onClick={handleAddToCart}
+              className="text-xs sm:text-sm text-white"
+            >
+              <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Add to Cart
+            </Button>
+            <Button 
+              variant="default"
+              size="sm"
+              onClick={handleProceedToCheckout}
+              className="text-xs sm:text-sm text-white bg-green-600 hover:bg-green-700"
+            >
+              Buy Now
+            </Button>
           </div>
         </div>
       </div>
