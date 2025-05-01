@@ -56,33 +56,65 @@ export const AnimatedFramePreview = ({
     return (framePrice + matPrice + glassPrice).toFixed(2);
   };
   
-  // Frame styles for selection and animation
-  const frameStyles = [
-    { color: selectedFrame?.color || "#8B4513", width: 25, name: selectedFrame?.name || "Classic Walnut", material: selectedFrame?.material || "Solid Wood", price: 89.99 },
-    { color: "#000000", width: 30, name: "Modern Black", material: "Metal Finish", price: 99.99 },
-    { color: "#D4AF37", width: 20, name: "Gold Leaf", material: "Wood with Gold Leaf", price: 129.99 },
-    { color: "#FFFFFF", width: 25, name: "Clean White", material: "Painted Wood", price: 79.99 },
-    { color: "#4B3621", width: 22, name: "Dark Oak", material: "Solid Hardwood", price: 109.99 },
-    { color: "#3A271A", width: 28, name: "Espresso", material: "Premium Hardwood", price: 119.99 },
-    { color: "#AB9364", width: 24, name: "Champagne", material: "Metal with Satin Finish", price: 139.99 },
-    { color: "#555555", width: 18, name: "Sleek Silver", material: "Brushed Aluminum", price: 99.99 },
-    { color: "#D35400", width: 26, name: "Amber Wood", material: "Cherry Wood", price: 109.99 },
-    { color: "#34495E", width: 22, name: "Navy Blue", material: "Painted Hardwood", price: 89.99 }
-  ];
+  // Get database frames and mats
+  const [databaseFrames, setDatabaseFrames] = useState<FrameOption[]>([]);
+  const [databaseMats, setDatabaseMats] = useState<MatOption[]>([]);
   
-  // Mat styles for selection and animation
-  const matStyles = [
-    { color: selectedMat?.color || "#F5F5F5", width: 20, name: selectedMat?.name || "Classic White", texture: "Smooth", finish: "Matte", price: 29.99 },
-    { color: "#E0E0E0", width: 25, name: "Light Gray", texture: "Textured", finish: "Matte", price: 34.99 },
-    { color: "#D3D3D3", width: 15, name: "Silver Gray", texture: "Linen", finish: "Metallic", price: 39.99 },
-    { color: "#F0F8FF", width: 20, name: "Ice Blue", texture: "Smooth", finish: "Satin", price: 32.99 },
-    { color: "#FFF8DC", width: 18, name: "Cream", texture: "Suede", finish: "Matte", price: 34.99 },
-    { color: "#FAF0E6", width: 22, name: "Linen", texture: "Linen", finish: "Textured", price: 37.99 },
-    { color: "#FAEBD7", width: 20, name: "Antique White", texture: "Cotton", finish: "Conservation", price: 44.99 },
-    { color: "#F5F5DC", width: 16, name: "Beige", texture: "Textured", finish: "Acid-Free", price: 42.99 },
-    { color: "#FFF0F5", width: 18, name: "Lavender Blush", texture: "Smooth", finish: "Conservation", price: 39.99 },
-    { color: "#F0FFF0", width: 20, name: "Honeydew", texture: "Cotton", finish: "Matte", price: 32.99 }
-  ];
+  // Fetch frame and mat options from database
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        // Fetch frame options
+        const frameResponse = await fetch('/api/frame-options');
+        const frameData = await frameResponse.json();
+        setDatabaseFrames(frameData);
+        
+        // Fetch mat options
+        const matResponse = await fetch('/api/mat-options');
+        const matData = await matResponse.json();
+        setDatabaseMats(matData);
+      } catch (error) {
+        console.error('Error fetching frame/mat options:', error);
+      }
+    };
+    
+    fetchOptions();
+  }, []);
+  
+  // Frame styles for selection and animation - use database options if available
+  const frameStyles = databaseFrames.length > 0 ? 
+    databaseFrames.map(frame => ({ 
+      color: frame.color, 
+      width: 25, 
+      name: frame.name, 
+      material: frame.material, 
+      price: frame.pricePerInch * (width + height) * 2 / 100
+    })) : 
+    [
+      { color: selectedFrame?.color || "#8B4513", width: 25, name: selectedFrame?.name || "Classic Walnut", material: selectedFrame?.material || "Solid Wood", price: 89.99 },
+      { color: "#000000", width: 30, name: "Modern Black", material: "Metal Finish", price: 99.99 },
+      { color: "#D4AF37", width: 20, name: "Gold Leaf", material: "Wood with Gold Leaf", price: 129.99 },
+      { color: "#FFFFFF", width: 25, name: "Clean White", material: "Painted Wood", price: 79.99 },
+      { color: "#4B3621", width: 22, name: "Dark Oak", material: "Solid Hardwood", price: 109.99 }
+    ];
+  
+  // Mat styles for selection and animation - use database options if available
+  const matStyles = databaseMats.length > 0 ?
+    databaseMats.map(mat => ({
+      color: mat.color,
+      width: 20,
+      name: mat.name,
+      texture: "Smooth",
+      finish: "Matte",
+      price: mat.price / 100
+    })) :
+    [
+      { color: selectedMat?.color || "#F5F5F5", width: 20, name: selectedMat?.name || "Classic White", texture: "Smooth", finish: "Matte", price: 29.99 },
+      { color: "#E0E0E0", width: 25, name: "Light Gray", texture: "Textured", finish: "Matte", price: 34.99 },
+      { color: "#D3D3D3", width: 15, name: "Silver Gray", texture: "Linen", finish: "Metallic", price: 39.99 },
+      { color: "#F0F8FF", width: 20, name: "Ice Blue", texture: "Smooth", finish: "Satin", price: 32.99 },
+      { color: "#FFF8DC", width: 18, name: "Cream", texture: "Suede", finish: "Matte", price: 34.99 }
+    ];
   
   // Room background colors based on style
   const roomStyleColors: Record<RoomStyle, { wall: string, shadow: string }> = {
