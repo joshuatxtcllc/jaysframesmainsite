@@ -66,10 +66,18 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     select: (data) => data as GlassOption[]
   });
   
+  // Define RevealSize type
+  interface RevealSize {
+    id: number;
+    size: string;
+    sizeInches: number;
+    displayName: string;
+  }
+  
   // Fetch reveal size options
   const { data: revealSizes = [] } = useQuery({
     queryKey: ["/api/reveal-sizes"],
-    select: (data) => data as any[]
+    select: (data) => data as RevealSize[]
   });
 
   // Select default options when data is loaded
@@ -164,7 +172,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   // Get selected reveal size display name
   const getRevealSizeDisplay = (sizeId: number) => {
     const size = revealSizes.find(s => s.id === sizeId);
-    return size ? size.display_name : '1/8"';
+    return size ? size.displayName : '1/8"';
   };
 
   // Handle add to cart
