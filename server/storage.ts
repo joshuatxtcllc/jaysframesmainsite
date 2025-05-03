@@ -51,6 +51,7 @@ export interface IStorage {
   // Reveal size options operations
   getRevealSizes(): Promise<RevealSize[]>;
   getRevealSizeById(id: number): Promise<RevealSize | undefined>;
+  createRevealSize(size: InsertRevealSize): Promise<RevealSize>;
   
   // Glass options operations
   getGlassOptions(): Promise<GlassOption[]>;
@@ -107,6 +108,7 @@ export class MemStorage implements IStorage {
   private orders: Map<number, Order>;
   private frameOptions: Map<number, FrameOption>;
   private matOptions: Map<number, MatOption>;
+  private revealSizes: Map<number, RevealSize>;
   private glassOptions: Map<number, GlassOption>;
   private chatMessages: ChatMessage[];
   private blogCategories: Map<number, BlogCategory>;
@@ -117,6 +119,7 @@ export class MemStorage implements IStorage {
   private orderCounter: number;
   private frameOptionCounter: number;
   private matOptionCounter: number;
+  private revealSizeCounter: number;
   private glassOptionCounter: number;
   private chatMessageCounter: number;
   private blogCategoryCounter: number;
@@ -128,6 +131,7 @@ export class MemStorage implements IStorage {
     this.orders = new Map();
     this.frameOptions = new Map();
     this.matOptions = new Map();
+    this.revealSizes = new Map();
     this.glassOptions = new Map();
     this.chatMessages = [];
     this.blogCategories = new Map();
@@ -138,6 +142,7 @@ export class MemStorage implements IStorage {
     this.orderCounter = 1;
     this.frameOptionCounter = 1;
     this.matOptionCounter = 1;
+    this.revealSizeCounter = 1;
     this.glassOptionCounter = 1;
     this.chatMessageCounter = 1;
     this.blogCategoryCounter = 1;
@@ -248,6 +253,22 @@ export class MemStorage implements IStorage {
     const newOption: MatOption = { ...option, id };
     this.matOptions.set(id, newOption);
     return newOption;
+  }
+  
+  // Reveal size operations
+  async getRevealSizes(): Promise<RevealSize[]> {
+    return Array.from(this.revealSizes.values());
+  }
+
+  async getRevealSizeById(id: number): Promise<RevealSize | undefined> {
+    return this.revealSizes.get(id);
+  }
+
+  async createRevealSize(size: InsertRevealSize): Promise<RevealSize> {
+    const id = this.revealSizeCounter++;
+    const newSize: RevealSize = { ...size, id };
+    this.revealSizes.set(id, newSize);
+    return newSize;
   }
 
   // Glass options operations
@@ -429,6 +450,23 @@ export class MemStorage implements IStorage {
       isAdmin: true
     };
     this.users.set(adminUser.id, adminUser);
+    
+    // Initialize reveal sizes from 1/8" to 1" in increments of 1/8"
+    const revealSizes: InsertRevealSize[] = [
+      { size: "1/8 inch", sizeInches: 1, displayName: "1/8\"" },
+      { size: "1/4 inch", sizeInches: 2, displayName: "1/4\"" },
+      { size: "3/8 inch", sizeInches: 3, displayName: "3/8\"" },
+      { size: "1/2 inch", sizeInches: 4, displayName: "1/2\"" },
+      { size: "5/8 inch", sizeInches: 5, displayName: "5/8\"" },
+      { size: "3/4 inch", sizeInches: 6, displayName: "3/4\"" },
+      { size: "7/8 inch", sizeInches: 7, displayName: "7/8\"" },
+      { size: "1 inch", sizeInches: 8, displayName: "1\"" }
+    ];
+    
+    revealSizes.forEach(size => {
+      const id = this.revealSizeCounter++;
+      this.revealSizes.set(id, { ...size, id });
+    });
     
     // Create sample blog categories and posts directly
     // Sample blog categories
@@ -1394,6 +1432,39 @@ export class DatabaseStorage implements IStorage {
   async createMatOption(option: InsertMatOption): Promise<MatOption> {
     const [newOption] = await db.insert(matOptions).values(option).returning();
     return newOption;
+  }
+  
+  // Reveal size operations
+  async getRevealSizes(): Promise<RevealSize[]> {
+    if (!await this.checkDb()) return [];
+    try {
+      return await db.select().from(revealSizes).orderBy(asc(revealSizes.sizeInches));
+    } catch (error) {
+      console.error("Error fetching reveal sizes:", error);
+      return [];
+    }
+  }
+
+  async getRevealSizeById(id: number): Promise<RevealSize | undefined> {
+    if (!await this.checkDb()) return undefined;
+    try {
+      const [size] = await db.select().from(revealSizes).where(eq(revealSizes.id, id));
+      return size;
+    } catch (error) {
+      console.error("Error fetching reveal size by id:", error);
+      return undefined;
+    }
+  }
+  
+  async createRevealSize(size: InsertRevealSize): Promise<RevealSize> {
+    if (!await this.checkDb()) throw new Error("Database connection not available");
+    try {
+      const [newSize] = await db.insert(revealSizes).values(size).returning();
+      return newSize;
+    } catch (error) {
+      console.error("Error creating reveal size:", error);
+      throw new Error("Failed to create reveal size");
+    }
   }
 
   // Glass options operations
