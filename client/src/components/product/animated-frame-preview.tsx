@@ -14,6 +14,11 @@ interface AnimatedFramePreviewProps {
   selectedGlass: GlassOption | null;
   onClose?: () => void;
   onAddToCart?: (frameStyle: any, matStyle: any) => void;
+  topMatReveal?: number;
+  middleMatReveal?: number;
+  bottomMatReveal?: number;
+  useMiddleMat?: boolean;
+  useBottomMat?: boolean;
 }
 
 type RoomStyle = "modern" | "classic" | "minimalist" | "eclectic" | "natural";
@@ -27,7 +32,12 @@ export const AnimatedFramePreview = ({
   selectedMat,
   selectedGlass,
   onClose,
-  onAddToCart
+  onAddToCart,
+  topMatReveal,
+  middleMatReveal,
+  bottomMatReveal,
+  useMiddleMat,
+  useBottomMat
 }: AnimatedFramePreviewProps) => {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -418,13 +428,56 @@ export const AnimatedFramePreview = ({
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
       
-      // Draw mat
+      // Draw mats (multiple if enabled)
+      const calculateRevealPixels = (revealId: number | undefined) => {
+        // Default to a small reveal (about 1/8")
+        if (!revealId) return Math.max(3, frameWidth * 0.005);
+        
+        // Calculate pixels based on reveal size (1/8" to 1" = approximately 3px to 24px)
+        // Using reveal ID as a scale from 1-8 (assuming 8 reveal size options)
+        return Math.max(3, Math.min(24, revealId * 3));
+      };
+      
+      // Bottom mat (if enabled)
+      if (useBottomMat) {
+        // Use third mat color if available
+        ctx.fillStyle = matStyles.length > 2 ? matStyles[2].color : "#F0F0F0";
+        ctx.fillRect(
+          frameX, 
+          frameY, 
+          frameWidth, 
+          frameHeight
+        );
+      }
+      
+      // Middle mat (if enabled) - smaller than bottom mat with reveal
+      if (useMiddleMat) {
+        // Calculate reveal size for middle mat
+        const middleRevealSize = calculateRevealPixels(middleMatReveal);
+        
+        // Use second mat color if available
+        ctx.fillStyle = matStyles.length > 1 ? matStyles[1].color : "#E0E0E0";
+        ctx.fillRect(
+          frameX + middleRevealSize, 
+          frameY + middleRevealSize, 
+          frameWidth - (middleRevealSize * 2), 
+          frameHeight - (middleRevealSize * 2)
+        );
+      }
+      
+      // Top mat - smaller than middle mat with reveal
+      const topRevealSize = calculateRevealPixels(topMatReveal);
+      const topMatOffsetX = useMiddleMat ? frameX + topRevealSize : frameX;
+      const topMatOffsetY = useMiddleMat ? frameY + topRevealSize : frameY;
+      const topMatWidth = useMiddleMat ? frameWidth - (topRevealSize * 2) : frameWidth;
+      const topMatHeight = useMiddleMat ? frameHeight - (topRevealSize * 2) : frameHeight;
+      
       ctx.fillStyle = matStyle.color;
       ctx.fillRect(
-        frameX, 
-        frameY, 
-        frameWidth, 
-        frameHeight
+        topMatOffsetX,
+        topMatOffsetY,
+        topMatWidth,
+        topMatHeight
       );
       
       // Draw artwork placeholder or actual artwork
@@ -512,7 +565,7 @@ export const AnimatedFramePreview = ({
     };
     
     drawFrame();
-  }, [userImage, selectedFrame, selectedMat, selectedGlass, roomStyle, lighting, frameIndex, matIndex, currentAnimation, height, width, highContrastMode]);
+  }, [userImage, selectedFrame, selectedMat, selectedGlass, roomStyle, lighting, frameIndex, matIndex, currentAnimation, height, width, highContrastMode, topMatReveal, middleMatReveal, bottomMatReveal, useMiddleMat, useBottomMat]);
   
   // Get the preview canvas size
   const getCanvasSize = useCallback(() => {

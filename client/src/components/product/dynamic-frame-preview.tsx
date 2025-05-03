@@ -11,6 +11,11 @@ interface DynamicFramePreviewProps {
   selectedFrame: FrameOption | null;
   selectedMat: MatOption | null;
   selectedGlass: GlassOption | null;
+  topMatReveal?: number;
+  middleMatReveal?: number;
+  bottomMatReveal?: number;
+  useMiddleMat?: boolean;
+  useBottomMat?: boolean;
 }
 
 export const DynamicFramePreview = ({
@@ -18,7 +23,12 @@ export const DynamicFramePreview = ({
   height,
   selectedFrame,
   selectedMat,
-  selectedGlass
+  selectedGlass,
+  topMatReveal,
+  middleMatReveal,
+  bottomMatReveal,
+  useMiddleMat,
+  useBottomMat
 }: DynamicFramePreviewProps) => {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [showARPreview, setShowARPreview] = useState<boolean>(false);
@@ -205,6 +215,11 @@ export const DynamicFramePreview = ({
           selectedFrame={selectedFrame}
           selectedMat={selectedMat}
           selectedGlass={selectedGlass}
+          topMatReveal={topMatReveal}
+          middleMatReveal={middleMatReveal}
+          bottomMatReveal={bottomMatReveal}
+          useMiddleMat={useMiddleMat}
+          useBottomMat={useBottomMat}
           onClose={closeAnimatedPreview}
         />
       )}
