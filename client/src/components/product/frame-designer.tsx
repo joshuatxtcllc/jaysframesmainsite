@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -25,7 +26,18 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const [width, setWidth] = useState(initialWidth);
   const [height, setHeight] = useState(initialHeight);
   const [selectedFrame, setSelectedFrame] = useState<number | null>(null);
+  const [selectedStackedFrame, setSelectedStackedFrame] = useState<number | null>(null);
+  const [useStackedFrame, setUseStackedFrame] = useState<boolean>(false);
+  
   const [selectedMat, setSelectedMat] = useState<number | null>(null);
+  const [selectedMiddleMat, setSelectedMiddleMat] = useState<number | null>(null);
+  const [selectedBottomMat, setSelectedBottomMat] = useState<number | null>(null);
+  const [useMiddleMat, setUseMiddleMat] = useState<boolean>(false);
+  const [useBottomMat, setUseBottomMat] = useState<boolean>(false);
+  const [topMatReveal, setTopMatReveal] = useState<number>(1); // Default 1/8"
+  const [middleMatReveal, setMiddleMatReveal] = useState<number>(1); // Default 1/8"
+  const [bottomMatReveal, setBottomMatReveal] = useState<number>(1); // Default 1/8"
+  
   const [selectedGlass, setSelectedGlass] = useState<number | null>(null);
   const [artworkDescription, setArtworkDescription] = useState("");
   const [aiRecommendations, setAiRecommendations] = useState<{
@@ -52,6 +64,12 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const { data: glassOptions = [] } = useQuery({
     queryKey: ["/api/glass-options"],
     select: (data) => data as GlassOption[]
+  });
+  
+  // Fetch reveal size options
+  const { data: revealSizes = [] } = useQuery({
+    queryKey: ["/api/reveal-sizes"],
+    select: (data) => data as any[]
   });
 
   // Select default options when data is loaded
@@ -80,11 +98,39 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       }
     }
     
-    // Mat price
+    // Stacked frame price (if enabled)
+    if (useStackedFrame && selectedStackedFrame) {
+      const stackedFrame = frameOptions.find(f => f.id === selectedStackedFrame);
+      if (stackedFrame) {
+        const perimeter = 2 * (width + height);
+        // Add 20% premium for stacked frame application
+        price += (perimeter * stackedFrame.pricePerInch / 100) * 1.2;
+      }
+    }
+    
+    // Mat price (top mat)
     if (selectedMat) {
       const mat = matOptions.find(m => m.id === selectedMat);
       if (mat) {
         price += mat.price / 100;
+      }
+    }
+    
+    // Middle mat price (if enabled)
+    if (useMiddleMat && selectedMiddleMat) {
+      const mat = matOptions.find(m => m.id === selectedMiddleMat);
+      if (mat) {
+        // Add 10% surcharge for middle mat cutting and alignment
+        price += (mat.price / 100) * 1.1;
+      }
+    }
+    
+    // Bottom mat price (if enabled)
+    if (useBottomMat && selectedBottomMat) {
+      const mat = matOptions.find(m => m.id === selectedBottomMat);
+      if (mat) {
+        // Add 10% surcharge for bottom mat cutting and alignment
+        price += (mat.price / 100) * 1.1;
       }
     }
     
@@ -99,24 +145,51 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     // Mount price - fixed $25
     price += 25;
     
+    // Add additional charge for advanced matting with reveals
+    if (useMiddleMat || useBottomMat) {
+      price += 15; // $15 additional for advanced matting
+    }
+    
     return Math.round(price * 100);
   };
 
   // Get selected options
   const getSelectedFrameOption = () => frameOptions.find(f => f.id === selectedFrame);
+  const getSelectedStackedFrameOption = () => frameOptions.find(f => f.id === selectedStackedFrame);
   const getSelectedMatOption = () => matOptions.find(m => m.id === selectedMat);
+  const getSelectedMiddleMatOption = () => matOptions.find(m => m.id === selectedMiddleMat);
+  const getSelectedBottomMatOption = () => matOptions.find(m => m.id === selectedBottomMat);
   const getSelectedGlassOption = () => glassOptions.find(g => g.id === selectedGlass);
+  
+  // Get selected reveal size display name
+  const getRevealSizeDisplay = (sizeId: number) => {
+    const size = revealSizes.find(s => s.id === sizeId);
+    return size ? size.display_name : '1/8"';
+  };
 
   // Handle add to cart
   const handleAddToCart = () => {
     const frame = getSelectedFrameOption();
-    const mat = getSelectedMatOption();
+    const stackedFrame = useStackedFrame ? getSelectedStackedFrameOption() : null;
+    const topMat = getSelectedMatOption();
+    const middleMat = useMiddleMat ? getSelectedMiddleMatOption() : null;
+    const bottomMat = useBottomMat ? getSelectedBottomMatOption() : null;
     const glass = getSelectedGlassOption();
     
-    if (!frame || !mat || !glass) return;
+    if (!frame || !topMat || !glass) return;
     
     const price = calculatePrice();
-    const itemName = `Custom Frame - ${frame.name} w/ ${mat.name} Mat`;
+    let itemName = `Custom Frame - ${frame.name}`;
+    
+    if (useStackedFrame && stackedFrame) {
+      itemName += ` & ${stackedFrame.name} Stack`;
+    }
+    
+    itemName += ` w/ ${topMat.name} Mat`;
+    
+    if (useMiddleMat || useBottomMat) {
+      itemName += " (multi-mat)";
+    }
     
     addToCart({
       id: `custom-frame-${Date.now()}`,
@@ -129,11 +202,25 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         width,
         height,
         frameId: frame.id,
-        matId: mat.id,
+        matId: topMat.id,
         glassId: glass.id,
         frameColor: frame.color,
-        matColor: mat.color,
-        glassType: glass.name
+        matColor: topMat.color,
+        glassType: glass.name,
+        // Add stacked frame options
+        useStackedFrame,
+        stackedFrameId: stackedFrame?.id,
+        stackedFrameColor: stackedFrame?.color,
+        // Add multiple mat options
+        useMiddleMat,
+        middleMatId: middleMat?.id,
+        middleMatColor: middleMat?.color,
+        topMatRevealSize: topMatReveal,
+        useBottomMat,
+        bottomMatId: bottomMat?.id,
+        bottomMatColor: bottomMat?.color,
+        middleMatRevealSize: middleMatReveal,
+        bottomMatRevealSize: bottomMatReveal
       }
     });
   };
@@ -271,36 +358,229 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </div>
               ))}
             </div>
+            
+            {/* Stacked Frame Option */}
+            <div className="mt-6 pt-4 border-t border-neutral-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <Switch 
+                    checked={useStackedFrame}
+                    onCheckedChange={setUseStackedFrame}
+                    className="mr-2"
+                  />
+                  <Label className="font-serif text-sm font-medium text-primary cursor-pointer" onClick={() => setUseStackedFrame(!useStackedFrame)}>
+                    Add Stacked Frame
+                  </Label>
+                </div>
+                <div>
+                  <span className="text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded">Premium Feature</span>
+                </div>
+              </div>
+              
+              {useStackedFrame && (
+                <div className="pl-8 border-l-2 border-accent">
+                  <h4 className="text-sm font-medium mb-3 text-primary">Select Secondary Frame</h4>
+                  <div className="grid grid-cols-4 gap-2">
+                    {frameOptions.map((frame) => (
+                      <div 
+                        key={`stacked-${frame.id}`}
+                        className={`cursor-pointer bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-200 ${
+                          selectedStackedFrame === frame.id 
+                            ? 'ring-2 ring-accent scale-105 shadow-md' 
+                            : 'hover:shadow-md hover:scale-105 border border-neutral-200'
+                        }`}
+                        onClick={() => setSelectedStackedFrame(frame.id)}
+                      >
+                        <div 
+                          className="h-12 border-b"
+                          style={{ backgroundColor: frame.color }}
+                        ></div>
+                        <div className="p-2">
+                          <p className="text-xs font-medium text-center line-clamp-1">{frame.name}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mat Selection - Below frame options */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-lg font-serif font-bold text-primary">Mat Color</h3>
+              <h3 className="text-lg font-serif font-bold text-primary">Mat Options</h3>
               {selectedMat && (
                 <span className="text-sm text-secondary font-medium">
-                  Selected: {getSelectedMatOption()?.name}
+                  Top Mat: {getSelectedMatOption()?.name}
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-6 gap-3">
-              {matOptions.map((mat) => (
-                <div 
-                  key={mat.id}
-                  className={`cursor-pointer transition-all duration-300 ${
-                    selectedMat === mat.id 
-                      ? 'ring-2 ring-accent scale-105' 
-                      : 'hover:scale-105'
-                  }`}
-                  onClick={() => setSelectedMat(mat.id)}
-                >
+            
+            {/* Top Mat Selection */}
+            <div className="mb-4">
+              <h4 className="text-sm font-medium mb-2 text-neutral-700">Top Mat Color</h4>
+              <div className="grid grid-cols-6 gap-3">
+                {matOptions.map((mat) => (
                   <div 
-                    className={`h-12 w-12 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
-                    style={{ backgroundColor: mat.color }}
-                  ></div>
-                  <p className="text-xs mt-2 text-center line-clamp-1">{mat.name}</p>
+                    key={mat.id}
+                    className={`cursor-pointer transition-all duration-300 ${
+                      selectedMat === mat.id 
+                        ? 'ring-2 ring-accent scale-105' 
+                        : 'hover:scale-105'
+                    }`}
+                    onClick={() => setSelectedMat(mat.id)}
+                  >
+                    <div 
+                      className={`h-12 w-12 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
+                      style={{ backgroundColor: mat.color }}
+                    ></div>
+                    <p className="text-xs mt-2 text-center line-clamp-1">{mat.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Multiple Mat Options */}
+            <div className="mt-6 pt-4 border-t border-neutral-100">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <Switch 
+                      checked={useMiddleMat}
+                      onCheckedChange={setUseMiddleMat}
+                      className="mr-2"
+                    />
+                    <Label className="font-serif text-sm font-medium text-primary cursor-pointer" onClick={() => setUseMiddleMat(!useMiddleMat)}>
+                      Add Middle Mat
+                    </Label>
+                  </div>
+                  <div>
+                    <span className="text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded">Decorative Accent</span>
+                  </div>
                 </div>
-              ))}
+                
+                {useMiddleMat && (
+                  <div className="pl-8 border-l-2 border-accent mt-3">
+                    <div className="mb-3">
+                      <div className="flex justify-between mb-2">
+                        <h4 className="text-sm font-medium text-primary">Middle Mat Color</h4>
+                        {selectedMiddleMat && (
+                          <span className="text-xs text-secondary">
+                            {getSelectedMiddleMatOption()?.name}
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-6 gap-2">
+                        {matOptions.map((mat) => (
+                          <div 
+                            key={`middle-${mat.id}`}
+                            className={`cursor-pointer transition-all duration-200 ${
+                              selectedMiddleMat === mat.id 
+                                ? 'ring-2 ring-accent scale-105' 
+                                : 'hover:scale-105'
+                            }`}
+                            onClick={() => setSelectedMiddleMat(mat.id)}
+                          >
+                            <div 
+                              className={`h-8 w-8 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
+                              style={{ backgroundColor: mat.color }}
+                            ></div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <h4 className="text-sm font-medium mb-2 text-primary">Top Mat Reveal</h4>
+                      <div className="grid grid-cols-4 gap-2">
+                        {revealSizes.map((size) => (
+                          <div 
+                            key={`reveal-top-${size.id}`}
+                            className={`cursor-pointer bg-white border p-2 rounded-md text-center text-xs font-medium transition-all duration-200 ${
+                              topMatReveal === size.id 
+                                ? 'border-accent bg-accent/5 text-accent' 
+                                : 'border-neutral-200 hover:border-accent/50'
+                            }`}
+                            onClick={() => setTopMatReveal(size.id)}
+                          >
+                            {size.display_name}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <Switch 
+                      checked={useBottomMat}
+                      onCheckedChange={setUseBottomMat}
+                      className="mr-2"
+                    />
+                    <Label className="font-serif text-sm font-medium text-primary cursor-pointer" onClick={() => setUseBottomMat(!useBottomMat)}>
+                      Add Bottom Mat
+                    </Label>
+                  </div>
+                </div>
+                
+                {useBottomMat && (
+                  <div className="pl-8 border-l-2 border-accent mt-3">
+                    <div className="mb-3">
+                      <div className="flex justify-between mb-2">
+                        <h4 className="text-sm font-medium text-primary">Bottom Mat Color</h4>
+                        {selectedBottomMat && (
+                          <span className="text-xs text-secondary">
+                            {getSelectedBottomMatOption()?.name}
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-6 gap-2">
+                        {matOptions.map((mat) => (
+                          <div 
+                            key={`bottom-${mat.id}`}
+                            className={`cursor-pointer transition-all duration-200 ${
+                              selectedBottomMat === mat.id 
+                                ? 'ring-2 ring-accent scale-105' 
+                                : 'hover:scale-105'
+                            }`}
+                            onClick={() => setSelectedBottomMat(mat.id)}
+                          >
+                            <div 
+                              className={`h-8 w-8 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
+                              style={{ backgroundColor: mat.color }}
+                            ></div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {useMiddleMat && (
+                      <div className="mb-3">
+                        <h4 className="text-sm font-medium mb-2 text-primary">Middle Mat Reveal</h4>
+                        <div className="grid grid-cols-4 gap-2">
+                          {revealSizes.map((size) => (
+                            <div 
+                              key={`reveal-middle-${size.id}`}
+                              className={`cursor-pointer bg-white border p-2 rounded-md text-center text-xs font-medium transition-all duration-200 ${
+                                middleMatReveal === size.id 
+                                  ? 'border-accent bg-accent/5 text-accent' 
+                                  : 'border-neutral-200 hover:border-accent/50'
+                              }`}
+                              onClick={() => setMiddleMatReveal(size.id)}
+                            >
+                              {size.display_name}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           
@@ -371,8 +651,19 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <span className="font-medium text-primary">{getSelectedFrameOption()?.name || "Loading..."}</span>
                 </div>
               </li>
+              
+              {useStackedFrame && selectedStackedFrame && (
+                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                  <span className="text-neutral-500 text-sm">Stacked Frame:</span>
+                  <div className="flex items-center">
+                    <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedStackedFrameOption()?.color }}></span>
+                    <span className="font-medium text-primary">{getSelectedStackedFrameOption()?.name || "Loading..."}</span>
+                  </div>
+                </li>
+              )}
+              
               <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
-                <span className="text-neutral-500 text-sm">Mat Color:</span>
+                <span className="text-neutral-500 text-sm">Top Mat:</span>
                 <div className="flex items-center">
                   {selectedMat && (
                     <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedMatOption()?.color }}></span>
@@ -380,6 +671,35 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <span className="font-medium text-primary">{getSelectedMatOption()?.name || "Loading..."}</span>
                 </div>
               </li>
+              
+              {useMiddleMat && selectedMiddleMat && (
+                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                  <span className="text-neutral-500 text-sm">Middle Mat:</span>
+                  <div className="flex items-center">
+                    <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedMiddleMatOption()?.color }}></span>
+                    <span className="font-medium text-primary">
+                      {getSelectedMiddleMatOption()?.name || "Loading..."} 
+                      <span className="ml-2 text-xs text-neutral-500">({getRevealSizeDisplay(topMatReveal)} reveal)</span>
+                    </span>
+                  </div>
+                </li>
+              )}
+              
+              {useBottomMat && selectedBottomMat && (
+                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                  <span className="text-neutral-500 text-sm">Bottom Mat:</span>
+                  <div className="flex items-center">
+                    <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedBottomMatOption()?.color }}></span>
+                    <span className="font-medium text-primary">
+                      {getSelectedBottomMatOption()?.name || "Loading..."}
+                      {useMiddleMat && (
+                        <span className="ml-2 text-xs text-neutral-500">({getRevealSizeDisplay(middleMatReveal)} reveal)</span>
+                      )}
+                    </span>
+                  </div>
+                </li>
+              )}
+              
               <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
                 <span className="text-neutral-500 text-sm">Glass Type:</span>
                 <span className="font-medium text-primary">{getSelectedGlassOption()?.name || "Loading..."}</span>
