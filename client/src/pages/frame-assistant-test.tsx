@@ -32,11 +32,17 @@ export default function FrameAssistantTest() {
         { message }
       );
       
+      // Check for non-200 responses
+      if (!fetchResponse.ok) {
+        const errorData = await fetchResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Server error occurred');
+      }
+      
       const result = await fetchResponse.json() as FrameAssistantResponse;
       setResponse(result.response);
     } catch (err) {
       console.error('Error contacting Frame Assistant:', err);
-      setError('Failed to get a response from the Frame Design Assistant. Please try again.');
+      setError('Failed to get a response from the Frame Design Assistant. The server might be experiencing database issues. Please try again later.');
     } finally {
       setIsLoading(false);
     }

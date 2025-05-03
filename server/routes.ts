@@ -860,12 +860,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Message is required" });
       }
       
-      const response = await askFrameAssistant(message);
-      res.json({ response });
+      // Try to get a response without database access if possible
+      try {
+        const response = await askFrameAssistant(message);
+        return res.json({ response });
+      } catch (aiError) {
+        console.error("Frame assistant AI error:", aiError);
+        
+        // Fallback response for database errors
+        if (aiError.message && aiError.message.includes("column") && aiError.message.includes("does not exist")) {
+          return res.json({ 
+            response: "I'm currently experiencing database issues and can't access all my frame information. " +
+                      "I can still answer general framing questions. Could you please try again with a simple framing question?" 
+          });
+        }
+        
+        // Re-throw for other errors
+        throw aiError;
+      }
     } catch (error) {
       console.error("Frame assistant error:", error);
       res.status(500).json({ 
-        message: "Failed to get a response from the Frame Design Assistant" 
+        message: "Failed to get a response from the Frame Design Assistant due to a server error. Please try again later." 
       });
     }
   });

@@ -34,7 +34,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
     if (!sessionId) {
       setSessionId(nanoid());
     }
-    
+
     // If no messages, add welcome message
     if (messages.length === 0) {
       setMessages([
@@ -80,7 +80,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
       role: "user",
       content: input
     };
-    
+
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -95,9 +95,13 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
         message: input,
         orderNumber
       });
-      
+
+      if (!response.ok) {
+        throw new Error(`Server returned an error: ${response.status} ${response.statusText}`);
+      }
+
       const data = await response.json();
-      
+
       // Add assistant message
       const assistantMessage: ChatMessage = {
         id: nanoid(),
@@ -106,17 +110,17 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
         recommendations: data.recommendations,
         orderInfo: data.orderInfo
       };
-      
+
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error("Chat error:", error);
-      // Add error message
+      // Add error message with improved handling for database issues
       setMessages((prev) => [
         ...prev,
         {
           id: nanoid(),
           role: "assistant",
-          content: "I'm sorry, I'm having trouble processing your request right now. Please try again later."
+          content: `I'm sorry, I'm having trouble processing your request right now. ${error.message.includes('database') ? 'This may be due to a database connection error. Please try again later or contact support if the issue persists.' : 'Please try again later.'}`
         }
       ]);
     } finally {
@@ -146,7 +150,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
             <X className="h-5 w-5" />
           </Button>
         </div>
-        
+
         <CardContent className="p-0">
           <div className="h-96 overflow-y-auto px-4 py-4" style={{ scrollBehavior: "smooth" }}>
             {messages.map((message) => (
@@ -156,7 +160,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
                     <span className="text-white text-sm font-bold">JF</span>
                   </div>
                 )}
-                
+
                 <div className={`${
                   message.role === "user" 
                     ? "mr-3 bg-accent bg-opacity-10 rounded-lg rounded-tr-none" 
@@ -164,7 +168,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
                   } p-3 max-w-xs`}
                 >
                   <p className="text-sm">{message.content}</p>
-                  
+
                   {/* Product recommendations */}
                   {message.recommendations && message.recommendations.length > 0 && (
                     <div className="mt-3 grid grid-cols-2 gap-2">
@@ -183,7 +187,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
                       ))}
                     </div>
                   )}
-                  
+
                   {/* Order info */}
                   {message.orderInfo && (
                     <div className="mt-3 p-2 bg-white rounded border border-neutral-200">
@@ -193,7 +197,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
                     </div>
                   )}
                 </div>
-                
+
                 {message.role === "user" && (
                   <div className="w-8 h-8 rounded-full bg-neutral-300 flex items-center justify-center flex-shrink-0">
                     <span className="text-neutral-600 text-sm font-bold">You</span>
@@ -201,7 +205,7 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
                 )}
               </div>
             ))}
-            
+
             {isLoading && (
               <div className="flex mb-4">
                 <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
@@ -216,10 +220,10 @@ const Chatbot = ({ initialIsOpen = false, setIsOpen: externalSetIsOpen }: Chatbo
                 </div>
               </div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
-          
+
           <form onSubmit={handleSubmit} className="p-4 border-t border-neutral-200">
             <div className="flex items-center">
               <Input
