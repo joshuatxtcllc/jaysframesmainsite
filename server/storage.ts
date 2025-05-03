@@ -4,6 +4,7 @@ import {
   orders, type Order, type InsertOrder,
   frameOptions, type FrameOption, type InsertFrameOption,
   matOptions, type MatOption, type InsertMatOption,
+  revealSizes, type RevealSize, type InsertRevealSize,
   glassOptions, type GlassOption, type InsertGlassOption,
   chatMessages, type ChatMessage, type InsertChatMessage,
   blogCategories, type BlogCategory, type InsertBlogCategory,
@@ -46,7 +47,11 @@ export interface IStorage {
   getMatOptions(): Promise<MatOption[]>;
   getMatOptionById(id: number): Promise<MatOption | undefined>;
   createMatOption(option: InsertMatOption): Promise<MatOption>;
-
+  
+  // Reveal size options operations
+  getRevealSizes(): Promise<RevealSize[]>;
+  getRevealSizeById(id: number): Promise<RevealSize | undefined>;
+  
   // Glass options operations
   getGlassOptions(): Promise<GlassOption[]>;
   getGlassOptionById(id: number): Promise<GlassOption | undefined>;

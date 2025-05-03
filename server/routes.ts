@@ -217,6 +217,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(options);
   });
 
+  // Get reveal size options
+  app.get("/api/reveal-sizes", async (req: Request, res: Response) => {
+    const options = await storage.getRevealSizes();
+    res.json(options);
+  });
+
   // Get glass options
   app.get("/api/glass-options", async (req: Request, res: Response) => {
     const options = await storage.getGlassOptions();

@@ -111,6 +111,7 @@ export const frameOptions = pgTable("frame_options", {
   material: text("material").notNull(),
   pricePerInch: integer("price_per_inch").notNull(), // Price per inch in cents
   imageUrl: text("image_url"),
+  width: integer("width").default(25), // Default frame width in pixels for display
 });
 
 export const insertFrameOptionSchema = createInsertSchema(frameOptions).omit({
@@ -127,6 +128,18 @@ export const matOptions = pgTable("mat_options", {
 });
 
 export const insertMatOptionSchema = createInsertSchema(matOptions).omit({
+  id: true,
+});
+
+// Reveal sizes for mats
+export const revealSizes = pgTable("reveal_sizes", {
+  id: serial("id").primaryKey(),
+  size: text("size").notNull(), // e.g. "1/8 inch", "1/4 inch", "1/2 inch", "3/4 inch", "1 inch"
+  sizeInches: integer("size_inches").notNull(), // Size in 1/8 inch increments (1 = 1/8, 8 = 1 inch)
+  displayName: text("display_name").notNull(), // e.g. "1/8\"", "1/4\"", etc.
+});
+
+export const insertRevealSizeSchema = createInsertSchema(revealSizes).omit({
   id: true,
 });
 
@@ -171,6 +184,9 @@ export type InsertFrameOption = z.infer<typeof insertFrameOptionSchema>;
 
 export type MatOption = typeof matOptions.$inferSelect;
 export type InsertMatOption = z.infer<typeof insertMatOptionSchema>;
+
+export type RevealSize = typeof revealSizes.$inferSelect;
+export type InsertRevealSize = z.infer<typeof insertRevealSizeSchema>;
 
 export type GlassOption = typeof glassOptions.$inferSelect;
 export type InsertGlassOption = z.infer<typeof insertGlassOptionSchema>;
