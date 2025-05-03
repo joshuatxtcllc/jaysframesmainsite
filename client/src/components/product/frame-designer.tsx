@@ -336,6 +336,11 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               selectedFrame={getSelectedFrameOption() || null}
               selectedMat={getSelectedMatOption() || null}
               selectedGlass={getSelectedGlassOption() || null}
+              topMatReveal={topMatReveal}
+              middleMatReveal={middleMatReveal}
+              bottomMatReveal={bottomMatReveal}
+              useMiddleMat={useMiddleMat}
+              useBottomMat={useBottomMat}
             />
           </div>
           
