@@ -91,7 +91,12 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     if (glassOptions.length > 0 && !selectedGlass) {
       setSelectedGlass(glassOptions[1].id); // Default to UV protection glass
     }
-  }, [frameOptions, matOptions, glassOptions]);
+    if (revealSizes.length > 0 && !topMatReveal) {
+      setTopMatReveal(revealSizes[0].id); // Default to smallest reveal (1/8")
+      setMiddleMatReveal(revealSizes[0].id);
+      setBottomMatReveal(revealSizes[0].id);
+    }
+  }, [frameOptions, matOptions, glassOptions, revealSizes]);
 
   // Calculate price
   const calculatePrice = () => {
@@ -447,6 +452,27 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   </div>
                 ))}
               </div>
+              
+              {!useMiddleMat && !useBottomMat && (
+                <div className="mt-4 pt-3 border-t border-neutral-100">
+                  <h4 className="text-sm font-medium mb-2 text-neutral-700">Single Mat Reveal (Optional)</h4>
+                  <div className="grid grid-cols-4 gap-2">
+                    {revealSizes.map((size) => (
+                      <div 
+                        key={`reveal-single-${size.id}`}
+                        className={`cursor-pointer bg-white border p-2 rounded-md text-center text-xs font-medium transition-all duration-200 ${
+                          topMatReveal === size.id 
+                            ? 'border-accent bg-accent/5 text-accent' 
+                            : 'border-neutral-200 hover:border-accent/50'
+                        }`}
+                        onClick={() => setTopMatReveal(size.id)}
+                      >
+                        {size.displayName}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Multiple Mat Options */}
@@ -512,7 +538,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                             }`}
                             onClick={() => setTopMatReveal(size.id)}
                           >
-                            {size.display_name}
+                            {size.displayName}
                           </div>
                         ))}
                       </div>
@@ -580,7 +606,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                               }`}
                               onClick={() => setMiddleMatReveal(size.id)}
                             >
-                              {size.display_name}
+                              {size.displayName}
                             </div>
                           ))}
                         </div>
