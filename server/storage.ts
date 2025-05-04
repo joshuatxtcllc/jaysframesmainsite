@@ -300,6 +300,100 @@ export class MemStorage implements IStorage {
     return newMessage;
   }
 
+  // Initialize blog data with sample content
+  async initializeBlogData(): Promise<void> {
+    console.log('Initializing blog data with sample content...');
+    
+    // Sample blog categories
+    const categories: InsertBlogCategory[] = [
+      {
+        name: "Custom Framing Tips",
+        slug: "custom-framing-tips",
+        description: "Expert advice and tips for custom framing projects in Houston and beyond."
+      },
+      {
+        name: "Art Preservation",
+        slug: "art-preservation",
+        description: "Learn about art conservation and preservation techniques for your valuable artwork."
+      },
+      {
+        name: "Frame Design Inspiration",
+        slug: "frame-design-inspiration",
+        description: "Get inspired with creative framing ideas and design trends."
+      },
+      {
+        name: "Framing Materials",
+        slug: "framing-materials",
+        description: "Information about various framing materials, their benefits, and use cases."
+      },
+      {
+        name: "Installation Services",
+        slug: "installation-services",
+        description: "Professional art installation tips and services for your framed artwork."
+      }
+    ];
+    
+    // Create categories (preferably in database)
+    for (const category of categories) {
+      try {
+        await this.createBlogCategory(category);
+      } catch (error) {
+        console.error(`Error creating blog category ${category.name}:`, error);
+      }
+    }
+    
+    // Sample blog posts
+    const posts: InsertBlogPost[] = [
+      {
+        title: "The Ultimate Guide to Custom Framing in Houston",
+        slug: "ultimate-guide-custom-framing-houston",
+        excerpt: "Everything you need to know about custom framing services in Houston, from choosing the right frame to preserving your artwork.",
+        content: "# The Ultimate Guide to Custom Framing in Houston\n\nHouston's vibrant art scene deserves the very best in custom framing. Whether you're looking to preserve a family heirloom, showcase a new piece of art, or frame a special memento, finding the right framing solution is essential.",
+        metaTitle: "Custom Framing Guide | Jay's Frames Houston",
+        metaDescription: "Learn about custom framing services in Houston. Expert advice on choosing frames, materials, and preservation techniques for your artwork.",
+        keywords: "custom framing Houston, framing services, art preservation, frame design, Jay's Frames",
+        status: "published",
+        categoryId: 1,
+        authorId: 1
+      },
+      {
+        title: "5 Tips for Preserving Valuable Artwork",
+        slug: "tips-preserving-valuable-artwork",
+        excerpt: "Professional recommendations for keeping your valuable artwork in pristine condition for generations to come.",
+        content: "# 5 Tips for Preserving Valuable Artwork\n\nPreserving your valuable artwork requires attention to detail and knowledge of conservation practices. The right framing choices can significantly impact how well your art withstands the test of time.",
+        metaTitle: "Art Preservation Tips | Jay's Frames Houston",
+        metaDescription: "Expert art preservation tips from Houston's premier custom framing studio. Learn how to protect and preserve your valuable artwork.",
+        keywords: "art preservation, conservation framing, archival framing, UV protection, Houston custom framing",
+        status: "published",
+        categoryId: 2,
+        authorId: 1
+      },
+      {
+        title: "Choosing the Perfect Frame for Your Art Style",
+        slug: "choosing-perfect-frame-art-style",
+        excerpt: "A comprehensive guide to selecting frames that complement different art styles and enhance your décor.",
+        content: "# Choosing the Perfect Frame for Your Art Style\n\nThe frame you choose can dramatically enhance or detract from your artwork. Understanding how different frame styles complement various art types is essential for creating a cohesive and beautiful display.",
+        metaTitle: "Frame Selection Guide | Jay's Frames Houston",
+        metaDescription: "Learn how to choose the perfect frame style for your artwork. Expert guidance on matching frames to art styles and home décor.",
+        keywords: "frame selection, art framing, frame styles, modern frames, traditional frames, frame matching",
+        status: "published",
+        categoryId: 3,
+        authorId: 1
+      }
+    ];
+    
+    // Create posts (preferably in database)
+    for (const post of posts) {
+      try {
+        await this.createBlogPost(post);
+      } catch (error) {
+        console.error(`Error creating blog post ${post.title}:`, error);
+      }
+    }
+    
+    console.log('Blog data initialization complete');
+  }
+  
   // Blog Category operations
   async getBlogCategories(): Promise<BlogCategory[]> {
     return Array.from(this.blogCategories.values());
@@ -394,17 +488,35 @@ export class MemStorage implements IStorage {
   }
 
   async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
-    const id = this.blogPostCounter++;
-    const now = new Date().toISOString();
-    const newPost: BlogPost = { 
-      ...post, 
-      id, 
-      createdAt: now, 
-      updatedAt: now,
-      publishedAt: post.status === 'published' ? now : null
-    };
-    this.blogPosts.set(id, newPost);
-    return newPost;
+    try {
+      // Try to use database first
+      const [newPost] = await db
+        .insert(blogPosts)
+        .values({
+          ...post,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          publishedAt: post.status === 'published' ? new Date() : null
+        })
+        .returning();
+      
+      return newPost;
+    } catch (error) {
+      console.error("Error creating blog post in database:", error);
+      
+      // Fallback to in-memory storage
+      const id = this.blogPostCounter++;
+      const now = new Date().toISOString();
+      const newPost: BlogPost = { 
+        ...post, 
+        id, 
+        createdAt: now, 
+        updatedAt: now,
+        publishedAt: post.status === 'published' ? now : null
+      };
+      this.blogPosts.set(id, newPost);
+      return newPost;
+    }
   }
 
   async updateBlogPost(id: number, postUpdate: Partial<InsertBlogPost>): Promise<BlogPost | undefined> {

@@ -1260,18 +1260,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Keyword is required for content generation" });
       }
       
-      // In a future implementation, this would use the OpenAI API to generate content
-      // For now, let's just return a message that would normally be handled by the client
+      // Create a slug from the title
+      const slug = title
+        ? title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+        : `blog-post-${Date.now()}`;
+      
+      // Generate simple content based on the keyword
+      const content = `# ${title || `Blog Post About ${keyword}`}
+
+## Introduction
+This is an automatically generated blog post about ${keyword}. Custom framing provides numerous benefits for your artwork.
+
+## Benefits of Custom Framing for ${keyword}
+1. Enhanced visual appeal
+2. Proper protection from environmental factors
+3. Preservation of value
+4. Perfect fit for your specific piece
+
+## Conclusion
+When it comes to ${keyword}, investing in quality custom framing is always worthwhile. Visit Jay's Frames to explore your options!
+      `;
+      
+      // Create a new blog post
+      const newPost = await storage.createBlogPost({
+        title: title || `All About ${keyword}`,
+        slug,
+        excerpt: `Learn all about ${keyword} and how custom framing can enhance your experience.`,
+        content,
+        metaTitle: `${title || keyword} | Jay's Frames Blog`,
+        metaDescription: `Expert information about ${keyword} from Houston's premier custom framing studio.`,
+        keywords: keyword,
+        status: "draft",
+        categoryId: categoryId || 1,
+        authorId: 1
+      });
       
       res.json({
         success: true,
-        message: "Content generation request received",
-        data: {
-          keyword,
-          categoryId,
-          title,
-          status: "pending" // In a real implementation, this would be stored in a queue
-        }
+        message: "Blog post generated successfully",
+        data: newPost
       });
     } catch (error) {
       console.error("Error in blog content generation:", error);

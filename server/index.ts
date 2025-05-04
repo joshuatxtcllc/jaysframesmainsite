@@ -6,6 +6,8 @@ import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
 import { larsonJuhlCatalogService } from './services/catalog'; // Import the service
+import { db } from './db';
+import { blogCategories, blogPosts } from '../shared/schema'; // Import blog schema
 
 
 // Initialize Twilio client for SMS notifications
@@ -146,14 +148,27 @@ process.on("uncaughtException", (error) => {
   // process.exit(1); // Uncomment this in production to restart the service
 });
 
-// Initialize Larson Juhl catalog
+// Initialize Larson Juhl catalog and blog tables
 (async () => {
   try {
-    console.log("Initializing Larson Juhl catalog...");
-    const importedFrames = await larsonJuhlCatalogService.importCatalog();
-    console.log(`Successfully imported ${importedFrames.length} frames from Larson Juhl catalog`);
+    // Initialize the Larson Juhl catalog
+    console.log('Initializing Larson Juhl catalog...');
+    await larsonJuhlCatalogService.initializeCatalog();
+
+    // Initialize blog tables if they don't exist
+    console.log('Checking and initializing blog tables...');
+    try {
+      // Check if blog categories table exists by doing a simple query
+      await db.select().from(blogCategories).limit(1);
+      console.log('Blog categories table exists');
+    } catch (error) {
+      console.log('Creating blog tables...');
+      // Initialize blog sample data.  This assumes a function 'initializeBlogData' exists in './storage'
+      await storage.initializeBlogData(); 
+      console.log('Blog tables initialized with sample data');
+    }
   } catch (error) {
-    console.error("Error initializing Larson Juhl catalog:", error);
+    console.error('Error during initialization:', error);
   }
 })();
 
