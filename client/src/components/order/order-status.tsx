@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import OrderTimeline from "./order-timeline";
+import FrameProductionStages from "./frame-production-stages";
 import { useQuery, QueryClient } from "@tanstack/react-query";
 import { formatPrice } from "@/lib/utils";
 
@@ -175,7 +176,33 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
             
             <div>
               <h4 className="font-bold mb-4">Order Progress</h4>
-              <OrderTimeline currentStage={order.currentStage} />
+              <OrderTimeline 
+                currentStage={order.currentStage} 
+                estimatedCompletion={order.estimatedCompletionDate}
+                stageStartedAt={order.stageStartedAt}
+                notes={order.notes ? [order.notes] : []}
+                isDelayed={order.status === "delayed"}
+              />
+              
+              {/* Show detailed production stages for custom framing orders */}
+              {order.items && order.items.some(item => 
+                item.details && 
+                (item.details.width || item.details.frameId || item.details.matId)
+              ) && (
+                <FrameProductionStages 
+                  currentStage={order.currentStage}
+                  frameDetails={{
+                    // Get details from the first framing item
+                    frameType: order.items.find(item => item.details?.frameId)?.name,
+                    dimensions: order.items.find(item => item.details?.width)?.details?.width && 
+                               order.items.find(item => item.details?.height)?.details?.height 
+                      ? `${order.items.find(item => item.details?.width)?.details?.width}" × ${order.items.find(item => item.details?.height)?.details?.height}"`
+                      : undefined,
+                    matColor: order.items.find(item => item.details?.matColor)?.details?.matColor,
+                    glassType: order.items.find(item => item.details?.glassType)?.details?.glassType
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>
