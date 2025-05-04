@@ -30,6 +30,8 @@ import Footer from "@/components/layout/footer";
 import GlobalVoiceAssistant from "@/components/ui/global-voice-assistant";
 import { CartProvider } from "@/context/cart-context";
 import { lazy } from 'react';
+import CatalogManagement from './pages/admin/catalog-management';
+import BlogManager from './pages/admin/blog-manager';
 
 function Router() {
   return (
@@ -42,6 +44,7 @@ function Router() {
       <Route path="/order-status" component={OrderStatus} />
       <Route path="/admin/dashboard" component={lazy(() => import('./pages/admin/dashboard'))} />
       <Route path="/admin/catalog-management" component={lazy(() => import('./pages/admin/catalog-management'))} />
+      <Route path="/admin/blog-manager" component={BlogManager} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
       <Route path="/voice-frame-assistant" component={VoiceFrameAssistant} />
       <Route path="/frame-fitting-assistant" component={FrameFittingAssistant} />

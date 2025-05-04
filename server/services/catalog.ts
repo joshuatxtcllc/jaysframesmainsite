@@ -1,4 +1,3 @@
-
 import { FrameOption, InsertFrameOption } from "@shared/schema";
 import { storage } from "../storage";
 
@@ -59,7 +58,7 @@ const larsonJuhlCatalog: LarsonJuhlCatalogItem[] = [
     width: 22,
     description: "Brushed silver metal frame for contemporary settings"
   },
-  
+
   // Modern Collections
   {
     collection: "Metro",
@@ -81,7 +80,7 @@ const larsonJuhlCatalog: LarsonJuhlCatalogItem[] = [
     width: 18,
     description: "Clean white metal frame for gallery-style presentation"
   },
-  
+
   // Premium Collections
   {
     collection: "Biltmore",
@@ -103,7 +102,7 @@ const larsonJuhlCatalog: LarsonJuhlCatalogItem[] = [
     width: 45,
     description: "Copper-toned luxury frame with ornate detailing"
   },
-  
+
   // Designer Collections
   {
     collection: "Linea",
@@ -125,7 +124,7 @@ const larsonJuhlCatalog: LarsonJuhlCatalogItem[] = [
     width: 15,
     description: "Slim off-white frame for modern interiors"
   },
-  
+
   // Natural Collections
   {
     collection: "Hanover",
@@ -163,8 +162,10 @@ export async function importLarsonJuhlCatalog(): Promise<FrameOption[]> {
       collection: item.collection,
       style: item.style,
       sku: item.sku,
-      width: item.width, // This will be stored in the details JSON field
-      description: item.description
+      description: item.description,
+      details: {
+        width: item.width
+      }
     }
   }));
 
@@ -183,10 +184,10 @@ export async function importLarsonJuhlCatalog(): Promise<FrameOption[]> {
 // Function to get all Larson Juhl frames
 export async function getLarsonJuhlFrames(): Promise<FrameOption[]> {
   const frameOptions = await storage.getFrameOptions();
-  
+
   // Filter frames that belong to Larson Juhl collections
   const larsonJuhlCollections = new Set(larsonJuhlCatalog.map(item => item.collection));
-  
+
   return frameOptions.filter(frame => {
     const details = frame.details as any;
     return details && details.collection && larsonJuhlCollections.has(details.collection);
@@ -196,7 +197,7 @@ export async function getLarsonJuhlFrames(): Promise<FrameOption[]> {
 // Function to get frame options by collection
 export async function getFrameOptionsByCollection(collection: string): Promise<FrameOption[]> {
   const frameOptions = await storage.getFrameOptions();
-  
+
   return frameOptions.filter(frame => {
     const details = frame.details as any;
     return details && details.collection === collection;
@@ -207,14 +208,14 @@ export async function getFrameOptionsByCollection(collection: string): Promise<F
 export async function getLarsonJuhlCollections(): Promise<string[]> {
   const frames = await getLarsonJuhlFrames();
   const collections = new Set<string>();
-  
+
   frames.forEach(frame => {
     const details = frame.details as any;
     if (details && details.collection) {
       collections.add(details.collection);
     }
   });
-  
+
   return Array.from(collections);
 }
 

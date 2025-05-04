@@ -42,7 +42,8 @@ import {
   ClipboardList,
   CalendarClock,
   ShieldCheck,
-  Info
+  Info,
+  FileText
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { 
@@ -64,19 +65,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from 'next/link';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
-  
+
   // Authentication check - in a real app, this would check for admin privileges
   // For now, we'll just assume the user is an admin
   const [isAuthenticated, setIsAuthenticated] = useState(true);
-  
+
   // Fetch all orders
   const { data: orders = [], isLoading, error } = useQuery({
     queryKey: ["/api/orders"],
   });
-  
+
   // Mutation for updating order status
   const updateOrderStatus = useMutation({
     mutationFn: async ({ id, status, stage }: { id: number, status: string, stage: string }) => {
@@ -98,21 +100,21 @@ const AdminDashboard = () => {
       });
     }
   });
-  
+
   const handleStatusUpdate = (id: number, status: string, stage: string) => {
     updateOrderStatus.mutate({ id, status, stage });
   };
-  
+
   // Filter orders by status
   const pendingOrders = orders.filter((order: any) => order.status === "pending");
   const inProgressOrders = orders.filter((order: any) => order.status === "in_progress");
   const completedOrders = orders.filter((order: any) => order.status === "completed");
-  
+
   // Calculate some stats
   const totalOrders = orders.length;
   const totalRevenue = orders.reduce((sum: number, order: any) => sum + order.totalAmount, 0);
   const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-  
+
   // Automation system status and controls
   const [isAutomationEnabled, setIsAutomationEnabled] = useState(true);
   const [automationInterval, setAutomationInterval] = useState(30);
@@ -125,18 +127,18 @@ const AdminDashboard = () => {
     errorCount: 0,
     nextRunTime: null as Date | null
   });
-  
+
   // Fetch automation status when page loads
   useEffect(() => {
     const fetchAutomationStatus = async () => {
       try {
         const response = await apiRequest("GET", "/api/automation/status");
         const data = await response.json();
-        
+
         setIsAutomationEnabled(data.enabled || true);
         setAutomationInterval(data.intervalMinutes || 30);
         setAutomationBatchSize(data.batchSize || 20);
-        
+
         if (data.lastRun) {
           setProcessedStats({
             lastRun: new Date(data.lastRun),
@@ -151,17 +153,17 @@ const AdminDashboard = () => {
         // Set some defaults if the endpoint isn't implemented yet
         const nextRun = new Date();
         nextRun.setMinutes(nextRun.getMinutes() + 30);
-        
+
         setProcessedStats(prev => ({
           ...prev,
           nextRunTime: nextRun
         }));
       }
     };
-    
+
     fetchAutomationStatus();
   }, []);
-  
+
   // Mutation for running auto-processing manually
   const runAutoProcessing = useMutation({
     mutationFn: async () => {
@@ -174,7 +176,7 @@ const AdminDashboard = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
       setIsProcessing(false);
-      
+
       // Update stats
       setProcessedStats({
         lastRun: new Date(),
@@ -183,7 +185,7 @@ const AdminDashboard = () => {
         errorCount: data.failed || 0,
         nextRunTime: processedStats.nextRunTime
       });
-      
+
       toast({
         title: "Auto-processing complete",
         description: `Processed ${data.processed} orders successfully.`,
@@ -198,12 +200,12 @@ const AdminDashboard = () => {
       });
     }
   });
-  
+
   // Handle manual auto-processing
   const handleRunAutoProcessing = () => {
     runAutoProcessing.mutate();
   };
-  
+
   // Mutation for updating automation settings
   const updateAutomationSettings = useMutation({
     mutationFn: async (settings: { 
@@ -219,7 +221,7 @@ const AdminDashboard = () => {
         title: "Settings updated",
         description: "Automation settings have been saved successfully.",
       });
-      
+
       // Update next run time
       if (data.nextRunTime) {
         setProcessedStats(prev => ({
@@ -236,7 +238,7 @@ const AdminDashboard = () => {
       });
     }
   });
-  
+
   // Handle settings update
   const handleSaveSettings = () => {
     updateAutomationSettings.mutate({
@@ -245,11 +247,11 @@ const AdminDashboard = () => {
       batchSize: automationBatchSize
     });
   };
-  
+
   // Format Next Run Time
   const formatNextRunTime = () => {
     if (!processedStats.nextRunTime) return "N/A";
-    
+
     return processedStats.nextRunTime.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
@@ -276,12 +278,12 @@ const AdminDashboard = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="bg-neutral-100 min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-primary mb-8">Admin Dashboard</h1>
-        
+
         {/* Automation Control Panel */}
         <Card className="mb-8">
           <CardHeader className="pb-3">
@@ -324,7 +326,7 @@ const AdminDashboard = () => {
                 <h3 className="text-sm font-medium text-neutral-500 flex items-center gap-2">
                   <Info className="h-4 w-4" /> System Status
                 </h3>
-                
+
                 <div className="bg-neutral-50 rounded-lg p-4 space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-neutral-600">Status</span>
@@ -332,22 +334,22 @@ const AdminDashboard = () => {
                       {isAutomationEnabled ? "Active" : "Paused"}
                     </Badge>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-neutral-600">Next Run</span>
                     <span className="text-sm font-medium">{formatNextRunTime()}</span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-neutral-600">Run Interval</span>
                     <span className="text-sm font-medium">{automationInterval} minutes</span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-neutral-600">Batch Size</span>
                     <span className="text-sm font-medium">{automationBatchSize} orders</span>
                   </div>
-                  
+
                   {processedStats.lastRun && (
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-neutral-600">Last Run</span>
@@ -357,7 +359,7 @@ const AdminDashboard = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="bg-neutral-50 rounded-lg p-4">
                   <Button 
                     onClick={handleRunAutoProcessing}
@@ -378,13 +380,13 @@ const AdminDashboard = () => {
                   </Button>
                 </div>
               </div>
-              
+
               {/* Middle column - Configuration */}
               <div className="space-y-4">
                 <h3 className="text-sm font-medium text-neutral-500 flex items-center gap-2">
                   <Cog className="h-4 w-4" /> Configuration
                 </h3>
-                
+
                 <div className="bg-neutral-50 rounded-lg p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
@@ -399,7 +401,7 @@ const AdminDashboard = () => {
                       onCheckedChange={setIsAutomationEnabled}
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="interval">Interval (minutes)</Label>
                     <div className="flex items-center space-x-2">
@@ -424,7 +426,7 @@ const AdminDashboard = () => {
                       </TooltipProvider>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="batch-size">Batch Size</Label>
                     <div className="flex items-center space-x-2">
@@ -449,7 +451,7 @@ const AdminDashboard = () => {
                       </TooltipProvider>
                     </div>
                   </div>
-                  
+
                   <Button 
                     onClick={handleSaveSettings}
                     disabled={updateAutomationSettings.isPending}
@@ -470,13 +472,13 @@ const AdminDashboard = () => {
                   </Button>
                 </div>
               </div>
-              
+
               {/* Right column - Statistics */}
               <div className="space-y-4">
                 <h3 className="text-sm font-medium text-neutral-500 flex items-center gap-2">
                   <BarChart3 className="h-4 w-4" /> Processing Statistics
                 </h3>
-                
+
                 <div className="bg-neutral-50 rounded-lg p-4 space-y-3">
                   <div className="text-center p-2 border border-neutral-200 rounded-md">
                     <div className="text-3xl font-bold text-primary">
@@ -486,7 +488,7 @@ const AdminDashboard = () => {
                       Orders Processed
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <div className="text-center p-2 border border-green-100 bg-green-50 rounded-md">
                       <div className="text-xl font-bold text-green-600">
@@ -496,7 +498,7 @@ const AdminDashboard = () => {
                         Successful
                       </div>
                     </div>
-                    
+
                     <div className="text-center p-2 border border-red-100 bg-red-50 rounded-md">
                       <div className="text-xl font-bold text-red-600">
                         {processedStats.errorCount}
@@ -506,7 +508,7 @@ const AdminDashboard = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="automations">
                       <AccordionTrigger className="text-sm py-2">
@@ -521,7 +523,7 @@ const AdminDashboard = () => {
                             </div>
                             <Badge variant="outline" className="text-green-600 bg-white">Active</Badge>
                           </div>
-                          
+
                           <div className="flex items-center justify-between text-sm p-2 bg-neutral-50 border border-neutral-200 rounded">
                             <div className="flex items-center">
                               <Archive className="h-4 w-4 mr-2 text-neutral-600" />
@@ -529,7 +531,7 @@ const AdminDashboard = () => {
                             </div>
                             <Badge variant="outline" className="text-neutral-600">Coming Soon</Badge>
                           </div>
-                          
+
                           <div className="flex items-center justify-between text-sm p-2 bg-neutral-50 border border-neutral-200 rounded">
                             <div className="flex items-center">
                               <CalendarClock className="h-4 w-4 mr-2 text-neutral-600" />
@@ -546,7 +548,7 @@ const AdminDashboard = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         {/* Stats cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
@@ -560,7 +562,7 @@ const AdminDashboard = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
@@ -572,7 +574,7 @@ const AdminDashboard = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
@@ -584,7 +586,7 @@ const AdminDashboard = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
@@ -597,7 +599,7 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        
+
         {/* Orders tabs */}
         <Tabs defaultValue="all" className="w-full">
           <TabsList className="mb-6">
@@ -606,7 +608,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="in_progress">In Progress</TabsTrigger>
             <TabsTrigger value="completed">Completed</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="all">
             <OrdersTable 
               orders={orders} 
@@ -615,7 +617,7 @@ const AdminDashboard = () => {
               isPending={updateOrderStatus.isPending}
             />
           </TabsContent>
-          
+
           <TabsContent value="pending">
             <OrdersTable 
               orders={pendingOrders} 
@@ -624,7 +626,7 @@ const AdminDashboard = () => {
               isPending={updateOrderStatus.isPending}
             />
           </TabsContent>
-          
+
           <TabsContent value="in_progress">
             <OrdersTable 
               orders={inProgressOrders} 
@@ -633,7 +635,7 @@ const AdminDashboard = () => {
               isPending={updateOrderStatus.isPending}
             />
           </TabsContent>
-          
+
           <TabsContent value="completed">
             <OrdersTable 
               orders={completedOrders} 
@@ -666,7 +668,7 @@ const OrdersTable = ({ orders, isLoading, onStatusUpdate, isPending }: OrdersTab
     { value: "completed", label: "Ready for Pickup" },
     { value: "delayed", label: "Delayed" }
   ];
-  
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
@@ -681,7 +683,7 @@ const OrdersTable = ({ orders, isLoading, onStatusUpdate, isPending }: OrdersTab
         return "bg-neutral-500";
     }
   };
-  
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -689,11 +691,11 @@ const OrdersTable = ({ orders, isLoading, onStatusUpdate, isPending }: OrdersTab
       day: 'numeric'
     });
   };
-  
+
   const formatStatus = (status: string) => {
     return status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
   };
-  
+
   if (isLoading) {
     return (
       <div className="text-center py-12">
@@ -702,7 +704,7 @@ const OrdersTable = ({ orders, isLoading, onStatusUpdate, isPending }: OrdersTab
       </div>
     );
   }
-  
+
   if (orders.length === 0) {
     return (
       <div className="text-center py-12 bg-white rounded-lg shadow">
@@ -712,7 +714,7 @@ const OrdersTable = ({ orders, isLoading, onStatusUpdate, isPending }: OrdersTab
       </div>
     );
   }
-  
+
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="overflow-x-auto">
