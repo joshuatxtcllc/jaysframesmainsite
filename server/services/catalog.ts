@@ -163,7 +163,7 @@ export async function importLarsonJuhlCatalog(): Promise<FrameOption[]> {
       collection: item.collection,
       style: item.style,
       sku: item.sku,
-      width: item.width,
+      width: item.width, // This will be stored in the details JSON field
       description: item.description
     }
   }));
