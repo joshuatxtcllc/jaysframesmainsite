@@ -22,6 +22,7 @@ import Reinvented from "@/pages/reinvented";
 import About from "@/pages/about";
 import Contact from "@/pages/contact";
 import ApiDocs from "@/pages/api-docs";
+import VirtualRoomVisualizer from "@/pages/virtual-room-visualizer"; // Added import
 // Blog Pages
 import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog/[slug]";
@@ -60,6 +61,7 @@ function Router() {
       {/* Blog Routes */}
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/virtual-room-visualizer" component={VirtualRoomVisualizer} /> {/* Added route */}
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

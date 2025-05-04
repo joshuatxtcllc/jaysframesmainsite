@@ -41,7 +41,7 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   // Setup notification listeners
   useEffect(() => {
     // Listen for notification events from the unified system
@@ -49,7 +49,7 @@ const Header = () => {
       const newNotification = event.detail;
       setNotifications(prev => [newNotification, ...prev.slice(0, 9)]); // Keep last 10
       setHasUnread(true);
-      
+
       // Show toast for new notifications
       toast({
         title: newNotification.title,
@@ -57,10 +57,10 @@ const Header = () => {
         variant: newNotification.type as any || 'default',
       });
     };
-    
+
     // Register global event listener
     window.addEventListener('jf-notification' as any, handleNotification as any);
-    
+
     // Register with the notification system if available
     if (window.jfNotifications) {
       window.jfNotifications.onNotification((notification: JFNotification) => {
@@ -68,7 +68,7 @@ const Header = () => {
         setHasUnread(true);
       });
     }
-    
+
     return () => {
       window.removeEventListener('jf-notification' as any, handleNotification as any);
     };
@@ -96,7 +96,8 @@ const Header = () => {
     { href: "/blog", label: "Blog" },
     { href: "/order-status", label: "Order Status" },
     { href: "/about", label: "About Us" },
-    { href: "/contact", label: "Contact" }
+    { href: "/contact", label: "Contact" },
+    { href: "/virtual-room-visualizer", label: "Virtual Room Visualizer"} // Added new link
   ];
 
   return (
@@ -130,7 +131,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    
+
       {/* Main header */}
       <header className={`bg-white sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-elegant py-2' : 'py-4'}`}>
         <div className="container mx-auto px-4">
@@ -144,7 +145,7 @@ const Header = () => {
                 </div>
               </Link>
             </div>
-            
+
             <nav className="hidden md:flex space-x-10 items-center">
               {navLinks.map((link) => (
                 <Link key={link.href} href={link.href}>
@@ -155,12 +156,12 @@ const Header = () => {
                 </Link>
               ))}
             </nav>
-            
+
             <div className="flex items-center space-x-5">
               <button className="text-primary hover:text-secondary transition-colors" aria-label="Search">
                 <Search className="h-5 w-5" />
               </button>
-              
+
               {/* Notifications Bell */}
               <Popover>
                 <PopoverTrigger asChild>
@@ -180,7 +181,7 @@ const Header = () => {
                     <h3 className="font-bold text-primary">Notifications</h3>
                     <p className="text-xs text-neutral-500">Stay updated with order status and news</p>
                   </div>
-                  
+
                   {notifications.length === 0 ? (
                     <div className="p-6 text-center">
                       <div className="mx-auto w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center mb-3">
@@ -234,7 +235,7 @@ const Header = () => {
                   </div>
                 </PopoverContent>
               </Popover>
-              
+
               <button 
                 className="text-primary hover:text-secondary transition-colors relative" 
                 onClick={toggleCart}
@@ -247,13 +248,13 @@ const Header = () => {
                   </span>
                 )}
               </button>
-              
+
               <Link href="/custom-framing" className="hidden md:block">
                 <Button className="bg-secondary hover:bg-secondary/80 text-white text-sm">
                   Start Framing
                 </Button>
               </Link>
-              
+
               <button 
                 className="md:hidden text-primary hover:text-secondary transition-colors" 
                 onClick={toggleMobileMenu}
@@ -267,7 +268,7 @@ const Header = () => {
               </button>
             </div>
           </div>
-          
+
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div className="md:hidden pt-5 pb-3 border-t border-gray-100 mt-3 fade-in">
