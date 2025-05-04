@@ -25,6 +25,7 @@ import {
   startAutomationSystem, 
   stopAutomationSystem 
 } from "./services/automation";
+import { larsonJuhlCatalogService } from "./services/catalog";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
@@ -209,6 +210,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/frame-options", async (req: Request, res: Response) => {
     const options = await storage.getFrameOptions();
     res.json(options);
+  });
+  
+  // Get Larson Juhl frame catalog
+  app.get("/api/catalog/larson-juhl", async (req: Request, res: Response) => {
+    try {
+      const frames = await larsonJuhlCatalogService.getFrames();
+      res.json(frames);
+    } catch (error) {
+      console.error("Error fetching Larson Juhl catalog:", error);
+      res.status(500).json({ message: "Failed to fetch Larson Juhl catalog" });
+    }
+  });
+  
+  // Get Larson Juhl collection list
+  app.get("/api/catalog/larson-juhl/collections", async (req: Request, res: Response) => {
+    try {
+      const collections = await larsonJuhlCatalogService.getCollections();
+      res.json(collections);
+    } catch (error) {
+      console.error("Error fetching Larson Juhl collections:", error);
+      res.status(500).json({ message: "Failed to fetch Larson Juhl collections" });
+    }
+  });
+  
+  // Get frames by collection
+  app.get("/api/catalog/larson-juhl/collections/:collection", async (req: Request, res: Response) => {
+    try {
+      const { collection } = req.params;
+      const frames = await larsonJuhlCatalogService.getFramesByCollection(collection);
+      res.json(frames);
+    } catch (error) {
+      console.error("Error fetching frames by collection:", error);
+      res.status(500).json({ message: "Failed to fetch frames by collection" });
+    }
+  });
+  
+  // Import Larson Juhl catalog (admin only)
+  app.post("/api/catalog/larson-juhl/import", async (req: Request, res: Response) => {
+    try {
+      // In a real implementation, this would be protected by authentication
+      const importedFrames = await larsonJuhlCatalogService.importCatalog();
+      res.json({ 
+        success: true, 
+        message: `Successfully imported ${importedFrames.length} frames from Larson Juhl catalog`,
+        frames: importedFrames
+      });
+    } catch (error) {
+      console.error("Error importing Larson Juhl catalog:", error);
+      res.status(500).json({ message: "Failed to import Larson Juhl catalog" });
+    }
   });
 
   // Get mat options

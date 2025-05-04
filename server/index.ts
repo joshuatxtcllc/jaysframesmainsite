@@ -5,6 +5,8 @@ import compression from "compression";
 import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
+import { larsonJuhlCatalogService } from './services/larson-juhl-catalog'; // Import the service
+
 
 // Initialize Twilio client for SMS notifications
 export let twilioClient: any = null;
@@ -98,7 +100,7 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
-  
+
   // Handle 404 for API routes - must come after all API route definitions
   app.use('/api/*', (req, res) => {
     res.status(404).json({ message: "API endpoint not found" });
@@ -132,8 +134,27 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
-    
+
     // Start the automation system after server is running
     startAutomationSystem();
   });
 })();
+
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught Exception:", error);
+  // In a production app, you might want to notify an admin or log to a service
+  // process.exit(1); // Uncomment this in production to restart the service
+});
+
+// Initialize Larson Juhl catalog
+(async () => {
+  try {
+    console.log("Initializing Larson Juhl catalog...");
+    const importedFrames = await larsonJuhlCatalogService.importCatalog();
+    console.log(`Successfully imported ${importedFrames.length} frames from Larson Juhl catalog`);
+  } catch (error) {
+    console.error("Error initializing Larson Juhl catalog:", error);
+  }
+})();
+
+const PORT = process.env.PORT || 5000;

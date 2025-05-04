@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardContent
@@ -28,7 +28,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const [selectedFrame, setSelectedFrame] = useState<number | null>(null);
   const [selectedStackedFrame, setSelectedStackedFrame] = useState<number | null>(null);
   const [useStackedFrame, setUseStackedFrame] = useState<boolean>(false);
-  
+
   const [selectedMat, setSelectedMat] = useState<number | null>(null);
   const [selectedMiddleMat, setSelectedMiddleMat] = useState<number | null>(null);
   const [selectedBottomMat, setSelectedBottomMat] = useState<number | null>(null);
@@ -37,7 +37,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const [topMatReveal, setTopMatReveal] = useState<number>(1); // Default 1/8"
   const [middleMatReveal, setMiddleMatReveal] = useState<number>(1); // Default 1/8"
   const [bottomMatReveal, setBottomMatReveal] = useState<number>(1); // Default 1/8"
-  
+
   const [selectedGlass, setSelectedGlass] = useState<number | null>(null);
   const [artworkDescription, setArtworkDescription] = useState("");
   const [aiRecommendations, setAiRecommendations] = useState<{
@@ -45,27 +45,66 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     mats: MatOption[];
     explanation: string;
   } | null>(null);
-  
+
   const { addToCart } = useCart();
 
-  // Fetch frame options
-  const { data: frameOptions = [] } = useQuery({
-    queryKey: ["/api/frame-options"],
-    select: (data) => data as FrameOption[]
-  });
+  // Get database frames and mats
+  const [databaseFrames, setDatabaseFrames] = useState<FrameOption[]>([]);
+  const [databaseMats, setDatabaseMats] = useState<MatOption[]>([]);
+  const [larsonJuhlFrames, setLarsonJuhlFrames] = useState<FrameOption[]>([]);
+  const [larsonJuhlCollections, setLarsonJuhlCollections] = useState<string[]>([]);
+  const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
 
-  // Fetch mat options
-  const { data: matOptions = [] } = useQuery({
-    queryKey: ["/api/mat-options"],
-    select: (data) => data as MatOption[]
-  });
+  // Fetch frame and mat options from database
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        // Fetch frame options
+        const frameResponse = await fetch('/api/frame-options');
+        const frameData = await frameResponse.json();
+        setDatabaseFrames(frameData);
+
+        // Fetch mat options
+        const matResponse = await fetch('/api/mat-options');
+        const matData = await matResponse.json();
+        setDatabaseMats(matData);
+
+        // Fetch Larson Juhl catalog
+        const larsonJuhlResponse = await fetch('/api/catalog/larson-juhl');
+        const larsonJuhlData = await larsonJuhlResponse.json();
+        setLarsonJuhlFrames(larsonJuhlData);
+
+        // Fetch Larson Juhl collections
+        const collectionsResponse = await fetch('/api/catalog/larson-juhl/collections');
+        const collectionsData = await collectionsResponse.json();
+        setLarsonJuhlCollections(collectionsData);
+      } catch (error) {
+        console.error('Error fetching frame/mat options:', error);
+      }
+    };
+
+    fetchOptions();
+  }, []);
+
+  // Filter frames by selected collection
+  const filteredFrames = useMemo(() => {
+    if (!selectedCollection) {
+      return [...databaseFrames, ...larsonJuhlFrames];
+    }
+
+    return larsonJuhlFrames.filter(frame => {
+      const details = frame.details as any;
+      return details && details.collection === selectedCollection;
+    });
+  }, [databaseFrames, larsonJuhlFrames, selectedCollection]);
+
 
   // Fetch glass options
   const { data: glassOptions = [] } = useQuery({
     queryKey: ["/api/glass-options"],
     select: (data) => data as GlassOption[]
   });
-  
+
   // Define RevealSize type
   interface RevealSize {
     id: number;
@@ -73,7 +112,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     sizeInches: number;
     displayName: string;
   }
-  
+
   // Fetch reveal size options
   const { data: revealSizes = [] } = useQuery({
     queryKey: ["/api/reveal-sizes"],
@@ -82,11 +121,11 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
   // Select default options when data is loaded
   useEffect(() => {
-    if (frameOptions.length > 0 && !selectedFrame) {
-      setSelectedFrame(frameOptions[0].id);
+    if (filteredFrames.length > 0 && !selectedFrame) {
+      setSelectedFrame(filteredFrames[0].id);
     }
-    if (matOptions.length > 0 && !selectedMat) {
-      setSelectedMat(matOptions[0].id);
+    if (databaseMats.length > 0 && !selectedMat) {
+      setSelectedMat(databaseMats[0].id);
     }
     if (glassOptions.length > 0 && !selectedGlass) {
       setSelectedGlass(glassOptions[1].id); // Default to UV protection glass
@@ -96,57 +135,57 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       setMiddleMatReveal(revealSizes[0].id);
       setBottomMatReveal(revealSizes[0].id);
     }
-  }, [frameOptions, matOptions, glassOptions, revealSizes]);
+  }, [filteredFrames, databaseMats, glassOptions, revealSizes]);
 
   // Calculate price
   const calculatePrice = () => {
     let price = 0;
-    
+
     // Frame price (based on perimeter)
     if (selectedFrame) {
-      const frame = frameOptions.find(f => f.id === selectedFrame);
+      const frame = filteredFrames.find(f => f.id === selectedFrame);
       if (frame) {
         const perimeter = 2 * (width + height);
         price += perimeter * frame.pricePerInch / 100;
       }
     }
-    
+
     // Stacked frame price (if enabled)
     if (useStackedFrame && selectedStackedFrame) {
-      const stackedFrame = frameOptions.find(f => f.id === selectedStackedFrame);
+      const stackedFrame = filteredFrames.find(f => f.id === selectedStackedFrame);
       if (stackedFrame) {
         const perimeter = 2 * (width + height);
         // Add 20% premium for stacked frame application
         price += (perimeter * stackedFrame.pricePerInch / 100) * 1.2;
       }
     }
-    
+
     // Mat price (top mat)
     if (selectedMat) {
-      const mat = matOptions.find(m => m.id === selectedMat);
+      const mat = databaseMats.find(m => m.id === selectedMat);
       if (mat) {
         price += mat.price / 100;
       }
     }
-    
+
     // Middle mat price (if enabled)
     if (useMiddleMat && selectedMiddleMat) {
-      const mat = matOptions.find(m => m.id === selectedMiddleMat);
+      const mat = databaseMats.find(m => m.id === selectedMiddleMat);
       if (mat) {
         // Add 10% surcharge for middle mat cutting and alignment
         price += (mat.price / 100) * 1.1;
       }
     }
-    
+
     // Bottom mat price (if enabled)
     if (useBottomMat && selectedBottomMat) {
-      const mat = matOptions.find(m => m.id === selectedBottomMat);
+      const mat = databaseMats.find(m => m.id === selectedBottomMat);
       if (mat) {
         // Add 10% surcharge for bottom mat cutting and alignment
         price += (mat.price / 100) * 1.1;
       }
     }
-    
+
     // Glass price
     if (selectedGlass) {
       const glass = glassOptions.find(g => g.id === selectedGlass);
@@ -154,26 +193,26 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         price += glass.price / 100;
       }
     }
-    
+
     // Mount price - fixed $25
     price += 25;
-    
+
     // Add additional charge for advanced matting with reveals
     if (useMiddleMat || useBottomMat) {
       price += 15; // $15 additional for advanced matting
     }
-    
+
     return Math.round(price * 100);
   };
 
   // Get selected options
-  const getSelectedFrameOption = () => frameOptions.find(f => f.id === selectedFrame);
-  const getSelectedStackedFrameOption = () => frameOptions.find(f => f.id === selectedStackedFrame);
-  const getSelectedMatOption = () => matOptions.find(m => m.id === selectedMat);
-  const getSelectedMiddleMatOption = () => matOptions.find(m => m.id === selectedMiddleMat);
-  const getSelectedBottomMatOption = () => matOptions.find(m => m.id === selectedBottomMat);
+  const getSelectedFrameOption = () => filteredFrames.find(f => f.id === selectedFrame);
+  const getSelectedStackedFrameOption = () => filteredFrames.find(f => f.id === selectedStackedFrame);
+  const getSelectedMatOption = () => databaseMats.find(m => m.id === selectedMat);
+  const getSelectedMiddleMatOption = () => databaseMats.find(m => m.id === selectedMiddleMat);
+  const getSelectedBottomMatOption = () => databaseMats.find(m => m.id === selectedBottomMat);
   const getSelectedGlassOption = () => glassOptions.find(g => g.id === selectedGlass);
-  
+
   // Get selected reveal size display name
   const getRevealSizeDisplay = (sizeId: number) => {
     const size = revealSizes.find(s => s.id === sizeId);
@@ -188,22 +227,22 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     const middleMat = useMiddleMat ? getSelectedMiddleMatOption() : null;
     const bottomMat = useBottomMat ? getSelectedBottomMatOption() : null;
     const glass = getSelectedGlassOption();
-    
+
     if (!frame || !topMat || !glass) return;
-    
+
     const price = calculatePrice();
     let itemName = `Custom Frame - ${frame.name}`;
-    
+
     if (useStackedFrame && stackedFrame) {
       itemName += ` & ${stackedFrame.name} Stack`;
     }
-    
+
     itemName += ` w/ ${topMat.name} Mat`;
-    
+
     if (useMiddleMat || useBottomMat) {
       itemName += " (multi-mat)";
     }
-    
+
     addToCart({
       id: `custom-frame-${Date.now()}`,
       productId: 1, // Assuming custom frame has ID 1
@@ -280,9 +319,9 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const getFrameStyle = () => {
     const frame = getSelectedFrameOption();
     const mat = getSelectedMatOption();
-    
+
     if (!frame || !mat) return {};
-    
+
     return {
       border: '5px solid transparent',
       boxShadow: `0 0 0 30px ${mat.color}, 0 0 0 40px ${frame.color}`,
@@ -298,7 +337,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       <div className="lg:col-span-2">
         <div className="bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-xl p-8 shadow-elegant h-full">
           <h2 className="text-2xl font-serif font-bold mb-6 text-primary">Custom Frame Designer</h2>
-          
+
           {/* Dimensions - Moved above the preview */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <h3 className="text-lg font-serif font-bold mb-3 text-primary">Artwork Dimensions</h3>
@@ -327,7 +366,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               </div>
             </div>
           </div>
-          
+
           {/* Dynamic Frame Preview with AR capabilities */}
           <div className="mb-8">
             <DynamicFramePreview
@@ -343,7 +382,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               useBottomMat={useBottomMat}
             />
           </div>
-          
+
           {/* Frame Selection - Below preview */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <div className="flex justify-between items-center mb-3">
@@ -355,7 +394,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               )}
             </div>
             <div className="grid grid-cols-4 gap-3">
-              {frameOptions.map((frame) => (
+              {filteredFrames.map((frame) => (
                 <div 
                   key={frame.id}
                   className={`frame-option cursor-pointer bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 ${
@@ -376,7 +415,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </div>
               ))}
             </div>
-            
+
             {/* Stacked Frame Option */}
             <div className="mt-6 pt-4 border-t border-neutral-100">
               <div className="flex items-center justify-between mb-4">
@@ -394,12 +433,12 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <span className="text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded">Premium Feature</span>
                 </div>
               </div>
-              
+
               {useStackedFrame && (
                 <div className="pl-8 border-l-2 border-accent">
                   <h4 className="text-sm font-medium mb-3 text-primary">Select Secondary Frame</h4>
                   <div className="grid grid-cols-4 gap-2">
-                    {frameOptions.map((frame) => (
+                    {filteredFrames.map((frame) => (
                       <div 
                         key={`stacked-${frame.id}`}
                         className={`cursor-pointer bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-200 ${
@@ -434,12 +473,12 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </span>
               )}
             </div>
-            
+
             {/* Top Mat Selection */}
             <div className="mb-4">
               <h4 className="text-sm font-medium mb-2 text-neutral-700">Top Mat Color</h4>
               <div className="grid grid-cols-6 gap-3">
-                {matOptions.map((mat) => (
+                {databaseMats.map((mat) => (
                   <div 
                     key={mat.id}
                     className={`cursor-pointer transition-all duration-300 ${
@@ -457,7 +496,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   </div>
                 ))}
               </div>
-              
+
               {!useMiddleMat && !useBottomMat && (
                 <div className="mt-4 pt-3 border-t border-neutral-100">
                   <h4 className="text-sm font-medium mb-2 text-neutral-700">Single Mat Reveal (Optional)</h4>
@@ -479,7 +518,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </div>
               )}
             </div>
-            
+
             {/* Multiple Mat Options */}
             <div className="mt-6 pt-4 border-t border-neutral-100">
               <div className="mb-4">
@@ -498,7 +537,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                     <span className="text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded">Decorative Accent</span>
                   </div>
                 </div>
-                
+
                 {useMiddleMat && (
                   <div className="pl-8 border-l-2 border-accent mt-3">
                     <div className="mb-3">
@@ -511,7 +550,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         )}
                       </div>
                       <div className="grid grid-cols-6 gap-2">
-                        {matOptions.map((mat) => (
+                        {databaseMats.map((mat) => (
                           <div 
                             key={`middle-${mat.id}`}
                             className={`cursor-pointer transition-all duration-200 ${
@@ -529,7 +568,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         ))}
                       </div>
                     </div>
-                    
+
                     <div className="mb-3">
                       <h4 className="text-sm font-medium mb-2 text-primary">Top Mat Reveal</h4>
                       <div className="grid grid-cols-4 gap-2">
@@ -551,7 +590,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   </div>
                 )}
               </div>
-              
+
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center">
@@ -565,7 +604,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                     </Label>
                   </div>
                 </div>
-                
+
                 {useBottomMat && (
                   <div className="pl-8 border-l-2 border-accent mt-3">
                     <div className="mb-3">
@@ -578,7 +617,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         )}
                       </div>
                       <div className="grid grid-cols-6 gap-2">
-                        {matOptions.map((mat) => (
+                        {databaseMats.map((mat) => (
                           <div 
                             key={`bottom-${mat.id}`}
                             className={`cursor-pointer transition-all duration-200 ${
@@ -596,7 +635,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         ))}
                       </div>
                     </div>
-                    
+
                     {useMiddleMat && (
                       <div className="mb-3">
                         <h4 className="text-sm font-medium mb-2 text-primary">Middle Mat Reveal</h4>
@@ -622,7 +661,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               </div>
             </div>
           </div>
-          
+
           {/* Glass Selection - Moved to left column */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <div className="flex justify-between items-center mb-3">
@@ -633,7 +672,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </span>
               )}
             </div>
-            
+
             <div className="grid grid-cols-1 gap-3">
               {glassOptions.map((glass) => (
                 <div 
@@ -655,12 +694,12 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         </svg>
                       )}
                     </div>
-                    
+
                     <div>
                       <h4 className="text-sm font-medium">{glass.name}</h4>
                       <p className="text-xs text-neutral-500">{glass.description}</p>
                     </div>
-                    
+
                     <div className="ml-auto text-sm font-medium text-primary">
                       {formatPrice(glass.price)}
                     </div>
@@ -669,7 +708,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               ))}
             </div>
           </div>
-          
+
           {/* Frame Specifications */}
           <div className="bg-white rounded-lg p-5 shadow-sm mb-8">
             <h3 className="text-lg font-serif font-bold mb-4 text-primary flex items-center">
@@ -690,7 +729,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <span className="font-medium text-primary">{getSelectedFrameOption()?.name || "Loading..."}</span>
                 </div>
               </li>
-              
+
               {useStackedFrame && selectedStackedFrame && (
                 <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
                   <span className="text-neutral-500 text-sm">Stacked Frame:</span>
@@ -700,7 +739,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   </div>
                 </li>
               )}
-              
+
               <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
                 <span className="text-neutral-500 text-sm">Top Mat:</span>
                 <div className="flex items-center">
@@ -710,7 +749,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <span className="font-medium text-primary">{getSelectedMatOption()?.name || "Loading..."}</span>
                 </div>
               </li>
-              
+
               {useMiddleMat && selectedMiddleMat && (
                 <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
                   <span className="text-neutral-500 text-sm">Middle Mat:</span>
@@ -723,9 +762,9 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   </div>
                 </li>
               )}
-              
+
               {useBottomMat && selectedBottomMat && (
-                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                <li className="flex justify-between items-center pb-2 border-b borderneutral-100">
                   <span className="text-neutral-500 text-sm">Bottom Mat:</span>
                   <div className="flex items-center">
                     <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedBottomMatOption()?.color }}></span>
@@ -738,7 +777,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   </div>
                 </li>
               )}
-              
+
               <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
                 <span className="text-neutral-500 text-sm">Glass Type:</span>
                 <span className="font-medium text-primary">{getSelectedGlassOption()?.name || "Loading..."}</span>
@@ -751,20 +790,20 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
           </div>
         </div>
       </div>
-      
+
       {/* Right Sidebar Options */}
       <div className="bg-gradient-to-tr from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant">
         <div className="bg-white rounded-lg p-4 shadow-sm mb-6 text-center">
           <h3 className="text-xl font-serif font-bold text-primary mb-1">Design Assistance</h3>
           <p className="text-sm text-neutral-500">Get expert help for your perfect frame</p>
         </div>
-        
+
         {/* AI Designer */}
         <div className="mb-8 relative overflow-hidden rounded-xl shadow-highlight">
           <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent/30 z-0"></div>
           <div className="absolute top-0 right-0 h-24 w-24 bg-accent/10 rounded-full -mr-8 -mt-8 z-0"></div>
           <div className="absolute bottom-0 left-0 h-16 w-16 bg-accent/10 rounded-full -ml-6 -mb-6 z-0"></div>
-          
+
           <div className="relative z-10 p-6">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0 bg-accent rounded-full p-2.5 shadow-md">
@@ -777,7 +816,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </p>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg p-4 shadow-sm mb-4">
               <label className="block text-xs font-medium text-neutral-500 mb-2">
                 Describe your artwork in detail
@@ -788,7 +827,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 value={artworkDescription}
                 onChange={(e) => setArtworkDescription(e.target.value)}
               />
-              
+
               <Button 
                 variant="default" 
                 className="w-full bg-accent hover:bg-accent/90 text-white py-2.5 group"
@@ -811,7 +850,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 )}
               </Button>
             </div>
-            
+
             {aiRecommendations && (
               <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-accent/30 mb-1">
                 <div className="flex items-center mb-2">
@@ -821,7 +860,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <h5 className="text-sm font-bold text-primary">AI Recommendation</h5>
                 </div>
                 <p className="text-sm text-neutral-700 mb-3">{aiRecommendations.explanation}</p>
-                
+
                 {aiRecommendations.frames.length > 0 && aiRecommendations.mats.length > 0 && (
                   <div className="flex items-center justify-center gap-6 bg-neutral-50 rounded-md p-3">
                     <div className="text-center">
@@ -848,13 +887,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 )}
               </div>
             )}
-            
+
             <p className="text-center text-xs text-neutral-500 italic">
               Powered by AI to analyze color, composition, and style
             </p>
           </div>
         </div>
-        
+
         {/* Price Breakdown - Moved to bottom of right sidebar */}
         <div className="bg-white rounded-lg p-5 shadow-sm mb-6">
           <h3 className="text-lg font-serif font-bold mb-4 text-primary flex items-center">
@@ -896,7 +935,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </li>
           </ul>
         </div>
-        
+
         {/* Add to Cart */}
         <div className="sticky top-4">
           <Button 

@@ -29,6 +29,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import GlobalVoiceAssistant from "@/components/ui/global-voice-assistant";
 import { CartProvider } from "@/context/cart-context";
+import { lazy } from 'react';
 
 function Router() {
   return (
@@ -39,7 +40,8 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
       <Route path="/order-status" component={OrderStatus} />
-      <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/dashboard" component={lazy(() => import('./pages/admin/dashboard'))} />
+      <Route path="/admin/catalog-management" component={lazy(() => import('./pages/admin/catalog-management'))} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
       <Route path="/voice-frame-assistant" component={VoiceFrameAssistant} />
       <Route path="/frame-fitting-assistant" component={FrameFittingAssistant} />
