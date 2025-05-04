@@ -5,7 +5,7 @@ import compression from "compression";
 import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
-import { larsonJuhlCatalogService } from './services/larson-juhl-catalog'; // Import the service
+import { larsonJuhlCatalogService } from './services/catalog'; // Import the service
 
 
 // Initialize Twilio client for SMS notifications
