@@ -22,6 +22,7 @@ declare global {
     };
   }
 }
+
 import {
   ShoppingCart,
   Search,
@@ -39,7 +40,8 @@ import {
   Info,
   Mail,
   Image,
-  Radio
+  Radio,
+  ChevronDown
 } from "lucide-react";
 import { 
   Popover,
@@ -50,15 +52,6 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import Cart from "@/components/ui/cart";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
 const Header = () => {
@@ -190,49 +183,51 @@ const Header = () => {
             </div>
 
             <nav className="hidden md:flex items-center space-x-8">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {/* Regular nav links */}
-                  {navLinks.map((link) => (
-                    <NavigationMenuItem key={link.href}>
-                      <Link href={link.href}>
-                        <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary py-2 transition-colors duration-200 cursor-pointer relative group`}>
-                          {link.label}
-                          <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
+              {/* Regular nav links */}
+              {navLinks.map((link) => (
+                <Link key={link.href} href={link.href}>
+                  <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary py-2 transition-colors duration-200 cursor-pointer relative group`}>
+                    {link.label}
+                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
+                  </div>
+                </Link>
+              ))}
+              
+              {/* Custom Framing dropdown using Popover instead of NavigationMenu */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div 
+                    className={`flex items-center ${
+                      location.startsWith('/custom-framing') ? 'text-secondary font-medium' : 'text-primary'
+                    } hover:text-secondary py-2 transition-colors duration-200 cursor-pointer relative group`}
+                  >
+                    <span>Custom Framing</span>
+                    <ChevronDown className="h-4 w-4 ml-1 opacity-70" />
+                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${
+                      location.startsWith('/custom-framing') ? 'w-full' : 'group-hover:w-full'
+                    }`}></span>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-[250px] p-2" align="center">
+                  <div className="grid gap-1">
+                    {customFramingSubMenu.map((item) => (
+                      <Link 
+                        key={item.href} 
+                        href={item.href}
+                        className={cn(
+                          "flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
+                          location === item.href ? "bg-accent text-accent-foreground" : "text-primary"
+                        )}
+                      >
+                        <div className="flex items-center text-sm font-medium">
+                          {item.icon}
+                          {item.label}
                         </div>
                       </Link>
-                    </NavigationMenuItem>
-                  ))}
-                  
-                  {/* Custom Framing dropdown */}
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className={`${location.startsWith('/custom-framing') ? 'text-secondary font-medium' : 'text-primary'}`}>
-                      Custom Framing
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="w-[400px] p-4 grid gap-3">
-                        <div className="grid grid-cols-1 gap-2">
-                          {customFramingSubMenu.map((item) => (
-                            <Link 
-                              key={item.href} 
-                              href={item.href}
-                              className={cn(
-                                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                                location === item.href ? "bg-accent text-accent-foreground" : "text-primary"
-                              )}
-                            >
-                              <div className="flex items-center text-sm font-medium leading-none">
-                                {item.icon}
-                                {item.label}
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
             </nav>
 
             <div className="flex items-center space-x-5">
