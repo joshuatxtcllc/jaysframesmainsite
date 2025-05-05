@@ -2,6 +2,26 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
+
+// Type definition for notifications
+interface JFNotification {
+  id?: string;
+  title: string;
+  description: string;
+  timestamp: string | Date;
+  type?: 'success' | 'warning' | 'error' | 'default';
+  actionable?: boolean;
+  link?: string;
+}
+
+// Extend Window interface for custom notification system
+declare global {
+  interface Window {
+    jfNotifications?: {
+      onNotification: (callback: (notification: JFNotification) => void) => void;
+    };
+  }
+}
 import {
   ShoppingCart,
   Search,
@@ -10,7 +30,16 @@ import {
   Phone,
   ChevronRight,
   Bell,
-  MapPin
+  MapPin,
+  LayoutGrid,
+  MessageCircle,
+  Box,
+  Home,
+  FileText,
+  Info,
+  Mail,
+  Image,
+  Radio
 } from "lucide-react";
 import { 
   Popover,
@@ -21,6 +50,16 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import Cart from "@/components/ui/cart";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -86,18 +125,22 @@ const Header = () => {
     setCartOpen(false);
   };
 
+  // Define submenu items for Custom Framing
+  const customFramingSubMenu = [
+    { href: "/products", label: "Products", icon: <LayoutGrid className="mr-2 h-4 w-4" /> },
+    { href: "/frame-fitting-assistant", label: "Frame Fitting AI", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
+    { href: "/voice-frame-assistant", label: "Voice Assistant", icon: <Radio className="mr-2 h-4 w-4" /> },
+    { href: "/order-status", label: "Order Status", icon: <Box className="mr-2 h-4 w-4" /> },
+    { href: "/virtual-room-visualizer", label: "Virtual Room Visualizer", icon: <Image className="mr-2 h-4 w-4" /> }
+  ];
+
+  // Main navigation links - remove the items that will be in submenu
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/products", label: "Products" },
-    { href: "/custom-framing", label: "Custom Framing" },
-    { href: "/frame-fitting-assistant", label: "Frame Fitting AI" },
-    { href: "/voice-frame-assistant", label: "Voice Assistant" },
-    { href: "/reinvented", label: "Reinvented" },
-    { href: "/blog", label: "Blog" },
-    { href: "/order-status", label: "Order Status" },
-    { href: "/about", label: "About Us" },
-    { href: "/contact", label: "Contact" },
-    { href: "/virtual-room-visualizer", label: "Virtual Room Visualizer"} // Added new link
+    { href: "/", label: "Home", icon: <Home className="mr-2 h-4 w-4" /> },
+    { href: "/reinvented", label: "Reinvented", icon: <FileText className="mr-2 h-4 w-4" /> },
+    { href: "/blog", label: "Blog", icon: <FileText className="mr-2 h-4 w-4" /> },
+    { href: "/about", label: "About Us", icon: <Info className="mr-2 h-4 w-4" /> },
+    { href: "/contact", label: "Contact", icon: <Mail className="mr-2 h-4 w-4" /> }
   ];
 
   return (
@@ -146,15 +189,50 @@ const Header = () => {
               </Link>
             </div>
 
-            <nav className="hidden md:flex space-x-10 items-center">
-              {navLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary transition-colors duration-200 cursor-pointer relative group`}>
-                    {link.label}
-                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
-                  </div>
-                </Link>
-              ))}
+            <nav className="hidden md:flex items-center space-x-8">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {/* Regular nav links */}
+                  {navLinks.map((link) => (
+                    <NavigationMenuItem key={link.href}>
+                      <Link href={link.href}>
+                        <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary py-2 transition-colors duration-200 cursor-pointer relative group`}>
+                          {link.label}
+                          <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
+                        </div>
+                      </Link>
+                    </NavigationMenuItem>
+                  ))}
+                  
+                  {/* Custom Framing dropdown */}
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className={`${location.startsWith('/custom-framing') ? 'text-secondary font-medium' : 'text-primary'}`}>
+                      Custom Framing
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="w-[400px] p-4 grid gap-3">
+                        <div className="grid grid-cols-1 gap-2">
+                          {customFramingSubMenu.map((item) => (
+                            <Link 
+                              key={item.href} 
+                              href={item.href}
+                              className={cn(
+                                "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                                location === item.href ? "bg-accent text-accent-foreground" : "text-primary"
+                              )}
+                            >
+                              <div className="flex items-center text-sm font-medium leading-none">
+                                {item.icon}
+                                {item.label}
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </nav>
 
             <div className="flex items-center space-x-5">
@@ -279,11 +357,29 @@ const Header = () => {
                       className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary flex justify-between items-center font-medium transition-colors duration-200 cursor-pointer`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
+                      {link.icon}
                       {link.label}
-                      <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-4 w-4 ml-auto" />
                     </div>
                   </Link>
                 ))}
+                
+                {/* Custom Framing section in mobile menu */}
+                <div className="pt-2 border-t border-gray-100">
+                  <div className="font-medium text-primary mb-3">Custom Framing</div>
+                  {customFramingSubMenu.map((item) => (
+                    <Link key={item.href} href={item.href}>
+                      <div 
+                        className={`${location === item.href ? 'text-secondary' : 'text-primary'} hover:text-secondary flex items-center font-medium transition-colors duration-200 cursor-pointer pl-2 py-2 text-sm`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.icon}
+                        {item.label}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+                
                 <Link href="/custom-framing">
                   <Button className="bg-secondary hover:bg-secondary/80 text-white w-full mt-2 text-sm">
                     Start Framing
