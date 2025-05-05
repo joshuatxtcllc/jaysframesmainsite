@@ -153,7 +153,7 @@ process.on("uncaughtException", (error) => {
   try {
     // Initialize the Larson Juhl catalog
     console.log('Initializing Larson Juhl catalog...');
-    await larsonJuhlCatalogService.initializeCatalog();
+    await larsonJuhlCatalogService.importCatalog();
 
     // Initialize blog tables if they don't exist
     console.log('Checking and initializing blog tables...');
