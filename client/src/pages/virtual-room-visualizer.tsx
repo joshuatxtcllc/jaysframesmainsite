@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { FileUpload, Image, Move, Maximize2, ZoomIn, RotateCw, PanelLeft, Save } from "lucide-react";
+import { Upload, Image, Move, Maximize2, ZoomIn, RotateCw, PanelLeft, Save } from "lucide-react";
 import { RecommendationCarousel } from "@/components/product/recommendation-carousel";
 import { Link } from "wouter";
 
@@ -118,7 +118,7 @@ const VirtualRoomVisualizer = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <div className="inline-block p-3 rounded-full bg-secondary/20 mb-4">
-              <FileUpload className="h-8 w-8 text-secondary" />
+              <Upload className="h-8 w-8 text-secondary" />
             </div>
             <h1 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Virtual Room Visualizer</h1>
             <p className="text-neutral-500 max-w-2xl mx-auto">
@@ -134,7 +134,7 @@ const VirtualRoomVisualizer = () => {
                 
                 {!roomImage ? (
                   <div className="border-2 border-dashed border-neutral-300 rounded-lg h-96 flex flex-col items-center justify-center">
-                    <FileUpload className="h-16 w-16 text-neutral-300 mb-4" />
+                    <Upload className="h-16 w-16 text-neutral-300 mb-4" />
                     <p className="text-neutral-500 mb-4">Upload a photo of your room to begin</p>
                     <label className="cursor-pointer">
                       <span className="bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-md">
