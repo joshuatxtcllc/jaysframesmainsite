@@ -1425,7 +1425,19 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
     path: '/ws',
     // Explicitly set these handlers to prevent connection issues
     verifyClient: () => true,
-    clientTracking: true
+    clientTracking: true,
+    // Add additional settings to improve connection stability
+    perMessageDeflate: {
+      zlibDeflateOptions: {
+        chunkSize: 1024,
+        memLevel: 7,
+        level: 3
+      },
+      zlibInflateOptions: {
+        chunkSize: 10 * 1024
+      },
+      threshold: 1024 // Only compress messages larger than this
+    }
   });
   
   console.log('WebSocket server initialized at path: /ws');
