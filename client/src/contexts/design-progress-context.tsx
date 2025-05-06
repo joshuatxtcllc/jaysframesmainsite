@@ -57,6 +57,11 @@ export type DesignProgress = {
   updatedAt?: string;
 };
 
+// Extended type for updating design progress
+export type UpdateDesignProgress = Partial<DesignProgress> & {
+  completedStep?: string;
+};
+
 interface DesignProgressContextType {
   steps: DesignStep[];
   achievements: Achievement[];
@@ -88,47 +93,48 @@ export function DesignProgressProvider({ children, designId = 'default' }: {
   
   // Queries for steps and achievements
   const { 
-    data: steps = [], 
+    data: steps = [] as DesignStep[], 
     isLoading: isLoadingSteps,
     error: stepsError 
-  } = useQuery({
+  } = useQuery<DesignStep[]>({
     queryKey: ['/api/design/steps'],
     staleTime: 60 * 60 * 1000, // 1 hour
   });
   
   const { 
-    data: achievements = [], 
+    data: achievements = [] as Achievement[], 
     isLoading: isLoadingAchievements,
     error: achievementsError 
-  } = useQuery({
+  } = useQuery<Achievement[]>({
     queryKey: ['/api/design/achievements'],
     staleTime: 60 * 60 * 1000, // 1 hour
   });
   
   const { 
-    data: userAchievements = [], 
+    data: userAchievements = [] as UserAchievement[], 
     isLoading: isLoadingUserAchievements,
     error: userAchievementsError 
-  } = useQuery({
+  } = useQuery<UserAchievement[]>({
     queryKey: ['/api/design/user-achievements', 1], // Hard-coded user ID 1 for now
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
   
   // Query for user's design progress
   const { 
-    data: progress = null, 
+    data: progress = null as DesignProgress | null, 
     isLoading: isLoadingProgress,
     error: progressError,
     refetch: refetchProgress
-  } = useQuery({
+  } = useQuery<DesignProgress | null>({
     queryKey: ['/api/design/progress', designIdState],
     enabled: !!designIdState,
   });
   
   // Mutation for updating design progress
   const updateProgressMutation = useMutation({
-    mutationFn: async (data: Partial<DesignProgress>) => {
-      return apiRequest(`/api/design/progress/${designIdState}`, {
+    mutationFn: async (data: UpdateDesignProgress) => {
+      return apiRequest({
+        url: `/api/design/progress/${designIdState}`,
         method: 'PATCH',
         data,
       });
