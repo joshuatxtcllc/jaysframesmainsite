@@ -138,7 +138,7 @@ const Process = () => {
         
         {/* Benefits section */}
         <div id="savings" className="mt-20 text-center">
-          <h3 className="heading-md mb-6 text-primary">Revolutionary Framing Innovation</h3>
+          <h3 className="heading-md mb-6 text-primary">Revolutionizing The Picture Framing Industry</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
             Our proprietary system has quadrupled production capacity while significantly reducing turnaround times, all while maintaining the artisanal quality that defines our brand.
           </p>
