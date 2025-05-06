@@ -7,8 +7,17 @@ import {
   insertOrderSchema, 
   insertChatMessageSchema, 
   insertBlogCategorySchema, 
-  insertBlogPostSchema 
+  insertBlogPostSchema,
+  insertDesignStepSchema,
+  insertUserDesignProgressSchema,
+  insertDesignAchievementSchema,
+  insertUserAchievementSchema,
+  designSteps,
+  userDesignProgress,
+  designAchievements,
+  userAchievements
 } from "@shared/schema";
+import { db } from "./db";
 import { handleChatRequest, getFrameRecommendations, askFrameAssistant, analyzeArtworkImage, type ChatMessage } from "./ai";
 import { 
   sendNotification,

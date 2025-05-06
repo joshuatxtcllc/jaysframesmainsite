@@ -290,3 +290,92 @@ export const insertServiceAvailabilitySchema = createInsertSchema(serviceAvailab
 
 export type ServiceAvailability = typeof serviceAvailability.$inferSelect;
 export type InsertServiceAvailability = z.infer<typeof insertServiceAvailabilitySchema>;
+
+// Design Achievements/Badges
+export const designAchievements = pgTable("design_achievements", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  iconUrl: text("icon_url"),
+  category: text("category").notNull(), // frame, mat, glass, completion, etc.
+  points: integer("points").default(10).notNull(),
+  rarity: text("rarity").default("common"), // common, uncommon, rare, epic, legendary
+  criteria: jsonb("criteria").notNull(), // JSON object with conditions to earn this achievement
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertDesignAchievementSchema = createInsertSchema(designAchievements).omit({
+  id: true,
+  createdAt: true,
+});
+
+// User Design Progress
+export const userDesignProgress = pgTable("user_design_progress", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  designId: text("design_id").notNull(), // Unique identifier for the current design session
+  stepsCompleted: jsonb("steps_completed").default([]).notNull(), // Array of completed step IDs
+  currentStep: text("current_step"), // Current step in the design process
+  totalPoints: integer("total_points").default(0).notNull(),
+  designChoices: jsonb("design_choices").default({}), // User's current design selections
+  frameSelected: boolean("frame_selected").default(false),
+  matSelected: boolean("mat_selected").default(false),
+  glassSelected: boolean("glass_selected").default(false),
+  hasCustomSize: boolean("has_custom_size").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  lastInteractionAt: timestamp("last_interaction_at").defaultNow(),
+});
+
+export const insertUserDesignProgressSchema = createInsertSchema(userDesignProgress).omit({
+  id: true,
+  totalPoints: true,
+  createdAt: true,
+  updatedAt: true,
+  lastInteractionAt: true,
+});
+
+// User Achievements
+export const userAchievements = pgTable("user_achievements", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  achievementId: integer("achievement_id").references(() => designAchievements.id).notNull(),
+  earnedAt: timestamp("earned_at").defaultNow(),
+  designId: text("design_id"), // Associated design if applicable
+  pointsEarned: integer("points_earned").notNull(),
+});
+
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
+  id: true,
+  earnedAt: true,
+});
+
+// Design Steps (predefined steps in the design journey)
+export const designSteps = pgTable("design_steps", {
+  id: serial("id").primaryKey(),
+  stepKey: text("step_key").notNull().unique(), // unique identifier for the step
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  order: integer("order").notNull(), // For ordering steps in the UI
+  points: integer("points").default(5).notNull(), // Points earned for completing this step
+  isRequired: boolean("is_required").default(true),
+  category: text("category").notNull(), // frame, mat, glass, sizing, etc.
+  tips: jsonb("tips"), // Array of helpful tips for this step
+});
+
+export const insertDesignStepSchema = createInsertSchema(designSteps).omit({
+  id: true,
+});
+
+// Export types for the new schemas
+export type DesignAchievement = typeof designAchievements.$inferSelect;
+export type InsertDesignAchievement = z.infer<typeof insertDesignAchievementSchema>;
+
+export type UserDesignProgress = typeof userDesignProgress.$inferSelect;
+export type InsertUserDesignProgress = z.infer<typeof insertUserDesignProgressSchema>;
+
+export type UserAchievement = typeof userAchievements.$inferSelect;
+export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;
+
+export type DesignStep = typeof designSteps.$inferSelect;
+export type InsertDesignStep = z.infer<typeof insertDesignStepSchema>;
