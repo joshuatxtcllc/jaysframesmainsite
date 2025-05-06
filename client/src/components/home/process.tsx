@@ -140,7 +140,7 @@ const Process = () => {
         <div id="savings" className="mt-20 text-center">
           <h3 className="heading-md mb-6 text-primary">Revolutionizing The Picture Framing Industry</h3>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
-            Our proprietary system has quadrupled production capacity while significantly reducing turnaround times, all while maintaining the artisanal quality that defines our brand.
+            Taking Jay's 25 years experience and putting it in to AI Assistants that work around the clock and reduce errors by 40%.
           </p>
           <p className="text-neutral-600 max-w-3xl mx-auto mb-4">
             Jay's revolutionary approach enables one framer to accomplish what previously required a team of four, 
