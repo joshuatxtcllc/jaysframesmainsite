@@ -62,12 +62,12 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
   const [isAnalyzingImage, setIsAnalyzingImage] = useState(false);
   const [listeningMode, setListeningMode] = useState<'continuous' | 'command'>('command');
   const [isPermanentlyListening, setIsPermanentlyListening] = useState(false);
-  
+
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthesisRef = useRef<SpeechSynthesis | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const { toast } = useToast();
-  
+
   // Setup WebSocket connection
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -75,17 +75,18 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
     let reconnectAttempts = 0;
     let reconnectInterval: number | null = null;
     let isConnecting = false;
-    
+
     // Function to setup the WebSocket connection with better error handling
     const setupWebSocket = () => {
       if (isConnecting) return; // Prevent multiple connection attempts
       isConnecting = true;
-      
-      // Use relative path instead of constructing full URL
-      const wsUrl = `/ws`;
-      
-      console.log(`Attempting to connect to WebSocket: ${wsUrl}`);
-      
+
+    // Construct a proper WebSocket URL with protocol and host
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+
+    console.log(`Attempting to connect to WebSocket: ${wsUrl}`);
+
       // Close any existing connection first
       if (wsRef.current) {
         try {
@@ -94,39 +95,39 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
           console.warn('Error closing existing WebSocket connection:', e);
         }
       }
-      
+
       try {
         wsRef.current = new WebSocket(wsUrl);
-        
+
         // Connection opened
         wsRef.current.onopen = () => {
           console.log('WebSocket connection established successfully');
           reconnectAttempts = 0; // Reset reconnect attempts on successful connection
           isConnecting = false;
-          
+
           // Send a ping message to verify the connection
           if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
             wsRef.current.send(JSON.stringify({ type: 'ping' }));
           }
-          
+
           // Set up regular ping to prevent connection timeout
           if (reconnectInterval) {
             clearInterval(reconnectInterval);
           }
-          
+
           reconnectInterval = window.setInterval(() => {
             if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
               wsRef.current.send(JSON.stringify({ type: 'ping' }));
             }
           }, 30000); // Ping every 30 seconds
         };
-        
+
         // Listen for messages
         wsRef.current.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
             console.log('Received WebSocket message:', data.type);
-            
+
             // Handle connection confirmation message
             if (data.type === 'connection_established') {
               console.log('Voice assistant connection confirmed');
@@ -147,7 +148,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             else if (data.type === 'image_analysis_result') {
               const analysisResult = data.analysis;
               const analysisDescription = `Based on your image, I've analyzed it as a ${analysisResult.artworkType} with ${analysisResult.dominantColors.join(', ')} colors in a ${analysisResult.style} style. The mood appears to be ${analysisResult.mood}. I've selected frames and mats that would complement this artwork.`;
-              
+
               setResponse(analysisDescription + '\n\n' + analysisResult.reasoning);
               speakResponse(analysisDescription);
               setIsAnalyzingImage(false);
@@ -156,7 +157,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             else if (data.type === 'order_status_result') {
               const order = data.order;
               const statusMessage = `Order #${order.id} for ${order.customerName} is currently ${order.status}. Stage: ${order.currentStage || 'Processing'}. ${order.estimatedCompletion ? `Estimated completion on ${new Date(order.estimatedCompletion).toLocaleDateString()}.` : ''}`;
-              
+
               setResponse(statusMessage);
               speakResponse(statusMessage);
               setIsProcessingCommand(false);
@@ -181,35 +182,35 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             console.error('Error processing WebSocket message:', error);
           }
         };
-        
+
         // Handle errors
         wsRef.current.onerror = (error) => {
           console.error('WebSocket error occurred:', error);
           isConnecting = false;
-          
+
           toast({
             title: "Connection Error",
             description: "Failed to establish voice assistant connection",
             variant: "destructive"
           });
         };
-        
+
         // Handle connection close
         wsRef.current.onclose = (event) => {
           console.log(`WebSocket connection closed. Code: ${event.code}, Reason: ${event.reason}`);
           isConnecting = false;
-          
+
           // Clear ping interval
           if (reconnectInterval) {
             clearInterval(reconnectInterval);
             reconnectInterval = null;
           }
-          
+
           // Implement exponential backoff for reconnection
           if (reconnectAttempts < 5) { // Limit to 5 attempts
             const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000); // Max 30 second delay
             console.log(`Attempting to reconnect in ${delay}ms (attempt ${reconnectAttempts + 1})`);
-            
+
             setTimeout(() => {
               if (document.visibilityState === 'visible') {
                 reconnectAttempts++;
@@ -228,7 +229,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       } catch (error) {
         console.error('Error creating WebSocket connection:', error);
         isConnecting = false;
-        
+
         toast({
           title: "Connection Error",
           description: "Failed to create voice assistant connection",
@@ -236,10 +237,10 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
         });
       }
     };
-    
+
     // Initialize the WebSocket connection
     setupWebSocket();
-    
+
     // Handle visibility change to reconnect when the page becomes visible again
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && 
@@ -248,15 +249,15 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    
+
     // Clean up
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      
+
       if (reconnectInterval) {
         clearInterval(reconnectInterval);
       }
-      
+
       if (wsRef.current) {
         try {
           wsRef.current.close();
@@ -266,35 +267,35 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       }
     };
   }, []);
-  
+
   // Initialize speech recognition and synthesis
   useEffect(() => {
     // Check if browser supports speech recognition
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
       const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-      
+
       if (SpeechRecognitionAPI) {
         recognitionRef.current = new SpeechRecognitionAPI();
       }
-      
+
       if (recognitionRef.current) {
         recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
-        
+
         recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
           const { resultIndex, results } = event;
           let newTranscript = '';
-          
+
           for (let i = resultIndex; i < results.length; i++) {
             const transcript = results[i][0].transcript.trim().toLowerCase();
-            
+
             if (results[i].isFinal) {
               newTranscript += transcript;
-              
+
               // Check for trigger phrase in continuous mode
               if (listeningMode === 'continuous' && !isOpen) {
                 const hasTriggerPhrase = transcript.includes(triggerPhrase.toLowerCase());
-                
+
                 if (hasTriggerPhrase) {
                   // Open the assistant when trigger phrase is detected
                   setIsOpen(true);
@@ -304,7 +305,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
               }
             }
           }
-          
+
           if (newTranscript.trim()) {
             setTranscript(prevTranscript => {
               const combinedTranscript = prevTranscript + ' ' + newTranscript;
@@ -312,10 +313,10 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             });
           }
         };
-        
+
         recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
           console.error('Speech recognition error:', event.error);
-          
+
           if (event.error === 'not-allowed') {
             toast({
               title: "Microphone Access Required",
@@ -325,10 +326,10 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
           }
           setIsListening(false);
         };
-        
+
         recognitionRef.current.onend = () => {
           setIsListening(false);
-          
+
           // Restart recognition if in permanent listening mode
           if (isPermanentlyListening && !isProcessingCommand) {
             startListening();
@@ -343,30 +344,30 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
         variant: "destructive"
       });
     }
-    
+
     // Check if browser supports speech synthesis
     if ('speechSynthesis' in window) {
       synthesisRef.current = window.speechSynthesis;
     }
-    
+
     return () => {
       // Clean up
       if (recognitionRef.current) {
         recognitionRef.current.onresult = null;
         recognitionRef.current.onerror = null;
         recognitionRef.current.onend = null;
-        
+
         if (isListening) {
           recognitionRef.current.stop();
         }
       }
-      
+
       if (synthesisRef.current && synthesisRef.current.speaking) {
         synthesisRef.current.cancel();
       }
     };
   }, [isPermanentlyListening, isProcessingCommand, listeningMode, triggerPhrase]);
-  
+
   // Function to start listening
   const startListening = useCallback(() => {
     if (!speechSupported) {
@@ -377,9 +378,9 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       });
       return;
     }
-    
+
     setTranscript('');
-    
+
     if (recognitionRef.current) {
       try {
         recognitionRef.current.start();
@@ -394,7 +395,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       }
     }
   }, [speechSupported]);
-  
+
   // Function to stop listening
   const stopListening = useCallback(() => {
     if (recognitionRef.current) {
@@ -402,19 +403,19 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
     }
     setIsListening(false);
   }, []);
-  
+
   // Process voice command
   const processVoiceCommand = useCallback(() => {
     if (!transcript.trim()) return;
-    
+
     setIsProcessingCommand(true);
-    
+
     // Check if the transcript contains order status request
     if (/order (status|update) .*(order|number) ([\d]+)/i.test(transcript)) {
       const orderNumberMatch = transcript.match(/order (status|update) .*(order|number) ([\d]+)/i);
       if (orderNumberMatch && orderNumberMatch[3]) {
         const orderNumber = orderNumberMatch[3];
-        
+
         // Send order status request via WebSocket
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
           wsRef.current.send(JSON.stringify({
@@ -448,33 +449,33 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
         setResponse("I'm sorry, I couldn't connect to the assistant. Please try again later.");
       }
     }
-    
+
     // Clear transcript after processing
     setTranscript('');
   }, [transcript]);
-  
+
   // Speak response using speech synthesis
   const speakResponse = useCallback((text: string) => {
     if (!synthesisRef.current) return;
-    
+
     if (synthesisRef.current.speaking) {
       synthesisRef.current.cancel();
     }
-    
+
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
-    
+
     synthesisRef.current.speak(utterance);
   }, []);
-  
+
   // Handle file selection for image upload
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    
+
     if (!file) return;
-    
+
     // Check if the file is an image
     if (!file.type.startsWith('image/')) {
       toast({
@@ -484,17 +485,17 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       });
       return;
     }
-    
+
     // Set the selected file and create a preview URL
     setSelectedFile(file);
     const fileUrl = URL.createObjectURL(file);
     setPreviewUrl(fileUrl);
-    
+
     return () => {
       URL.revokeObjectURL(fileUrl);
     };
   }, []);
-  
+
   // Convert a file to base64
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -504,7 +505,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       reader.onerror = (error) => reject(error);
     });
   };
-  
+
   // Analyze the uploaded artwork image
   const analyzeImage = async () => {
     if (!selectedFile) {
@@ -515,13 +516,13 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       });
       return;
     }
-    
+
     setIsAnalyzingImage(true);
-    
+
     try {
       // Convert the file to base64
       const base64Image = await fileToBase64(selectedFile);
-      
+
       // Send the image to the WebSocket server
       if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.send(JSON.stringify({
@@ -546,27 +547,27 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       });
     }
   };
-  
+
   // Toggle permanent listening mode
   const togglePermanentListening = () => {
     setIsPermanentlyListening(prev => {
       const newValue = !prev;
-      
+
       if (newValue) {
         startListening();
       } else {
         stopListening();
       }
-      
+
       return newValue;
     });
   };
-  
+
   // Command handling button click
   const handleCommandClick = () => {
     processVoiceCommand();
   };
-  
+
   // If not open, only render the floating button
   if (!isOpen) {
     return (
@@ -580,7 +581,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             </Badge>
           </div>
         )}
-        
+
         {/* Floating assistant button */}
         <div className="fixed bottom-28 right-4 z-50">
           <Button 
@@ -595,7 +596,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       </>
     );
   }
-  
+
   return (
     <div className={`fixed ${isExpanded ? 'inset-0' : 'bottom-4 right-4 max-w-md'} z-50 transition-all duration-300 ease-in-out`}>
       <Card className={`shadow-xl ${isExpanded ? 'h-full rounded-none' : 'rounded-xl'}`}>
@@ -627,7 +628,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             </Button>
           </div>
         </CardHeader>
-        
+
         <CardContent className={`space-y-4 ${isExpanded ? 'overflow-y-auto pb-20' : 'max-h-[70vh] overflow-y-auto'}`}>
           {/* Listening mode controls */}
           <div className="flex items-center justify-between mb-4">
@@ -640,7 +641,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
               />
             </div>
           </div>
-          
+
           {/* Voice command input box */}
           {transcript && (
             <div className="bg-secondary/10 p-3 rounded-lg border border-secondary/20">
@@ -658,7 +659,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
               )}
             </div>
           )}
-          
+
           {/* Response display */}
           {response && (
             <div className="bg-primary/10 p-3 rounded-lg border border-primary/20">
@@ -682,11 +683,11 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
               )}
             </div>
           )}
-          
+
           {/* Image upload section */}
           <div className="mt-4">
             <p className="text-sm font-medium mb-2">Upload artwork for analysis:</p>
-            
+
             {previewUrl ? (
               // Image Preview
               <div className="relative rounded-md overflow-hidden border">
@@ -707,7 +708,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
                 >
                   &times;
                 </Button>
-                
+
                 {!isAnalyzingImage && (
                   <Button
                     type="button"
@@ -742,7 +743,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
                 </label>
               </div>
             )}
-            
+
             {/* Loading state for image analysis */}
             {isAnalyzingImage && (
               <div className="mt-2 space-y-2">
@@ -754,7 +755,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
               </div>
             )}
           </div>
-          
+
           {/* Voice controls */}
           <div className="sticky bottom-0 pt-2 bg-card flex justify-between items-center">
             <div className="grid grid-cols-2 gap-2 w-full">
@@ -775,7 +776,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
                   </>
                 )}
               </Button>
-              
+
               {isProcessingCommand ? (
                 <Button variant="outline" disabled className="w-full">
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
