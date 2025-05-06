@@ -75,7 +75,7 @@ const Process = () => {
           <div className="inline-block px-6 py-2 bg-secondary/10 rounded-full mb-4">
             <p className="text-secondary text-sm font-medium">REVOLUTIONARY HYBRID PRODUCTION MODEL</p>
           </div>
-          <h2 className="heading-lg text-primary mb-6">Four Times Production Capacity</h2>
+          <h2 className="heading-lg text-primary mb-6">Streamlined Framing Processes</h2>
           <p className="body-lg text-neutral-600 max-w-3xl mx-auto">
             Jay has developed Houston's first eco-friendly hybrid production model, saving thousands of labor hours annually
             through local sustainable partnerships, AI design assistance, and a methodically restructured Houston Heights workshop 
