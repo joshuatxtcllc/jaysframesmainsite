@@ -14,8 +14,10 @@ import { apiRequest } from "@/lib/queryClient";
 import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { FrameOption, MatOption, GlassOption } from "@/types";
-import { Lightbulb, ShoppingCart } from "lucide-react";
+import { Lightbulb, ShoppingCart, Trophy, Target } from "lucide-react";
 import { DynamicFramePreview } from "./dynamic-frame-preview";
+import { ProgressTracker, ProgressBar } from "@/components/design-progress";
+import { useDesignProgress } from "@/contexts/design-progress-context";
 
 interface FrameDesignerProps {
   initialWidth?: number;
@@ -45,6 +47,20 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     mats: MatOption[];
     explanation: string;
   } | null>(null);
+  
+  // Unique design ID for this framing session
+  const [designId] = useState(`design-${Date.now()}`);
+  
+  // Progress tracking
+  const { 
+    markStepCompleted, 
+    updateCurrentStep, 
+    setFrameSelected, 
+    setMatSelected, 
+    setGlassSelected,
+    setHasCustomSize,
+    progress
+  } = useDesignProgress();
 
   const { addToCart } = useCart();
 
@@ -136,6 +152,51 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       setBottomMatReveal(revealSizes[0].id);
     }
   }, [filteredFrames, databaseMats, glassOptions, revealSizes]);
+  
+  // Initialize the design progress tracker with this design ID
+  useEffect(() => {
+    // Initialize with the custom sizing step
+    updateCurrentStep('sizing');
+    // Mark the artwork upload as completed
+    markStepCompleted('artwork_upload');
+    // Update custom size setting
+    setHasCustomSize(true);
+  }, [designId]);
+  
+  // Track frame selection for progress
+  useEffect(() => {
+    if (selectedFrame) {
+      setFrameSelected(true);
+      // Set current step to frame selection if not already past it
+      if (progress?.currentStep === 'sizing') {
+        updateCurrentStep('frame_selection');
+      }
+    }
+  }, [selectedFrame]);
+  
+  // Track mat selection for progress
+  useEffect(() => {
+    if (selectedMat) {
+      setMatSelected(true);
+      // Set current step to mat selection if at frame selection
+      if (progress?.currentStep === 'frame_selection') {
+        markStepCompleted('frame_selection');
+        updateCurrentStep('mat_selection');
+      }
+    }
+  }, [selectedMat]);
+  
+  // Track glass selection for progress
+  useEffect(() => {
+    if (selectedGlass) {
+      setGlassSelected(true);
+      // Set current step to glass selection if at mat selection
+      if (progress?.currentStep === 'mat_selection') {
+        markStepCompleted('mat_selection');
+        updateCurrentStep('glass_selection');
+      }
+    }
+  }, [selectedGlass]);
 
   // Calculate price
   const calculatePrice = () => {
@@ -230,6 +291,15 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
     if (!frame || !topMat || !glass) return;
 
+    // Mark all steps as completed when adding to cart
+    if (progress?.currentStep === 'glass_selection') {
+      markStepCompleted('glass_selection');
+    }
+    
+    // Update design progress to indicate completion
+    markStepCompleted('design_complete');
+    updateCurrentStep('checkout');
+
     const price = calculatePrice();
     let itemName = `Custom Frame - ${frame.name}`;
 
@@ -272,7 +342,9 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         bottomMatId: bottomMat?.id,
         bottomMatColor: bottomMat?.color,
         middleMatRevealSize: middleMatReveal,
-        bottomMatRevealSize: bottomMatReveal
+        bottomMatRevealSize: bottomMatReveal,
+        // Add design tracking information
+        designId: designId
       }
     });
   };
