@@ -104,14 +104,20 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
   // Filter frames by selected collection
   const filteredFrames = useMemo(() => {
-    if (!selectedCollection) {
-      return [...databaseFrames, ...larsonJuhlFrames];
-    }
-
-    return larsonJuhlFrames.filter(frame => {
-      const details = frame.details as any;
-      return details && details.collection === selectedCollection;
-    });
+    // Create the filtered frames array
+    let frames = !selectedCollection 
+      ? [...databaseFrames, ...larsonJuhlFrames]
+      : larsonJuhlFrames.filter(frame => {
+          const details = frame.details as any;
+          return details && details.collection === selectedCollection;
+        });
+    
+    // Debug logging
+    console.log('Database frames count:', databaseFrames.length);
+    console.log('Larson Juhl frames count:', larsonJuhlFrames.length);
+    console.log('Total filtered frames count:', frames.length);
+    
+    return frames;
   }, [databaseFrames, larsonJuhlFrames, selectedCollection]);
 
 
@@ -885,9 +891,9 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             <ProgressBar />
           </div>
           
-          {/* Progress Tracker */}
+          {/* Progress Tracker - Using compact mode to save space */}
           <div className="space-y-2">
-            <ProgressTracker />
+            <ProgressTracker compact={true} />
           </div>
           
           {/* Design Tips based on current step */}
