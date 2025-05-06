@@ -24,7 +24,7 @@ export interface IStorage {
   getProductById(id: number): Promise<Product | undefined>;
   getProductsByCategory(category: string): Promise<Product[]>;
   createProduct(product: InsertProduct): Promise<Product>;
-  
+
   // Inventory operations
   updateProductStock(id: number, quantity: number): Promise<Product | undefined>;
   getLowStockProducts(): Promise<Product[]>;
@@ -47,12 +47,12 @@ export interface IStorage {
   getMatOptions(): Promise<MatOption[]>;
   getMatOptionById(id: number): Promise<MatOption | undefined>;
   createMatOption(option: InsertMatOption): Promise<MatOption>;
-  
+
   // Reveal size options operations
   getRevealSizes(): Promise<RevealSize[]>;
   getRevealSizeById(id: number): Promise<RevealSize | undefined>;
   createRevealSize(size: InsertRevealSize): Promise<RevealSize>;
-  
+
   // Glass options operations
   getGlassOptions(): Promise<GlassOption[]>;
   getGlassOptionById(id: number): Promise<GlassOption | undefined>;
@@ -61,7 +61,7 @@ export interface IStorage {
   // Chat messages operations
   getChatMessagesBySessionId(sessionId: string): Promise<ChatMessage[]>;
   createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
-  
+
   // Blog Category operations
   getBlogCategories(): Promise<BlogCategory[]>;
   getBlogCategoryById(id: number): Promise<BlogCategory | undefined>;
@@ -69,7 +69,7 @@ export interface IStorage {
   createBlogCategory(category: InsertBlogCategory): Promise<BlogCategory>;
   updateBlogCategory(id: number, category: Partial<InsertBlogCategory>): Promise<BlogCategory | undefined>;
   deleteBlogCategory(id: number): Promise<boolean>;
-  
+
   // Blog Post operations
   getBlogPosts(limit?: number, offset?: number): Promise<BlogPost[]>;
   getBlogPostById(id: number): Promise<BlogPost | undefined>;
@@ -80,7 +80,7 @@ export interface IStorage {
   updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<BlogPost | undefined>;
   deleteBlogPost(id: number): Promise<boolean>;
   publishBlogPost(id: number): Promise<BlogPost | undefined>;
-  
+
   // Appointment operations
   getAppointments(): Promise<Appointment[]>;
   getAppointmentById(id: number): Promise<Appointment | undefined>;
@@ -91,7 +91,7 @@ export interface IStorage {
   updateAppointment(id: number, appointment: Partial<InsertAppointment>): Promise<Appointment | undefined>;
   deleteAppointment(id: number): Promise<boolean>;
   markAppointmentReminderSent(id: number): Promise<Appointment | undefined>;
-  
+
   // Service Availability operations
   getServiceAvailability(): Promise<ServiceAvailability[]>;
   getAvailabilityByDay(dayOfWeek: number): Promise<ServiceAvailability | undefined>;
@@ -254,7 +254,7 @@ export class MemStorage implements IStorage {
     this.matOptions.set(id, newOption);
     return newOption;
   }
-  
+
   // Reveal size operations
   async getRevealSizes(): Promise<RevealSize[]> {
     return Array.from(this.revealSizes.values());
@@ -303,7 +303,7 @@ export class MemStorage implements IStorage {
   // Initialize blog data with sample content
   async initializeBlogData(): Promise<void> {
     console.log('Initializing blog data with sample content...');
-    
+
     // Sample blog categories
     const categories: InsertBlogCategory[] = [
       {
@@ -332,7 +332,7 @@ export class MemStorage implements IStorage {
         description: "Professional art installation tips and services for your framed artwork."
       }
     ];
-    
+
     // Create categories (preferably in database)
     for (const category of categories) {
       try {
@@ -341,7 +341,7 @@ export class MemStorage implements IStorage {
         console.error(`Error creating blog category ${category.name}:`, error);
       }
     }
-    
+
     // Sample blog posts
     const posts: InsertBlogPost[] = [
       {
@@ -381,7 +381,7 @@ export class MemStorage implements IStorage {
         authorId: 1
       }
     ];
-    
+
     // Create posts (preferably in database)
     for (const post of posts) {
       try {
@@ -390,10 +390,10 @@ export class MemStorage implements IStorage {
         console.error(`Error creating blog post ${post.title}:`, error);
       }
     }
-    
+
     console.log('Blog data initialization complete');
   }
-  
+
   // Blog Category operations
   async getBlogCategories(): Promise<BlogCategory[]> {
     return Array.from(this.blogCategories.values());
@@ -429,19 +429,19 @@ export class MemStorage implements IStorage {
   async deleteBlogCategory(id: number): Promise<boolean> {
     return this.blogCategories.delete(id);
   }
-  
+
   // Blog Post operations
   async getBlogPosts(limit?: number, offset?: number): Promise<BlogPost[]> {
     let posts = Array.from(this.blogPosts.values());
-    
+
     if (offset !== undefined) {
       posts = posts.slice(offset);
     }
-    
+
     if (limit !== undefined) {
       posts = posts.slice(0, limit);
     }
-    
+
     return posts;
   }
 
@@ -459,15 +459,15 @@ export class MemStorage implements IStorage {
     let posts = Array.from(this.blogPosts.values()).filter(
       (post) => post.categoryId === categoryId
     );
-    
+
     if (offset !== undefined) {
       posts = posts.slice(offset);
     }
-    
+
     if (limit !== undefined) {
       posts = posts.slice(0, limit);
     }
-    
+
     return posts;
   }
 
@@ -475,15 +475,15 @@ export class MemStorage implements IStorage {
     let posts = Array.from(this.blogPosts.values()).filter(
       (post) => post.status === status
     );
-    
+
     if (offset !== undefined) {
       posts = posts.slice(offset);
     }
-    
+
     if (limit !== undefined) {
       posts = posts.slice(0, limit);
     }
-    
+
     return posts;
   }
 
@@ -499,11 +499,11 @@ export class MemStorage implements IStorage {
           publishedAt: post.status === 'published' ? new Date() : null
         })
         .returning();
-      
+
       return newPost;
     } catch (error) {
       console.error("Error creating blog post in database:", error);
-      
+
       // Fallback to in-memory storage
       const id = this.blogPostCounter++;
       const now = new Date().toISOString();
@@ -562,7 +562,7 @@ export class MemStorage implements IStorage {
       isAdmin: true
     };
     this.users.set(adminUser.id, adminUser);
-    
+
     // Initialize reveal sizes from 1/8" to 1" in increments of 1/8"
     const revealSizes: InsertRevealSize[] = [
       { size: "1/8 inch", sizeInches: 1, displayName: "1/8\"" },
@@ -574,12 +574,12 @@ export class MemStorage implements IStorage {
       { size: "7/8 inch", sizeInches: 7, displayName: "7/8\"" },
       { size: "1 inch", sizeInches: 8, displayName: "1\"" }
     ];
-    
+
     revealSizes.forEach(size => {
       const id = this.revealSizeCounter++;
       this.revealSizes.set(id, { ...size, id });
     });
-    
+
     // Create sample blog categories and posts directly
     // Sample blog categories
     const categories: InsertBlogCategory[] = [
@@ -616,7 +616,7 @@ export class MemStorage implements IStorage {
       const createdAt = new Date().toISOString();
       this.blogCategories.set(id, { ...category, id, createdAt });
     });
-    
+
     // Sample blog posts with SEO-rich content
     const posts: InsertBlogPost[] = [
       {
@@ -839,7 +839,7 @@ Contact Jay's Frames to schedule a professional art installation service. Our ex
         name: "Walnut Classic",
         color: "#8B4513",
         material: "Wood",
-        pricePerInch: 150, // $1.50 per inch
+        pricePerInch: 150, //$1.50 per inch
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
       },
       {
@@ -1320,7 +1320,7 @@ export class DatabaseStorage implements IStorage {
     }
     return true;
   }
-  
+
   // User operations
   async getUser(id: number): Promise<User | undefined> {
     if (!await this.checkDb()) return undefined;
@@ -1379,15 +1379,15 @@ export class DatabaseStorage implements IStorage {
     const [newProduct] = await db.insert(products).values(product).returning();
     return newProduct;
   }
-  
+
   // Inventory operations
   async updateProductStock(id: number, quantity: number): Promise<Product | undefined> {
     const [existingProduct] = await db.select().from(products).where(eq(products.id, id));
-    
+
     if (!existingProduct) return undefined;
-    
+
     const newStockQuantity = Math.max(0, (existingProduct.stockQuantity || 0) + quantity);
-    
+
     const [updatedProduct] = await db
       .update(products)
       .set({
@@ -1397,10 +1397,10 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(products.id, id))
       .returning();
-    
+
     return updatedProduct;
   }
-  
+
   async getLowStockProducts(): Promise<Product[]> {
     return await db
       .select()
@@ -1450,12 +1450,12 @@ export class DatabaseStorage implements IStorage {
 
   async updateOrderStatus(id: number, status: string, stage?: string): Promise<Order | undefined> {
     if (!await this.checkDb()) return undefined;
-    
+
     try {
       const updateValues: Partial<Order> = { status };
       if (stage) {
         updateValues.currentStage = stage;
-        
+
         // Add to stage history if it exists
         const [existingOrder] = await db.select().from(orders).where(eq(orders.id, id));
         if (existingOrder) {
@@ -1470,28 +1470,28 @@ export class DatabaseStorage implements IStorage {
           ];
         }
       }
-      
+
       // Update the updatedAt timestamp
       updateValues.updatedAt = new Date();
-      
-      // If status is 'completed', update the completedAt date
+
+      // If status is 'completed', update thecompletedAt date
       if (status === 'completed' && !updateValues.completedAt) {
         updateValues.completedAt = new Date();
       }
-      
+
       const [updatedOrder] = await db
         .update(orders)
         .set(updateValues)
         .where(eq(orders.id, id))
         .returning();
-      
+
       return updatedOrder;
     } catch (error) {
       console.error(`Error updating order status for order ${id}:`, error);
       return undefined;
     }
   }
-  
+
   async getOrdersByUserId(userId: number): Promise<Order[]> {
     return await db
       .select()
@@ -1499,7 +1499,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(orders.userId, userId))
       .orderBy(desc(orders.createdAt));
   }
-  
+
   async getOrdersByStatus(status: string): Promise<Order[]> {
     return await db
       .select()
@@ -1507,7 +1507,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(orders.status, status))
       .orderBy(desc(orders.createdAt));
   }
-  
+
   async getRecentOrders(limit: number = 10): Promise<Order[]> {
     return await db
       .select()
@@ -1545,7 +1545,7 @@ export class DatabaseStorage implements IStorage {
     const [newOption] = await db.insert(matOptions).values(option).returning();
     return newOption;
   }
-  
+
   // Reveal size operations
   async getRevealSizes(): Promise<RevealSize[]> {
     if (!await this.checkDb()) return [];
@@ -1567,7 +1567,7 @@ export class DatabaseStorage implements IStorage {
       return undefined;
     }
   }
-  
+
   async createRevealSize(size: InsertRevealSize): Promise<RevealSize> {
     if (!await this.checkDb()) throw new Error("Database connection not available");
     try {
@@ -1607,7 +1607,7 @@ export class DatabaseStorage implements IStorage {
     const [newMessage] = await db.insert(chatMessages).values(message).returning();
     return newMessage;
   }
-  
+
   // Blog Category operations
   async getBlogCategories(): Promise<BlogCategory[]> {
     return await db.select().from(blogCategories);
@@ -1634,7 +1634,7 @@ export class DatabaseStorage implements IStorage {
       .set(category)
       .where(eq(blogCategories.id, id))
       .returning();
-    
+
     return updatedCategory;
   }
 
@@ -1642,22 +1642,22 @@ export class DatabaseStorage implements IStorage {
     const result = await db.delete(blogCategories).where(eq(blogCategories.id, id));
     return !!result;
   }
-  
+
   // Blog Post operations
   async getBlogPosts(limit?: number, offset?: number): Promise<BlogPost[]> {
     let query = db
       .select()
       .from(blogPosts)
       .orderBy(desc(blogPosts.createdAt));
-    
+
     if (limit !== undefined) {
       query = query.limit(limit);
     }
-    
+
     if (offset !== undefined) {
       query = query.offset(offset);
     }
-    
+
     return await query;
   }
 
@@ -1677,15 +1677,15 @@ export class DatabaseStorage implements IStorage {
       .from(blogPosts)
       .where(eq(blogPosts.categoryId, categoryId))
       .orderBy(desc(blogPosts.createdAt));
-    
+
     if (limit !== undefined) {
       query = query.limit(limit);
     }
-    
+
     if (offset !== undefined) {
       query = query.offset(offset);
     }
-    
+
     return await query;
   }
 
@@ -1695,15 +1695,15 @@ export class DatabaseStorage implements IStorage {
       .from(blogPosts)
       .where(eq(blogPosts.status, status))
       .orderBy(desc(blogPosts.createdAt));
-    
+
     if (limit !== undefined) {
       query = query.limit(limit);
     }
-    
+
     if (offset !== undefined) {
       query = query.offset(offset);
     }
-    
+
     return await query;
   }
 
@@ -1721,7 +1721,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(blogPosts.id, id))
       .returning();
-    
+
     return updatedPost;
   }
 
@@ -1741,10 +1741,10 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(blogPosts.id, id))
       .returning();
-    
+
     return publishedPost;
   }
-  
+
   // Appointment operations
   async getAppointments(): Promise<Appointment[]> {
     return await db.select().from(appointments).orderBy(asc(appointments.startTime));
@@ -1798,7 +1798,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(appointments.id, id))
       .returning();
-    
+
     return updatedAppointment;
   }
 
@@ -1816,10 +1816,10 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(appointments.id, id))
       .returning();
-    
+
     return updatedAppointment;
   }
-  
+
   // Service Availability operations
   async getServiceAvailability(): Promise<ServiceAvailability[]> {
     return await db.select().from(serviceAvailability);
@@ -1835,27 +1835,27 @@ export class DatabaseStorage implements IStorage {
           isNull(serviceAvailability.specificDate)
         )
       );
-    
+
     return availability;
   }
 
   async getAvailabilityByDate(date: Date): Promise<ServiceAvailability | undefined> {
     // Format the date to just get the date part without time
     const dateOnly = new Date(date.toDateString());
-    
+
     // First check for specific date override
     const [specificAvailability] = await db
       .select()
       .from(serviceAvailability)
       .where(eq(serviceAvailability.specificDate, dateOnly));
-    
+
     if (specificAvailability) {
       return specificAvailability;
     }
-    
+
     // If no specific date found, fall back to day of week
     const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    
+
     return this.getAvailabilityByDay(dayOfWeek);
   }
 
@@ -1870,7 +1870,7 @@ export class DatabaseStorage implements IStorage {
       .set(availabilityUpdate)
       .where(eq(serviceAvailability.id, id))
       .returning();
-    
+
     return updatedAvailability;
   }
 
@@ -1882,71 +1882,71 @@ export class DatabaseStorage implements IStorage {
   async getAvailableTimeSlots(date: Date): Promise<{startTime: Date, endTime: Date, available: boolean}[]> {
     // Get availability settings for the date
     const availability = await this.getAvailabilityByDate(date);
-    
+
     if (!availability || !availability.isAvailable) {
       return []; // No slots available for this date
     }
-    
+
     // Parse open and close times
     const [openHour, openMinute] = availability.openTime.split(':').map(Number);
     const [closeHour, closeMinute] = availability.closeTime.split(':').map(Number);
-    
+
     // Set up start and end datetime objects
     const startDate = new Date(date);
     startDate.setHours(openHour, openMinute, 0, 0);
-    
+
     const endDate = new Date(date);
     endDate.setHours(closeHour, closeMinute, 0, 0);
-    
+
     // Get appointment duration in minutes
     const slotDuration = availability.slotDuration || 60; // Default to 1 hour
-    
+
     // Calculate number of slots
     const totalMinutes = (endDate.getTime() - startDate.getTime()) / (60 * 1000);
     const numSlots = Math.floor(totalMinutes / slotDuration);
-    
+
     // Get existing appointments for this date
     const dateStart = new Date(date);
     dateStart.setHours(0, 0, 0, 0);
-    
+
     const dateEnd = new Date(date);
     dateEnd.setHours(23, 59, 59, 999);
-    
+
     const existingAppointments = await this.getAppointmentsByDateRange(dateStart, dateEnd);
-    
+
     // Generate time slots
     const timeSlots: {startTime: Date, endTime: Date, available: boolean}[] = [];
-    
+
     for (let i = 0; i < numSlots; i++) {
       const slotStart = new Date(startDate.getTime() + i * slotDuration * 60 * 1000);
       const slotEnd = new Date(slotStart.getTime() + slotDuration * 60 * 1000);
-      
+
       // Check if the slot conflicts with any existing appointments
       const conflictingAppointments = existingAppointments.filter(appointment => {
         const appointmentStart = new Date(appointment.startTime);
         const appointmentEnd = new Date(appointment.endTime);
-        
+
         // Check if appointment overlaps with this slot
         return (
           (appointmentStart < slotEnd && appointmentEnd > slotStart) &&
           appointment.status !== 'cancelled'
         );
       });
-      
+
       // Count active appointments in this slot
       const activeAppointmentsInSlot = conflictingAppointments.length;
-      
+
       // Slot is available if number of appointments is less than the max allowed
       const maxAllowed = availability.maxAppointments || 1;
       const isAvailable = activeAppointmentsInSlot < maxAllowed;
-      
+
       timeSlots.push({
         startTime: slotStart,
         endTime: slotEnd,
         available: isAvailable
       });
     }
-    
+
     return timeSlots;
   }
 }

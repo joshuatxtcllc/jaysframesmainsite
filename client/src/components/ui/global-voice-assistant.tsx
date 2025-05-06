@@ -81,6 +81,9 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
       if (isConnecting) return; // Prevent multiple connection attempts
       isConnecting = true;
       
+      // Use relative path instead of constructing full URL
+      const wsUrl = `/ws`;
+      
       console.log(`Attempting to connect to WebSocket: ${wsUrl}`);
       
       // Close any existing connection first
