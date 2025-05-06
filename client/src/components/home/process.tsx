@@ -24,7 +24,7 @@ const processSteps = [
   {
     step: 1,
     icon: <Bot className="h-8 w-8 text-white" />,
-    title: "AI-Powered Design Consultation",
+    title: "AI-Assisted Design Consultation",
     description: "Our exclusive machine learning assistant trained on Jay's 15+ years of framing expertise perfectly mimics his precise framing style for Houston's most discerning art collectors. Get expert design recommendations tailored to your specific artwork.",
     color: "from-secondary/90 to-orange-500"
   },
