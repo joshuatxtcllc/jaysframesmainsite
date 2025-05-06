@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import { WebSocketServer, WebSocket } from 'ws';
+import { eq, and } from "drizzle-orm";
 import { 
   insertOrderSchema, 
   insertChatMessageSchema, 
@@ -1316,6 +1317,395 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
   });
 
   // API Integration endpoints
+  // Gamification system API endpoints
+  
+  // Get all design steps
+  app.get("/api/design/steps", async (req: Request, res: Response) => {
+    try {
+      const steps = await db.select().from(designSteps).orderBy(designSteps.order);
+      res.json(steps);
+    } catch (error) {
+      console.error("Error fetching design steps:", error);
+      res.status(500).json({ message: "Failed to fetch design steps" });
+    }
+  });
+  
+  // Get all achievements
+  app.get("/api/design/achievements", async (req: Request, res: Response) => {
+    try {
+      const achievements = await db.select().from(designAchievements);
+      res.json(achievements);
+    } catch (error) {
+      console.error("Error fetching achievements:", error);
+      res.status(500).json({ message: "Failed to fetch achievements" });
+    }
+  });
+  
+  // Get or create user design progress
+  app.get("/api/design/progress/:designId", async (req: Request, res: Response) => {
+    try {
+      const { designId } = req.params;
+      // For now, use a fixed userId since we don't have auth yet
+      const userId = 1;
+      
+      let progress = await db.select().from(userDesignProgress)
+        .where(and(
+          eq(userDesignProgress.userId, userId),
+          eq(userDesignProgress.designId, designId)
+        ))
+        .limit(1);
+      
+      // If no progress found, create a new one
+      if (progress.length === 0) {
+        const newProgress = {
+          userId,
+          designId,
+          stepsCompleted: [],
+          currentStep: "frame_selection",
+          totalPoints: 0,
+          designChoices: {}
+        };
+        
+        const [created] = await db.insert(userDesignProgress)
+          .values(newProgress)
+          .returning();
+          
+        return res.json(created);
+      }
+      
+      res.json(progress[0]);
+    } catch (error) {
+      console.error("Error fetching user progress:", error);
+      res.status(500).json({ message: "Failed to fetch user design progress" });
+    }
+  });
+  
+  // Update user design progress
+  app.patch("/api/design/progress/:designId", async (req: Request, res: Response) => {
+    try {
+      const { designId } = req.params;
+      const { 
+        currentStep, 
+        completedStep,
+        designChoices,
+        frameSelected,
+        matSelected,
+        glassSelected,
+        hasCustomSize
+      } = req.body;
+      
+      // For now, use a fixed userId since we don't have auth yet
+      const userId = 1;
+      
+      // Find existing progress
+      let progress = await db.select().from(userDesignProgress)
+        .where(and(
+          eq(userDesignProgress.userId, userId),
+          eq(userDesignProgress.designId, designId)
+        ))
+        .limit(1);
+      
+      // If no progress found, return error
+      if (progress.length === 0) {
+        return res.status(404).json({ message: "Design progress not found" });
+      }
+      
+      // Get current progress
+      const currentProgress = progress[0];
+      
+      // Update step completion
+      let updateData: any = { 
+        updatedAt: new Date(),
+        lastInteractionAt: new Date()
+      };
+      
+      if (currentStep) {
+        updateData.currentStep = currentStep;
+      }
+      
+      if (completedStep) {
+        // Check if step already completed
+        const stepsCompleted = currentProgress.stepsCompleted || [];
+        if (!stepsCompleted.includes(completedStep)) {
+          // Add points for completing the step
+          // Get step from database to determine points
+          const step = await db.select().from(designSteps)
+            .where(eq(designSteps.stepKey, completedStep))
+            .limit(1);
+            
+          if (step.length > 0) {
+            const stepPoints = step[0].points || 5;
+            
+            // Update steps completed and total points
+            updateData.stepsCompleted = [...stepsCompleted, completedStep];
+            updateData.totalPoints = (currentProgress.totalPoints || 0) + stepPoints;
+          }
+        }
+      }
+      
+      // Update design choices if provided
+      if (designChoices) {
+        updateData.designChoices = {
+          ...currentProgress.designChoices,
+          ...designChoices
+        };
+      }
+      
+      // Update boolean fields if provided
+      if (frameSelected !== undefined) {
+        updateData.frameSelected = frameSelected;
+      }
+      
+      if (matSelected !== undefined) {
+        updateData.matSelected = matSelected;
+      }
+      
+      if (glassSelected !== undefined) {
+        updateData.glassSelected = glassSelected;
+      }
+      
+      if (hasCustomSize !== undefined) {
+        updateData.hasCustomSize = hasCustomSize;
+      }
+      
+      // Update the progress
+      const [updated] = await db.update(userDesignProgress)
+        .set(updateData)
+        .where(and(
+          eq(userDesignProgress.userId, userId),
+          eq(userDesignProgress.designId, designId)
+        ))
+        .returning();
+      
+      // Check for achievements
+      // Note: In a real implementation, this would be more complex and
+      // check specific criteria for each achievement
+      if (completedStep) {
+        // Find achievements that might have been triggered
+        // For this example, we'll award "first_frame_selected" if we completed the frame_selection step
+        if (completedStep === 'frame_selection' && frameSelected === true) {
+          const achievements = await db.select().from(designAchievements)
+            .where(eq(designAchievements.category, 'frame'))
+            .limit(1);
+            
+          if (achievements.length > 0) {
+            // Check if user already has this achievement
+            const existingAchievement = await db.select().from(userAchievements)
+              .where(and(
+                eq(userAchievements.userId, userId),
+                eq(userAchievements.achievementId, achievements[0].id)
+              ))
+              .limit(1);
+              
+            if (existingAchievement.length === 0) {
+              // Award new achievement
+              await db.insert(userAchievements)
+                .values({
+                  userId,
+                  achievementId: achievements[0].id,
+                  designId,
+                  pointsEarned: achievements[0].points || 10
+                });
+                
+              // Add achievement points to user's total
+              await db.update(userDesignProgress)
+                .set({ 
+                  totalPoints: (updated.totalPoints || 0) + (achievements[0].points || 10)
+                })
+                .where(and(
+                  eq(userDesignProgress.userId, userId),
+                  eq(userDesignProgress.designId, designId)
+                ));
+            }
+          }
+        }
+      }
+      
+      res.json(updated);
+    } catch (error) {
+      console.error("Error updating user progress:", error);
+      res.status(500).json({ message: "Failed to update user design progress" });
+    }
+  });
+  
+  // Get user achievements
+  app.get("/api/design/user-achievements/:userId", async (req: Request, res: Response) => {
+    try {
+      const userId = parseInt(req.params.userId) || 1;
+      
+      // Get user achievements with achievement details
+      const achievements = await db.select({
+        id: userAchievements.id,
+        userId: userAchievements.userId,
+        achievementId: userAchievements.achievementId,
+        earnedAt: userAchievements.earnedAt,
+        designId: userAchievements.designId,
+        pointsEarned: userAchievements.pointsEarned,
+        name: designAchievements.name,
+        description: designAchievements.description,
+        iconUrl: designAchievements.iconUrl,
+        category: designAchievements.category,
+        rarity: designAchievements.rarity
+      })
+      .from(userAchievements)
+      .innerJoin(designAchievements, eq(userAchievements.achievementId, designAchievements.id))
+      .where(eq(userAchievements.userId, userId));
+      
+      res.json(achievements);
+    } catch (error) {
+      console.error("Error fetching user achievements:", error);
+      res.status(500).json({ message: "Failed to fetch user achievements" });
+    }
+  });
+  
+  // Initialize design steps (for testing/setup)
+  app.post("/api/design/initialize-steps", async (req: Request, res: Response) => {
+    try {
+      // Check if steps already exist
+      const existingSteps = await db.select().from(designSteps);
+      
+      if (existingSteps.length > 0) {
+        return res.status(400).json({ 
+          message: "Design steps already initialized", 
+          count: existingSteps.length 
+        });
+      }
+      
+      // Define the main steps of the framing design journey
+      const steps = [
+        {
+          stepKey: "artwork_upload",
+          name: "Upload Artwork",
+          description: "Upload an image of your artwork to begin the framing process",
+          order: 1,
+          points: 5,
+          isRequired: true,
+          category: "setup",
+          tips: ["JPG, PNG and PDF files accepted", "Higher resolution images will give better results"]
+        },
+        {
+          stepKey: "sizing",
+          name: "Set Dimensions",
+          description: "Enter the dimensions of your artwork",
+          order: 2,
+          points: 5,
+          isRequired: true,
+          category: "setup",
+          tips: ["Measure from edge to edge", "For irregular shapes, use the largest dimensions"]
+        },
+        {
+          stepKey: "frame_selection",
+          name: "Choose Frame",
+          description: "Select a frame style that complements your artwork",
+          order: 3,
+          points: 10,
+          isRequired: true,
+          category: "frame",
+          tips: ["Consider the artwork's colors and style", "Wider frames create more visual impact"]
+        },
+        {
+          stepKey: "mat_selection",
+          name: "Select Matting",
+          description: "Choose mat colors and reveal sizes",
+          order: 4,
+          points: 10,
+          isRequired: false,
+          category: "mat",
+          tips: ["Neutral mats work with most artwork", "Double matting adds sophistication"]
+        },
+        {
+          stepKey: "glass_selection",
+          name: "Choose Glass",
+          description: "Select the appropriate glass or acrylic glazing",
+          order: 5,
+          points: 5,
+          isRequired: true,
+          category: "glass",
+          tips: ["UV protection prevents fading", "Museum glass reduces reflections"]
+        },
+        {
+          stepKey: "review",
+          name: "Review Design",
+          description: "Review your complete frame design",
+          order: 6,
+          points: 5,
+          isRequired: true,
+          category: "completion",
+          tips: ["Check all measurements", "Consider how it will look in your space"]
+        },
+        {
+          stepKey: "checkout",
+          name: "Checkout",
+          description: "Complete your purchase",
+          order: 7,
+          points: 15,
+          isRequired: true,
+          category: "completion",
+          tips: ["Review shipping options", "Save your design even if you don't purchase now"]
+        }
+      ];
+      
+      // Insert steps into database
+      const insertedSteps = await db.insert(designSteps)
+        .values(steps)
+        .returning();
+        
+      // Insert some sample achievements
+      const achievements = [
+        {
+          name: "First Frame",
+          description: "Selected your first frame",
+          iconUrl: "/icons/achievements/first-frame.svg",
+          category: "frame",
+          points: 10,
+          rarity: "common",
+          criteria: { step: "frame_selection", action: "select_frame" }
+        },
+        {
+          name: "Mat Master",
+          description: "Experimented with multiple mat colors",
+          iconUrl: "/icons/achievements/mat-master.svg",
+          category: "mat",
+          points: 15,
+          rarity: "uncommon",
+          criteria: { step: "mat_selection", action: "change_mat", count: 5 }
+        },
+        {
+          name: "Design Completed",
+          description: "Finished your first frame design",
+          iconUrl: "/icons/achievements/design-complete.svg",
+          category: "completion",
+          points: 25,
+          rarity: "common",
+          criteria: { step: "review", action: "complete_design" }
+        },
+        {
+          name: "Frame Collector",
+          description: "Created 5 different frame designs",
+          iconUrl: "/icons/achievements/collector.svg",
+          category: "special",
+          points: 50,
+          rarity: "rare",
+          criteria: { action: "create_design", count: 5 }
+        }
+      ];
+      
+      // Insert achievements into database
+      const insertedAchievements = await db.insert(designAchievements)
+        .values(achievements)
+        .returning();
+      
+      res.status(201).json({ 
+        success: true, 
+        steps: insertedSteps,
+        achievements: insertedAchievements
+      });
+    } catch (error) {
+      console.error("Error initializing design steps:", error);
+      res.status(500).json({ message: "Failed to initialize design steps" });
+    }
+  });
+  
   // Allows third-party apps to easily connect to Jay's Frames systems
   app.get("/api/integration/status", (req: Request, res: Response) => {
     res.json({
@@ -1329,7 +1719,13 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         orders: "/api/orders",
         chat: "/api/chat",
         frameRecommendations: "/api/frame-recommendations",
-        frameAssistant: "/api/frame-assistant"
+        frameAssistant: "/api/frame-assistant",
+        design: {
+          steps: "/api/design/steps",
+          achievements: "/api/design/achievements",
+          progress: "/api/design/progress/:designId",
+          userAchievements: "/api/design/user-achievements/:userId"
+        }
       }
     });
   });
