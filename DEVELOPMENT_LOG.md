@@ -103,6 +103,16 @@ A modern e-commerce platform for Jay's Frames with product catalog, order manage
 
 ## Recent Changes
 
+### May 07, 2025
+1. Fixed database initialization with proper frame options, mat options, glass options, and reveal sizes data
+2. Successfully imported Larson Juhl catalog frames (12 frames added), bringing total to 503 frame options
+3. Enhanced frame selection UI with responsive grid layout and material textures for wood/metal frames
+4. Implemented deduplication logic for mat options to resolve UI duplication issue
+5. Added collection filtering system to browse frames more easily by grouping
+6. Updated database schema to include details field for Larson Juhl frames with collection information
+7. Created organized frame browsing by collection with "All Frames" default view
+8. Fixed the frame-designer component to properly display and organize frames by collection
+
 ### March 23, 2025
 1. Added OpenAI API key to environment secrets
 2. Updated frame-assistant-test.tsx with proper type definitions

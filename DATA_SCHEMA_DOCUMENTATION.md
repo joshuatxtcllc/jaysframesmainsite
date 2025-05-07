@@ -98,6 +98,8 @@ export const frameOptions = pgTable("frame_options", {
   material: text("material").notNull(),
   pricePerInch: integer("price_per_inch").notNull(), // Price per inch in cents
   imageUrl: text("image_url"),
+  width: integer("width").default(25), // Default frame width in pixels for display
+  details: jsonb("details"), // For Larson Juhl catalog properties
 });
 
 export type FrameOption = typeof frameOptions.$inferSelect;
@@ -111,6 +113,16 @@ export interface FrameOption {
   material: string;
   pricePerInch: number;
   imageUrl?: string;
+  width?: number;
+  details?: {
+    collection?: string;
+    style?: string;
+    sku?: string;
+    description?: string;
+    details?: {
+      width?: number;
+    }
+  }
 }
 ```
 
@@ -321,10 +333,41 @@ private initializeSampleData() {
 }
 ```
 
+## Larson Juhl Frame Details
+
+The Larson Juhl frame catalog is imported into the system with additional details stored in the `details` field of the `frameOptions` table. This allows for categorization and filtering by collection.
+
+### Collection Hierarchy
+
+Frames are organized by collections:
+- Academie
+- Allure
+- Metro 
+- Biltmore
+- Linea
+- Hanover
+
+Each collection contains multiple frame styles with their own SKUs and descriptions.
+
+### Frame Details Structure
+
+```json
+{
+  "collection": "Collection name (e.g., 'Academie', 'Allure', 'Metro')",
+  "style": "Style description (e.g., 'traditional', 'contemporary', 'modern')",
+  "sku": "Stock keeping unit identifier (e.g., 'ACAD-001')",
+  "description": "Detailed description of the frame",
+  "details": {
+    "width": "Width of the frame in millimeters"
+  }
+}
+```
+
 ## Type Inconsistencies and Known Issues
 
 1. **Optional vs. Required Fields**:
    - In the schema.ts definitions, certain fields like `details` in products are required, but in the frontend types they're optional.
+   - The `details` field in frameOptions is now used for Larson Juhl catalog information.
 
 2. **Date Handling**:
    - The schema defines `createdAt` as a timestamp, but it's handled as a string in some parts of the code.

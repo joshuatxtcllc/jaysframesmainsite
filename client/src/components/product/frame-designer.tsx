@@ -772,7 +772,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 <div className="mt-4 pt-3 border-t border-neutral-100">
                   <h4 className="text-sm font-medium mb-2 text-neutral-700">Single Mat Reveal (Optional)</h4>
                   <div className="grid grid-cols-4 gap-2">
-                    {revealSizes.map((size) => (
+                    {/* For Single Mat, show only 1", 2", 3", 4" options */}
+                    {[
+                      { id: 5, displayName: "1\"" },
+                      { id: 6, displayName: "2\"" },
+                      { id: 7, displayName: "3\"" },
+                      { id: 8, displayName: "4\"" }
+                    ].map((size) => (
                       <div 
                         key={`reveal-single-${size.id}`}
                         className={`cursor-pointer bg-white border p-2 rounded-md text-center text-xs font-medium transition-all duration-200 ${
@@ -843,7 +849,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                     <div className="mb-3">
                       <h4 className="text-sm font-medium mb-2 text-primary">Top Mat Reveal</h4>
                       <div className="grid grid-cols-4 gap-2">
-                        {revealSizes.map((size) => (
+                        {/* For middle/bottom mats, show only 1/8", 1/4", 3/8", 1/2" options */}
+                        {[
+                          { id: 1, displayName: "1/8\"" },
+                          { id: 2, displayName: "1/4\"" },
+                          { id: 3, displayName: "3/8\"" },
+                          { id: 4, displayName: "1/2\"" }
+                        ].map((size) => (
                           <div 
                             key={`reveal-top-${size.id}`}
                             className={`cursor-pointer bg-white border p-2 rounded-md text-center text-xs font-medium transition-all duration-200 ${
@@ -911,7 +923,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                       <div className="mb-3">
                         <h4 className="text-sm font-medium mb-2 text-primary">Middle Mat Reveal</h4>
                         <div className="grid grid-cols-4 gap-2">
-                          {revealSizes.map((size) => (
+                          {/* For middle/bottom mats, show only 1/8", 1/4", 3/8", 1/2" options */}
+                          {[
+                            { id: 1, displayName: "1/8\"" },
+                            { id: 2, displayName: "1/4\"" },
+                            { id: 3, displayName: "3/8\"" },
+                            { id: 4, displayName: "1/2\"" }
+                          ].map((size) => (
                             <div 
                               key={`reveal-middle-${size.id}`}
                               className={`cursor-pointer bg-white border p-2 rounded-md text-center text-xs font-medium transition-all duration-200 ${
