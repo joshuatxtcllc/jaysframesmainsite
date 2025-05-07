@@ -1312,6 +1312,14 @@ import { db } from "./db";
 import { eq, desc, and, like, sql, asc, lte, gte, isNull, not } from "drizzle-orm";
 
 export class DatabaseStorage implements IStorage {
+  constructor() {
+    // Initialize tables with sample data if needed
+    this.initializeFrameOptions();
+    this.initializeMatOptions();
+    this.initializeGlassOptions();
+    this.initializeRevealSizes();
+  }
+  
   // Helper method to check if database is available
   private async checkDb(): Promise<boolean> {
     if (!db) {
@@ -1319,6 +1327,214 @@ export class DatabaseStorage implements IStorage {
       return false;
     }
     return true;
+  }
+  
+  // Initialize frame options with sample data
+  private async initializeFrameOptions() {
+    if (!await this.checkDb()) return;
+    
+    try {
+      // Check if frame options table has data
+      const existingOptions = await db.select().from(frameOptions);
+      if (existingOptions.length > 0) {
+        console.log(`Frame options table already has ${existingOptions.length} entries`);
+        return;
+      }
+      
+      // Initialize with sample data
+      const sampleFrameOptions: InsertFrameOption[] = [
+        {
+          name: "Walnut Classic",
+          color: "#8B4513",
+          material: "Wood",
+          pricePerInch: 150, //$1.50 per inch
+          imageUrl: "/images/frames/walnut.png",
+          width: 25
+        },
+        {
+          name: "Gold Leaf",
+          color: "#D4B996",
+          material: "Metal",
+          pricePerInch: 200, // $2.00 per inch
+          imageUrl: "/images/frames/gold.png",
+          width: 25
+        },
+        {
+          name: "Matte Black",
+          color: "#000000",
+          material: "Wood",
+          pricePerInch: 125, // $1.25 per inch
+          imageUrl: "/images/frames/black.png",
+          width: 25
+        },
+        {
+          name: "White Gallery",
+          color: "#FFFFFF",
+          material: "Wood",
+          pricePerInch: 175, // $1.75 per inch
+          imageUrl: "/images/frames/white.png",
+          width: 25
+        },
+        {
+          name: "Natural Maple",
+          color: "#E5DCC5",
+          material: "Wood",
+          pricePerInch: 150, // $1.50 per inch
+          imageUrl: "/images/frames/maple.png",
+          width: 25
+        },
+        {
+          name: "Cherry Wood",
+          color: "#6E2C00",
+          material: "Wood",
+          pricePerInch: 165, // $1.65 per inch
+          imageUrl: "/images/frames/cherry.png",
+          width: 25
+        }
+      ];
+      
+      // Insert sample data
+      await db.insert(frameOptions).values(sampleFrameOptions);
+      console.log(`Initialized frame options table with ${sampleFrameOptions.length} entries`);
+    } catch (error) {
+      console.error("Error initializing frame options:", error);
+    }
+  }
+  
+  // Initialize mat options with sample data
+  private async initializeMatOptions() {
+    if (!await this.checkDb()) return;
+    
+    try {
+      // Check if mat options table has data
+      const existingOptions = await db.select().from(matOptions);
+      if (existingOptions.length > 0) {
+        console.log(`Mat options table already has ${existingOptions.length} entries`);
+        return;
+      }
+      
+      // Initialize with sample data
+      const sampleMatOptions: InsertMatOption[] = [
+        {
+          name: "White",
+          color: "#FFFFFF",
+          price: 3500, // $35.00
+          imageUrl: "/images/mats/white.png"
+        },
+        {
+          name: "Off-White",
+          color: "#F5F5F5",
+          price: 3500, // $35.00
+          imageUrl: "/images/mats/off-white.png"
+        },
+        {
+          name: "Light Gray",
+          color: "#E5E9F0",
+          price: 3500, // $35.00
+          imageUrl: "/images/mats/light-gray.png"
+        },
+        {
+          name: "Black",
+          color: "#000000",
+          price: 4000, // $40.00
+          imageUrl: "/images/mats/black.png"
+        },
+        {
+          name: "Ivory",
+          color: "#FFFFF0",
+          price: 3500, // $35.00
+          imageUrl: "/images/mats/ivory.png"
+        },
+        {
+          name: "Cream",
+          color: "#FFF8DC",
+          price: 3500, // $35.00
+          imageUrl: "/images/mats/cream.png"
+        }
+      ];
+      
+      // Insert sample data
+      await db.insert(matOptions).values(sampleMatOptions);
+      console.log(`Initialized mat options table with ${sampleMatOptions.length} entries`);
+    } catch (error) {
+      console.error("Error initializing mat options:", error);
+    }
+  }
+  
+  // Initialize glass options with sample data
+  private async initializeGlassOptions() {
+    if (!await this.checkDb()) return;
+    
+    try {
+      // Check if glass options table has data
+      const existingOptions = await db.select().from(glassOptions);
+      if (existingOptions.length > 0) {
+        console.log(`Glass options table already has ${existingOptions.length} entries`);
+        return;
+      }
+      
+      // Initialize with sample data
+      const sampleGlassOptions: InsertGlassOption[] = [
+        {
+          name: "Standard Glass",
+          description: "Clear glass with basic protection",
+          price: 2500 // $25.00
+        },
+        {
+          name: "UV-Protection Glass",
+          description: "Blocks 99% of harmful UV rays to prevent fading",
+          price: 5000 // $50.00
+        },
+        {
+          name: "Anti-Glare Glass",
+          description: "Reduces reflections for better visibility",
+          price: 6000 // $60.00
+        },
+        {
+          name: "Museum Glass",
+          description: "Premium glass with UV protection and anti-glare properties",
+          price: 9000 // $90.00
+        }
+      ];
+      
+      // Insert sample data
+      await db.insert(glassOptions).values(sampleGlassOptions);
+      console.log(`Initialized glass options table with ${sampleGlassOptions.length} entries`);
+    } catch (error) {
+      console.error("Error initializing glass options:", error);
+    }
+  }
+  
+  // Initialize reveal sizes with sample data
+  private async initializeRevealSizes() {
+    if (!await this.checkDb()) return;
+    
+    try {
+      // Check if reveal sizes table has data
+      const existingSizes = await db.select().from(revealSizes);
+      if (existingSizes.length > 0) {
+        console.log(`Reveal sizes table already has ${existingSizes.length} entries`);
+        return;
+      }
+      
+      // Initialize with sample data
+      const sampleRevealSizes: InsertRevealSize[] = [
+        { size: "1/8 inch", sizeInches: 1, displayName: "1/8\"" },
+        { size: "1/4 inch", sizeInches: 2, displayName: "1/4\"" },
+        { size: "3/8 inch", sizeInches: 3, displayName: "3/8\"" },
+        { size: "1/2 inch", sizeInches: 4, displayName: "1/2\"" },
+        { size: "5/8 inch", sizeInches: 5, displayName: "5/8\"" },
+        { size: "3/4 inch", sizeInches: 6, displayName: "3/4\"" },
+        { size: "7/8 inch", sizeInches: 7, displayName: "7/8\"" },
+        { size: "1 inch", sizeInches: 8, displayName: "1\"" }
+      ];
+      
+      // Insert sample data
+      await db.insert(revealSizes).values(sampleRevealSizes);
+      console.log(`Initialized reveal sizes table with ${sampleRevealSizes.length} entries`);
+    } catch (error) {
+      console.error("Error initializing reveal sizes:", error);
+    }
   }
 
   // User operations
