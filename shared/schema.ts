@@ -112,6 +112,7 @@ export const frameOptions = pgTable("frame_options", {
   pricePerInch: integer("price_per_inch").notNull(), // Price per inch in cents
   imageUrl: text("image_url"),
   width: integer("width").default(25), // Default frame width in pixels for display
+  details: jsonb("details"), // For Larson Juhl catalog properties (collection, style, sku, etc.)
 });
 
 export const insertFrameOptionSchema = createInsertSchema(frameOptions).omit({

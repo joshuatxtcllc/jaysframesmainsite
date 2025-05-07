@@ -83,11 +83,11 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
         // Fetch mat options
         const matResponse = await fetch('/api/mat-options');
-        const matData = await matResponse.json();
+        const matData = await matResponse.json() as MatOption[];
         // Remove any duplicates using a map with ID as key
         const uniqueMats = Array.from(
-          new Map(matData.map(mat => [mat.id, mat])).values()
-        );
+          new Map(matData.map((mat: MatOption) => [mat.id, mat])).values()
+        ) as MatOption[];
         setDatabaseMats(uniqueMats);
         console.log("Fetched mat options:", uniqueMats);
 
@@ -201,6 +201,29 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     }
   }, [databaseFrames, databaseMats]);
 
+  // Group frames by collection for better organization
+  const framesByCollection = useMemo(() => {
+    const grouped: {[key: string]: FrameOption[]} = {};
+    
+    // Process all database frames
+    databaseFrames.forEach(frame => {
+      const details = frame.details as any;
+      const collection = details?.collection || 'Standard';
+      
+      if (!grouped[collection]) {
+        grouped[collection] = [];
+      }
+      grouped[collection].push(frame);
+    });
+    
+    return grouped;
+  }, [databaseFrames]);
+  
+  // Get available collections for filtering
+  const availableCollections = useMemo(() => {
+    return Object.keys(framesByCollection).sort();
+  }, [framesByCollection]);
+  
   // Filter frames by selected collection
   const filteredFrames = useMemo(() => {
     // Ensure we have frames even if the API fails
@@ -208,20 +231,14 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       return [];
     }
     
-    // Only use database frames for now until Larson Juhl catalog is populated
-    return databaseFrames;
-    
-    /* Commenting out until Larson Juhl catalog is populated
+    // If no collection selected, return all frames or limit to a reasonable amount
     if (!selectedCollection) {
-      return [...databaseFrames, ...larsonJuhlFrames];
+      return databaseFrames.slice(0, 100); // Limit to prevent performance issues
     }
 
-    return larsonJuhlFrames.filter(frame => {
-      const details = frame.details as any;
-      return details && details.collection === selectedCollection;
-    });
-    */
-  }, [databaseFrames]);
+    // Return frames from the selected collection
+    return framesByCollection[selectedCollection] || [];
+  }, [databaseFrames, framesByCollection, selectedCollection]);
 
 
   // Fetch glass options
@@ -574,6 +591,35 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </span>
               )}
             </div>
+            
+            {/* Collection Filter */}
+            {availableCollections.length > 0 && (
+              <div className="mb-4">
+                <div className="text-sm font-medium mb-2 text-neutral-700">Filter by Collection</div>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant={selectedCollection === null ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCollection(null)}
+                    className="text-xs"
+                  >
+                    All Frames
+                  </Button>
+                  {availableCollections.map(collection => (
+                    <Button
+                      key={collection}
+                      variant={selectedCollection === collection ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedCollection(collection)}
+                      className="text-xs"
+                    >
+                      {collection}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 max-h-96 overflow-y-auto p-2">
               {filteredFrames.map((frame) => (
                 <div 
