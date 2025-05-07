@@ -84,8 +84,12 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         // Fetch mat options
         const matResponse = await fetch('/api/mat-options');
         const matData = await matResponse.json();
-        setDatabaseMats(matData);
-        console.log("Fetched mat options:", matData);
+        // Remove any duplicates using a map with ID as key
+        const uniqueMats = Array.from(
+          new Map(matData.map(mat => [mat.id, mat])).values()
+        );
+        setDatabaseMats(uniqueMats);
+        console.log("Fetched mat options:", uniqueMats);
 
         // Fetch Larson Juhl catalog
         const larsonJuhlResponse = await fetch('/api/catalog/larson-juhl');
@@ -200,10 +204,14 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   // Filter frames by selected collection
   const filteredFrames = useMemo(() => {
     // Ensure we have frames even if the API fails
-    if (databaseFrames.length === 0 && larsonJuhlFrames.length === 0) {
+    if (databaseFrames.length === 0) {
       return [];
     }
     
+    // Only use database frames for now until Larson Juhl catalog is populated
+    return databaseFrames;
+    
+    /* Commenting out until Larson Juhl catalog is populated
     if (!selectedCollection) {
       return [...databaseFrames, ...larsonJuhlFrames];
     }
@@ -212,7 +220,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       const details = frame.details as any;
       return details && details.collection === selectedCollection;
     });
-  }, [databaseFrames, larsonJuhlFrames, selectedCollection]);
+    */
+  }, [databaseFrames]);
 
 
   // Fetch glass options
@@ -565,7 +574,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 max-h-96 overflow-y-auto p-2">
               {filteredFrames.map((frame) => (
                 <div 
                   key={frame.id}
@@ -576,10 +585,32 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   }`}
                   onClick={() => setSelectedFrame(frame.id)}
                 >
-                  <div 
-                    className="h-16 border-b"
-                    style={{ backgroundColor: frame.color }}
-                  ></div>
+                  <div className="relative">
+                    <div 
+                      className="h-16 border-b"
+                      style={{ backgroundColor: frame.color }}
+                    ></div>
+                    {/* Add wooden texture overlay for wood frames */}
+                    {frame.material === 'Wood' && (
+                      <div 
+                        className="absolute inset-0 opacity-30 mix-blend-overlay"
+                        style={{ 
+                          backgroundImage: 'url("https://www.transparenttextures.com/patterns/wood-pattern.png")', 
+                          backgroundSize: 'cover' 
+                        }}
+                      ></div>
+                    )}
+                    {/* Add metal texture overlay for metal frames */}
+                    {frame.material === 'Metal' && (
+                      <div 
+                        className="absolute inset-0 opacity-30 mix-blend-overlay"
+                        style={{ 
+                          backgroundImage: 'url("https://www.transparenttextures.com/patterns/brushed-alum.png")', 
+                          backgroundSize: 'cover' 
+                        }}
+                      ></div>
+                    )}
+                  </div>
                   <div className="p-2">
                     <p className="text-xs font-medium text-center line-clamp-1">{frame.name}</p>
                     <p className="text-xs text-center text-neutral-500">{frame.material}</p>
@@ -609,7 +640,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               {useStackedFrame && (
                 <div className="pl-8 border-l-2 border-accent">
                   <h4 className="text-sm font-medium mb-3 text-primary">Select Secondary Frame</h4>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-56 overflow-y-auto p-2">
                     {filteredFrames.map((frame) => (
                       <div 
                         key={`stacked-${frame.id}`}
@@ -620,10 +651,32 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         }`}
                         onClick={() => setSelectedStackedFrame(frame.id)}
                       >
-                        <div 
-                          className="h-12 border-b"
-                          style={{ backgroundColor: frame.color }}
-                        ></div>
+                        <div className="relative">
+                          <div 
+                            className="h-12 border-b"
+                            style={{ backgroundColor: frame.color }}
+                          ></div>
+                          {/* Add wooden texture overlay for wood frames */}
+                          {frame.material === 'Wood' && (
+                            <div 
+                              className="absolute inset-0 opacity-30 mix-blend-overlay"
+                              style={{ 
+                                backgroundImage: 'url("https://www.transparenttextures.com/patterns/wood-pattern.png")', 
+                                backgroundSize: 'cover' 
+                              }}
+                            ></div>
+                          )}
+                          {/* Add metal texture overlay for metal frames */}
+                          {frame.material === 'Metal' && (
+                            <div 
+                              className="absolute inset-0 opacity-30 mix-blend-overlay"
+                              style={{ 
+                                backgroundImage: 'url("https://www.transparenttextures.com/patterns/brushed-alum.png")', 
+                                backgroundSize: 'cover' 
+                              }}
+                            ></div>
+                          )}
+                        </div>
                         <div className="p-2">
                           <p className="text-xs font-medium text-center line-clamp-1">{frame.name}</p>
                         </div>
