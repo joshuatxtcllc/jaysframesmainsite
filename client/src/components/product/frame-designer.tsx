@@ -79,11 +79,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         const frameResponse = await fetch('/api/frame-options');
         const frameData = await frameResponse.json();
         setDatabaseFrames(frameData);
+        console.log("Fetched frame options:", frameData);
 
         // Fetch mat options
         const matResponse = await fetch('/api/mat-options');
         const matData = await matResponse.json();
         setDatabaseMats(matData);
+        console.log("Fetched mat options:", matData);
 
         // Fetch Larson Juhl catalog
         const larsonJuhlResponse = await fetch('/api/catalog/larson-juhl');
@@ -102,8 +104,106 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     fetchOptions();
   }, []);
 
+  // Fallback sample data if API fails to load
+  useEffect(() => {
+    if (databaseFrames.length === 0) {
+      console.log("Using fallback frame options");
+      setDatabaseFrames([
+        {
+          id: 1,
+          name: "Matte Black",
+          color: "#000000",
+          material: "Wood",
+          pricePerInch: 125,
+          imageUrl: "/images/frames/black.png",
+          width: 25
+        },
+        {
+          id: 2,
+          name: "White Gallery",
+          color: "#FFFFFF",
+          material: "Wood",
+          pricePerInch: 175,
+          imageUrl: "/images/frames/white.png",
+          width: 25
+        },
+        {
+          id: 3,
+          name: "Natural Maple",
+          color: "#E5DCC5",
+          material: "Wood",
+          pricePerInch: 150,
+          imageUrl: "/images/frames/maple.png",
+          width: 25
+        },
+        {
+          id: 4,
+          name: "Cherry Wood",
+          color: "#6E2C00",
+          material: "Wood",
+          pricePerInch: 165,
+          imageUrl: "/images/frames/cherry.png",
+          width: 25
+        }
+      ]);
+    }
+    
+    if (databaseMats.length === 0) {
+      console.log("Using fallback mat options");
+      setDatabaseMats([
+        {
+          id: 1,
+          name: "Bright White",
+          color: "#FFFFFF",
+          price: 3500,
+          imageUrl: "/images/mats/white.png"
+        },
+        {
+          id: 2,
+          name: "Antique White",
+          color: "#F5F5F5",
+          price: 3500,
+          imageUrl: "/images/mats/antique-white.png"
+        },
+        {
+          id: 3,
+          name: "Midnight Black",
+          color: "#000000",
+          price: 4000,
+          imageUrl: "/images/mats/black.png"
+        },
+        {
+          id: 4,
+          name: "Navy Blue",
+          color: "#001F3F",
+          price: 4000,
+          imageUrl: "/images/mats/navy.png"
+        },
+        {
+          id: 5,
+          name: "Forest Green",
+          color: "#228B22",
+          price: 4000,
+          imageUrl: "/images/mats/green.png"
+        },
+        {
+          id: 6,
+          name: "Burgundy",
+          color: "#800020",
+          price: 4000,
+          imageUrl: "/images/mats/burgundy.png"
+        }
+      ]);
+    }
+  }, [databaseFrames, databaseMats]);
+
   // Filter frames by selected collection
   const filteredFrames = useMemo(() => {
+    // Ensure we have frames even if the API fails
+    if (databaseFrames.length === 0 && larsonJuhlFrames.length === 0) {
+      return [];
+    }
+    
     if (!selectedCollection) {
       return [...databaseFrames, ...larsonJuhlFrames];
     }
