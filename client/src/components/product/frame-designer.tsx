@@ -14,7 +14,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { FrameOption, MatOption, GlassOption } from "@/types";
-import { Lightbulb, ShoppingCart, Trophy, Target } from "lucide-react";
+import { Lightbulb, ShoppingCart, Trophy, Target, Download } from "lucide-react";
 import { DynamicFramePreview } from "./dynamic-frame-preview";
 import { ProgressTracker, ProgressBar } from "@/components/design-progress";
 import { useDesignProgress } from "@/contexts/design-progress-context";
@@ -531,54 +531,95 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Frame Preview and Left Column */}
+      {/* Left Column with Frame Preview */}
       <div className="lg:col-span-2">
-        <div className="bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-xl p-8 shadow-elegant h-full">
-          <h2 className="text-2xl font-serif font-bold mb-6 text-primary">Custom Frame Designer</h2>
-
-          {/* Dimensions - Moved above the preview */}
-          <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
-            <h3 className="text-lg font-serif font-bold mb-3 text-primary">Artwork Dimensions</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="block text-xs mb-1 text-neutral-500">Width (inches)</Label>
-                <Input 
-                  type="number" 
-                  value={width}
-                  min={1}
-                  max={60}
-                  onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
-                  className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              <div>
-                <Label className="block text-xs mb-1 text-neutral-500">Height (inches)</Label>
-                <Input 
-                  type="number" 
-                  value={height}
-                  min={1}
-                  max={60}
-                  onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
-                  className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-              </div>
+        <div className="bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant h-full">
+          <div className="flex justify-between items-start mb-4">
+            <h2 className="text-2xl font-serif font-bold text-primary">Custom Frame Designer</h2>
+            <div className="flex space-x-2">
+              <Button variant="outline" size="sm" className="text-xs">
+                <Download className="h-3 w-3 mr-1" />
+                Save
+              </Button>
+              <Button size="sm" className="text-xs">
+                <ShoppingCart className="h-3 w-3 mr-1" />
+                Add to Cart
+              </Button>
             </div>
           </div>
-
-          {/* Dynamic Frame Preview with AR capabilities */}
-          <div className="mb-8">
-            <DynamicFramePreview
-              width={width}
-              height={height}
-              selectedFrame={getSelectedFrameOption() || null}
-              selectedMat={getSelectedMatOption() || null}
-              selectedGlass={getSelectedGlassOption() || null}
-              topMatReveal={topMatReveal}
-              middleMatReveal={middleMatReveal}
-              bottomMatReveal={bottomMatReveal}
-              useMiddleMat={useMiddleMat}
-              useBottomMat={useBottomMat}
-            />
+          
+          {/* Grid Layout for Top Elements */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Frame Preview in First Column */}
+            <div className="md:col-span-2">
+              <DynamicFramePreview
+                width={width}
+                height={height}
+                selectedFrame={getSelectedFrameOption() || null}
+                selectedMat={getSelectedMatOption() || null}
+                selectedGlass={getSelectedGlassOption() || null}
+                topMatReveal={topMatReveal}
+                middleMatReveal={middleMatReveal}
+                bottomMatReveal={bottomMatReveal}
+                useMiddleMat={useMiddleMat}
+                useBottomMat={useBottomMat}
+              />
+            </div>
+            
+            {/* Dimensions and Price in Second Column */}
+            <div className="md:col-span-1">
+              {/* Dimensions */}
+              <div className="bg-white p-4 shadow-sm rounded-lg mb-4">
+                <h3 className="text-md font-serif font-bold mb-2 text-primary">Artwork Size</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label className="block text-xs mb-1 text-neutral-500">Width (in)</Label>
+                    <Input 
+                      type="number" 
+                      value={width}
+                      min={1}
+                      max={60}
+                      onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
+                      className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                  <div>
+                    <Label className="block text-xs mb-1 text-neutral-500">Height (in)</Label>
+                    <Input 
+                      type="number" 
+                      value={height}
+                      min={1}
+                      max={60}
+                      onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
+                      className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Frame Specifications Summary */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <h3 className="text-md font-serif font-bold mb-2 text-primary">Frame Summary</h3>
+                <ul className="space-y-2 text-xs">
+                  <li className="flex justify-between items-center">
+                    <span className="text-neutral-500">Size:</span>
+                    <span className="font-medium text-primary">{width}" × {height}"</span>
+                  </li>
+                  <li className="flex justify-between items-center">
+                    <span className="text-neutral-500">Frame:</span>
+                    <span className="font-medium text-primary truncate max-w-[120px]">{getSelectedFrameOption()?.name || "None"}</span>
+                  </li>
+                  <li className="flex justify-between items-center">
+                    <span className="text-neutral-500">Mat:</span>
+                    <span className="font-medium text-primary truncate max-w-[120px]">{getSelectedMatOption()?.name || "None"}</span>
+                  </li>
+                  <li className="flex justify-between items-center">
+                    <span className="text-neutral-500">Glass:</span>
+                    <span className="font-medium text-primary truncate max-w-[120px]">{getSelectedGlassOption()?.name || "None"}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
 
           {/* Frame Selection - Below preview */}
