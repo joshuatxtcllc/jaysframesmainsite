@@ -281,7 +281,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Import and use redirect handlers
-  import { handleRedirects, handle404 } from './redirects';
+  const { handleRedirects, handle404 } = require('./redirects');
   
   // Apply redirect middleware before the static file handler
   app.use(handleRedirects);
