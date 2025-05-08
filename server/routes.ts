@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import { WebSocketServer, WebSocket } from 'ws';
+import { handleRedirects, handle404 } from './redirects';
 import { 
   insertOrderSchema, 
   insertChatMessageSchema, 
@@ -280,9 +281,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(options);
   });
 
-  // Import and use redirect handlers
-  import { handleRedirects, handle404 } from './redirects';
-  
   // Apply redirect middleware before the static file handler
   app.use(handleRedirects);
 
