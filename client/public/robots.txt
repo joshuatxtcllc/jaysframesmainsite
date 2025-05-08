@@ -1,4 +1,15 @@
+
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /api/
+Disallow: /api-docs/
 
+# Allow product pages to be indexed
+Allow: /products
+Allow: /custom-framing
+Allow: /order-status
+
+# Specify the sitemap location
 Sitemap: https://jaysframes.com/sitemap.xml

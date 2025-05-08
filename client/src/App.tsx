@@ -33,7 +33,7 @@ import { CartProvider } from "@/context/cart-context";
 import { lazy } from 'react';
 import CatalogManagement from './pages/admin/catalog-management';
 import BlogManager from './pages/admin/blog-manager';
-import { DesignProgressProvider } from '@/contexts/design-progress-context';
+import './lib/seo-monitor'; // Import SEO monitoring
 
 function Router() {
   return (
@@ -73,17 +73,15 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CartProvider>
-        <DesignProgressProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <Router />
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-          <GlobalVoiceAssistant triggerPhrase="hey echo" />
-        </DesignProgressProvider>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-grow">
+            <Router />
+          </main>
+          <Footer />
+        </div>
+        <Toaster />
+        <GlobalVoiceAssistant triggerPhrase="hey echo" />
       </CartProvider>
     </QueryClientProvider>
   );

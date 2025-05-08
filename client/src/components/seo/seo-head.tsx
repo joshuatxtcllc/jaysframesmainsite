@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
@@ -11,11 +12,13 @@ interface SeoHeadProps {
   ogType?: 'website' | 'article' | 'product' | 'profile';
   twitterCard?: 'summary' | 'summary_large_image' | 'app' | 'player';
   canonicalUrl?: string;
+  structuredData?: Record<string, any> | Record<string, any>[];
+  noIndex?: boolean;
   children?: React.ReactNode;
 }
 
 /**
- * SEO component for consistent meta tags and canonical URLs
+ * Enhanced SEO component for consistent meta tags and canonical URLs
  */
 export default function SeoHead({
   title,
@@ -23,10 +26,12 @@ export default function SeoHead({
   keywords,
   ogTitle,
   ogDescription,
-  ogImage = '/images/og-image.jpg',
+  ogImage = '/images/jays-frames-og-image.jpg',
   ogType = 'website',
   twitterCard = 'summary_large_image',
   canonicalUrl,
+  structuredData,
+  noIndex = false,
   children,
 }: SeoHeadProps) {
   // Generate proper canonical URL
@@ -51,18 +56,30 @@ export default function SeoHead({
   }
   
   const fullCanonicalUrl = `${baseUrl}${path}`;
+  
+  // Format title to include brand name if not already included
+  const formattedTitle = title.includes("Jay's Frames") 
+    ? title 
+    : `${title} | Jay's Frames - Custom Framing Houston`;
 
   return (
     <Helmet>
-      <title>{title}</title>
+      <title>{formattedTitle}</title>
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
+      
+      {/* Robots directives */}
+      {noIndex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      )}
       
       {/* Canonical URL */}
       <link rel="canonical" href={fullCanonicalUrl} />
       
       {/* Open Graph Meta Tags */}
-      <meta property="og:title" content={ogTitle || title} />
+      <meta property="og:title" content={ogTitle || formattedTitle} />
       <meta property="og:description" content={ogDescription || description} />
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={fullCanonicalUrl} />
@@ -72,9 +89,22 @@ export default function SeoHead({
       
       {/* Twitter Meta Tags */}
       <meta name="twitter:card" content={twitterCard} />
-      <meta name="twitter:title" content={ogTitle || title} />
+      <meta name="twitter:title" content={ogTitle || formattedTitle} />
       <meta name="twitter:description" content={ogDescription || description} />
       {ogImage && <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`} />}
+      
+      {/* Geo Tags for Local SEO */}
+      <meta name="geo.region" content="US-TX" />
+      <meta name="geo.placename" content="Houston" />
+      <meta name="geo.position" content="29.7604;-95.3698" />
+      <meta name="ICBM" content="29.7604, -95.3698" />
+      
+      {/* Structured Data / JSON-LD */}
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
       
       {children}
     </Helmet>
