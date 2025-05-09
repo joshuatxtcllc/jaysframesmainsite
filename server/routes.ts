@@ -1429,8 +1429,36 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
     path: '/ws',
     // Explicitly set these handlers to prevent connection issues
     verifyClient: () => true,
-    clientTracking: true
+    clientTracking: true,
+    // Add higher timeout values for better connection stability
+    perMessageDeflate: {
+      zlibDeflateOptions: {
+        chunkSize: 1024,
+        memLevel: 7,
+        level: 3
+      },
+      zlibInflateOptions: {
+        chunkSize: 10 * 1024
+      },
+      serverNoContextTakeover: true,
+      clientNoContextTakeover: true,
+      concurrencyLimit: 10,
+      threshold: 1024
+    }
   });
+  
+  // Add a ping interval to keep connections alive
+  const pingInterval = setInterval(() => {
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        try {
+          client.send(JSON.stringify({ type: 'ping' }));
+        } catch (err) {
+          console.error('Error sending ping:', err);
+        }
+      }
+    });
+  }, 30000); // Ping every 30 seconds
   
   console.log('WebSocket server initialized at path: /ws');
   

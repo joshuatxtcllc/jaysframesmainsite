@@ -71,7 +71,9 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
   // Setup WebSocket connection
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const host = window.location.host;
+    // Fix: Use relative path to ensure correct routing through the server
+    const wsUrl = `${protocol}//${host}/ws`;
     let reconnectAttempts = 0;
     let reconnectInterval: number | null = null;
     let isConnecting = false;
@@ -80,10 +82,6 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
     const setupWebSocket = () => {
       if (isConnecting) return; // Prevent multiple connection attempts
       isConnecting = true;
-
-    // Construct a proper WebSocket URL with protocol and host
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
 
     console.log(`Attempting to connect to WebSocket: ${wsUrl}`);
 
