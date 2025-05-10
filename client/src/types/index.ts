@@ -16,7 +16,17 @@ export interface FrameOption {
   material: string;
   pricePerInch: number;
   imageUrl?: string;
-  // Enhanced properties from catalog data
+  width?: number;
+  details?: {
+    collection?: string;
+    style?: string;
+    sku?: string;
+    description?: string;
+    details?: {
+      width?: number;
+    }
+  };
+  // Backward compatibility for older code
   collection?: string;
   collectionInfo?: {
     style: string;
@@ -24,7 +34,6 @@ export interface FrameOption {
     bestFor: string;
     description: string;
   };
-  width?: number;
   finish?: string;
 }
 
