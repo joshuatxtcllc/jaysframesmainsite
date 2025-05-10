@@ -218,9 +218,9 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
           } else {
             console.error('Maximum reconnection attempts reached');
             toast({
-              title: "Connection Failed",
-              description: "Unable to establish a voice assistant connection. Please try again later.",
-              variant: "destructive"
+              title: "Connection Issues",
+              description: "Voice connection unavailable. You can still type your questions in the text field.",
+              variant: "warning"
             });
           }
         };
@@ -764,6 +764,26 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             )}
           </div>
 
+          {/* Text input for typing when voice is unavailable */}
+          <div className="px-1 pt-2">
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="Type your message here..."
+                value={transcript}
+                onChange={(e) => setTranscript(e.target.value)}
+                disabled={isProcessingCommand}
+                className="flex-1"
+              />
+              <Button 
+                onClick={handleCommandClick} 
+                disabled={!transcript.trim() || isProcessingCommand}
+                size="icon"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
           {/* Voice controls */}
           <div className="sticky bottom-0 pt-2 bg-card flex justify-between items-center">
             <div className="grid grid-cols-2 gap-2 w-full">
@@ -771,6 +791,8 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
                 variant={isListening ? "destructive" : "default"}
                 onClick={isListening ? stopListening : startListening}
                 className="w-full text-white"
+                disabled={!speechSupported}
+                title={!speechSupported ? "Speech recognition not available in your browser" : ""}
               >
                 {isListening ? (
                   <>
