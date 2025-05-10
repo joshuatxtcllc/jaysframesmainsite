@@ -68,12 +68,12 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
   const wsRef = useRef<WebSocket | null>(null);
   const { toast } = useToast();
 
-  // Setup WebSocket connection
+  // Initialize WebSocket connection
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.host;
-    // Fix: Use relative path to ensure correct routing through the server
-    const wsUrl = `${protocol}//${host}/ws`;
+    // Use absolute path with API prefix to ensure proper routing
+    const wsUrl = `${protocol}//${host}/api/ws`;
     let reconnectAttempts = 0;
     let reconnectInterval: number | null = null;
     let isConnecting = false;

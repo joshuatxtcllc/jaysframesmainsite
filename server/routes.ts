@@ -1433,7 +1433,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
   // Create WebSocket server for real-time voice assistant communication
   const wss = new WebSocketServer({ 
     server: httpServer, 
-    path: '/ws',
+    path: '/api/ws',
     // Explicitly set these handlers to prevent connection issues
     verifyClient: () => true,
     clientTracking: true,
