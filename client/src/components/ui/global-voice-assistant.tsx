@@ -425,6 +425,16 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
         }
       }
     }
+    // Check if the transcript contains image analysis request
+    else if (/analyze (this|the|my) (image|artwork|picture|photo)/i.test(transcript)) {
+      // Check if an image is uploaded
+      if (selectedFile && previewUrl) {
+        analyzeImage();
+      } else {
+        setResponse("Please upload an image first before asking me to analyze it.");
+        setIsProcessingCommand(false);
+      }
+    }
     // Check if the transcript contains pricing inquiry
     else if (/how much would .* cost/i.test(transcript)) {
       if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
@@ -450,7 +460,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
 
     // Clear transcript after processing
     setTranscript('');
-  }, [transcript]);
+  }, [transcript, selectedFile, previewUrl]);
 
   // Speak response using speech synthesis
   const speakResponse = useCallback((text: string) => {

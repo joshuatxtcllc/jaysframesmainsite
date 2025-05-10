@@ -306,6 +306,18 @@ export default function VoiceFrameAssistant() {
       return;
     }
     
+    // Check if message is requesting image analysis
+    if (/analyze (this|the|my) (image|artwork|picture|photo)/i.test(message.toLowerCase())) {
+      // Check if an image is uploaded
+      if (selectedFile) {
+        analyzeImage();
+        return;
+      } else {
+        setError('Please upload an image first before asking me to analyze it.');
+        return;
+      }
+    }
+    
     setIsLoading(true);
     setError('');
     
