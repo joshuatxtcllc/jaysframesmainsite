@@ -39,6 +39,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // API Documentation and Integration
   app.get("/api/docs", (req: Request, res: Response) => {
+
+  // Health check endpoint for root path
+  app.get("/", (req: Request, res: Response) => {
+    res.status(200).json({ status: "ok" });
+  });
+
+
     const apiDocs = {
       version: "1.0.0",
       baseUrl: `${req.protocol}://${req.get('host')}/api`,

@@ -122,7 +122,7 @@ app.use((req, res, next) => {
       next();
     } else {
       // In production, serve the static index.html
-      res.sendFile('index.html', { root: './client/dist' });
+      res.sendFile('index.html', { root: './dist/public' });
     }
   });
 
@@ -163,8 +163,8 @@ process.on("uncaughtException", (error) => {
       console.log('Blog categories table exists');
     } catch (error) {
       console.log('Creating blog tables...');
-      // Initialize blog sample data.  This assumes a function 'initializeBlogData' exists in './storage'
-      await storage.initializeBlogData(); 
+      // Initialize blog sample data
+      await db.initializeBlogData(); 
       console.log('Blog tables initialized with sample data');
     }
   } catch (error) {
