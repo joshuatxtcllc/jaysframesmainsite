@@ -7,6 +7,7 @@ import { MessageSquare, Wand2, PaintBucket, Camera, ExternalLink } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet";
+import { DesignProgressProvider } from "@/contexts/design-progress-context";
 
 const CustomFraming = () => {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -112,7 +113,9 @@ const CustomFraming = () => {
             </p>
           </div>
 
-          <FrameDesigner />
+          <DesignProgressProvider designId={`design-${Date.now()}`}>
+            <FrameDesigner />
+          </DesignProgressProvider>
         </div>
       </section>
 
