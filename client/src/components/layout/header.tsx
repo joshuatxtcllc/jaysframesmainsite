@@ -120,6 +120,7 @@ const Header = () => {
 
   // Define submenu items for Custom Framing
   const customFramingSubMenu = [
+    { href: "/custom-framing", label: "Start Framing", icon: <Wand2 className="mr-2 h-4 w-4" />, highlight: true },
     { href: "/products", label: "Products", icon: <LayoutGrid className="mr-2 h-4 w-4" /> },
     { href: "/frame-fitting-assistant", label: "Frame Fitting AI", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
     { href: "/voice-frame-assistant", label: "Voice Assistant", icon: <Radio className="mr-2 h-4 w-4" /> },
@@ -216,6 +217,7 @@ const Header = () => {
                         href={item.href}
                         className={cn(
                           "flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
+                          item.highlight ? "bg-secondary text-white font-semibold" : 
                           location === item.href ? "bg-accent text-accent-foreground" : "text-primary"
                         )}
                       >
@@ -365,7 +367,10 @@ const Header = () => {
                   {customFramingSubMenu.map((item) => (
                     <Link key={item.href} href={item.href}>
                       <div 
-                        className={`${location === item.href ? 'text-secondary' : 'text-primary'} hover:text-secondary flex items-center font-medium transition-colors duration-200 cursor-pointer pl-2 py-2 text-sm`}
+                        className={`${
+                          item.highlight ? 'bg-secondary text-white rounded-md' :
+                          location === item.href ? 'text-secondary' : 'text-primary'
+                        } hover:text-secondary flex items-center font-medium transition-colors duration-200 cursor-pointer pl-2 py-2 text-sm`}
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {item.icon}
