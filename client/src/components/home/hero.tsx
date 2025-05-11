@@ -165,12 +165,16 @@ const Hero = () => {
               
               {/* Enhanced buttons with better contrast */}
               <div className="flex gap-4 justify-start">
-                <div className="h-10 bg-secondary rounded-md w-auto px-6 flex items-center justify-center text-white text-sm font-medium shadow-highlight transition-all duration-300 hover:bg-secondary/90 hover:scale-105 cursor-pointer">
-                  Explore Services
-                </div>
-                <div className="h-10 border border-secondary rounded-md w-auto px-6 flex items-center justify-center text-secondary text-sm font-medium transition-all duration-300 hover:bg-secondary/10 hover:scale-105 cursor-pointer">
-                  Get Quote
-                </div>
+                <Link href="/custom-framing">
+                  <div className="h-10 bg-secondary rounded-md w-auto px-6 flex items-center justify-center text-white text-sm font-medium shadow-highlight transition-all duration-300 hover:bg-secondary/90 hover:scale-105 cursor-pointer">
+                    Explore Services
+                  </div>
+                </Link>
+                <Link href="/contact">
+                  <div className="h-10 border border-secondary rounded-md w-auto px-6 flex items-center justify-center text-secondary text-sm font-medium transition-all duration-300 hover:bg-secondary/10 hover:scale-105 cursor-pointer">
+                    Get Quote
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
