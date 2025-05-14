@@ -992,7 +992,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
 
-          {/* Glass Selection - Moved to left column */}
+          {/* Glass Selection - Enhanced with more details */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-lg font-serif font-bold text-primary">Glass Type</h3>
@@ -1002,20 +1002,24 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </span>
               )}
             </div>
+            
+            <p className="text-sm text-neutral-600 mb-4">
+              Choose the right glass to protect your artwork and enhance its appearance. Different glass options offer varying levels of clarity, UV protection, and glare reduction.
+            </p>
 
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-4">
               {glassOptions.map((glass) => (
                 <div 
                   key={glass.id}
                   className={`cursor-pointer bg-white rounded-lg overflow-hidden transition-all duration-300 ${
                     selectedGlass === glass.id 
-                      ? 'ring-2 ring-accent shadow-md' 
+                      ? 'ring-2 ring-accent shadow-md border border-accent/30' 
                       : 'border border-neutral-200 hover:border-accent hover:shadow-sm'
                   }`}
                   onClick={() => setSelectedGlass(glass.id)}
                 >
-                  <div className="flex items-center p-3">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-3 ${
+                  <div className="flex items-start p-4">
+                    <div className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center mr-3 mt-1 ${
                       selectedGlass === glass.id ? 'bg-accent text-white' : 'bg-neutral-100'
                     }`}>
                       {selectedGlass === glass.id && (
@@ -1025,17 +1029,42 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                       )}
                     </div>
 
-                    <div>
+                    <div className="flex-grow">
                       <h4 className="text-sm font-medium">{glass.name}</h4>
-                      <p className="text-xs text-neutral-500">{glass.description}</p>
+                      <p className="text-xs text-neutral-500 mt-1">{glass.description}</p>
+                      
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {glass.name.includes("UV") && (
+                          <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium">UV Protection</span>
+                        )}
+                        {glass.name.includes("Anti-Glare") || glass.name.includes("Non-Glare") && (
+                          <span className="px-2 py-0.5 bg-green-50 text-green-700 rounded text-xs font-medium">Reduced Glare</span>
+                        )}
+                        {glass.name.includes("Museum") && (
+                          <span className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-xs font-medium">Museum Quality</span>
+                        )}
+                        {glass.name.includes("Standard") && (
+                          <span className="px-2 py-0.5 bg-gray-50 text-gray-700 rounded text-xs font-medium">Basic Protection</span>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="ml-auto text-sm font-medium text-primary">
+                    <div className="ml-auto text-sm font-medium text-primary flex-shrink-0">
                       {formatPrice(glass.price)}
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+            
+            <div className="mt-4 p-3 bg-blue-50 rounded-md text-xs text-blue-700">
+              <p className="font-medium mb-1">Glass Protection Guide</p>
+              <ul className="list-disc pl-4 space-y-1">
+                <li>Standard Glass: Good for basic framing needs in low-light environments</li>
+                <li>UV Protection: Recommended for valuable artwork or photographs</li>
+                <li>Anti-Glare/Non-Glare: Ideal for areas with direct lighting</li>
+                <li>Museum Glass: Best choice for heirlooms and professional displays</li>
+              </ul>
             </div>
           </div>
 
