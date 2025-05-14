@@ -1111,7 +1111,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         {glass.name.includes("UV") && (
                           <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium">UV Protection</span>
                         )}
-                        {glass.name.includes("Anti-Glare") || glass.name.includes("Non-Glare") && (
+                        {(glass.name.includes("Anti-Glare") || glass.name.includes("Non-Glare")) && (
                           <span className="px-2 py-0.5 bg-green-50 text-green-700 rounded text-xs font-medium">Reduced Glare</span>
                         )}
                         {glass.name.includes("Museum") && (
@@ -1197,7 +1197,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               )}
 
               {useBottomMat && selectedBottomMat && (
-                <li className="flex justify-between items-center pb-2 border-b borderneutral-100">
+                <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
                   <span className="text-neutral-500 text-sm">Bottom Mat:</span>
                   <div className="flex items-center">
                     <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getSelectedBottomMatOption()?.color }}></span>
