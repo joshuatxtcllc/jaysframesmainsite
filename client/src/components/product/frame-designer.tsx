@@ -25,6 +25,7 @@ interface FrameDesignerProps {
 }
 
 const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerProps) => {
+  // Frame Specifications
   const [width, setWidth] = useState(initialWidth);
   const [height, setHeight] = useState(initialHeight);
   const [selectedFrame, setSelectedFrame] = useState<number | null>(null);
@@ -40,6 +41,10 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const [middleMatReveal, setMiddleMatReveal] = useState<number>(1); // Default 1/8"
   const [bottomMatReveal, setBottomMatReveal] = useState<number>(1); // Default 1/8"
 
+  // Special mounting options
+  const [useFloatMount, setUseFloatMount] = useState<boolean>(false);
+  const [useGlassSpacer, setUseGlassSpacer] = useState<boolean>(false);
+
   const [selectedGlass, setSelectedGlass] = useState<number | null>(null);
   const [artworkDescription, setArtworkDescription] = useState("");
   const [aiRecommendations, setAiRecommendations] = useState<{
@@ -47,10 +52,10 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     mats: MatOption[];
     explanation: string;
   } | null>(null);
-  
+
   // Unique design ID for this framing session
   const [designId] = useState(`design-${Date.now()}`);
-  
+
   // Progress tracking
   const { 
     markStepCompleted, 
@@ -151,7 +156,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         }
       ]);
     }
-    
+
     if (databaseMats.length === 0) {
       console.log("Using fallback mat options");
       setDatabaseMats([
@@ -204,33 +209,33 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   // Group frames by collection for better organization
   const framesByCollection = useMemo(() => {
     const grouped: {[key: string]: FrameOption[]} = {};
-    
+
     // Process all database frames
     databaseFrames.forEach(frame => {
       const details = frame.details as any;
       const collection = details?.collection || 'Standard';
-      
+
       if (!grouped[collection]) {
         grouped[collection] = [];
       }
       grouped[collection].push(frame);
     });
-    
+
     return grouped;
   }, [databaseFrames]);
-  
+
   // Get available collections for filtering
   const availableCollections = useMemo(() => {
     return Object.keys(framesByCollection).sort();
   }, [framesByCollection]);
-  
+
   // Filter frames by selected collection
   const filteredFrames = useMemo(() => {
     // Ensure we have frames even if the API fails
     if (databaseFrames.length === 0) {
       return [];
     }
-    
+
     // If no collection selected, return all frames or limit to a reasonable amount
     if (!selectedCollection) {
       return databaseFrames.slice(0, 100); // Limit to prevent performance issues
@@ -278,7 +283,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       setBottomMatReveal(revealSizes[0].id);
     }
   }, [filteredFrames, databaseMats, glassOptions, revealSizes]);
-  
+
   // Initialize the design progress tracker with this design ID
   useEffect(() => {
     // Initialize with the custom sizing step
@@ -288,7 +293,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     // Update custom size setting
     setHasCustomSize(true);
   }, [designId]);
-  
+
   // Track frame selection for progress
   useEffect(() => {
     if (selectedFrame) {
@@ -299,7 +304,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       }
     }
   }, [selectedFrame]);
-  
+
   // Track mat selection for progress
   useEffect(() => {
     if (selectedMat) {
@@ -311,7 +316,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       }
     }
   }, [selectedMat]);
-  
+
   // Track glass selection for progress
   useEffect(() => {
     if (selectedGlass) {
@@ -389,6 +394,16 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       price += 15; // $15 additional for advanced matting
     }
 
+    // Add float mount charge
+    if (useFloatMount) {
+      price += 50; // $50 additional for float mounting
+    }
+
+    // Add glass spacer charge
+    if (useGlassSpacer) {
+      price += 35; // $35 additional for glass spacers
+    }
+
     return Math.round(price * 100);
   };
 
@@ -421,7 +436,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     if (progress?.currentStep === 'glass_selection') {
       markStepCompleted('glass_selection');
     }
-    
+
     // Update design progress to indicate completion
     markStepCompleted('design_complete');
     updateCurrentStep('checkout');
@@ -437,6 +452,14 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
     if (useMiddleMat || useBottomMat) {
       itemName += " (multi-mat)";
+    }
+
+    if (useFloatMount) {
+      itemName += " (float mount)";
+    }
+
+    if (useGlassSpacer) {
+      itemName += " (glass spacers)";
     }
 
     addToCart({
@@ -470,7 +493,10 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         middleMatRevealSize: middleMatReveal,
         bottomMatRevealSize: bottomMatReveal,
         // Add design tracking information
-        designId: designId
+        designId: designId,
+        // Add special mounting options
+        useFloatMount,
+        useGlassSpacer
       }
     });
   };
@@ -547,7 +573,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               </Button>
             </div>
           </div>
-          
+
           {/* Grid Layout for Top Elements */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Frame Preview in First Column */}
@@ -565,7 +591,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 useBottomMat={useBottomMat}
               />
             </div>
-            
+
             {/* Dimensions and Price in Second Column */}
             <div className="md:col-span-1">
               {/* Dimensions */}
@@ -596,7 +622,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   </div>
                 </div>
               </div>
-              
+
               {/* Frame Specifications Summary */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <h3 className="text-md font-serif font-bold mb-2 text-primary">Frame Summary</h3>
@@ -632,7 +658,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </span>
               )}
             </div>
-            
+
             {/* Collection Filter */}
             {availableCollections.length > 0 && (
               <div className="mb-4">
@@ -660,7 +686,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </div>
               </div>
             )}
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 max-h-96 overflow-y-auto p-2">
               {filteredFrames.map((frame) => (
                 <div 
@@ -990,7 +1016,55 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 )}
               </div>
             </div>
-          </div>
+
+             {/* Mounting Options */}
+             <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
+                <h3 className="text-lg font-serif font-bold text-primary">Mounting Options</h3>
+                <p className="text-sm text-neutral-600 mb-4">
+                    Choose how your artwork is mounted within the frame.
+                </p>
+
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center">
+                        <Switch
+                            checked={useFloatMount}
+                            onCheckedChange={setUseFloatMount}
+                            className="mr-2"
+                        />
+                        <Label className="font-serif text-sm font-medium text-primary cursor-pointer" onClick={() => setUseFloatMount(!useFloatMount)}>
+                            Float Art
+                        </Label>
+                    </div>
+                    <div>
+                        <span className="text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded">Special Order</span>
+                    </div>
+                </div>
+
+                {useFloatMount && (
+                    <div className="pl-8 border-l-2 border-accent mt-3">
+                        <p className="text-sm text-neutral-600 mb-2">
+                            Artwork is mounted on top of the mat for a modern, elevated look.
+                        </p>
+
+                        <div className="flex items-center mb-3">
+                            <Switch
+                                checked={useGlassSpacer}
+                                onCheckedChange={setUseGlassSpacer}
+                                className="mr-2"
+                            />
+                            <Label className="text-sm font-medium text-primary cursor-pointer" onClick={() => setUseGlassSpacer(!useGlassSpacer)}>
+                                Use Glass Spacers
+                            </Label>
+                        </div>
+
+                        {useGlassSpacer && (
+                            <p className="text-xs text-neutral-500 pl-8">
+                                Glass spacers create extra space between the art and glass, providing additional protection.
+                            </p>
+                        )}
+                    </div>
+                )}
+            </div>
 
           {/* Glass Selection - Enhanced with more details */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
@@ -1002,7 +1076,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </span>
               )}
             </div>
-            
+
             <p className="text-sm text-neutral-600 mb-4">
               Choose the right glass to protect your artwork and enhance its appearance. Different glass options offer varying levels of clarity, UV protection, and glare reduction.
             </p>
@@ -1032,7 +1106,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                     <div className="flex-grow">
                       <h4 className="text-sm font-medium">{glass.name}</h4>
                       <p className="text-xs text-neutral-500 mt-1">{glass.description}</p>
-                      
+
                       <div className="mt-2 flex flex-wrap gap-2">
                         {glass.name.includes("UV") && (
                           <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium">UV Protection</span>
@@ -1056,7 +1130,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </div>
               ))}
             </div>
-            
+
             <div className="mt-4 p-3 bg-blue-50 rounded-md text-xs text-blue-700">
               <p className="font-medium mb-1">Glass Protection Guide</p>
               <ul className="list-disc pl-4 space-y-1">
@@ -1137,6 +1211,15 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 </li>
               )}
 
+               {useFloatMount && (
+                    <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                        <span className="text-neutral-500 text-sm">Mounting:</span>
+                        <span className="font-medium text-primary">
+                            Float Mount {useGlassSpacer ? "(with glass spacers)" : ""}
+                        </span>
+                    </li>
+                )}
+
               <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
                 <span className="text-neutral-500 text-sm">Glass Type:</span>
                 <span className="font-medium text-primary">{getSelectedGlassOption()?.name || "Loading..."}</span>
@@ -1166,17 +1249,17 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               </span>
             </div>
           </div>
-          
+
           {/* Progress Bar */}
           <div className="mb-4">
             <ProgressBar />
           </div>
-          
+
           {/* Progress Tracker */}
           <div className="space-y-2">
             <ProgressTracker />
           </div>
-          
+
           {/* Design Tips based on current step */}
           {progress?.currentStep && (
             <div className="mt-4 pt-4 border-t border-neutral-100">
@@ -1204,7 +1287,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           )}
         </div>
-        
+
         <div className="bg-white rounded-lg p-4 shadow-sm mb-6 text-center">
           <h3 className="text-xl font-serif font-bold text-primary mb-1">Design Assistance</h3>
           <p className="text-sm text-neutral-500">Get expert help for your perfect frame</p>
@@ -1337,6 +1420,19 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   : "$0.00"}
               </span>
             </li>
+             {useFloatMount && (
+                    <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                        <span className="text-neutral-500 text-sm">Float Mounting:</span>
+                        <span className="font-medium text-primary">$50.00</span>
+                    </li>
+                )}
+
+                {useGlassSpacer && useFloatMount && (
+                    <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
+                        <span className="text-neutral-500 text-sm">Glass Spacers:</span>
+                        <span className="font-medium text-primary">$35.00</span>
+                    </li>
+                )}
             <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
               <span className="text-neutral-500 text-sm">Mounting:</span>
               <span className="font-medium text-primary">$25.00</span>

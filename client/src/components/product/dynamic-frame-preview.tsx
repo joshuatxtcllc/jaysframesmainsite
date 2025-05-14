@@ -11,11 +11,13 @@ interface DynamicFramePreviewProps {
   selectedFrame: FrameOption | null;
   selectedMat: MatOption | null;
   selectedGlass: GlassOption | null;
-  topMatReveal?: number;
-  middleMatReveal?: number;
-  bottomMatReveal?: number;
-  useMiddleMat?: boolean;
-  useBottomMat?: boolean;
+  topMatReveal: number;
+  middleMatReveal: number;
+  bottomMatReveal: number;
+  useMiddleMat: boolean;
+  useBottomMat: boolean;
+  useFloatMount?: boolean;
+  useGlassSpacer?: boolean;
 }
 
 export const DynamicFramePreview = ({
@@ -28,15 +30,17 @@ export const DynamicFramePreview = ({
   middleMatReveal,
   bottomMatReveal,
   useMiddleMat,
-  useBottomMat
+  useBottomMat,
+  useFloatMount,
+  useGlassSpacer
 }: DynamicFramePreviewProps) => {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [showARPreview, setShowARPreview] = useState<boolean>(false);
   const [showAnimatedPreview, setShowAnimatedPreview] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Handle file upload for the image
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -50,7 +54,7 @@ export const DynamicFramePreview = ({
       reader.readAsDataURL(file);
     }
   };
-  
+
   // Reset and clear the current image
   const resetImage = () => {
     setUserImage(null);
@@ -58,11 +62,11 @@ export const DynamicFramePreview = ({
       fileInputRef.current.value = '';
     }
   };
-  
+
   // Calculate the frame style based on selected options
   const getFrameStyle = useCallback(() => {
     if (!selectedFrame || !selectedMat) return {};
-    
+
     return {
       border: userImage ? '5px solid transparent' : '15px solid transparent',
       boxShadow: userImage 
@@ -73,27 +77,27 @@ export const DynamicFramePreview = ({
       backgroundColor: 'transparent' // Make sure the background is transparent
     };
   }, [selectedFrame, selectedMat, userImage]);
-  
+
   // Open the AR preview modal
   const openARPreview = () => {
     setShowARPreview(true);
   };
-  
+
   // Close the AR preview modal
   const closeARPreview = () => {
     setShowARPreview(false);
   };
-  
+
   // Open the Animated preview modal
   const openAnimatedPreview = () => {
     setShowAnimatedPreview(true);
   };
-  
+
   // Close the Animated preview modal
   const closeAnimatedPreview = () => {
     setShowAnimatedPreview(false);
   };
-  
+
   return (
     <div className="relative">
       {/* Image Preview */}
@@ -116,7 +120,7 @@ export const DynamicFramePreview = ({
                 style={getFrameStyle()}
               />
             )}
-            
+
             {isLoading && (
               <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent"></div>
@@ -124,7 +128,7 @@ export const DynamicFramePreview = ({
             )}
           </div>
         </div>
-        
+
         {selectedFrame && selectedMat && (
           <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-md py-1 px-3 text-xs font-medium shadow-sm border border-neutral-100">
             <div className="flex items-center space-x-2">
@@ -135,7 +139,7 @@ export const DynamicFramePreview = ({
           </div>
         )}
       </div>
-      
+
       {/* Feature badges - moved to top of card, outside of frame display area */}
       <div className="absolute -top-3 right-0">
         <span className="bg-primary text-white text-xs font-bold py-1 px-3 rounded-full flex items-center shadow-md">
@@ -143,7 +147,7 @@ export const DynamicFramePreview = ({
           New: Interactive Preview!
         </span>
       </div>
-      
+
       {/* Image Upload and Preview Controls */}
       <div className="mt-4 flex flex-wrap gap-2">
         <Button
@@ -162,7 +166,7 @@ export const DynamicFramePreview = ({
           accept="image/*" 
           className="hidden"
         />
-        
+
         {userImage && (
           <Button
             variant="outline"
@@ -173,7 +177,7 @@ export const DynamicFramePreview = ({
             Reset
           </Button>
         )}
-        
+
         <Button
           variant="outline"
           size="sm"
@@ -183,7 +187,7 @@ export const DynamicFramePreview = ({
           <Camera className="h-4 w-4 mr-2" />
           Try on Your Wall
         </Button>
-        
+
         <Button
           variant="default"
           size="sm"
@@ -194,7 +198,7 @@ export const DynamicFramePreview = ({
           Interactive AI Preview
         </Button>
       </div>
-      
+
       {/* AR Preview Modal */}
       {showARPreview && (
         <AugmentedRealityPreview
@@ -206,7 +210,7 @@ export const DynamicFramePreview = ({
           onClose={closeARPreview}
         />
       )}
-      
+
       {/* Animated Preview Modal */}
       {showAnimatedPreview && (
         <AnimatedFramePreview
