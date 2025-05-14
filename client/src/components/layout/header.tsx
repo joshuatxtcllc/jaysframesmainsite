@@ -41,7 +41,8 @@ import {
   Mail,
   Image,
   Radio,
-  ChevronDown
+  ChevronDown,
+  Wand2
 } from "lucide-react";
 import { 
   Popover,
@@ -193,7 +194,7 @@ const Header = () => {
                   </div>
                 </Link>
               ))}
-              
+
               {/* Custom Framing dropdown using Popover instead of NavigationMenu */}
               <Popover>
                 <PopoverTrigger asChild>
@@ -360,7 +361,7 @@ const Header = () => {
                     </div>
                   </Link>
                 ))}
-                
+
                 {/* Custom Framing section in mobile menu */}
                 <div className="pt-2 border-t border-gray-100">
                   <div className="font-medium text-primary mb-3">Custom Framing</div>
@@ -379,7 +380,7 @@ const Header = () => {
                     </Link>
                   ))}
                 </div>
-                
+
                 <Link href="/custom-framing">
                   <Button className="bg-secondary hover:bg-secondary/80 text-white w-full mt-2 text-sm">
                     Start Framing
