@@ -124,7 +124,7 @@ const Header = () => {
     { href: "/custom-framing", label: "Start Framing", icon: <Wand2 className="mr-2 h-4 w-4" />, highlight: true },
     { href: "/products", label: "Products", icon: <LayoutGrid className="mr-2 h-4 w-4" /> },
     { href: "/frame-fitting-assistant", label: "Frame Fitting AI", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
-    { href: "/voice-frame-assistant", label: "Voice Assistant", icon: <Radio className="mr-2 h-4 w-4" /> },
+    { href: "/voice-frame-assistant", label: "Frame Assistant", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
     { href: "/order-status", label: "Order Status", icon: <Box className="mr-2 h-4 w-4" /> },
     { href: "/virtual-room-visualizer", label: "Virtual Room Visualizer", icon: <Image className="mr-2 h-4 w-4" /> }
   ];
