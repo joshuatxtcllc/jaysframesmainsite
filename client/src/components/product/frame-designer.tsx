@@ -1117,8 +1117,6 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         {glass.name.includes("Museum") && (
                           <span className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-xs font-medium">Museum Quality</span>
                         )}
-                          <span className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-xs font-medium">Museum Quality</span>
-                        )}
                         {glass.name.includes("Standard") && (
                           <span className="px-2 py-0.5 bg-gray-50 text-gray-700 rounded text-xs font-medium">Basic Protection</span>
                         )}
