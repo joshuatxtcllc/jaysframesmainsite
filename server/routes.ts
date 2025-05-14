@@ -27,6 +27,7 @@ import {
   stopAutomationSystem 
 } from "./services/automation";
 import { larsonJuhlCatalogService } from "./services/catalog";
+import { integrationService } from "./services/integrations";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
@@ -1396,7 +1397,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
   });
   
   // API data sync endpoint for bulk data export
-  app.get("/api/integration/sync/:resource", (req: Request, res: Response) => {
+  app.get("/api/integration/sync/:resource", async (req: Request, res: Response) => {
     const { resource } = req.params;
     const { since, limit, format } = req.query;
     
@@ -1411,21 +1412,96 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
       });
     }
     
-    // In a real implementation, we would fetch the data from storage based on the parameters
-    // For now, return a simple response with sync details
-    res.json({
-      success: true,
-      resource,
-      syncDetails: {
-        timestamp: new Date().toISOString(),
-        parameters: {
-          since: since || 'all',
-          limit: limit || 'none',
-          format: format || 'json'
-        },
-        message: `This endpoint allows bulk data synchronization for ${resource}. Add appropriate query parameters to filter and format the data.`
+    try {
+      // Parse parameters
+      const sinceDate = since ? new Date(since.toString()) : undefined;
+      const limitNum = limit ? parseInt(limit.toString()) : undefined;
+      
+      // Get data from integration service
+      const data = await integrationService.getSyncData(
+        resource,
+        sinceDate,
+        limitNum
+      );
+      
+      // Format the response
+      if (format === 'csv') {
+        // In a real implementation, we would convert the data to CSV
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename=${resource}.csv`);
+        // For now, just return a simple CSV header
+        res.send(`id,name,description,created_at,updated_at\n`);
+      } else {
+        // Default to JSON
+        res.json({
+          success: true,
+          resource,
+          data,
+          syncDetails: {
+            timestamp: new Date().toISOString(),
+            totalRecords: data.length,
+            parameters: {
+              since: since || 'all',
+              limit: limitNum || 'none',
+              format: format || 'json'
+            }
+          }
+        });
       }
-    });
+    } catch (error) {
+      console.error(`Error syncing ${resource}:`, error);
+      res.status(500).json({
+        success: false,
+        message: `Error syncing ${resource}`,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+  
+  // Register a new app integration
+  app.post("/api/integration/register", async (req: Request, res: Response) => {
+    try {
+      const { name, appId, type, apiKey, endpoint, webhookUrl, eventTypes } = req.body;
+      
+      if (!name || !appId || !type || !apiKey) {
+        return res.status(400).json({
+          success: false,
+          message: "Missing required fields: name, appId, type, apiKey"
+        });
+      }
+      
+      // Validate integration type
+      const validTypes = ['notification', 'data_sync', 'webhook'];
+      if (!validTypes.includes(type)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid integration type: ${type}`,
+          validTypes
+        });
+      }
+      
+      // Register the integration
+      const integration = await integrationService.registerIntegration(
+        name,
+        appId,
+        type,
+        apiKey,
+        { endpoint, webhookUrl, eventTypes }
+      );
+      
+      res.status(201).json({
+        success: true,
+        message: "Integration registered successfully",
+        integration
+      });
+    } catch (error) {
+      console.error("Error registering integration:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to register integration",
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
   });
 
   const httpServer = createServer(app);
