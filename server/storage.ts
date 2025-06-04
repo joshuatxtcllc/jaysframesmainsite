@@ -103,7 +103,7 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<number, User>;
+  private users: User[] = [];
   private products: Map<number, Product>;
   private orders: Map<number, Order>;
   private frameOptions: Map<number, FrameOption>;
@@ -1304,9 +1304,66 @@ Contact Jay's Frames to schedule a professional art installation service. Our ex
       this.orders.set(id, { ...order, id, createdAt });
     });
   }
+
+  // User management methods
+  async createUser(userData: InsertUser): Promise<User> {
+    const newUser: User = {
+      id: this.getNextId(this.users),
+      ...userData,
+      createdAt: new Date(),
+      lastLogin: null,
+    };
+
+    this.users.push(newUser);
+    return newUser;
+  }
+
+  async getUserById(id: number): Promise<User | undefined> {
+    return this.users.find(user => user.id === id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return this.users.find(user => user.email === email);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return this.users.find(user => user.username === username);
+  }
+
+  async updateUser(id: number, updates: Partial<Omit<User, 'id' | 'createdAt'>>): Promise<User | undefined> {
+    const userIndex = this.users.findIndex(user => user.id === id);
+    if (userIndex === -1) return undefined;
+
+    this.users[userIndex] = {
+      ...this.users[userIndex],
+      ...updates,
+    };
+
+    return this.users[userIndex];
+  }
+
+  async updateUserLastLogin(id: number): Promise<void> {
+    const userIndex = this.users.findIndex(user => user.id === id);
+    if (userIndex !== -1) {
+      this.users[userIndex].lastLogin = new Date();
+    }
+  }
+
+  async deleteUser(id: number): Promise<boolean> {
+    const userIndex = this.users.findIndex(user => user.id === id);
+    if (userIndex === -1) return false;
+
+    this.users.splice(userIndex, 1);
+    return true;
+  }
+
+  async getUsers(): Promise<User[]> {
+    return this.users;
+  }
 }
 
-
+// Export storage instance
+export const storage = new MemStorage();
 
 import { db } from "./db";
 import { eq, desc, and, like, sql, asc, lte, gte, isNull, not } from "drizzle-orm";
@@ -1319,7 +1376,7 @@ export class DatabaseStorage implements IStorage {
     this.initializeGlassOptions();
     this.initializeRevealSizes();
   }
-  
+
   // Helper method to check if database is available
   private async checkDb(): Promise<boolean> {
     if (!db) {
@@ -1328,11 +1385,11 @@ export class DatabaseStorage implements IStorage {
     }
     return true;
   }
-  
+
   // Initialize frame options with sample data
   private async initializeFrameOptions() {
     if (!await this.checkDb()) return;
-    
+
     try {
       // Check if frame options table has data
       const existingOptions = await db.select().from(frameOptions);
@@ -1340,7 +1397,7 @@ export class DatabaseStorage implements IStorage {
         console.log(`Frame options table already has ${existingOptions.length} entries`);
         return;
       }
-      
+
       // Initialize with sample data
       const sampleFrameOptions: InsertFrameOption[] = [
         {
@@ -1392,7 +1449,7 @@ export class DatabaseStorage implements IStorage {
           width: 25
         }
       ];
-      
+
       // Insert sample data
       await db.insert(frameOptions).values(sampleFrameOptions);
       console.log(`Initialized frame options table with ${sampleFrameOptions.length} entries`);
@@ -1400,11 +1457,11 @@ export class DatabaseStorage implements IStorage {
       console.error("Error initializing frame options:", error);
     }
   }
-  
+
   // Initialize mat options with sample data
   private async initializeMatOptions() {
     if (!await this.checkDb()) return;
-    
+
     try {
       // Check if mat options table has data
       const existingOptions = await db.select().from(matOptions);
@@ -1412,9 +1469,9 @@ export class DatabaseStorage implements IStorage {
         console.log(`Mat options table already has ${existingOptions.length} entries`);
         return;
       }
-      
+
       // Initialize with sample data
-      const sampleMatOptions: InsertMatOption[] = [
+      const sampleMatOptions: InsertMatOption[]: InsertMatOption[] = [
         {
           name: "White",
           color: "#FFFFFF",
@@ -1452,7 +1509,7 @@ export class DatabaseStorage implements IStorage {
           imageUrl: "/images/mats/cream.png"
         }
       ];
-      
+
       // Insert sample data
       await db.insert(matOptions).values(sampleMatOptions);
       console.log(`Initialized mat options table with ${sampleMatOptions.length} entries`);
@@ -1460,11 +1517,11 @@ export class DatabaseStorage implements IStorage {
       console.error("Error initializing mat options:", error);
     }
   }
-  
+
   // Initialize glass options with sample data
   private async initializeGlassOptions() {
     if (!await this.checkDb()) return;
-    
+
     try {
       // Check if glass options table has data
       const existingOptions = await db.select().from(glassOptions);
@@ -1472,7 +1529,7 @@ export class DatabaseStorage implements IStorage {
         console.log(`Glass options table already has ${existingOptions.length} entries`);
         return;
       }
-      
+
       // Initialize with sample data
       const sampleGlassOptions: InsertGlassOption[] = [
         {
@@ -1496,7 +1553,7 @@ export class DatabaseStorage implements IStorage {
           price: 9000 // $90.00
         }
       ];
-      
+
       // Insert sample data
       await db.insert(glassOptions).values(sampleGlassOptions);
       console.log(`Initialized glass options table with ${sampleGlassOptions.length} entries`);
@@ -1504,11 +1561,11 @@ export class DatabaseStorage implements IStorage {
       console.error("Error initializing glass options:", error);
     }
   }
-  
+
   // Initialize reveal sizes with sample data
   private async initializeRevealSizes() {
     if (!await this.checkDb()) return;
-    
+
     try {
       // Check if reveal sizes table has data
       const existingSizes = await db.select().from(revealSizes);
@@ -1516,7 +1573,7 @@ export class DatabaseStorage implements IStorage {
         console.log(`Reveal sizes table already has ${existingSizes.length} entries`);
         return;
       }
-      
+
       // Initialize with sample data
       const sampleRevealSizes: InsertRevealSize[] = [
         { size: "1/8 inch", sizeInches: 1, displayName: "1/8\"" },
@@ -1528,7 +1585,7 @@ export class DatabaseStorage implements IStorage {
         { size: "7/8 inch", sizeInches: 7, displayName: "7/8\"" },
         { size: "1 inch", sizeInches: 8, displayName: "1\"" }
       ];
-      
+
       // Insert sample data
       await db.insert(revealSizes).values(sampleRevealSizes);
       console.log(`Initialized reveal sizes table with ${sampleRevealSizes.length} entries`);

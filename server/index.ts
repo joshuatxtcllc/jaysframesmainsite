@@ -8,7 +8,8 @@ import { startAutomationSystem } from './services/automation';
 import { larsonJuhlCatalogService } from './services/catalog'; // Import the service
 import { db } from './db';
 import { blogCategories, blogPosts } from '../shared/schema'; // Import blog schema
-
+import cors from 'cors'; // Import cors
+import cookieParser from 'cookie-parser'; // Import cookie-parser
 
 // Initialize Twilio client for SMS notifications
 export let twilioClient: any = null;
@@ -31,6 +32,15 @@ app.use(fileUpload({
   abortOnLimit: true,
   createParentPath: true,
   useTempFiles: false
+}));
+
+// Add cookie parser middleware
+app.use(cookieParser());
+
+// Enable CORS middleware
+app.use(cors({
+  origin: true, // Allow all origins in development
+  credentials: true
 }));
 
 // HTTP to HTTPS redirect and www handling middleware for production

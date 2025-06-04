@@ -42,7 +42,9 @@ import {
   Image,
   Radio,
   ChevronDown,
-  Wand2
+  Wand2,
+  User,
+  LogOut
 } from "lucide-react";
 import { 
   Popover,
@@ -54,6 +56,15 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import Cart from "@/components/ui/cart";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/auth-context";
+import { AuthModal } from "@/components/auth/auth-modal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -64,6 +75,8 @@ const Header = () => {
   const { toast } = useToast();
   const [notifications, setNotifications] = useState<JFNotification[]>([]);
   const [hasUnread, setHasUnread] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   // Handle scrolling effects
   useEffect(() => {
@@ -393,8 +406,12 @@ const Header = () => {
 
         {/* Cart Sidebar */}
         {cartOpen && <Cart isOpen={cartOpen} onClose={closeCart} />}
-      </header>
-    </>
+              <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => setIsAuthModalOpen(false)}
+      />
+    </header>
   );
 };
 

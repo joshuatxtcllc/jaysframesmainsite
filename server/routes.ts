@@ -3,6 +3,9 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import { WebSocketServer, WebSocket } from 'ws';
+import cookieParser from 'cookie-parser';
+import { AuthService, registerSchema, loginSchema } from './services/auth';
+import { authenticateToken, requireAdmin, requireStaff, optionalAuth } from './middleware/auth';
 import { handleRedirects, handle404 } from './redirects';
 import { 
   insertOrderSchema, 
@@ -34,10 +37,136 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
   await initializeEmailTransporter();
   
+  // Add cookie parser middleware
+  app.use(cookieParser());
+  
   // Start automated order processing is handled in server/index.ts
   
   // API Routes
   const apiRouter = app.route("/api");
+
+  // Authentication routes
+  app.post("/api/auth/register", async (req: Request, res: Response) => {
+    try {
+      const result = await AuthService.register(req.body);
+      
+      if (result.success && result.token) {
+        // Set JWT token as httpOnly cookie
+        res.cookie('auth-token', result.token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+        
+        res.status(201).json({
+          success: true,
+          user: result.user,
+          message: result.message
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: result.message
+        });
+      }
+    } catch (error) {
+      console.error('Registration route error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  });
+
+  app.post("/api/auth/login", async (req: Request, res: Response) => {
+    try {
+      const result = await AuthService.login(req.body);
+      
+      if (result.success && result.token) {
+        // Set JWT token as httpOnly cookie
+        res.cookie('auth-token', result.token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+        
+        res.json({
+          success: true,
+          user: result.user,
+          message: result.message
+        });
+      } else {
+        res.status(401).json({
+          success: false,
+          message: result.message
+        });
+      }
+    } catch (error) {
+      console.error('Login route error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  });
+
+  app.post("/api/auth/logout", (req: Request, res: Response) => {
+    res.clearCookie('auth-token');
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  });
+
+  app.get("/api/auth/profile", authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const user = await AuthService.getProfile(req.user!.id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+      
+      res.json({
+        success: true,
+        user
+      });
+    } catch (error) {
+      console.error('Profile route error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  });
+
+  app.patch("/api/auth/profile", authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const result = await AuthService.updateProfile(req.user!.id, req.body);
+      
+      if (result.success) {
+        res.json(result);
+      } else {
+        res.status(400).json(result);
+      }
+    } catch (error) {
+      console.error('Update profile route error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  });
+
+  app.get("/api/auth/check", optionalAuth, (req: Request, res: Response) => {
+    res.json({
+      authenticated: !!req.user,
+      user: req.user || null
+    });
+  });
   
   // API Documentation and Integration
   app.get("/api/docs", (req: Request, res: Response) => {
@@ -531,7 +660,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update order status (admin only)
-  app.patch("/api/orders/:id/status", async (req: Request, res: Response) => {
+  app.patch("/api/orders/:id/status", authenticateToken, requireStaff, async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid order ID" });
@@ -831,7 +960,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all orders (admin only)
-  app.get("/api/orders", async (req: Request, res: Response) => {
+  app.get("/api/orders", authenticateToken, requireStaff, async (req: Request, res: Response) => {
     // Check for query parameters for filtering
     const { status, userId, limit } = req.query;
     
