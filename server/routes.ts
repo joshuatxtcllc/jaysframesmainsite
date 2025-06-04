@@ -28,6 +28,7 @@ import {
 } from "./services/automation";
 import { larsonJuhlCatalogService } from "./services/catalog";
 import { integrationService } from "./services/integrations";
+import { contentManager } from "./services/content-manager";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
@@ -291,6 +292,182 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Apply redirect middleware before the static file handler
   app.use(handleRedirects);
+
+  // CONTENT MANAGEMENT ROUTES
+  
+  // Get all content
+  app.get("/api/content", async (req: Request, res: Response) => {
+    try {
+      const { page, section } = req.query;
+      
+      let content;
+      if (page && section) {
+        content = await contentManager.getContentBySection(page.toString(), section.toString());
+      } else if (page) {
+        content = await contentManager.getContentByPage(page.toString());
+      } else {
+        content = await contentManager.getAllContent();
+      }
+      
+      res.json(content);
+    } catch (error) {
+      console.error("Error fetching content:", error);
+      res.status(500).json({ message: "Failed to fetch content" });
+    }
+  });
+
+  // Get single content block
+  app.get("/api/content/:key", async (req: Request, res: Response) => {
+    try {
+      const { key } = req.params;
+      const content = await contentManager.getContent(key);
+      
+      if (!content) {
+        return res.status(404).json({ message: "Content not found" });
+      }
+      
+      res.json(content);
+    } catch (error) {
+      console.error("Error fetching content:", error);
+      res.status(500).json({ message: "Failed to fetch content" });
+    }
+  });
+
+  // Update content block
+  app.patch("/api/content/:key", async (req: Request, res: Response) => {
+    try {
+      const { key } = req.params;
+      const updates = req.body;
+      
+      const content = await contentManager.updateContent(key, updates);
+      
+      if (!content) {
+        return res.status(404).json({ message: "Content not found" });
+      }
+      
+      res.json(content);
+    } catch (error) {
+      console.error("Error updating content:", error);
+      res.status(500).json({ message: "Failed to update content" });
+    }
+  });
+
+  // Create new content block
+  app.post("/api/content", async (req: Request, res: Response) => {
+    try {
+      const contentData = req.body;
+      const content = await contentManager.createContent(contentData);
+      res.status(201).json(content);
+    } catch (error) {
+      console.error("Error creating content:", error);
+      res.status(500).json({ message: "Failed to create content" });
+    }
+  });
+
+  // Delete content block
+  app.delete("/api/content/:key", async (req: Request, res: Response) => {
+    try {
+      const { key } = req.params;
+      const success = await contentManager.deleteContent(key);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Content not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting content:", error);
+      res.status(500).json({ message: "Failed to delete content" });
+    }
+  });
+
+  // Get content structure (pages and sections)
+  app.get("/api/content-structure", async (req: Request, res: Response) => {
+    try {
+      const structure = await contentManager.getContentStructure();
+      res.json(structure);
+    } catch (error) {
+      console.error("Error fetching content structure:", error);
+      res.status(500).json({ message: "Failed to fetch content structure" });
+    }
+  });
+
+  // IMAGE MANAGEMENT ROUTES
+  
+  // Upload image
+  app.post("/api/images/upload", async (req: Request, res: Response) => {
+    try {
+      // Note: You'll need to set up multer middleware for file uploads
+      // For now, this is a placeholder that expects base64 data
+      const { imageData, filename, alt } = req.body;
+      
+      if (!imageData || !filename) {
+        return res.status(400).json({ message: "Image data and filename are required" });
+      }
+      
+      // Convert base64 to buffer
+      const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+      const buffer = Buffer.from(base64Data, 'base64');
+      
+      const file = {
+        buffer,
+        originalname: filename,
+        size: buffer.length,
+        mimetype: 'image/jpeg' // You might want to detect this
+      };
+      
+      const image = await contentManager.uploadImage(file, alt || '');
+      res.status(201).json(image);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      res.status(500).json({ message: "Failed to upload image" });
+    }
+  });
+
+  // Get all images
+  app.get("/api/images", async (req: Request, res: Response) => {
+    try {
+      const images = await contentManager.getAllImages();
+      res.json(images);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+      res.status(500).json({ message: "Failed to fetch images" });
+    }
+  });
+
+  // Get single image
+  app.get("/api/images/:id", async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const image = await contentManager.getImage(id);
+      
+      if (!image) {
+        return res.status(404).json({ message: "Image not found" });
+      }
+      
+      res.json(image);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      res.status(500).json({ message: "Failed to fetch image" });
+    }
+  });
+
+  // Delete image
+  app.delete("/api/images/:id", async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const success = await contentManager.deleteImage(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Image not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      res.status(500).json({ message: "Failed to delete image" });
+    }
+  });
 
   // Create new order
   app.post("/api/orders", async (req: Request, res: Response) => {

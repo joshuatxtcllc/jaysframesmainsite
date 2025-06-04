@@ -2,15 +2,18 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Wand2, Award, ArrowRight, Sparkles, PackageSearch } from "lucide-react";
 import { Cpu, Clock } from "lucide-react";
+import { useSectionContent } from "@/hooks/use-content";
 
 const Hero = () => {
+  const getContent = useSectionContent("hero");
+
   return (
     <section className="relative bg-gradient-to-br from-primary/10 via-neutral-50 to-white py-40 overflow-hidden">
       {/* Background with enhanced contrast */}
       <div className="absolute inset-0">
         {/* Dark overlay to enhance contrast - significantly darker now */}
         <div className="absolute inset-0 bg-primary/60 mix-blend-multiply z-10"></div>
-        
+
         {/* Hero image with better quality and contrast */}
         <div 
           className="absolute inset-0 bg-cover bg-center z-0" 
@@ -20,16 +23,16 @@ const Hero = () => {
           }}
         ></div>
       </div>
-      
+
       {/* Enhanced decorative elements with better contrast */}
       <div className="absolute top-20 right-20 w-96 h-96 bg-secondary/15 rounded-full blur-3xl animate-pulse z-20"></div>
       <div className="absolute bottom-20 left-20 w-80 h-80 bg-accent/15 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "1s" }}></div>
       <div className="absolute top-1/3 left-1/4 w-56 h-56 bg-white/20 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "1.5s" }}></div>
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "2s" }}></div>
-      
+
       {/* Adjusted semi-transparent overlay for improved text contrast */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-transparent z-30"></div>
-      
+
       <div className="container mx-auto px-4 relative z-40">
         <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
           <div className="lg:w-3/5 fade-in" style={{ animationDelay: "0.2s" }}>
@@ -37,26 +40,23 @@ const Hero = () => {
               <Award className="h-4 w-4 text-white mr-2" />
               <p className="text-white font-semibold tracking-wider text-sm">JAY'S FRAMES REINVENTED - GRAND REOPENING 2025</p>
             </div>
-            
+
             <h1 className="heading-xl mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-              <span className="text-white">Jay's Frames</span> <span className="text-secondary italic relative font-bold">
-                Reinvented
-                <span className="absolute -bottom-3 left-0 w-full h-1.5 bg-secondary/70 rounded-full"></span>
-              </span>
+              {getContent('hero_title', "Jay's Frames Reinvented")}
             </h1>
-            
+
             <p className="body-lg text-white/90 mb-6 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              Houston's premier custom framing studio with over 15 years of excellence has been reinvented to meet evolving customer needs. Our revolutionary hybrid production model delivers 62% faster turnaround times and has quadrupled our production capacity.
+              {getContent('hero_description', 'Houston\'s premier custom framing studio with over 15 years of excellence has been reinvented to meet evolving customer needs. Our revolutionary hybrid production model delivers 62% faster turnaround times and has quadrupled our production capacity.')}
             </p>
-            
+
             <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
               Our assistants enable us to work closer with clients when it truly matters and helps us keep the hand-crafted quality at its highest possible level. Recognized as the Best Custom Frame Shop in Houston by the Houston A-List voters and featured in PaperCity magazine, we continue our legacy of collaboration with Houston's museums, sports teams, and art collectors.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-6 mb-12">
               <Link href="/custom-framing">
                 <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-8 text-base shadow-highlight group">
-                  Get Started Today
+                  {getContent('hero_cta_primary', 'Get Started Today')}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </Link>
@@ -80,7 +80,7 @@ const Hero = () => {
                 </Button>
               </Link>
             </div>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-10">
               {[
                 { icon: <Wand2 className="h-5 w-5" />, text: "AI-Powered Design Assistant" },
@@ -97,12 +97,12 @@ const Hero = () => {
               ))}
             </div>
           </div>
-          
+
           <div className="lg:w-2/5 relative mt-16 lg:mt-0 fade-in" style={{ animationDelay: "0.6s" }}>
             {/* Enhanced card effects with better contrast */}
             <div className="absolute inset-0 bg-gradient-to-br from-secondary/40 via-accent/30 to-primary/20 rounded-2xl blur-xl transform rotate-6"></div>
             <div className="absolute inset-2 bg-white/40 rounded-2xl blur-md transform -rotate-3"></div>
-            
+
             {/* Main card with improved contrast */}
             <div className="relative bg-white p-8 rounded-2xl border border-neutral-200 shadow-elegant transform -rotate-3 hover:rotate-0 transition-transform duration-500">
               {/* Window-like header with improved styling */}
@@ -117,7 +117,7 @@ const Hero = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Enhanced designer preview with better image contrast */}
                 <div className="relative h-56 bg-primary/5 rounded-md flex items-center justify-center overflow-hidden shadow-inner">
                   <img 
@@ -139,7 +139,7 @@ const Hero = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Featured services information */}
               <div className="space-y-4 mb-6">
                 <h3 className="text-lg font-semibold text-primary">Our Expert Framing Services</h3>
@@ -162,7 +162,7 @@ const Hero = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Enhanced buttons with better contrast */}
               <div className="flex gap-4 justify-start">
                 <Link href="/custom-framing">
