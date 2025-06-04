@@ -1066,6 +1066,9 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 )}
             </div>
 
+          {/* Mat Selection - End of mat options section */}
+          </div>
+
           {/* Glass Selection - Enhanced with more details */}
           <div className="bg-white p-6 shadow-sm rounded-lg mb-8">
             <div className="flex justify-between items-center mb-3">
