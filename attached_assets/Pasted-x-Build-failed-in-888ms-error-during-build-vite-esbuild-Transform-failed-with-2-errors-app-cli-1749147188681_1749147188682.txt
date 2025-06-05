@@ -1,0 +1,56 @@
+x Build failed in 888ms
+
+error during build:
+[vite:esbuild] Transform failed with 2 errors:
+/app/client/src/components/layout/header.tsx:416:0: ERROR: The character "}" is not valid inside a JSX element
+/app/client/src/components/layout/header.tsx:418:22: ERROR: Unexpected end of file before a closing fragment tag
+file: /app/client/src/components/layout/header.tsx:416:0
+
+The character "}" is not valid inside a JSX element
+414|      </header>
+415|    );
+416|  };
+   |  ^
+417|  
+418|  export default Header;
+
+Unexpected end of file before a closing fragment tag
+416|  };
+417|  
+418|  export default Header;
+   |                        ^
+
+    at failureErrorWithLog (/app/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /app/node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/app/node_modules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/app/node_modules/vite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/app/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:517:28)
+    at addChunk (node:internal/streams/readable:368:12)
+    at readableAddChunk (node:internal/streams/readable:341:9)
+    at Readable.push (node:internal/streams/readable:278:10)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
+
+✕ [stage-0 13/15] RUN --mount=type=cache,id=s/c83b0b2b-86b0-4fea-9ab5-462a5d731200-node_modules/cache,target=/app/node_modules/.cache npm run build 
+process "/bin/bash -ol pipefail -c npm run build" did not complete successfully: exit code: 1
+ 
+
+Dockerfile:30
+
+-------------------
+
+28 |     # build phase
+
+29 |     COPY . /app/.
+
+30 | >>> RUN --mount=type=cache,id=s/c83b0b2b-86b0-4fea-9ab5-462a5d731200-node_modules/cache,target=/app/node_modules/.cache npm run build
+
+31 |
+
+32 |
+
+-------------------
+
+ERROR: failed to solve: process "/bin/bash -ol pipefail -c npm run build" did not complete successfully: exit code: 1
+
+Error: Docker build failed
