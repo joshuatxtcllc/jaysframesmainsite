@@ -3,25 +3,8 @@ import { Link, useLocation } from "wouter";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
 
-// Type definition for notifications
-interface JFNotification {
-  id?: string;
-  title: string;
-  description: string;
-  timestamp: string | Date;
-  type?: 'success' | 'warning' | 'error' | 'default';
-  actionable?: boolean;
-  link?: string;
-}
-
-// Extend Window interface for custom notification system
-declare global {
-  interface Window {
-    jfNotifications?: {
-      onNotification: (callback: (notification: JFNotification) => void) => void;
-    };
-  }
-}
+// Import types from the existing type definitions
+import type { JFNotification } from "@/types/index.d";
 
 import {
   ShoppingCart,
@@ -73,7 +56,7 @@ const Header = () => {
   const [location] = useLocation();
   const { cartItems } = useCart();
   const { toast } = useToast();
-  const [notifications, setNotifications] = useState<JFNotification[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const [hasUnread, setHasUnread] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { user, logout } = useAuth();
@@ -91,7 +74,7 @@ const Header = () => {
   // Setup notification listeners
   useEffect(() => {
     // Listen for notification events from the unified system
-    const handleNotification = (event: CustomEvent<JFNotification>) => {
+    const handleNotification = (event: any) => {
       const newNotification = event.detail;
       setNotifications(prev => [newNotification, ...prev.slice(0, 9)]); // Keep last 10
       setHasUnread(true);
@@ -100,23 +83,23 @@ const Header = () => {
       toast({
         title: newNotification.title,
         description: newNotification.description,
-        variant: newNotification.type as any || 'default',
+        variant: newNotification.type === 'error' ? 'destructive' : 'default',
       });
     };
 
     // Register global event listener
-    window.addEventListener('jf-notification' as any, handleNotification as any);
+    window.addEventListener('jf-notification' as any, handleNotification);
 
     // Register with the notification system if available
     if (window.jfNotifications) {
-      window.jfNotifications.onNotification((notification: JFNotification) => {
+      window.jfNotifications.onNotification((notification: any) => {
         setNotifications(prev => [notification, ...prev.slice(0, 9)]); // Keep last 10
         setHasUnread(true);
       });
     }
 
     return () => {
-      window.removeEventListener('jf-notification' as any, handleNotification as any);
+      window.removeEventListener('jf-notification' as any, handleNotification);
     };
   }, [toast]);
 
@@ -338,6 +321,48 @@ const Header = () => {
                 )}
               </button>
 
+              {/* User Authentication */}
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-2 text-primary hover:text-secondary">
+                      <User className="h-4 w-4" />
+                      <span className="hidden md:inline">{user.firstName || user.username}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="flex items-center">
+                        <User className="mr-2 h-4 w-4" />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    {user.isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin/dashboard" className="flex items-center">
+                          <LayoutGrid className="mr-2 h-4 w-4" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout} className="flex items-center">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="text-primary hover:text-secondary"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Sign In
+                </Button>
+              )}
+
               <Link href="/custom-framing" className="hidden md:block">
                 <Button className="bg-secondary hover:bg-secondary/80 text-white text-sm">
                   Start Framing
@@ -406,12 +431,14 @@ const Header = () => {
 
         {/* Cart Sidebar */}
         {cartOpen && <Cart isOpen={cartOpen} onClose={closeCart} />}
-              <AuthModal 
+      </header>
+
+      <AuthModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)}
         onSuccess={() => setIsAuthModalOpen(false)}
       />
-    </header>
+    </>
   );
 };
 
