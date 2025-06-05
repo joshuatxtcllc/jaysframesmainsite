@@ -5,7 +5,7 @@ import { Cpu, Clock } from "lucide-react";
 import { useSectionContent } from "@/hooks/use-content";
 
 const Hero = () => {
-  const getContent = useSectionContent("hero");
+  const { getContent } = useSectionContent("home", "hero");
 
   return (
     <section className="relative bg-gradient-to-br from-primary/10 via-neutral-50 to-white py-40 overflow-hidden">
