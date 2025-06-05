@@ -428,16 +428,7 @@ const Header = () => {
             </div>
           )}
         </div>
-
-        {/* Cart Sidebar */}
-        {cartOpen && <Cart isOpen={cartOpen} onClose={closeCart} />}
-      </header>
-
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)}
-        onSuccess={() => setIsAuthModalOpen(false)}
-      />
+</header>
     </>
   );
 };
