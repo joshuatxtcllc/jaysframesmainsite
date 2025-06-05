@@ -8,12 +8,23 @@ import path from 'path';
 
 neonConfig.webSocketConstructor = ws;
 
-// Ensure DATABASE_URL is set
+// Ensure DATABASE_URL is set with graceful error handling
 if (!process.env.DATABASE_URL) {
   console.error(
     "❌ DATABASE_URL environment variable is not set. " +
-    "Please set up PostgreSQL database in Replit."
+    "Please set up PostgreSQL database in Replit and restart the application."
   );
+  
+  // In development, provide helpful instructions
+  if (process.env.NODE_ENV !== 'production') {
+    console.log("\n📋 Database Setup Instructions:");
+    console.log("1. Go to the Database tab in Replit");
+    console.log("2. Click 'Create a database'");
+    console.log("3. The DATABASE_URL will be automatically set");
+    console.log("4. Restart the application");
+  }
+  
+  // Exit gracefully to prevent crash loop
   process.exit(1);
 }
 

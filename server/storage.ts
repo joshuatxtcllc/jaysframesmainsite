@@ -647,20 +647,20 @@ class DatabaseStorage implements IStorage {
 
   // Blog Post operations
   async getBlogPosts(limit?: number, offset?: number): Promise<BlogPost[]> {
-    let query = db
+    const baseQuery = db
       .select()
       .from(blogPosts)
       .orderBy(desc(blogPosts.createdAt));
 
-    if (limit !== undefined) {
-      query = query.limit(limit);
+    if (limit !== undefined && offset !== undefined) {
+      return await baseQuery.limit(limit).offset(offset);
+    } else if (limit !== undefined) {
+      return await baseQuery.limit(limit);
+    } else if (offset !== undefined) {
+      return await baseQuery.offset(offset);
     }
 
-    if (offset !== undefined) {
-      query = query.offset(offset);
-    }
-
-    return await query;
+    return await baseQuery;
   }
 
   async getBlogPostById(id: number): Promise<BlogPost | undefined> {
@@ -674,39 +674,39 @@ class DatabaseStorage implements IStorage {
   }
 
   async getBlogPostsByCategory(categoryId: number, limit?: number, offset?: number): Promise<BlogPost[]> {
-    let query = db
+    const baseQuery = db
       .select()
       .from(blogPosts)
       .where(eq(blogPosts.categoryId, categoryId))
       .orderBy(desc(blogPosts.createdAt));
 
-    if (limit !== undefined) {
-      query = query.limit(limit);
+    if (limit !== undefined && offset !== undefined) {
+      return await baseQuery.limit(limit).offset(offset);
+    } else if (limit !== undefined) {
+      return await baseQuery.limit(limit);
+    } else if (offset !== undefined) {
+      return await baseQuery.offset(offset);
     }
 
-    if (offset !== undefined) {
-      query = query.offset(offset);
-    }
-
-    return await query;
+    return await baseQuery;
   }
 
   async getBlogPostsByStatus(status: string, limit?: number, offset?: number): Promise<BlogPost[]> {
-    let query = db
+    const baseQuery = db
       .select()
       .from(blogPosts)
       .where(eq(blogPosts.status, status))
       .orderBy(desc(blogPosts.createdAt));
 
-    if (limit !== undefined) {
-      query = query.limit(limit);
+    if (limit !== undefined && offset !== undefined) {
+      return await baseQuery.limit(limit).offset(offset);
+    } else if (limit !== undefined) {
+      return await baseQuery.limit(limit);
+    } else if (offset !== undefined) {
+      return await baseQuery.offset(offset);
     }
 
-    if (offset !== undefined) {
-      query = query.offset(offset);
-    }
-
-    return await query;
+    return await baseQuery;
   }
 
   async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
@@ -889,7 +889,11 @@ class DatabaseStorage implements IStorage {
       return []; // No slots available for this date
     }
 
-    // Parse open and close times
+    // Parse open and close times with null check
+    if (!availability.openTime || !availability.closeTime) {
+      return []; // No valid times available
+    }
+    
     const [openHour, openMinute] = availability.openTime.split(':').map(Number);
     const [closeHour, closeMinute] = availability.closeTime.split(':').map(Number);
 
