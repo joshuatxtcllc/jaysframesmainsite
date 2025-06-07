@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Camera, RotateCw, Sparkles } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Upload, Camera, RotateCw, Sparkles, Image } from "lucide-react";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { AugmentedRealityPreview } from "./augmented-reality-preview";
 import { AnimatedFramePreview } from "./animated-frame-preview";
@@ -163,10 +164,13 @@ const DynamicFramePreview = ({
             {/* Main Frame Border */}
             {selectedFrame && (
               <div 
-                className="absolute inset-0 shadow-lg"
+                className="absolute inset-0 shadow-lg border border-gray-300"
                 style={{
-                  border: `${frameWidth}px solid ${selectedFrame.color}`,
-                  borderRadius: '2px'
+                  borderWidth: `${frameWidth}px`,
+                  borderColor: selectedFrame.color,
+                  borderStyle: 'solid',
+                  borderRadius: '2px',
+                  boxSizing: 'border-box'
                 }}
               />
             )}
@@ -175,7 +179,7 @@ const DynamicFramePreview = ({
             {layers.map((layer, index) => (
               <div 
                 key={`${layer.type}-${index}`}
-                className={`absolute ${layer.type === 'stackedFrame' ? 'shadow-md' : 'shadow-sm'}`}
+                className={`absolute border ${layer.type === 'stackedFrame' ? 'shadow-md' : 'shadow-inner'}`}
                 style={{
                   top: `${layer.offset}px`,
                   left: `${layer.offset}px`,
@@ -183,10 +187,10 @@ const DynamicFramePreview = ({
                   bottom: `${layer.offset}px`,
                   backgroundColor: layer.color,
                   borderRadius: '1px',
-                  ...(layer.type === 'stackedFrame' && {
-                    border: `${layer.width}px solid ${layer.color}`,
-                    backgroundColor: 'transparent'
-                  })
+                  borderWidth: layer.type === 'stackedFrame' ? `${layer.width}px` : '1px',
+                  borderColor: layer.type === 'stackedFrame' ? layer.color : '#e5e7eb',
+                  borderStyle: 'solid',
+                  boxSizing: 'border-box'
                 }}
               />
             ))}
@@ -247,6 +251,3 @@ const DynamicFramePreview = ({
   );
 };
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { Image } from 'lucide-react';

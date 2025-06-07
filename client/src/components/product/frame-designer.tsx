@@ -910,8 +910,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                     onClick={() => setSelectedMat(mat.id)}
                   >
                     {mat.id === 0 ? (
-                      <div className="h-12 w-12 mx-auto rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center">
-                        <span className="text-xs text-gray-500">No</span>
+                      <div className="h-12 w-12 mx-auto rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center bg-white">
+                        <span className="text-xs text-gray-500 font-medium">None</span>
                       </div>
                     ) : (
                       <div 
