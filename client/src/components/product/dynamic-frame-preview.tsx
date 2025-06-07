@@ -238,7 +238,7 @@ const DynamicFramePreview = ({
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Feature badges - moved to top of card, outside of frame display area */}
       <div className="absolute -top-3 right-0">
