@@ -431,10 +431,10 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
       }
     }
 
-    // Mat price (top mat)
+    // Mat price (top mat) - only add price if mat is selected and not "No Mat"
     if (selectedMat && selectedMat !== 0) {
       const mat = databaseMats.find(m => m.id === selectedMat);
-      if (mat) {
+      if (mat && mat.price > 0) {
         price += mat.price / 100;
       }
     }
@@ -911,7 +911,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   >
                     {mat.id === 0 ? (
                       <div className="h-12 w-12 mx-auto rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center bg-white">
-                        <span className="text-xs text-gray-500 font-medium">None</span>
+                        <span className="text-[10px] text-gray-500 font-medium">No Mat</span>
                       </div>
                     ) : (
                       <div 
@@ -1499,7 +1499,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
               <span className="text-neutral-500 text-sm">Matting:</span>
               <span className="font-medium text-primary">
-                {selectedMat && selectedMat !== 0 && getSelectedMatOption() 
+                {selectedMat && selectedMat !== 0 && getSelectedMatOption() && getSelectedMatOption()!.price > 0
                   ? formatPrice(getSelectedMatOption()!.price) 
                   : "$0.00"}
               </span>

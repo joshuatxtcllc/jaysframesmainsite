@@ -136,7 +136,7 @@ const DynamicFramePreview = ({
       currentOffset += matWidth;
     }
 
-    // Top mat (innermost mat layer)
+    // Top mat (innermost mat layer) - only add if mat is selected and not "No Mat"
     if (selectedMat && selectedMat.id !== 0) {
       layers.push({
         type: 'topMat',
