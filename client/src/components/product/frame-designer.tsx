@@ -15,7 +15,7 @@ import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { FrameOption, MatOption, GlassOption } from "@/types";
 import { Lightbulb, ShoppingCart, Trophy, Target, Download } from "lucide-react";
-import { DynamicFramePreview } from "./dynamic-frame-preview";
+import DynamicFramePreview from "./dynamic-frame-preview";
 import { ProgressTracker, ProgressBar } from "@/components/design-progress";
 import { useDesignProgress } from "@/contexts/design-progress-context";
 
