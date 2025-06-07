@@ -251,3 +251,5 @@ const DynamicFramePreview = ({
   );
 };
 
+export default DynamicFramePreview;
+
