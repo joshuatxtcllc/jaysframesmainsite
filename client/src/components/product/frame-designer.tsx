@@ -153,6 +153,78 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
           pricePerInch: 165,
           imageUrl: "/images/frames/cherry.png",
           width: 25
+        },
+        {
+          id: 5,
+          name: "Silver Metal",
+          color: "#C0C0C0",
+          material: "Metal",
+          pricePerInch: 140,
+          imageUrl: "/images/frames/silver.png",
+          width: 25
+        },
+        {
+          id: 6,
+          name: "Gold Metal",
+          color: "#FFD700",
+          material: "Metal",
+          pricePerInch: 180,
+          imageUrl: "/images/frames/gold.png",
+          width: 25
+        },
+        {
+          id: 7,
+          name: "Dark Walnut",
+          color: "#5D4E37",
+          material: "Wood",
+          pricePerInch: 155,
+          imageUrl: "/images/frames/walnut.png",
+          width: 25
+        },
+        {
+          id: 8,
+          name: "Espresso",
+          color: "#3C2415",
+          material: "Wood",
+          pricePerInch: 145,
+          imageUrl: "/images/frames/espresso.png",
+          width: 25
+        },
+        {
+          id: 9,
+          name: "Champagne",
+          color: "#F7E7CE",
+          material: "Metal",
+          pricePerInch: 160,
+          imageUrl: "/images/frames/champagne.png",
+          width: 25
+        },
+        {
+          id: 10,
+          name: "Bronze",
+          color: "#CD7F32",
+          material: "Metal",
+          pricePerInch: 170,
+          imageUrl: "/images/frames/bronze.png",
+          width: 25
+        },
+        {
+          id: 11,
+          name: "Mahogany",
+          color: "#C04000",
+          material: "Wood",
+          pricePerInch: 165,
+          imageUrl: "/images/frames/mahogany.png",
+          width: 25
+        },
+        {
+          id: 12,
+          name: "Navy Blue",
+          color: "#000080",
+          material: "Wood",
+          pricePerInch: 155,
+          imageUrl: "/images/frames/navy.png",
+          width: 25
         }
       ]);
     }
@@ -160,6 +232,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     if (databaseMats.length === 0) {
       console.log("Using fallback mat options");
       setDatabaseMats([
+        {
+          id: 0,
+          name: "No Mat",
+          color: "transparent",
+          price: 0,
+          imageUrl: "/images/mats/no-mat.png"
+        },
         {
           id: 1,
           name: "Bright White",
@@ -353,7 +432,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     }
 
     // Mat price (top mat)
-    if (selectedMat) {
+    if (selectedMat && selectedMat !== 0) {
       const mat = databaseMats.find(m => m.id === selectedMat);
       if (mat) {
         price += mat.price / 100;
@@ -589,6 +668,10 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 bottomMatReveal={bottomMatReveal}
                 useMiddleMat={useMiddleMat}
                 useBottomMat={useBottomMat}
+                useStackedFrame={useStackedFrame}
+                selectedStackedFrame={getSelectedStackedFrameOption() || null}
+                selectedMiddleMat={getSelectedMiddleMatOption() || null}
+                selectedBottomMat={getSelectedBottomMatOption() || null}
               />
             </div>
 
@@ -826,10 +909,16 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                     }`}
                     onClick={() => setSelectedMat(mat.id)}
                   >
-                    <div 
-                      className={`h-12 w-12 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
-                      style={{ backgroundColor: mat.color }}
-                    ></div>
+                    {mat.id === 0 ? (
+                      <div className="h-12 w-12 mx-auto rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center">
+                        <span className="text-xs text-gray-500">No</span>
+                      </div>
+                    ) : (
+                      <div 
+                        className={`h-12 w-12 mx-auto rounded-full ${mat.color === '#FFFFFF' || mat.color === '#F5F5F5' ? 'border border-gray-200' : ''}`}
+                        style={{ backgroundColor: mat.color }}
+                      ></div>
+                    )}
                     <p className="text-xs mt-2 text-center line-clamp-1">{mat.name}</p>
                   </div>
                 ))}
@@ -1410,7 +1499,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             <li className="flex justify-between items-center pb-2 border-b border-neutral-100">
               <span className="text-neutral-500 text-sm">Matting:</span>
               <span className="font-medium text-primary">
-                {selectedMat && getSelectedMatOption() 
+                {selectedMat && selectedMat !== 0 && getSelectedMatOption() 
                   ? formatPrice(getSelectedMatOption()!.price) 
                   : "$0.00"}
               </span>

@@ -16,23 +16,27 @@ interface DynamicFramePreviewProps {
   bottomMatReveal: number;
   useMiddleMat: boolean;
   useBottomMat: boolean;
-  useFloatMount?: boolean;
-  useGlassSpacer?: boolean;
+  useStackedFrame?: boolean;
+  selectedStackedFrame?: FrameOption | null;
+  selectedMiddleMat?: MatOption | null;
+  selectedBottomMat?: MatOption | null;
 }
 
-export const DynamicFramePreview = ({
-  width,
-  height,
-  selectedFrame,
-  selectedMat,
+const DynamicFramePreview = ({ 
+  width, 
+  height, 
+  selectedFrame, 
+  selectedMat, 
   selectedGlass,
   topMatReveal,
   middleMatReveal,
   bottomMatReveal,
   useMiddleMat,
   useBottomMat,
-  useFloatMount,
-  useGlassSpacer
+  useStackedFrame = false,
+  selectedStackedFrame = null,
+  selectedMiddleMat = null,
+  selectedBottomMat = null
 }: DynamicFramePreviewProps) => {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [showARPreview, setShowARPreview] = useState<boolean>(false);
@@ -63,20 +67,15 @@ export const DynamicFramePreview = ({
     }
   };
 
-  // Calculate the frame style based on selected options
-  const getFrameStyle = useCallback(() => {
-    if (!selectedFrame || !selectedMat) return {};
-
-    return {
-      border: userImage ? '5px solid transparent' : '15px solid transparent',
-      boxShadow: userImage 
-        ? `0 0 0 20px ${selectedMat.color}, 0 0 0 30px ${selectedFrame.color}`
-        : `0 0 0 30px ${selectedMat.color}, 0 0 0 40px ${selectedFrame.color}`,
-      borderRadius: '0', // Sharp square corners
-      transition: 'all 0.3s ease-in-out',
-      backgroundColor: 'transparent' // Make sure the background is transparent
-    };
-  }, [selectedFrame, selectedMat, userImage]);
+    // Calculate the display width and height based on aspect ratio
+    const aspectRatio = width / height;
+    const displayWidth = 280;
+    const displayHeight = displayWidth / aspectRatio;
+  
+    // Default frame and mat widths (adjust as needed)
+    const frameWidth = 10;
+    const matWidth = 5;
+  
 
   // Open the AR preview modal
   const openARPreview = () => {
@@ -98,43 +97,140 @@ export const DynamicFramePreview = ({
     setShowAnimatedPreview(false);
   };
 
+  // Calculate mat layers from outside to inside
+  const getMatLayers = () => {
+    const layers = [];
+    let currentOffset = frameWidth;
+
+    // Add stacked frame layer if enabled
+    if (useStackedFrame && selectedStackedFrame) {
+      layers.push({
+        type: 'stackedFrame',
+        color: selectedStackedFrame.color,
+        offset: currentOffset,
+        width: 8 // Thinner than main frame
+      });
+      currentOffset += 8;
+    }
+
+    // Bottom mat (outermost mat layer)
+    if (useBottomMat && selectedBottomMat && selectedBottomMat.id !== 0) {
+      layers.push({
+        type: 'bottomMat',
+        color: selectedBottomMat.color,
+        offset: currentOffset,
+        width: matWidth
+      });
+      currentOffset += matWidth;
+    }
+
+    // Middle mat
+    if (useMiddleMat && selectedMiddleMat && selectedMiddleMat.id !== 0) {
+      layers.push({
+        type: 'middleMat',
+        color: selectedMiddleMat.color,
+        offset: currentOffset,
+        width: matWidth
+      });
+      currentOffset += matWidth;
+    }
+
+    // Top mat (innermost mat layer)
+    if (selectedMat && selectedMat.id !== 0) {
+      layers.push({
+        type: 'topMat',
+        color: selectedMat.color,
+        offset: currentOffset,
+        width: matWidth
+      });
+      currentOffset += matWidth;
+    }
+
+    return { layers, artworkOffset: currentOffset };
+  };
+
+  const { layers, artworkOffset } = getMatLayers();
+
   return (
-    <div className="relative">
-      {/* Image Preview */}
-      <div className="bg-white p-6 shadow-highlight rounded-lg relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100/50 to-transparent z-0"></div>
-        <div className="relative z-10">
-          <div className="h-[400px] flex items-center justify-center py-10">
-            {userImage ? (
-              <img
-                src={userImage}
-                alt="Your artwork"
-                className="max-h-full shadow-xl object-contain"
-                style={getFrameStyle()}
-              />
-            ) : (
-              <img
-                src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                alt="Sample artwork"
-                className="max-h-full shadow-xl object-contain"
-                style={getFrameStyle()}
+    <div className="relative w-full max-w-md mx-auto">
+      <Card className="relative bg-gradient-to-br from-neutral-100 to-neutral-200 shadow-lg">
+        <CardContent className="p-8">
+          <div className="relative mx-auto bg-white shadow-inner" style={{
+            width: `${Math.min(displayWidth, 280)}px`,
+            height: `${Math.min(displayHeight, 280)}px`,
+            aspectRatio: aspectRatio
+          }}>
+            {/* Main Frame Border */}
+            {selectedFrame && (
+              <div 
+                className="absolute inset-0 shadow-lg"
+                style={{
+                  border: `${frameWidth}px solid ${selectedFrame.color}`,
+                  borderRadius: '2px'
+                }}
               />
             )}
 
-            {isLoading && (
-              <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent"></div>
+            {/* Render all layers from outside to inside */}
+            {layers.map((layer, index) => (
+              <div 
+                key={`${layer.type}-${index}`}
+                className={`absolute ${layer.type === 'stackedFrame' ? 'shadow-md' : 'shadow-sm'}`}
+                style={{
+                  top: `${layer.offset}px`,
+                  left: `${layer.offset}px`,
+                  right: `${layer.offset}px`,
+                  bottom: `${layer.offset}px`,
+                  backgroundColor: layer.color,
+                  borderRadius: '1px',
+                  ...(layer.type === 'stackedFrame' && {
+                    border: `${layer.width}px solid ${layer.color}`,
+                    backgroundColor: 'transparent'
+                  })
+                }}
+              />
+            ))}
+
+            {/* Artwork Area */}
+            <div 
+              className="absolute bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 flex items-center justify-center"
+              style={{
+                top: `${artworkOffset}px`,
+                left: `${artworkOffset}px`,
+                right: `${artworkOffset}px`,
+                bottom: `${artworkOffset}px`,
+                borderRadius: '1px'
+              }}
+            >
+              <div className="text-center text-xs text-gray-400">
+                <div className="w-8 h-8 mx-auto mb-1 bg-gray-300 rounded flex items-center justify-center">
+                  <Image className="w-4 h-4" />
+                </div>
+                <p>Your Artwork</p>
+                <p className="text-[10px]">{width}" × {height}"</p>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        </CardContent>
 
-        {selectedFrame && selectedMat && (
+        {/* Glass overlay indicator */}
+        {selectedGlass && (
+          <div className="absolute top-4 left-4 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-medium">
+            {selectedGlass.name}
+          </div>
+        )}
+
+        {selectedFrame && (
           <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-md py-1 px-3 text-xs font-medium shadow-sm border border-neutral-100">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedFrame.color }}></div>
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedMat.color }}></div>
-              <span>{selectedFrame.name} frame, {selectedMat.name} mat</span>
+              {selectedMat && selectedMat.id !== 0 && (
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedMat.color }}></div>
+              )}
+              <span>
+                {selectedFrame.name} frame
+                {selectedMat && selectedMat.id !== 0 && `, ${selectedMat.name} mat`}
+              </span>
             </div>
           </div>
         )}
@@ -147,86 +243,10 @@ export const DynamicFramePreview = ({
           New: Interactive Preview!
         </span>
       </div>
-
-      {/* Image Upload and Preview Controls */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => fileInputRef.current?.click()}
-          className="flex-1"
-        >
-          <Upload className="h-4 w-4 mr-2" />
-          Upload Your Artwork
-        </Button>
-        <input 
-          type="file" 
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="image/*" 
-          className="hidden"
-        />
-
-        {userImage && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={resetImage}
-          >
-            <RotateCw className="h-4 w-4 mr-1" />
-            Reset
-          </Button>
-        )}
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={openARPreview}
-          className="flex-1"
-        >
-          <Camera className="h-4 w-4 mr-2" />
-          Try on Your Wall
-        </Button>
-
-        <Button
-          variant="default"
-          size="sm"
-          onClick={openAnimatedPreview}
-          className="flex-1 text-white"
-        >
-          <Sparkles className="h-4 w-4 mr-2" />
-          Interactive AI Preview
-        </Button>
-      </div>
-
-      {/* AR Preview Modal */}
-      {showARPreview && (
-        <AugmentedRealityPreview
-          width={width}
-          height={height}
-          selectedFrame={selectedFrame}
-          selectedMat={selectedMat}
-          selectedGlass={selectedGlass}
-          onClose={closeARPreview}
-        />
-      )}
-
-      {/* Animated Preview Modal */}
-      {showAnimatedPreview && (
-        <AnimatedFramePreview
-          width={width}
-          height={height}
-          selectedFrame={selectedFrame}
-          selectedMat={selectedMat}
-          selectedGlass={selectedGlass}
-          topMatReveal={topMatReveal}
-          middleMatReveal={middleMatReveal}
-          bottomMatReveal={bottomMatReveal}
-          useMiddleMat={useMiddleMat}
-          useBottomMat={useBottomMat}
-          onClose={closeAnimatedPreview}
-        />
-      )}
     </div>
   );
 };
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Image } from 'lucide-react';
