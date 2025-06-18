@@ -1,4 +1,9 @@
 import Hero from "@/components/home/hero";
+import LocationSection from "@/components/home/location-section";
+import PrintingSection from "@/components/home/printing-section";
+import AboutSection from "@/components/home/about-section";
+import CustomizationSection from "@/components/home/customization-section";
+import ArchivalScienceSection from "@/components/home/archival-science-section";
 import Process from "@/components/home/process";
 import Testimonials from "@/components/home/testimonials";
 import Chatbot from "@/components/ui/chatbot";
@@ -136,13 +141,16 @@ const Home = () => {
           }
         `}</script>
       </SeoHead>
-      
-      {/* Hero Section */}
+
       <Hero />
-      
-      {/* Framing Process */}
+      <LocationSection />
+      <PrintingSection />
+      <AboutSection />
+      <CustomizationSection />
+      <ArchivalScienceSection />
       <Process />
-      
+      <Testimonials />
+
       {/* AI Frame Designer Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -155,7 +163,7 @@ const Home = () => {
               Try our revolutionary Houston-based design assistant that mimics Jay's 15+ years of framing expertise to help you create the perfect custom frame for your artwork in minutes, with museum-quality recommendations and eco-friendly options.
             </p>
           </div>
-          
+
           <div className="bg-neutral-50 p-6 rounded-xl shadow-lg max-w-5xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="flex flex-col justify-center">
@@ -210,7 +218,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Ask Frame Assistant Section */}
       <section className="py-16 bg-neutral-100">
         <div className="container mx-auto px-4">
@@ -223,7 +231,7 @@ const Home = () => {
               Get expert Houston framing advice from our AI assistant, trained to perfectly mimic Jay's 15+ years of expertise across thousands of professional framing projects, providing instant recommendations for eco-friendly, museum-quality framing.
             </p>
           </div>
-          
+
           <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-5">
               <div className="p-6 bg-primary text-white md:col-span-2">
@@ -294,7 +302,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Product Showcase */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -307,7 +315,7 @@ const Home = () => {
               Discover our range of custom framing options, from readymade frames to museum-quality conservation framing and eco-friendly solutions.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Custom Frame Card */}
             <Card className="overflow-hidden shadow-lg">
@@ -339,7 +347,7 @@ const Home = () => {
                 </Link>
               </CardContent>
             </Card>
-            
+
             {/* Shadowbox Card */}
             <Card className="overflow-hidden shadow-lg">
               <div className="aspect-video bg-neutral-100">
@@ -367,7 +375,7 @@ const Home = () => {
                 </Link>
               </CardContent>
             </Card>
-            
+
             {/* Float Mount Card */}
             <Card className="overflow-hidden shadow-lg">
               <div className="aspect-video bg-neutral-100">
@@ -398,7 +406,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Art Installation Section */}
       <section className="py-16 bg-neutral-50">
         <div className="container mx-auto px-4">
@@ -415,7 +423,7 @@ const Home = () => {
                     with expert precision and care to enhance your space's aesthetic.
                   </p>
                 </div>
-                
+
                 <ul className="space-y-6">
                   <li className="flex items-start">
                     <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
@@ -457,14 +465,14 @@ const Home = () => {
                     </div>
                   </li>
                 </ul>
-                
+
                 <Link href="/custom-framing">
                   <Button className="bg-primary hover:bg-primary/90 text-white w-full md:w-auto font-medium mt-6">
                     Learn More About Our Services
                   </Button>
                 </Link>
               </div>
-              
+
               <div className="relative h-80 md:h-full">
                 <img 
                   src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
@@ -476,10 +484,10 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Testimonials */}
       <Testimonials />
-      
+
       {/* Chatbot */}
       <div className="fixed bottom-6 right-6 z-50">
         <Chatbot />
