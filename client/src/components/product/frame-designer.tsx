@@ -58,7 +58,6 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
-  const [showImageUpload, setShowImageUpload] = useState(true);
 
   // Unique design ID for this framing session
   const [designId] = useState(`design-${Date.now()}`);
@@ -774,73 +773,6 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
 
-          {/* AI Image Analysis Section */}
-          {showImageUpload && (
-            <div className="mb-6 p-6 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl border-2 border-dashed border-cyan-200">
-              <div className="text-center">
-                <div className="mx-auto w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mb-4">
-                  <Camera className="h-8 w-8 text-cyan-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">AI Frame Analysis</h3>
-                <p className="text-gray-600 mb-4">Upload your artwork for instant AI-powered frame recommendations</p>
-                
-                {!previewUrl ? (
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      id="artwork-upload"
-                    />
-                    <label htmlFor="artwork-upload" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-cyan-600 hover:bg-cyan-700 cursor-pointer transition-colors">
-                      <Upload className="h-5 w-5 mr-2" />
-                      Upload Artwork Image
-                    </label>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="relative inline-block">
-                      <img 
-                        src={previewUrl} 
-                        alt="Artwork preview" 
-                        className="max-w-xs max-h-48 object-contain rounded-lg shadow-md"
-                      />
-                      <button
-                        onClick={handleResetImage}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <div className="flex space-x-3 justify-center">
-                      <Button 
-                        onClick={analyzeImage}
-                        disabled={isAnalyzing}
-                        className="bg-cyan-600 hover:bg-cyan-700"
-                      >
-                        {isAnalyzing ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Analyzing...
-                          </>
-                        ) : (
-                          <>
-                            <ImageIcon className="h-4 w-4 mr-2" />
-                            Get AI Recommendations
-                          </>
-                        )}
-                      </Button>
-                      <Button variant="outline" onClick={handleResetImage}>
-                        Upload Different Image
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Analysis Results */}
           {analysisResult && (
             <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
@@ -849,14 +781,6 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <Trophy className="h-4 w-4 text-green-600" />
                 </div>
                 <h4 className="font-semibold text-green-800">AI Analysis Complete</h4>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setShowImageUpload(true)}
-                  className="ml-auto text-green-600 hover:text-green-700"
-                >
-                  Upload New Image
-                </Button>
               </div>
               <p className="text-green-700 text-sm mb-3">{analysisResult.reasoning}</p>
               <div className="text-xs text-green-600">
@@ -885,7 +809,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 selectedMiddleMat={getSelectedMiddleMatOption() || null}
                 selectedBottomMat={getSelectedBottomMatOption() || null}
                 uploadedImage={previewUrl}
-                onImageUpload={handleFileChange}
+                onImageUpload={handleImageUploadFromPreview}
               />
             </div>
 
