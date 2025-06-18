@@ -97,7 +97,7 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 mr-3 mt-0.5 text-secondary" />
-                <span className="text-neutral-300">218 E. 28th St.<br />Houston, TX 77008</span>
+                <span className="text-neutral-300">218 W 27th St.<br />Houston Heights, TX 77008</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-3 text-secondary" />
@@ -109,7 +109,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Clock className="h-5 w-5 mr-3 text-secondary" />
-                <span className="text-neutral-300">Mon-Sat: 10am-6pm<br />Sunday: Closed</span>
+                <span className="text-neutral-300">Mon-Fri: 10am-6pm<br />Sat: 11am-5pm<br />Sunday: Closed</span>
               </li>
             </ul>
           </div>

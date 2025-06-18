@@ -138,7 +138,7 @@ class ContentManager {
         key: 'contact_phone',
         type: 'text',
         title: 'Contact Phone',
-        value: '(713) 555-FRAME',
+        value: '(832) 893-3794',
         description: 'Primary phone number',
         section: 'contact',
         page: 'global'
@@ -156,7 +156,7 @@ class ContentManager {
         key: 'contact_address',
         type: 'text',
         title: 'Contact Address',
-        value: '123 Art Street, Houston Heights, TX 77008',
+        value: '218 W 27th St. Houston Heights, TX 77008',
         description: 'Physical address',
         section: 'contact',
         page: 'global'
