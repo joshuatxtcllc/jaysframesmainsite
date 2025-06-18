@@ -1003,20 +1003,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { name, email, phone, service, date, time, message } = req.body;
 
-      // Here you would typically save to database
-      // For now, we'll just send a confirmation email
+      const appointmentId = Date.now().toString();
 
+      // Here you would typically save to database
       console.log('New appointment scheduled:', {
-        name, email, phone, service, date, time, message
+        appointmentId, name, email, phone, service, date, time, message
       });
 
-      // Send confirmation email (using existing email service)
-      // You can expand this to integrate with calendar systems
+      // Send confirmation notification to customer
+      if (email) {
+        sendNotification({
+          title: `Consultation Scheduled - ${appointmentId}`,
+          description: `Thank you ${name}! Your ${service} consultation is scheduled for ${date} at ${time}. We'll see you at 218 W 27th St., Houston, TX 77008.`,
+          source: 'scheduling-system',
+          sourceId: appointmentId,
+          type: "success",
+          actionable: true,
+          link: `/contact`,
+          recipient: email
+        }).catch(error => {
+          console.error('Failed to send customer notification:', error);
+        });
+      }
+
+      // Send notification to staff/admin
+      sendNotification({
+        title: `New Consultation Scheduled - ${appointmentId}`,
+        description: `${name} scheduled a ${service} consultation for ${date} at ${time}. Contact: ${email}, ${phone}. Message: ${message || 'None'}`,
+        source: 'scheduling-system',
+        sourceId: appointmentId,
+        type: "info",
+        actionable: true,
+        link: `/admin/appointments/${appointmentId}`,
+        recipient: "Frames@Jaysframes.com"
+      }).catch(error => {
+        console.error('Failed to send admin notification:', error);
+      });
+
+      // Send SMS notification to staff if enabled
+      if (process.env.STAFF_PHONE) {
+        sendSmsNotification(
+          `New consultation: ${name} - ${service} on ${date} at ${time}. Phone: ${phone}`,
+          process.env.STAFF_PHONE
+        ).catch(error => {
+          console.error('Failed to send staff SMS:', error);
+        });
+      }
 
       res.json({ 
         success: true, 
         message: 'Appointment scheduled successfully',
-        appointmentId: Date.now().toString()
+        appointmentId
       });
     } catch (error) {
       console.error('Error scheduling appointment:', error);
