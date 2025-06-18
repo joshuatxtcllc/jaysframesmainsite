@@ -8,75 +8,72 @@ const Hero = () => {
   const { getContent } = useSectionContent("home", "hero");
 
   return (
-    <section className="relative bg-gradient-to-br from-primary/10 via-neutral-50 to-white py-40 overflow-hidden">
-      {/* Background with enhanced contrast */}
+    <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-cyan-900 py-20 overflow-hidden">
+      {/* Animated background patterns */}
       <div className="absolute inset-0">
-        {/* Dark overlay to enhance contrast - significantly darker now */}
-        <div className="absolute inset-0 bg-primary/60 mix-blend-multiply z-10"></div>
-
-        {/* Hero image with better quality and contrast */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center z-0" 
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')`,
-            filter: 'contrast(1.1) brightness(0.85)'
-          }}
-        ></div>
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 to-cyan-600/30 z-10"></div>
+        
+        {/* Modern geometric background */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/20 to-transparent"></div>
+          <div className="absolute bottom-0 right-0 w-full h-full bg-gradient-to-tl from-secondary/20 to-transparent"></div>
+        </div>
       </div>
 
-      {/* Enhanced decorative elements with better contrast */}
-      <div className="absolute top-20 right-20 w-96 h-96 bg-secondary/15 rounded-full blur-3xl animate-pulse z-20"></div>
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-accent/15 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "1s" }}></div>
-      <div className="absolute top-1/3 left-1/4 w-56 h-56 bg-white/20 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "1.5s" }}></div>
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "2s" }}></div>
+      {/* Modern floating elements */}
+      <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-primary to-secondary rounded-full blur-3xl opacity-30 animate-pulse z-20"></div>
+      <div className="absolute bottom-32 left-16 w-96 h-96 bg-gradient-to-r from-secondary to-accent rounded-full blur-3xl opacity-25 animate-pulse z-20" style={{ animationDelay: "2s" }}></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-accent/20 to-primary/20 rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "4s" }}></div>
 
       {/* Adjusted semi-transparent overlay for improved text contrast */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-transparent z-30"></div>
 
       <div className="container mx-auto px-4 relative z-40">
-        <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
-          <div className="lg:w-3/5 fade-in" style={{ animationDelay: "0.2s" }}>
-            <div className="inline-flex items-center px-6 py-2 bg-secondary/30 rounded-full mb-6 backdrop-blur-sm">
-              <Award className="h-4 w-4 text-white mr-2" />
-              <p className="text-white font-semibold tracking-wider text-sm">JAY'S FRAMES REINVENTED - GRAND REOPENING 2025</p>
+        <div className="flex flex-col lg:flex-row items-center gap-20 max-w-7xl mx-auto min-h-screen">
+          <div className="lg:w-3/5 fade-in space-y-12" style={{ animationDelay: "0.2s" }}>
+            {/* Modern status badge */}
+            <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-accent/30 to-primary/30 rounded-2xl backdrop-blur-lg border border-white/20">
+              <Sparkles className="h-5 w-5 text-accent mr-3" />
+              <p className="text-white font-bold tracking-wide text-base">AI-POWERED FRAMING REVOLUTION</p>
             </div>
 
-            <h1 className="heading-xl mb-8 leading-tight drop-shadow-md" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-              {getContent('hero_title', "Jay's Frames Reinvented")}
-            </h1>
+            {/* Revolutionary typography */}
+            <div className="space-y-8">
+              <h1 className="text-7xl md:text-8xl lg:text-9xl font-black leading-[0.85] tracking-tighter">
+                <span className="block bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent drop-shadow-2xl">
+                  FRAME
+                </span>
+                <span className="block bg-gradient-to-r from-accent via-secondary to-primary bg-clip-text text-transparent drop-shadow-2xl">
+                  THE FUTURE
+                </span>
+              </h1>
 
-            <p className="body-lg text-white/90 mb-6 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              {getContent('hero_description', 'Houston\'s premier custom framing studio with over 15 years of excellence has been reinvented to meet evolving customer needs. Our revolutionary hybrid production model delivers 62% faster turnaround times and has quadrupled our production capacity.')}
-            </p>
+              <p className="text-2xl md:text-3xl text-white/85 leading-relaxed max-w-3xl font-light">
+                Houston's most innovative custom framing studio where 
+                <span className="text-accent font-bold"> cutting-edge AI technology </span>
+                meets artisan craftsmanship to create extraordinary visual experiences.
+              </p>
+            </div>
 
-            <p className="body-lg text-white/90 mb-10 max-w-xl font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-              Our assistants enable us to work closer with clients when it truly matters and helps us keep the hand-crafted quality at its highest possible level. Recognized as the Best Custom Frame Shop in Houston by the Houston A-List voters and featured in PaperCity magazine, we continue our legacy of collaboration with Houston's museums, sports teams, and art collectors.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-6 mb-12">
+            {/* Revolutionary CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-8 mb-16">
               <Link href="/custom-framing">
-                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-8 text-base shadow-highlight group">
-                  {getContent('hero_cta_primary', 'Get Started Today')}
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                <Button size="lg" className="bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90 text-white font-black py-6 px-12 text-xl rounded-3xl shadow-2xl transform hover:scale-110 transition-all duration-500 group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <Cpu className="mr-4 h-7 w-7 relative z-10" />
+                  <span className="relative z-10">START AI DESIGN</span>
+                  <ArrowRight className="ml-4 h-7 w-7 transition-transform duration-500 group-hover:translate-x-3 relative z-10" />
                 </Button>
               </Link>
               <Link href="/custom-framing">
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white/30 font-medium py-3 px-8 text-base rounded-md transition-all duration-300 flex items-center gap-2"
+                  className="bg-white/10 backdrop-blur-xl border-3 border-white/40 text-white hover:bg-white/25 font-bold py-6 px-12 text-xl rounded-3xl transition-all duration-500 flex items-center gap-4 hover:scale-110 shadow-xl"
                 >
-                  <Wand2 className="h-5 w-5" />
-                  Let AI Design!
-                </Button>
-              </Link>
-              <Link href="#process" className="hidden sm:block">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white/30 font-medium py-3 px-8 text-base rounded-md transition-all duration-300"
-                >
-                  Learn Our Process
+                  <Clock className="h-7 w-7" />
+                  INSTANT QUOTE
                 </Button>
               </Link>
             </div>

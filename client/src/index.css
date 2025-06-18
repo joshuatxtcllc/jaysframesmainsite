@@ -53,48 +53,48 @@
 
 @layer components {
   .bg-primary {
-    @apply bg-[#1a365d];
+    @apply bg-[#8b5cf6];
   }
   
   .text-primary {
-    @apply text-[#1a365d];
+    @apply text-[#8b5cf6];
   }
   
   .bg-secondary {
-    @apply bg-[#f97316];
+    @apply bg-[#06b6d4];
   }
   
   .text-secondary {
-    @apply text-[#e67e22];
+    @apply text-[#06b6d4];
   }
   
   .hover\:bg-secondary\/80:hover {
-    @apply bg-[#d35400];
+    @apply bg-[#0891b2];
   }
   
   .bg-secondary\/10 {
-    @apply bg-[#e67e22]/10;
+    @apply bg-[#06b6d4]/10;
   }
   
   .bg-secondary\/20 {
-    @apply bg-[#e67e22]/20;
+    @apply bg-[#06b6d4]/20;
   }
   
-  /* Accent color (green) */
+  /* Accent color (amber) */
   .bg-accent {
-    @apply bg-[#27ae60];
+    @apply bg-[#f59e0b];
   }
   
   .text-accent {
-    @apply text-[#27ae60];
+    @apply text-[#f59e0b];
   }
   
   .bg-accent\/10 {
-    @apply bg-[#27ae60]/10;
+    @apply bg-[#f59e0b]/10;
   }
   
   .bg-accent\/20 {
-    @apply bg-[#27ae60]/20;
+    @apply bg-[#f59e0b]/20;
   }
 
   /* Custom shadows */

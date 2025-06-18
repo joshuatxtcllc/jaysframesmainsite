@@ -1,9 +1,9 @@
 
 {
   "variant": "vibrant",
-  "primary": "#1a365d",
-  "secondary": "#f97316",
-  "accent": "#059669",
+  "primary": "#8b5cf6",
+  "secondary": "#06b6d4",
+  "accent": "#f59e0b",
   "appearance": "light",
-  "radius": 1.5
+  "radius": 2
 }
