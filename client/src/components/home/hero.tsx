@@ -1,187 +1,164 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Wand2, Award, ArrowRight, Sparkles, PackageSearch, Shield, Palette, MapPin } from "lucide-react";
-import { Cpu, Clock } from "lucide-react";
+import { Wand2, Award, ArrowRight, Sparkles } from "lucide-react";
 import { useSectionContent } from "@/hooks/use-content";
 
 const Hero = () => {
   const { getContent } = useSectionContent("home", "hero");
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-black py-20 overflow-hidden">
-      {/* Dark aggressive background patterns */}
+    <section className="relative min-h-screen bg-black overflow-hidden">
+      {/* Modern geometric background */}
       <div className="absolute inset-0">
-        {/* Deep dark overlay with teal accent */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-gray-900/80 z-10"></div>
-        
-        {/* Menacing geometric background */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-secondary/10 to-transparent"></div>
-          <div className="absolute bottom-0 right-0 w-full h-full bg-gradient-to-tl from-black to-transparent"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(20,184,166,0.1),transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(0,0,0,0.8),transparent_50%)]"></div>
-        </div>
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-gradient-to-br from-cyan-500/10 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-gradient-to-br from-cyan-400/8 to-transparent rounded-full blur-2xl"></div>
       </div>
 
-      {/* Aggressive floating elements with teal glow */}
-      <div className="absolute top-20 right-20 w-80 h-80 bg-gradient-to-r from-secondary/20 to-black rounded-full blur-3xl shadow-neon animate-pulse z-20"></div>
-      <div className="absolute bottom-32 left-16 w-96 h-96 bg-gradient-to-r from-black to-secondary/15 rounded-full blur-3xl shadow-brutal animate-pulse z-20" style={{ animationDelay: "3s" }}></div>
-      <div className="absolute top-1/3 right-1/3 w-[400px] h-[400px] bg-gradient-to-r from-secondary/10 to-black rounded-full blur-3xl animate-pulse z-20" style={{ animationDelay: "6s" }}></div>
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(14,165,233,0.3) 1px, transparent 0)`,
+        backgroundSize: '50px 50px'
+      }}></div>
 
-      {/* Deep dark overlay for maximum contrast */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70 z-30"></div>
-
-      <div className="container mx-auto px-4 relative z-40">
-        <div className="flex flex-col lg:flex-row items-center gap-20 max-w-7xl mx-auto min-h-screen">
-          <div className="lg:w-3/5 fade-in space-y-12" style={{ animationDelay: "0.2s" }}>
-            {/* Premium status badge */}
-            <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-black to-secondary/20 rounded-2xl backdrop-blur-lg border border-secondary/50">
-              <Award className="h-5 w-5 text-secondary mr-3" />
-              <p className="text-white font-semibold tracking-wide text-base">MUSEUM-QUALITY ARCHIVAL FRAMING</p>
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col lg:flex-row items-center gap-20 max-w-7xl mx-auto min-h-screen pt-20">
+          {/* Left content */}
+          <div className="lg:w-3/5 space-y-12">
+            {/* Status badge */}
+            <div className="inline-flex items-center px-6 py-3 bg-white/5 backdrop-blur-xl rounded-full border border-white/10">
+              <div className="w-2 h-2 bg-cyan-400 rounded-full mr-3 animate-pulse"></div>
+              <span className="text-white/80 text-sm font-medium tracking-wide">Museum-Quality Archival Framing</span>
             </div>
 
-            {/* Professional elegant typography */}
-            <div className="space-y-8">
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight">
-                <span className="block bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent drop-shadow-2xl">
-                  CUSTOM FRAMING
+            {/* Main heading */}
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+                <span className="block text-white mb-2">
+                  Custom Framing
                 </span>
-                <span className="block bg-gradient-to-r from-secondary to-white bg-clip-text text-transparent drop-shadow-2xl">
-                  HOUSTON
+                <span className="block bg-gradient-to-r from-cyan-400 via-cyan-300 to-white bg-clip-text text-transparent">
+                  Houston
                 </span>
               </h1>
 
-              <p className="text-xl md:text-2xl text-white/90 leading-relaxed max-w-4xl font-medium">
-                Houston's premier 
-                <span className="text-secondary font-bold"> archival museum-grade custom framing studio </span>
-                specializing in conservation materials, UV-filtering glass, and innovative designs for discerning collectors and art enthusiasts.
+              <p className="text-xl md:text-2xl text-white/70 leading-relaxed max-w-2xl font-light">
+                Houston's premier archival custom framing studio specializing in 
+                <span className="text-cyan-400 font-medium"> museum-grade conservation materials</span>, 
+                UV-filtering glass, and innovative designs for discerning collectors.
               </p>
             </div>
 
-            {/* Professional CTA buttons */}
-            <div className="flex flex-col sm:flex-row gap-8 mb-16">
-              <Link href="/custom-framing">
-                <Button size="lg" className="bg-gradient-to-r from-black via-secondary to-black hover:from-black hover:via-secondary/80 hover:to-black text-white font-bold py-6 px-12 text-lg rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 group relative overflow-hidden border border-secondary/50">
-                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Wand2 className="mr-4 h-6 w-6 relative z-10" />
-                  <span className="relative z-10">Design My Frame</span>
-                  <ArrowRight className="ml-4 h-6 w-6 transition-transform duration-300 group-hover:translate-x-2 relative z-10" />
-                </Button>
-              </Link>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-6">
               <Link href="/custom-framing">
                 <Button 
                   size="lg" 
-                  variant="outline" 
-                  className="bg-black/80 backdrop-blur-xl border-2 border-secondary text-secondary hover:bg-secondary/10 hover:text-white font-bold py-6 px-12 text-lg rounded-xl transition-all duration-300 flex items-center gap-4 hover:scale-105 shadow-xl"
+                  className="bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-black font-semibold py-4 px-8 text-lg rounded-xl shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105"
                 >
-                  <Clock className="h-6 w-6" />
+                  <Wand2 className="mr-3 h-5 w-5" />
+                  Design My Frame
+                  <ArrowRight className="ml-3 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="bg-transparent border-2 border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-400 font-semibold py-4 px-8 text-lg rounded-xl transition-all duration-300 hover:scale-105"
+                >
                   Get Free Quote
                 </Button>
               </Link>
             </div>
 
-            {/* Premium services showcase */}
-            <div className="grid grid-cols-2 gap-6 mt-16">
+            {/* Feature highlights */}
+            <div className="grid grid-cols-2 gap-6 pt-8">
               {[
-                { icon: <Award className="h-7 w-7" />, text: "Museum-Grade Materials", color: "from-black to-secondary" },
-                { icon: <Sparkles className="h-7 w-7" />, text: "UV Conservation Glass", color: "from-secondary to-black" },
-                { icon: <Wand2 className="h-7 w-7" />, text: "Expert Design Consultation", color: "from-black to-secondary" },
-                { icon: <Clock className="h-7 w-7" />, text: "Local Houston Service", color: "from-secondary to-black" }
+                { icon: <Award className="h-6 w-6" />, text: "Museum-Grade Materials" },
+                { icon: <Sparkles className="h-6 w-6" />, text: "UV Conservation Glass" },
+                { icon: <Wand2 className="h-6 w-6" />, text: "Expert Design Service" },
+                { icon: <Award className="h-6 w-6" />, text: "Local Houston Studio" }
               ].map((feature, i) => (
                 <div 
                   key={i} 
-                  className="group text-center space-y-4 p-6 bg-gradient-to-br from-black/80 to-gray-900/60 backdrop-blur-xl rounded-xl border border-secondary/30 hover:border-secondary/60 hover:shadow-lg shadow-secondary/20 transition-all duration-300 hover:scale-105 cursor-pointer"
-                  style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}
+                  className="flex items-center gap-4 p-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 hover:border-cyan-400/30 transition-all duration-300"
                 >
-                  <div className={`bg-gradient-to-r ${feature.color} p-4 rounded-xl mx-auto w-fit shadow-lg group-hover:shadow-secondary/30 transition-all duration-300 border border-secondary/20`}>
-                    <div className="text-white">{feature.icon}</div>
+                  <div className="p-2 bg-gradient-to-br from-cyan-500/20 to-cyan-400/20 rounded-lg border border-cyan-400/20">
+                    <div className="text-cyan-400">{feature.icon}</div>
                   </div>
-                  <p className="text-white font-semibold text-sm">{feature.text}</p>
+                  <span className="text-white/80 font-medium text-sm">{feature.text}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="lg:w-2/5 relative mt-16 lg:mt-0 fade-in" style={{ animationDelay: "0.6s" }}>
-            {/* Premium floating effects with teal glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black via-secondary/15 to-black rounded-2xl blur-2xl transform rotate-2 scale-110"></div>
-            <div className="absolute inset-4 bg-gradient-to-tl from-secondary/8 to-black rounded-2xl blur-xl transform -rotate-1"></div>
+          {/* Right side - Interactive preview */}
+          <div className="lg:w-2/5 relative">
+            {/* Floating card effect */}
+            <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/20 shadow-2xl">
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <div className="bg-black/50 px-4 py-1 rounded-lg">
+                  <span className="text-cyan-400 text-xs font-mono">Archival Design Assistant</span>
+                </div>
+              </div>
 
-            {/* Premium interface showcase */}
-            <div className="relative bg-gradient-to-br from-black/95 to-gray-900/90 backdrop-blur-xl p-8 rounded-2xl border border-secondary/50 shadow-2xl transform hover:scale-105 transition-all duration-500">
-              {/* Professional interface header */}
-              <div className="bg-gradient-to-r from-black to-gray-900 p-4 rounded-xl border border-secondary/30 mb-6 shadow-lg">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse" style={{ animationDelay: "0.3s" }}></div>
-                  <div className="w-3 h-3 bg-secondary rounded-full animate-pulse" style={{ animationDelay: "0.6s" }}></div>
-                  <div className="bg-gradient-to-r from-black to-secondary h-6 rounded-lg w-56 ml-4 flex items-center justify-center border border-secondary/30">
-                    <div className="flex items-center gap-2 text-white font-semibold text-xs">
-                      <Award className="h-3 w-3" />
-                      ARCHIVAL DESIGN ASSISTANT
-                    </div>
+              {/* Preview area */}
+              <div className="relative h-64 bg-gradient-to-br from-black/80 to-gray-900/80 rounded-xl flex items-center justify-center overflow-hidden border border-white/10">
+                {/* Artwork placeholder */}
+                <div className="relative w-40 h-32 bg-white rounded-lg shadow-xl">
+                  <div className="absolute inset-2 bg-gradient-to-br from-gray-100 to-gray-50 rounded-md"></div>
+                  <div className="absolute inset-4 bg-gray-100 rounded-sm flex items-center justify-center">
+                    <span className="text-gray-500 text-xs font-medium">Your Artwork</span>
                   </div>
                 </div>
 
-                {/* Professional archival design interface */}
-                <div className="relative h-64 bg-gradient-to-br from-black to-gray-900 rounded-xl flex items-center justify-center overflow-hidden border border-secondary/40">
-                  {/* Elegant scanning effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/5 via-secondary/10 to-black animate-pulse"></div>
-                  
-                  {/* Premium frame preview */}
-                  <div className="relative w-40 h-32 bg-white rounded-lg shadow-xl transform rotate-1 hover:rotate-0 transition-transform duration-500 border border-secondary/20">
-                    <div className="absolute inset-2 bg-gradient-to-br from-black/5 to-secondary/5 rounded-md"></div>
-                    <div className="absolute inset-4 bg-secondary/5 rounded-sm flex items-center justify-center">
-                      <div className="text-xs text-gray-600 font-medium">Your Artwork</div>
+                {/* Analysis overlay */}
+                <div className="absolute bottom-4 left-4 right-4 bg-black/90 backdrop-blur-lg p-3 rounded-lg border border-cyan-400/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Award className="h-4 w-4 text-cyan-400" />
+                      <span className="text-white text-sm font-medium">Analyzing for conservation quality...</span>
                     </div>
-                  </div>
-                  
-                  {/* Professional analysis overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 bg-gradient-to-r from-black/90 to-secondary/70 backdrop-blur-lg p-3 rounded-lg border border-secondary/30">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Award className="h-4 w-4 text-secondary" />
-                        <span className="text-white font-semibold text-sm">Analyzing for archival quality...</span>
-                      </div>
-                      <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
-                        <div className="w-2 h-2 bg-secondary rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
-                        <div className="w-2 h-2 bg-secondary rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
-                      </div>
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Premium Houston framing services */}
-              <div className="space-y-6 mb-8">
-                <h3 className="text-lg font-bold text-white bg-gradient-to-r from-secondary to-white bg-clip-text text-transparent">Houston's Premier Custom Framing Services</h3>
-                <div className="space-y-3">
-                  {[
-                    { icon: <Wand2 className="h-4 w-4" />, text: "Custom Framing Houston", color: "from-black to-secondary" },
-                    { icon: <Award className="h-4 w-4" />, text: "Museum-Grade Conservation", color: "from-secondary to-black" },
-                    { icon: <PackageSearch className="h-4 w-4" />, text: "Canvas Stretching Houston", color: "from-black to-secondary" },
-                    { icon: <Sparkles className="h-4 w-4" />, text: "Archival Materials & UV Glass", color: "from-secondary to-black" }
-                  ].map((service, index) => (
-                    <div key={index} className="flex items-center gap-4 p-3 bg-gradient-to-r from-black/70 to-gray-900/50 rounded-lg border border-secondary/20 hover:border-secondary/40 hover:shadow-lg shadow-secondary/10 transition-all duration-300">
-                      <div className={`p-2 bg-gradient-to-r ${service.color} rounded-lg border border-secondary/20`}>
-                        <div className="text-white">{service.icon}</div>
-                      </div>
-                      <p className="text-sm font-semibold text-white">{service.text}</p>
-                    </div>
-                  ))}
-                </div>
+              {/* Services list */}
+              <div className="space-y-3 mt-6">
+                <h3 className="text-white font-semibold text-lg mb-4">Houston's Premier Custom Framing</h3>
+                {[
+                  "Custom Framing Houston",
+                  "Museum-Grade Conservation",
+                  "Canvas Stretching Houston", 
+                  "Archival UV-Filtering Glass"
+                ].map((service, i) => (
+                  <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
+                    <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                    <span className="text-white/80 text-sm font-medium">{service}</span>
+                  </div>
+                ))}
               </div>
 
-              {/* Professional action buttons */}
-              <div className="flex gap-4 justify-start">
+              {/* Bottom CTAs */}
+              <div className="flex gap-3 mt-6">
                 <Link href="/custom-framing">
-                  <div className="bg-gradient-to-r from-black to-secondary hover:from-black hover:to-secondary/80 rounded-lg px-6 py-3 flex items-center justify-center text-white text-sm font-semibold shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer border border-secondary/30 hover:border-secondary/50">
-                    Start Your Project
+                  <div className="bg-cyan-500 hover:bg-cyan-400 px-6 py-2 rounded-lg text-black font-semibold text-sm transition-colors cursor-pointer">
+                    Start Project
                   </div>
                 </Link>
                 <Link href="/contact">
-                  <div className="border border-secondary hover:border-white rounded-lg px-6 py-3 flex items-center justify-center text-secondary hover:text-white text-sm font-semibold transition-all duration-300 hover:scale-105 cursor-pointer bg-black/80 hover:bg-secondary/10">
+                  <div className="border border-cyan-400 hover:bg-cyan-400/10 px-6 py-2 rounded-lg text-cyan-400 font-semibold text-sm transition-colors cursor-pointer">
                     Get Quote
                   </div>
                 </Link>
