@@ -931,72 +931,68 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
 
-          {/* AI Recommendations Section - Moved Below Preview */}
+          {/* Ultra-Compact AI Recommendations */}
           {analysisResult && analysisResult.recommendations && (
-            <div className="mb-6 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg p-4 border border-cyan-200">
-              <div className="flex items-center mb-3">
-                <div className="w-6 h-6 bg-cyan-100 rounded-full flex items-center justify-center mr-2">
-                  <Trophy className="h-4 w-4 text-cyan-600" />
+            <div className="mb-4 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg p-3 border border-cyan-200">
+              <div className="flex items-center mb-2">
+                <div className="w-5 h-5 bg-cyan-100 rounded-full flex items-center justify-center mr-2">
+                  <Trophy className="h-3 w-3 text-cyan-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">AI Recommendations</h3>
+                <h3 className="text-sm font-semibold text-gray-900">AI Recommendations</h3>
               </div>
               
-              <p className="text-sm text-gray-700 mb-3">{analysisResult.reasoning}</p>
-              
-              <div className="text-xs text-gray-600 mb-4 bg-white/60 p-2 rounded">
-                <strong>Analysis:</strong> {analysisResult.artworkType} • <strong>Style:</strong> {analysisResult.style} • <strong>Mood:</strong> {analysisResult.mood}
-              </div>
+              <p className="text-xs text-gray-700 mb-2 line-clamp-2">{analysisResult.reasoning}</p>
 
-              {/* Compact Frame Recommendations */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {analysisResult.recommendations.frames?.slice(0, 3).map((rec: any, index: number) => {
-                  const frame = databaseFrames.find((f: any) => f.id === rec.id);
-                  if (!frame) return null;
-                  
-                  return (
-                    <div key={rec.id} className="bg-white rounded-md p-3 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer" 
-                         onClick={() => setSelectedFrame(rec.id)}>
-                      <div className="flex items-center mb-1">
-                        <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: frame.color }}></div>
-                        <span className="text-sm font-medium text-gray-900">{frame.name}</span>
-                        <span className="ml-auto text-xs text-cyan-600 font-semibold">{rec.score}/10</span>
-                      </div>
-                      <p className="text-xs text-gray-600 mb-1">{rec.reason}</p>
-                      <div className="text-xs text-gray-500">
-                        {frame.material} • ${(frame.pricePerInch / 100).toFixed(2)}/inch
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Compact Mat Recommendations */}
-              {analysisResult.recommendations.mats && (
-                <div className="mt-4">
-                  <h4 className="text-sm font-semibold text-gray-800 mb-2">Recommended Mat Options</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {analysisResult.recommendations.mats?.slice(0, 3).map((rec: any, index: number) => {
-                      const mat = databaseMats.find((m: any) => m.id === rec.id);
-                      if (!mat) return null;
+              {/* Ultra-Compact Frame & Mat Grid */}
+              <div className="grid grid-cols-2 gap-2">
+                {/* Frames Column */}
+                <div>
+                  <h4 className="text-xs font-semibold text-gray-800 mb-1">Top Frames</h4>
+                  <div className="space-y-1">
+                    {analysisResult.recommendations.frames?.slice(0, 2).map((rec: any) => {
+                      const frame = databaseFrames.find((f: any) => f.id === rec.id);
+                      if (!frame) return null;
                       
                       return (
-                        <div key={rec.id} className="bg-white rounded-md p-3 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer"
-                             onClick={() => setSelectedMat(rec.id)}>
-                          <div className="flex items-center mb-1">
-                            <div className="w-4 h-4 rounded-full mr-2 border border-gray-300" style={{ backgroundColor: mat.color }}></div>
-                            <span className="text-sm font-medium text-gray-900">{mat.name}</span>
-                            <span className="ml-auto text-xs text-cyan-600 font-semibold">{rec.score}/10</span>
-                          </div>
-                          <p className="text-xs text-gray-600 mb-1">{rec.reason}</p>
-                          <div className="text-xs text-gray-500">
-                            ${(mat.price / 100).toFixed(2)}
+                        <div key={rec.id} className="bg-white rounded p-2 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer" 
+                             onClick={() => setSelectedFrame(rec.id)}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: frame.color }}></div>
+                              <span className="text-xs font-medium text-gray-900 truncate">{frame.name}</span>
+                            </div>
+                            <span className="text-xs text-cyan-600 font-semibold">{rec.score}</span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
                 </div>
-              )}
+
+                {/* Mats Column */}
+                <div>
+                  <h4 className="text-xs font-semibold text-gray-800 mb-1">Top Mats</h4>
+                  <div className="space-y-1">
+                    {analysisResult.recommendations.mats?.slice(0, 2).map((rec: any) => {
+                      const mat = databaseMats.find((m: any) => m.id === rec.id);
+                      if (!mat) return null;
+                      
+                      return (
+                        <div key={rec.id} className="bg-white rounded p-2 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer"
+                             onClick={() => setSelectedMat(rec.id)}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 rounded-full mr-1 border border-gray-300" style={{ backgroundColor: mat.color }}></div>
+                              <span className="text-xs font-medium text-gray-900 truncate">{mat.name}</span>
+                            </div>
+                            <span className="text-xs text-cyan-600 font-semibold">{rec.score}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1005,36 +1001,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             {/* Empty div to maintain layout */}
             <div className="md:col-span-2"></div>
 
-            {/* Dimensions and Price in Second Column */}
+            {/* Price Summary in Second Column */}
             <div className="md:col-span-1">
-              {/* Dimensions */}
-              <div className="bg-white p-4 shadow-sm rounded-lg mb-4">
-                <h3 className="text-md font-serif font-bold mb-2 text-primary">Artwork Size</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <Label className="block text-xs mb-1 text-neutral-500">Width (in)</Label>
-                    <Input 
-                      type="number" 
-                      value={width}
-                      min={1}
-                      max={60}
-                      onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
-                      className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div>
-                    <Label className="block text-xs mb-1 text-neutral-500">Height (in)</Label>
-                    <Input 
-                      type="number" 
-                      value={height}
-                      min={1}
-                      max={60}
-                      onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
-                      className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                </div>
-              </div>
 
               {/* Frame Specifications Summary */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
