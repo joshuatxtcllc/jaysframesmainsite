@@ -1,0 +1,135 @@
+# Jay's Frames E-Commerce Platform
+
+## Overview
+
+Jay's Frames is a comprehensive e-commerce platform for a custom framing studio featuring an innovative hybrid production model. The application combines traditional craftsmanship with modern technology, including AI-powered design assistance, automated order processing, and real-time customer communication systems.
+
+## System Architecture
+
+### Frontend Architecture
+- **Framework**: React with TypeScript
+- **Routing**: Wouter for client-side routing
+- **State Management**: React Context for cart and authentication, TanStack Query for server state
+- **UI Components**: Custom components built with Radix UI primitives and Tailwind CSS
+- **Build Tool**: Vite with hot module replacement
+- **Styling**: Tailwind CSS with ShadCN UI component library
+
+### Backend Architecture
+- **Runtime**: Node.js with Express.js
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Drizzle ORM (falls back to in-memory storage)
+- **Authentication**: JWT-based authentication with bcrypt password hashing
+- **File Upload**: Express-fileupload middleware for image handling
+- **Real-time Communication**: WebSocket integration for live notifications
+
+## Key Components
+
+### AI Integration
+- **Provider**: OpenAI GPT-4o model for frame design assistance
+- **Features**: 
+  - Artwork image analysis for frame recommendations
+  - Interactive chat assistant for design guidance
+  - Automated frame, mat, and glass option suggestions
+- **Fallback**: Graceful degradation when API key is unavailable
+
+### Authentication System
+- JWT-based authentication with secure password hashing
+- Role-based access control (customer, staff, admin)
+- Protected routes with middleware authentication
+- Cookie-based token storage for better security
+
+### Product Management
+- Dynamic product catalog with categories (frames, shadowboxes, moonmount)
+- Frame options with pricing per inch calculations
+- Mat and glass option management
+- Inventory tracking with low stock alerts
+- Product search and filtering capabilities
+
+### Order Processing
+- Automated order workflow system
+- Real-time order status tracking
+- Email and SMS notification system
+- Payment processing integration ready
+- Admin dashboard for order management
+
+### Notification System
+- Unified notification platform with WebSocket real-time updates
+- Email notifications via Nodemailer
+- SMS integration with Twilio
+- Cross-application notification support
+- Embeddable notification widgets
+
+### Content Management
+- Dynamic content blocks for easy site updates
+- Image management system
+- Blog system with categories and posts
+- SEO optimization with structured data
+
+## Data Flow
+
+### Order Processing Flow
+1. Customer designs frame using AI assistant or manual selection
+2. Items added to cart with calculated pricing
+3. Checkout process with customer information collection
+4. Order creation triggers automated workflow
+5. Inventory checks and status updates
+6. Real-time notifications to customer and admin
+7. Production tracking through various stages
+
+### Authentication Flow
+1. User registration with email verification
+2. JWT token generation and secure storage
+3. Protected route access based on user roles
+4. Token refresh and session management
+
+### AI Recommendation Flow
+1. Customer uploads artwork image
+2. AI analyzes image for colors, style, and composition
+3. System matches analysis with available inventory
+4. Recommendations returned with reasoning
+5. Interactive refinement based on customer feedback
+
+## External Dependencies
+
+### Required Services
+- **OpenAI API**: For AI-powered frame design assistance
+- **PostgreSQL Database**: Primary data storage (with in-memory fallback)
+- **Email Service**: SMTP for transactional emails
+- **Twilio**: SMS notifications for order updates
+
+### Optional Integrations
+- **Payment Processing**: Stripe integration prepared but not active
+- **SendGrid**: Alternative email service
+- **External Catalog APIs**: Larson Juhl frame catalog integration
+
+### Development Dependencies
+- **Drizzle Kit**: Database migrations and schema management
+- **ESBuild**: Production bundle compilation
+- **TypeScript**: Type checking and compilation
+
+## Deployment Strategy
+
+### Production Build
+- Vite builds optimized frontend bundle
+- ESBuild compiles server-side TypeScript
+- Static assets served from dist/public directory
+- Server bundle outputs to dist/index.js
+
+### Environment Configuration
+- Development: Hot reload with Vite dev server
+- Production: Express serves static files and API routes
+- Database: Automatic connection with multiple environment variable options
+- SSL: HTTPS redirect middleware for production deployments
+
+### Scaling Considerations
+- WebSocket connections for real-time features
+- Database connection pooling with Neon serverless
+- File upload limits and temporary storage management
+- Background job processing for order automation
+
+## Changelog
+- June 18, 2025. Initial setup
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
