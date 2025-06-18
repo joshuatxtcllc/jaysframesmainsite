@@ -66,63 +66,29 @@ export async function analyzeArtworkImage(
 }
 
 async function analyzeWithClaude(base64Image: string, frameOptions: any[], matOptions: any[], glassOptions: any[]) {
-  const prompt = `You are an expert professional framer with decades of experience analyzing artwork and recommending the perfect framing solutions. 
-  Analyze the provided image and identify:
-  1. The type of artwork (painting, photograph, print, document, etc.)
-  2. The dominant colors (provide hex codes)
-  3. The style/period of the artwork
-  4. The mood or emotion the artwork conveys
+  // Optimize prompt to reduce token usage
+  const frameList = frameOptions.slice(0, 8).map(f => `${f.id}:${f.name}(${f.color})`).join(',');
+  const matList = matOptions.slice(0, 8).map(m => `${m.id}:${m.name}(${m.color})`).join(',');
+  
+  const prompt = `Analyze artwork and recommend framing. Return JSON only:
+{
+  "artworkType": "type",
+  "style": "style", 
+  "mood": "mood",
+  "reasoning": "brief explanation",
+  "recommendations": {
+    "frames": [{"id": number, "score": 1-10, "reason": "brief"}],
+    "mats": [{"id": number, "score": 1-10, "reason": "brief"}]
+  }
+}
 
-  Then, recommend:
-  - The 3 best frame options from the provided list that would complement this artwork
-  - The 3 best mat options from the provided list 
-  - The ideal glass/glazing option from the provided list
-
-  For each recommendation, provide a brief explanation of why it would work well with this specific artwork.
-  Base your recommendations on professional framing principles including color theory, aesthetic harmony, and preservation requirements.
-
-  Available frame options: ${JSON.stringify(frameOptions.map(f => ({ id: f.id, name: f.name, material: f.material, color: f.color })))}
-  Available mat options: ${JSON.stringify(matOptions.map(m => ({ id: m.id, name: m.name, color: m.color })))}
-  Available glass options: ${JSON.stringify(glassOptions.map(g => ({ id: g.id, name: g.name, features: g.features })))}
-
-  Return your analysis in properly formatted JSON with the following structure:
-  {
-    "artworkType": string,
-    "dominantColors": string[] (hex codes),
-    "style": string,
-    "mood": string,
-    "recommendations": {
-      "frames": [
-        {
-          "id": number,
-          "name": string,
-          "score": number (1-10),
-          "reason": string
-        }
-      ],
-      "mats": [
-        {
-          "id": number,
-          "name": string,
-          "score": number (1-10),
-          "reason": string
-        }
-      ],
-      "glass": [
-        {
-          "id": number,
-          "name": string,
-          "score": number (1-10),
-          "reason": string
-        }
-      ]
-    },
-    "reasoning": string (overall rationale for recommendations)
-  }`;
+Frames: ${frameList}
+Mats: ${matList}`;
 
   const response = await anthropic!.messages.create({
     model: anthropicModel,
     max_tokens: 4000,
+    system: "You are an expert framing consultant. Always respond with valid JSON only, no additional text or explanations.",
     messages: [{
       role: "user",
       content: [
@@ -142,8 +108,19 @@ async function analyzeWithClaude(base64Image: string, frameOptions: any[], matOp
     }]
   });
 
-  const analysisText = response.content[0].text;
-  const result = JSON.parse(analysisText);
+  const analysisText = response.content[0].type === 'text' ? response.content[0].text : '';
+  console.log("Claude raw response:", analysisText);
+  
+  // Extract JSON from response if it contains extra text
+  let jsonText = analysisText;
+  const jsonStart = analysisText.indexOf('{');
+  const jsonEnd = analysisText.lastIndexOf('}') + 1;
+  
+  if (jsonStart !== -1 && jsonEnd > jsonStart) {
+    jsonText = analysisText.substring(jsonStart, jsonEnd);
+  }
+  
+  const result = JSON.parse(jsonText);
   console.log("Claude artwork analysis complete");
   return result;
 }
