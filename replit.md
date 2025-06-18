@@ -145,6 +145,8 @@ Jay's Frames is a comprehensive e-commerce platform for a custom framing studio 
   - Added AI recommendations interface with scoring system for frames and mats
   - Positioned AI Frame Designer prominently in sidebar
   - Created dual workflow: AI analysis OR manual customization
+  - Enhanced image upload button with larger size, gradient styling, and prominent placement
+  - Updated business address to 218 W 27th St, Houston Heights, TX 77008
 - Professional rebranding with emphasis on archival museum-grade custom framing
 - SEO optimization for Houston local search with premium positioning
 - Dark aesthetic maintained with black, teal, and white color scheme

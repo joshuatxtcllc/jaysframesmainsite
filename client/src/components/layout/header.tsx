@@ -147,7 +147,7 @@ const Header = () => {
               </div>
               <div className="flex items-center mr-6">
                 <MapPin className="h-3.5 w-3.5 mr-2 text-cyan-400" />
-                <span>1440 Yale St, Houston</span>
+                <span>218 W 27th St, Houston Heights, TX 77008</span>
               </div>
               <span className="text-white/60">Mon-Sat: 10am-6pm · Sunday: Closed</span>
             </div>
