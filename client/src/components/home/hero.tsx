@@ -78,60 +78,74 @@ const Hero = () => {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-10">
+            {/* Modern feature showcase */}
+            <div className="grid grid-cols-2 gap-8 mt-16">
               {[
-                { icon: <Wand2 className="h-5 w-5" />, text: "AI-Powered Design Assistant" },
-                { icon: <Cpu className="h-5 w-5" />, text: "4x Production Capacity" },
-                { icon: <Clock className="h-5 w-5" />, text: "62% Faster Turnaround" },
-                { icon: <Sparkles className="h-5 w-5" />, text: "Houston's Premier Frame Shop" }
+                { icon: <Wand2 className="h-8 w-8" />, text: "AI Design Assistant", color: "from-primary to-secondary" },
+                { icon: <Cpu className="h-8 w-8" />, text: "4x Production Power", color: "from-secondary to-accent" },
+                { icon: <Clock className="h-8 w-8" />, text: "62% Faster Delivery", color: "from-accent to-primary" },
+                { icon: <Sparkles className="h-8 w-8" />, text: "Houston's Best", color: "from-primary to-accent" }
               ].map((feature, i) => (
-                <div key={i} className="flex items-center fade-in hover-lift" style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}>
-                  <div className="flex-shrink-0 mr-3 bg-secondary/40 p-2.5 rounded-full text-white shadow-md">
-                    {feature.icon}
+                <div 
+                  key={i} 
+                  className="group text-center space-y-4 p-6 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl border border-white/30 hover:border-white/60 transition-all duration-500 hover:scale-110 cursor-pointer"
+                  style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}
+                >
+                  <div className={`bg-gradient-to-r ${feature.color} p-4 rounded-2xl mx-auto w-fit shadow-2xl group-hover:shadow-accent/50 transition-all duration-500`}>
+                    <div className="text-white">{feature.icon}</div>
                   </div>
-                  <p className="text-white text-sm font-medium" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.4)' }}>{feature.text}</p>
+                  <p className="text-white font-bold text-sm tracking-wide">{feature.text}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="lg:w-2/5 relative mt-16 lg:mt-0 fade-in" style={{ animationDelay: "0.6s" }}>
-            {/* Enhanced card effects with better contrast */}
-            <div className="absolute inset-0 bg-gradient-to-br from-secondary/40 via-accent/30 to-primary/20 rounded-2xl blur-xl transform rotate-6"></div>
-            <div className="absolute inset-2 bg-white/40 rounded-2xl blur-md transform -rotate-3"></div>
+            {/* Modern floating effects */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-secondary/30 to-accent/30 rounded-3xl blur-2xl transform rotate-6 scale-110"></div>
+            <div className="absolute inset-4 bg-gradient-to-tl from-white/20 to-transparent rounded-3xl blur-xl transform -rotate-3"></div>
 
-            {/* Main card with improved contrast */}
-            <div className="relative bg-white p-8 rounded-2xl border border-neutral-200 shadow-elegant transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-              {/* Window-like header with improved styling */}
-              <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-200 mb-5 shadow-sm">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <div className="bg-neutral-100 h-5 rounded-md w-40 ml-3 flex items-center justify-center">
-                    <div className="w-5 h-5 bg-secondary/30 rounded-full flex items-center justify-center">
-                      <Wand2 className="h-3 w-3 text-white" />
+            {/* Ultra-modern interface card */}
+            <div className="relative bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl p-8 rounded-3xl border border-white/40 shadow-2xl transform hover:scale-105 transition-all duration-500 hover:shadow-accent/20">
+              {/* Futuristic AI interface header */}
+              <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-4 rounded-2xl border border-gray-700 mb-6 shadow-lg">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-4 h-4 rounded-full bg-gradient-to-r from-red-500 to-red-400 animate-pulse"></div>
+                  <div className="w-4 h-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 animate-pulse" style={{ animationDelay: "0.5s" }}></div>
+                  <div className="w-4 h-4 rounded-full bg-gradient-to-r from-green-500 to-green-400 animate-pulse" style={{ animationDelay: "1s" }}></div>
+                  <div className="bg-gradient-to-r from-primary to-secondary h-6 rounded-xl w-48 ml-4 flex items-center justify-center shadow-lg">
+                    <div className="flex items-center gap-2 text-white font-bold text-xs">
+                      <Cpu className="h-3 w-3" />
+                      AI FRAME DESIGNER
                     </div>
                   </div>
                 </div>
 
-                {/* Enhanced designer preview with better image contrast */}
-                <div className="relative h-56 bg-primary/5 rounded-md flex items-center justify-center overflow-hidden shadow-inner">
-                  <img 
-                    src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                    alt="Frame Design Preview" 
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ filter: 'contrast(1.1) brightness(0.9)' }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-primary/10 to-transparent"></div>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-white/80 backdrop-blur-md p-4 rounded-lg border border-white/70 shadow-lg">
-                    <div className="text-secondary font-bold mb-2 text-lg">AI Frame Designer</div>
-                    <div className="text-sm text-primary font-medium">Analyzing your artwork...</div>
-                    {/* Loading indicator */}
-                    <div className="mt-2 flex justify-center space-x-2">
-                      <div className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                      <div className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                      <div className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: "0.3s" }}></div>
+                {/* Futuristic AI preview interface */}
+                <div className="relative h-64 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-600">
+                  {/* AI scanning effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/30 to-accent/20 animate-pulse"></div>
+                  
+                  {/* Simulated frame preview */}
+                  <div className="relative w-40 h-32 bg-white rounded-lg shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <div className="absolute inset-2 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-md"></div>
+                    <div className="absolute inset-4 bg-accent/20 rounded-sm flex items-center justify-center">
+                      <div className="text-xs text-gray-600 font-medium">Your Art Here</div>
+                    </div>
+                  </div>
+                  
+                  {/* AI analysis overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 bg-gradient-to-r from-primary/90 to-secondary/90 backdrop-blur-lg p-3 rounded-xl border border-white/20">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Cpu className="h-4 w-4 text-white animate-spin" />
+                        <span className="text-white font-bold text-sm">AI Analyzing...</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-accent rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
+                        <div className="w-2 h-2 bg-accent rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
+                      </div>
                     </div>
                   </div>
                 </div>
