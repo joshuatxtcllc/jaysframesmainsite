@@ -123,69 +123,66 @@ const Hero = () => {
                   </div>
                 </div>
 
-                {/* Futuristic AI preview interface */}
-                <div className="relative h-64 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-600">
+                {/* Brutal AI domination interface */}
+                <div className="relative h-64 bg-gradient-to-br from-black to-gray-900 rounded-none flex items-center justify-center overflow-hidden border-2 border-secondary/50">
                   {/* AI scanning effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/30 to-accent/20 animate-pulse"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/10 via-secondary/20 to-black animate-pulse"></div>
                   
-                  {/* Simulated frame preview */}
-                  <div className="relative w-40 h-32 bg-white rounded-lg shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <div className="absolute inset-2 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-md"></div>
-                    <div className="absolute inset-4 bg-accent/20 rounded-sm flex items-center justify-center">
-                      <div className="text-xs text-gray-600 font-medium">Your Art Here</div>
+                  {/* Brutal frame preview */}
+                  <div className="relative w-40 h-32 bg-white rounded-none shadow-brutal transform rotate-2 hover:rotate-0 transition-transform duration-300 border-2 border-secondary/30">
+                    <div className="absolute inset-2 bg-gradient-to-br from-black/10 to-secondary/10 rounded-none"></div>
+                    <div className="absolute inset-4 bg-secondary/10 rounded-none flex items-center justify-center">
+                      <div className="text-xs text-black font-black tracking-wider">TARGET</div>
                     </div>
                   </div>
                   
-                  {/* AI analysis overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 bg-gradient-to-r from-primary/90 to-secondary/90 backdrop-blur-lg p-3 rounded-xl border border-white/20">
+                  {/* AI domination overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 bg-gradient-to-r from-black to-secondary/80 backdrop-blur-lg p-3 rounded-none border-2 border-secondary shadow-neon">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Cpu className="h-4 w-4 text-white animate-spin" />
-                        <span className="text-white font-bold text-sm">AI Analyzing...</span>
+                        <Cpu className="h-4 w-4 text-secondary animate-spin" />
+                        <span className="text-white font-black text-sm tracking-wider">PROCESSING TARGET...</span>
                       </div>
                       <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-                        <div className="w-2 h-2 bg-accent rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
-                        <div className="w-2 h-2 bg-accent rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
+                        <div className="w-2 h-2 bg-secondary rounded-none animate-pulse"></div>
+                        <div className="w-2 h-2 bg-secondary rounded-none animate-pulse" style={{ animationDelay: "0.2s" }}></div>
+                        <div className="w-2 h-2 bg-secondary rounded-none animate-pulse" style={{ animationDelay: "0.4s" }}></div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Featured services information */}
-              <div className="space-y-4 mb-6">
-                <h3 className="text-lg font-semibold text-primary">Our Expert Framing Services</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
-                    <p className="text-sm text-gray-700">Custom framing for artwork, photographs & memorabilia</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
-                    <p className="text-sm text-gray-700">Museum-quality conservation & archival framing</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
-                    <p className="text-sm text-gray-700">Shadow boxes for 3D objects & keepsakes</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-secondary"></div>
-                    <p className="text-sm text-gray-700">AI-assisted design consultations</p>
-                  </div>
+              {/* Brutal services domination */}
+              <div className="space-y-6 mb-8">
+                <h3 className="text-xl font-black text-white bg-gradient-to-r from-secondary to-white bg-clip-text text-transparent tracking-wider">TOTAL FRAMING SUPREMACY</h3>
+                <div className="space-y-4">
+                  {[
+                    { icon: <Wand2 className="h-4 w-4" />, text: "CUSTOM FRAME OBLITERATION", color: "from-black to-secondary" },
+                    { icon: <Award className="h-4 w-4" />, text: "MUSEUM-GRADE DEVASTATION", color: "from-secondary to-black" },
+                    { icon: <PackageSearch className="h-4 w-4" />, text: "3D SHADOW BOX ANNIHILATION", color: "from-black to-secondary" },
+                    { icon: <Cpu className="h-4 w-4" />, text: "AI-ASSISTED DOMINATION", color: "from-secondary to-black" }
+                  ].map((service, index) => (
+                    <div key={index} className="flex items-center gap-4 p-3 bg-gradient-to-r from-black/80 to-gray-900/60 rounded-none border border-secondary/30 hover:border-secondary hover:shadow-neon transition-all duration-300">
+                      <div className={`p-2 bg-gradient-to-r ${service.color} rounded-none border border-secondary/20`}>
+                        <div className="text-white">{service.icon}</div>
+                      </div>
+                      <p className="text-sm font-black text-white tracking-wide">{service.text}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Enhanced buttons with better contrast */}
+              {/* Brutal action buttons */}
               <div className="flex gap-4 justify-start">
                 <Link href="/custom-framing">
-                  <div className="h-10 bg-secondary rounded-md w-auto px-6 flex items-center justify-center text-white text-sm font-medium shadow-highlight transition-all duration-300 hover:bg-secondary/90 hover:scale-105 cursor-pointer">
-                    Explore Services
+                  <div className="bg-gradient-to-r from-black to-secondary hover:from-black hover:to-secondary/80 rounded-none px-8 py-4 flex items-center justify-center text-white text-sm font-black shadow-brutal transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-secondary/50 hover:border-secondary">
+                    EXECUTE ORDER
                   </div>
                 </Link>
                 <Link href="/contact">
-                  <div className="h-10 border border-secondary rounded-md w-auto px-6 flex items-center justify-center text-secondary text-sm font-medium transition-all duration-300 hover:bg-secondary/10 hover:scale-105 cursor-pointer">
-                    Get Quote
+                  <div className="border-2 border-secondary hover:border-white rounded-none px-8 py-4 flex items-center justify-center text-secondary hover:text-white text-sm font-black transition-all duration-300 hover:scale-105 cursor-pointer bg-black/90 hover:bg-secondary/20 hover:shadow-neon">
+                    SUBMIT
                   </div>
                 </Link>
               </div>
