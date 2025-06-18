@@ -30,10 +30,21 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "./context/auth-context";
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import CatalogManagement from './pages/admin/catalog-management';
 import BlogManager from './pages/admin/blog-manager';
 import './lib/seo-monitor'; // Import SEO monitoring
+import ErrorBoundary from "@/components/ui/error-boundary";
+
+const newQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 function Router() {
   return (
@@ -70,14 +81,30 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Handle unhandled promise rejections
+    const handleUnhandledRejection = (event) => {
+      console.error('Unhandled promise rejection:', event.reason);
+      event.preventDefault(); // Prevent the default browser behavior
+    };
+
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={newQueryClient}>
       <AuthProvider>
         <CartProvider>
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">
-              <Router />
+              <ErrorBoundary>
+                <Router />
+              </ErrorBoundary>
             </main>
             <Footer />
           </div>
