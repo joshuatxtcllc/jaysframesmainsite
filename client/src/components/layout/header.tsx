@@ -137,29 +137,29 @@ const Header = () => {
   return (
     <>
       {/* Top info bar */}
-      <div className="bg-primary py-2 hidden md:block">
+      <div className="bg-black border-b border-white/10 py-2 hidden md:block">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center text-white/90 text-sm">
+          <div className="flex justify-between items-center text-white/80 text-sm">
             <div className="flex items-center">
               <div className="flex items-center mr-6">
-                <Phone className="h-3.5 w-3.5 mr-2 text-secondary" />
+                <Phone className="h-3.5 w-3.5 mr-2 text-cyan-400" />
                 <span>(832) 893-3794</span>
               </div>
               <div className="flex items-center mr-6">
-                <MapPin className="h-3.5 w-3.5 mr-2 text-secondary" />
+                <MapPin className="h-3.5 w-3.5 mr-2 text-cyan-400" />
                 <span>1440 Yale St, Houston</span>
               </div>
-              <span className="text-white/70">Mon-Sat: 10am-6pm · Sunday: Closed</span>
+              <span className="text-white/60">Mon-Sat: 10am-6pm · Sunday: Closed</span>
             </div>
             <div className="flex space-x-4">
               <Link href="/order-status">
-                <span className="hover:text-secondary transition-colors cursor-pointer">Track Order</span>
+                <span className="hover:text-cyan-400 transition-colors cursor-pointer">Track Order</span>
               </Link>
               <Link href="#">
-                <span className="hover:text-secondary transition-colors cursor-pointer">FAQ</span>
+                <span className="hover:text-cyan-400 transition-colors cursor-pointer">FAQ</span>
               </Link>
               <Link href="/contact">
-                <span className="hover:text-secondary transition-colors cursor-pointer">Contact</span>
+                <span className="hover:text-cyan-400 transition-colors cursor-pointer">Contact</span>
               </Link>
             </div>
           </div>
@@ -167,14 +167,14 @@ const Header = () => {
       </div>
 
       {/* Main header */}
-      <header className={`bg-white sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-elegant py-2' : 'py-4'}`}>
+      <header className={`bg-black/95 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-2xl border-b border-white/10 py-3' : 'py-4'}`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <Link href="/">
                 <div className="flex items-center cursor-pointer">
-                  <span className="text-2xl font-bold text-primary font-serif tracking-wide">
-                    Jay's <span className="text-secondary">Frames</span>
+                  <span className="text-2xl font-bold text-white font-serif tracking-wide">
+                    Jay's <span className="text-cyan-400">Frames</span>
                   </span>
                 </div>
               </Link>
@@ -184,9 +184,9 @@ const Header = () => {
               {/* Regular nav links */}
               {navLinks.map((link) => (
                 <Link key={link.href} href={link.href}>
-                  <div className={`${location === link.href ? 'text-secondary font-medium' : 'text-primary'} hover:text-secondary py-2 transition-colors duration-200 cursor-pointer relative group`}>
+                  <div className={`${location === link.href ? 'text-cyan-400 font-medium' : 'text-white/80'} hover:text-cyan-400 py-2 transition-colors duration-200 cursor-pointer relative group`}>
                     {link.label}
-                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
+                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 ${location === link.href ? 'w-full' : 'group-hover:w-full'}`}></span>
                   </div>
                 </Link>
               ))}
@@ -196,26 +196,26 @@ const Header = () => {
                 <PopoverTrigger asChild>
                   <div 
                     className={`flex items-center ${
-                      location.startsWith('/custom-framing') ? 'text-secondary font-medium' : 'text-primary'
-                    } hover:text-secondary py-2 transition-colors duration-200 cursor-pointer relative group`}
+                      location.startsWith('/custom-framing') ? 'text-cyan-400 font-medium' : 'text-white/80'
+                    } hover:text-cyan-400 py-2 transition-colors duration-200 cursor-pointer relative group`}
                   >
                     <span>Custom Framing</span>
                     <ChevronDown className="h-4 w-4 ml-1 opacity-70" />
-                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 ${
+                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 ${
                       location.startsWith('/custom-framing') ? 'w-full' : 'group-hover:w-full'
                     }`}></span>
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-[250px] p-2" align="center">
+                <PopoverContent className="w-[250px] p-2 bg-black/95 backdrop-blur-xl border border-white/20" align="center">
                   <div className="grid gap-1">
                     {customFramingSubMenu.map((item) => (
                       <Link 
                         key={item.href} 
                         href={item.href}
                         className={cn(
-                          "flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
-                          item.highlight ? "bg-secondary text-white font-semibold" : 
-                          location === item.href ? "bg-accent text-accent-foreground" : "text-primary"
+                          "flex items-center p-2 rounded-md hover:bg-cyan-400/10 hover:text-cyan-400 transition-colors",
+                          item.highlight ? "bg-cyan-400 text-black font-semibold" : 
+                          location === item.href ? "bg-white/10 text-cyan-400" : "text-white/80"
                         )}
                       >
                         <div className="flex items-center text-sm font-medium">
@@ -230,7 +230,7 @@ const Header = () => {
             </nav>
 
             <div className="flex items-center space-x-5">
-              <button className="text-primary hover:text-secondary transition-colors" aria-label="Search">
+              <button className="text-white/80 hover:text-cyan-400 transition-colors" aria-label="Search">
                 <Search className="h-5 w-5" />
               </button>
 
@@ -238,17 +238,17 @@ const Header = () => {
               <Popover>
                 <PopoverTrigger asChild>
                   <button 
-                    className="text-primary hover:text-secondary transition-colors relative" 
+                    className="text-white/80 hover:text-cyan-400 transition-colors relative" 
                     aria-label="Notifications"
                     onClick={() => setHasUnread(false)}
                   >
                     <Bell className="h-5 w-5" />
                     {hasUnread && (
-                      <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center shadow-sm animate-pulse"></span>
+                      <span className="absolute -top-1.5 -right-1.5 bg-cyan-400 text-black text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center shadow-sm animate-pulse"></span>
                     )}
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80 p-0" align="end">
+                <PopoverContent className="w-80 p-0 bg-black/95 backdrop-blur-xl border border-white/20" align="end">
                   <div className="p-4 border-b border-neutral-100">
                     <h3 className="font-bold text-primary">Notifications</h3>
                     <p className="text-xs text-neutral-500">Stay updated with order status and news</p>
@@ -309,13 +309,13 @@ const Header = () => {
               </Popover>
 
               <button 
-                className="text-primary hover:text-secondary transition-colors relative" 
+                className="text-white/80 hover:text-cyan-400 transition-colors relative" 
                 onClick={toggleCart}
                 aria-label="Shopping cart"
               >
                 <ShoppingCart className="h-5 w-5" />
                 {cartItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+                  <span className="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
                     {cartItems.length}
                   </span>
                 )}
@@ -325,7 +325,7 @@ const Header = () => {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center space-x-2 text-primary hover:text-secondary">
+                    <Button variant="ghost" className="flex items-center space-x-2 text-white/80 hover:text-cyan-400 bg-transparent hover:bg-white/5">
                       <User className="h-4 w-4" />
                       <span className="hidden md:inline">{user.firstName || user.username}</span>
                     </Button>
