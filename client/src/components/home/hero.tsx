@@ -34,7 +34,7 @@ const Hero = () => {
             <div className="space-y-6">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
                 <span className="block text-white mb-2">
-                  Custom Framing
+                  Conservation Framing
                 </span>
                 <span className="block bg-gradient-to-r from-cyan-400 via-cyan-300 to-white bg-clip-text text-transparent">
                   Houston
@@ -42,8 +42,8 @@ const Hero = () => {
               </h1>
 
               <p className="text-xl md:text-2xl text-white/70 leading-relaxed max-w-2xl font-light">
-                Houston's premier archival custom framing studio specializing in 
-                <span className="text-cyan-400 font-medium"> museum-grade conservation materials</span>, 
+                Houston's premier archival conservation framing studio specializing in 
+                <span className="text-cyan-400 font-medium"> museum-grade custom framing</span>, 
                 UV-filtering glass, and innovative designs for discerning collectors.
               </p>
             </div>
