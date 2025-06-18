@@ -172,18 +172,16 @@ const DynamicFramePreview = ({
             aspectRatio: aspectRatio
           }}>
             {/* Main Frame Border */}
-            {selectedFrame && (
-              <div 
-                className="absolute inset-0 shadow-lg border border-gray-300"
-                style={{
-                  borderWidth: `${frameWidth}px`,
-                  borderColor: selectedFrame.color,
-                  borderStyle: 'solid',
-                  borderRadius: '2px',
-                  boxSizing: 'border-box'
-                }}
-              />
-            )}
+            <div 
+              className="absolute inset-0 shadow-lg border border-gray-300"
+              style={{
+                borderWidth: `${frameWidth}px`,
+                borderColor: selectedFrame?.color || '#8B4513',
+                borderStyle: 'solid',
+                borderRadius: '2px',
+                boxSizing: 'border-box'
+              }}
+            />
 
             {/* Render all layers from outside to inside */}
             {layers.map((layer, index) => (
@@ -249,20 +247,18 @@ const DynamicFramePreview = ({
           </div>
         )}
 
-        {selectedFrame && (
-          <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-md py-1 px-3 text-xs font-medium shadow-sm border border-neutral-100">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedFrame.color }}></div>
-              {selectedMat && selectedMat.id !== 0 && (
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedMat.color }}></div>
-              )}
-              <span>
-                {selectedFrame.name} frame
-                {selectedMat && selectedMat.id !== 0 && `, ${selectedMat.name} mat`}
-              </span>
-            </div>
+        <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-md py-1 px-3 text-xs font-medium shadow-sm border border-neutral-100">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedFrame?.color || '#8B4513' }}></div>
+            {selectedMat && selectedMat.id !== 0 && (
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedMat.color }}></div>
+            )}
+            <span>
+              {selectedFrame?.name || 'Default'} frame
+              {selectedMat && selectedMat.id !== 0 && `, ${selectedMat.name} mat`}
+            </span>
           </div>
-        )}
+        </div>
       </Card>
 
       {/* Feature badges - moved to top of card, outside of frame display area */}
