@@ -1566,9 +1566,9 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 <Lightbulb className="h-5 w-5 text-white" />
               </div>
               <div className="ml-3">
-                <h4 className="text-base font-serif font-bold text-primary">AI Frame Designer</h4>
+                <h4 className="text-base font-serif font-bold text-primary">AI Visual Frame Designer</h4>
                 <p className="text-sm text-neutral-600">
-                  Get smart frame recommendations for your artwork
+                  Upload your artwork for AI visual analysis and smart frame recommendations
                 </p>
               </div>
             </div>
@@ -1577,7 +1577,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               {/* Image Upload Section - Enhanced Visibility */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
-                  📸 Upload Your Artwork for AI Analysis
+                  📸 Upload Your Artwork for Visual AI Analysis
                 </label>
                 <div className="flex gap-3">
                   <input
@@ -1620,46 +1620,43 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 )}
               </div>
 
-              {/* Text Description - Alternative Option */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-neutral-200" />
-                </div>
-                <div className="relative flex justify-center text-xs">
-                  <span className="bg-white px-2 text-neutral-500">or describe your artwork</span>
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <Textarea 
-                  placeholder="E.g. 'A vibrant sunset watercolor painting with orange and purple hues'"
-                  className="text-sm mb-3 min-h-[60px] border-neutral-200 focus:border-accent focus:ring-1 focus:ring-accent"
-                  value={artworkDescription}
-                  onChange={(e) => setArtworkDescription(e.target.value)}
-                />
-              </div>
-
-              <Button 
-                variant="default" 
-                className="w-full bg-accent hover:bg-accent/90 text-white py-2.5 group"
-                onClick={selectedFile ? () => handleImageUploadFromPreview(selectedFile) : getAiRecommendations}
-                disabled={isAnalyzing || (!selectedFile && !artworkDescription.trim())}
-              >
-                {aiRecommendationMutation.isPending ? (
-                  <div className="flex items-center text-white">
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Analyzing artwork...</span>
+              {/* Auto-analyze message */}
+              {selectedFile && !isAnalyzing && !analysisResult && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <Lightbulb className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-blue-700">
+                        Image ready! AI will analyze colors, style, and composition to recommend the perfect frame and mat combination.
+                      </p>
+                    </div>
                   </div>
-                ) : (
-                  <div className="flex items-center text-white">
-                    <span>Get AI Recommendations</span>
-                    <Lightbulb className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                </div>
+              )}
+
+              {/* Analysis in progress */}
+              {isAnalyzing && (
+                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg className="animate-spin h-5 w-5 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-amber-700 font-medium">
+                        Analyzing your artwork...
+                      </p>
+                      <p className="text-xs text-amber-600 mt-1">
+                        Examining colors, style, and composition
+                      </p>
+                    </div>
                   </div>
-                )}
-              </Button>
+                </div>
+              )}
             </div>
 
             {aiRecommendations && (
