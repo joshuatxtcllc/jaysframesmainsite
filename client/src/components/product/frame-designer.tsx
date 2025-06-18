@@ -931,67 +931,56 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
 
-          {/* Ultra-Compact AI Recommendations */}
+          {/* Minimal AI Recommendations */}
           {analysisResult && analysisResult.recommendations && (
-            <div className="mb-4 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg p-3 border border-cyan-200">
-              <div className="flex items-center mb-2">
-                <div className="w-5 h-5 bg-cyan-100 rounded-full flex items-center justify-center mr-2">
-                  <Trophy className="h-3 w-3 text-cyan-600" />
+            <div className="mb-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded p-2 border border-cyan-200">
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center">
+                  <Trophy className="h-3 w-3 text-cyan-600 mr-1" />
+                  <span className="text-xs font-semibold text-gray-900">AI Picks</span>
                 </div>
-                <h3 className="text-sm font-semibold text-gray-900">AI Recommendations</h3>
+                <span className="text-xs text-gray-600">{analysisResult.artworkType}</span>
               </div>
               
-              <p className="text-xs text-gray-700 mb-2 line-clamp-2">{analysisResult.reasoning}</p>
-
-              {/* Ultra-Compact Frame & Mat Grid */}
-              <div className="grid grid-cols-2 gap-2">
-                {/* Frames Column */}
-                <div>
-                  <h4 className="text-xs font-semibold text-gray-800 mb-1">Top Frames</h4>
-                  <div className="space-y-1">
-                    {analysisResult.recommendations.frames?.slice(0, 2).map((rec: any) => {
-                      const frame = databaseFrames.find((f: any) => f.id === rec.id);
-                      if (!frame) return null;
-                      
-                      return (
-                        <div key={rec.id} className="bg-white rounded p-2 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer" 
-                             onClick={() => setSelectedFrame(rec.id)}>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: frame.color }}></div>
-                              <span className="text-xs font-medium text-gray-900 truncate">{frame.name}</span>
-                            </div>
-                            <span className="text-xs text-cyan-600 font-semibold">{rec.score}</span>
-                          </div>
+              {/* Single Row Layout */}
+              <div className="flex gap-2">
+                {/* Top Frame */}
+                {analysisResult.recommendations.frames?.[0] && (() => {
+                  const frame = databaseFrames.find((f: any) => f.id === analysisResult.recommendations.frames[0].id);
+                  if (!frame) return null;
+                  
+                  return (
+                    <div className="flex-1 bg-white rounded p-1 border border-gray-200 hover:border-cyan-300 cursor-pointer" 
+                         onClick={() => setSelectedFrame(frame.id)}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 rounded-full mr-1" style={{ backgroundColor: frame.color }}></div>
+                          <span className="text-xs font-medium text-gray-900 truncate">{frame.name}</span>
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                        <span className="text-xs text-cyan-600">{analysisResult.recommendations.frames[0].score}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
 
-                {/* Mats Column */}
-                <div>
-                  <h4 className="text-xs font-semibold text-gray-800 mb-1">Top Mats</h4>
-                  <div className="space-y-1">
-                    {analysisResult.recommendations.mats?.slice(0, 2).map((rec: any) => {
-                      const mat = databaseMats.find((m: any) => m.id === rec.id);
-                      if (!mat) return null;
-                      
-                      return (
-                        <div key={rec.id} className="bg-white rounded p-2 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer"
-                             onClick={() => setSelectedMat(rec.id)}>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 rounded-full mr-1 border border-gray-300" style={{ backgroundColor: mat.color }}></div>
-                              <span className="text-xs font-medium text-gray-900 truncate">{mat.name}</span>
-                            </div>
-                            <span className="text-xs text-cyan-600 font-semibold">{rec.score}</span>
-                          </div>
+                {/* Top Mat */}
+                {analysisResult.recommendations.mats?.[0] && (() => {
+                  const mat = databaseMats.find((m: any) => m.id === analysisResult.recommendations.mats[0].id);
+                  if (!mat) return null;
+                  
+                  return (
+                    <div className="flex-1 bg-white rounded p-1 border border-gray-200 hover:border-cyan-300 cursor-pointer"
+                         onClick={() => setSelectedMat(mat.id)}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 rounded-full mr-1 border border-gray-300" style={{ backgroundColor: mat.color }}></div>
+                          <span className="text-xs font-medium text-gray-900 truncate">{mat.name}</span>
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                        <span className="text-xs text-cyan-600">{analysisResult.recommendations.mats[0].score}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           )}
