@@ -69,23 +69,23 @@
   }
   
   .bg-secondary {
-    @apply bg-[#14b8a6];
+    @apply bg-[#06b6d4];
   }
   
   .text-secondary {
-    @apply text-[#14b8a6];
+    @apply text-[#06b6d4];
   }
   
   .hover\:bg-secondary\/80:hover {
-    @apply bg-[#0f766e];
+    @apply bg-[#0891b2];
   }
   
   .bg-secondary\/10 {
-    @apply bg-[#14b8a6]/10;
+    @apply bg-[#06b6d4]/10;
   }
   
   .bg-secondary\/20 {
-    @apply bg-[#14b8a6]/20;
+    @apply bg-[#06b6d4]/20;
   }
   
   /* Accent color (white) */
@@ -111,32 +111,32 @@
   }
   
   .shadow-highlight {
-    @apply shadow-[0_20px_25px_-5px_rgba(20,184,166,0.4),0_10px_10px_-5px_rgba(20,184,166,0.2)];
+    @apply shadow-[0_20px_25px_-5px_rgba(6,182,212,0.4),0_10px_10px_-5px_rgba(6,182,212,0.2)];
   }
 
   .shadow-neon {
-    @apply shadow-[0_0_20px_rgba(20,184,166,0.8),0_0_40px_rgba(20,184,166,0.5),0_0_60px_rgba(20,184,166,0.3)];
+    @apply shadow-[0_0_20px_rgba(6,182,212,0.6),0_0_40px_rgba(6,182,212,0.3),0_0_60px_rgba(6,182,212,0.1)];
   }
 
   .shadow-brutal {
-    @apply shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_50px_rgba(20,184,166,0.3)];
+    @apply shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_50px_rgba(6,182,212,0.2)];
   }
 
   /* Card and component styling */
   .card-gradient {
-    @apply bg-gradient-to-b from-white to-gray-50;
+    @apply bg-gradient-to-b from-black/80 to-gray-900/90;
   }
 
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-elegant;
+    @apply bg-black hover:bg-black/90 text-white font-medium py-2 px-6 rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-elegant;
   }
   
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary/90 text-white font-medium py-2 px-6 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-highlight;
+    @apply bg-cyan-400 hover:bg-cyan-300 text-black font-medium py-2 px-6 rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-highlight;
   }
   
   .btn-outline {
-    @apply bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium py-2 px-6 rounded-md transition duration-300 ease-in-out;
+    @apply bg-transparent border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black font-medium py-2 px-6 rounded-xl transition duration-300 ease-in-out;
   }
   
   /* Typography enhancements */

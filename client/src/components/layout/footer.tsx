@@ -16,15 +16,15 @@ import { Input } from "@/components/ui/input";
 
 const Footer = () => {
   return (
-    <footer className="bg-primary text-white">
+    <footer className="bg-black text-white">
       {/* Newsletter section */}
       <div className="border-b border-white/10">
         <div className="container mx-auto px-4 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="md:w-1/2 text-center md:text-left">
-              <h3 className="font-serif text-2xl font-bold mb-2">Stay Connected</h3>
-              <p className="text-neutral-300 max-w-md">
-                Subscribe to our newsletter for exclusive offers, framing tips, and inspiration for your next project.
+              <h3 className="font-serif text-2xl font-bold mb-2 gradient-text">Stay Connected</h3>
+              <p className="text-white/70 max-w-md">
+                Subscribe for exclusive offers, conservation tips, and archival framing inspiration for your collection.
               </p>
             </div>
             <div className="w-full md:w-1/2 max-w-md">
@@ -32,9 +32,9 @@ const Footer = () => {
                 <Input 
                   type="email" 
                   placeholder="Your email address" 
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-l-md rounded-r-none focus:ring-0 focus:border-secondary"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-l-xl rounded-r-none focus:ring-0 focus:border-cyan-400"
                 />
-                <Button className="btn-secondary rounded-l-none">
+                <Button className="bg-cyan-400 hover:bg-cyan-300 text-black font-semibold rounded-l-none rounded-r-xl">
                   <Send className="h-4 w-4 mr-2" />
                   Subscribe
                 </Button>
@@ -96,20 +96,20 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-5 pb-2 border-b border-white/10">Contact Us</h3>
             <ul className="space-y-4">
               <li className="flex items-start">
-                <MapPin className="h-5 w-5 mr-3 mt-0.5 text-secondary" />
-                <span className="text-neutral-300">218 W 27th St.<br />Houston Heights, TX 77008</span>
+                <MapPin className="h-5 w-5 mr-3 mt-0.5 text-cyan-400" />
+                <span className="text-white/70">218 W 27th St.<br />Houston Heights, TX 77008</span>
               </li>
               <li className="flex items-center">
-                <Phone className="h-5 w-5 mr-3 text-secondary" />
-                <span className="text-neutral-300">(832) 893-3794</span>
+                <Phone className="h-5 w-5 mr-3 text-cyan-400" />
+                <span className="text-white/70">(832) 893-3794</span>
               </li>
               <li className="flex items-center">
-                <Mail className="h-5 w-5 mr-3 text-secondary" />
-                <span className="text-neutral-300">info@jaysframes.com</span>
+                <Mail className="h-5 w-5 mr-3 text-cyan-400" />
+                <span className="text-white/70">info@jaysframes.com</span>
               </li>
               <li className="flex items-center">
-                <Clock className="h-5 w-5 mr-3 text-secondary" />
-                <span className="text-neutral-300">Mon-Fri: 10am-6pm<br />Sat: 11am-5pm<br />Sunday: Closed</span>
+                <Clock className="h-5 w-5 mr-3 text-cyan-400" />
+                <span className="text-white/70">Mon-Fri: 10am-6pm<br />Sat: 11am-5pm<br />Sunday: Closed</span>
               </li>
             </ul>
           </div>
@@ -137,7 +137,7 @@ const Footer = () => {
 const FooterLink = ({ href, label }: { href: string; label: string }) => (
   <li>
     <Link href={href}>
-      <div className="group flex items-center text-neutral-300 hover:text-secondary transition-colors duration-200 cursor-pointer">
+      <div className="group flex items-center text-white/70 hover:text-cyan-400 transition-colors duration-200 cursor-pointer">
         <span>{label}</span>
         <ArrowRight className="h-3.5 w-3.5 ml-1.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
       </div>
