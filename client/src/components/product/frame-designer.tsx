@@ -1559,21 +1559,68 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
 
             <div className="bg-white rounded-lg p-4 shadow-sm mb-4">
-              <label className="block text-xs font-medium text-neutral-500 mb-2">
-                Describe your artwork in detail
-              </label>
-              <Textarea 
-                placeholder="E.g. 'A vibrant sunset watercolor painting with orange and purple hues' or 'Black and white portrait photograph with strong contrast'"
-                className="text-sm mb-3 min-h-[80px] border-neutral-200 focus:border-accent focus:ring-1 focus:ring-accent"
-                value={artworkDescription}
-                onChange={(e) => setArtworkDescription(e.target.value)}
-              />
+              {/* Image Upload Section */}
+              <div className="mb-4">
+                <label className="block text-xs font-medium text-neutral-500 mb-2">
+                  Upload artwork image for AI analysis
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex-1 border-accent text-accent hover:bg-accent/10"
+                    disabled={isAnalyzing}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {selectedFile ? selectedFile.name.substring(0, 20) + '...' : 'Upload Image'}
+                  </Button>
+                  {selectedFile && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleImageReset}
+                      className="text-neutral-500 hover:text-neutral-700"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* Text Description - Alternative Option */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-neutral-200" />
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="bg-white px-2 text-neutral-500">or describe your artwork</span>
+                </div>
+              </div>
+
+              <div className="mt-3">
+                <Textarea 
+                  placeholder="E.g. 'A vibrant sunset watercolor painting with orange and purple hues'"
+                  className="text-sm mb-3 min-h-[60px] border-neutral-200 focus:border-accent focus:ring-1 focus:ring-accent"
+                  value={artworkDescription}
+                  onChange={(e) => setArtworkDescription(e.target.value)}
+                />
+              </div>
 
               <Button 
                 variant="default" 
                 className="w-full bg-accent hover:bg-accent/90 text-white py-2.5 group"
-                onClick={getAiRecommendations}
-                disabled={aiRecommendationMutation.isPending || !artworkDescription.trim()}
+                onClick={selectedFile ? () => handleImageUpload(selectedFile) : getAiRecommendations}
+                disabled={isAnalyzing || (!selectedFile && !artworkDescription.trim())}
               >
                 {aiRecommendationMutation.isPending ? (
                   <div className="flex items-center text-white">
