@@ -772,7 +772,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Left Column with Frame Preview */}
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-2" data-preview-container>
         <div className="bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant h-full">
           <div className="flex justify-between items-start mb-4">
             <h2 className="text-2xl font-serif font-bold text-primary">Custom Frame Designer</h2>
