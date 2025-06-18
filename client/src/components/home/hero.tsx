@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Wand2, Award, ArrowRight, Sparkles, PackageSearch } from "lucide-react";
+import { Wand2, Award, ArrowRight, Sparkles, PackageSearch, Shield, Palette, MapPin } from "lucide-react";
 import { Cpu, Clock } from "lucide-react";
 import { useSectionContent } from "@/hooks/use-content";
 
@@ -34,91 +34,91 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-40">
         <div className="flex flex-col lg:flex-row items-center gap-20 max-w-7xl mx-auto min-h-screen">
           <div className="lg:w-3/5 fade-in space-y-12" style={{ animationDelay: "0.2s" }}>
-            {/* Brutal status badge */}
-            <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-black to-secondary/20 rounded-none backdrop-blur-lg border-2 border-secondary shadow-neon">
-              <Cpu className="h-6 w-6 text-secondary mr-3 animate-pulse" />
-              <p className="text-white font-black tracking-widest text-base">DOMINATE FRAMING</p>
+            {/* Premium status badge */}
+            <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-black to-secondary/20 rounded-2xl backdrop-blur-lg border border-secondary/50">
+              <Award className="h-5 w-5 text-secondary mr-3" />
+              <p className="text-white font-semibold tracking-wide text-base">MUSEUM-QUALITY ARCHIVAL FRAMING</p>
             </div>
 
-            {/* Brutal aggressive typography */}
+            {/* Professional elegant typography */}
             <div className="space-y-8">
-              <h1 className="text-7xl md:text-8xl lg:text-9xl font-black leading-[0.8] tracking-tighter transform -skew-x-2">
-                <span className="block bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent drop-shadow-2xl filter brightness-110">
-                  FRAME
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight">
+                <span className="block bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent drop-shadow-2xl">
+                  CUSTOM FRAMING
                 </span>
-                <span className="block bg-gradient-to-r from-secondary to-white bg-clip-text text-transparent drop-shadow-2xl shadow-neon">
-                  DOMINANCE
+                <span className="block bg-gradient-to-r from-secondary to-white bg-clip-text text-transparent drop-shadow-2xl">
+                  HOUSTON
                 </span>
               </h1>
 
-              <p className="text-2xl md:text-3xl text-white/90 leading-tight max-w-3xl font-bold">
-                Houston's most RUTHLESS custom framing operation where 
-                <span className="text-secondary font-black shadow-neon"> BRUTAL AI PRECISION </span>
-                crushes the competition and delivers UNMATCHED visual supremacy.
+              <p className="text-xl md:text-2xl text-white/90 leading-relaxed max-w-4xl font-medium">
+                Houston's premier 
+                <span className="text-secondary font-bold"> archival museum-grade custom framing studio </span>
+                specializing in conservation materials, UV-filtering glass, and innovative designs for discerning collectors and art enthusiasts.
               </p>
             </div>
 
-            {/* Brutal aggressive CTA buttons */}
+            {/* Professional CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-8 mb-16">
               <Link href="/custom-framing">
-                <Button size="lg" className="bg-gradient-to-r from-black via-secondary to-black hover:from-black hover:via-secondary/80 hover:to-black text-white font-black py-8 px-16 text-xl rounded-none shadow-brutal transform hover:scale-105 transition-all duration-300 group relative overflow-hidden border-2 border-secondary">
-                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Cpu className="mr-4 h-8 w-8 relative z-10 animate-pulse" />
-                  <span className="relative z-10 tracking-wider">UNLEASH AI</span>
-                  <ArrowRight className="ml-4 h-8 w-8 transition-transform duration-300 group-hover:translate-x-2 relative z-10" />
+                <Button size="lg" className="bg-gradient-to-r from-black via-secondary to-black hover:from-black hover:via-secondary/80 hover:to-black text-white font-bold py-6 px-12 text-lg rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 group relative overflow-hidden border border-secondary/50">
+                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Wand2 className="mr-4 h-6 w-6 relative z-10" />
+                  <span className="relative z-10">Design My Frame</span>
+                  <ArrowRight className="ml-4 h-6 w-6 transition-transform duration-300 group-hover:translate-x-2 relative z-10" />
                 </Button>
               </Link>
               <Link href="/custom-framing">
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="bg-black/90 backdrop-blur-xl border-3 border-secondary text-secondary hover:bg-secondary/20 hover:text-white font-black py-8 px-16 text-xl rounded-none transition-all duration-300 flex items-center gap-4 hover:scale-105 shadow-neon"
+                  className="bg-black/80 backdrop-blur-xl border-2 border-secondary text-secondary hover:bg-secondary/10 hover:text-white font-bold py-6 px-12 text-lg rounded-xl transition-all duration-300 flex items-center gap-4 hover:scale-105 shadow-xl"
                 >
-                  <Clock className="h-8 w-8" />
-                  DEMAND QUOTE
+                  <Clock className="h-6 w-6" />
+                  Get Free Quote
                 </Button>
               </Link>
             </div>
 
-            {/* Brutal feature dominance showcase */}
+            {/* Premium services showcase */}
             <div className="grid grid-cols-2 gap-6 mt-16">
               {[
-                { icon: <Wand2 className="h-8 w-8" />, text: "AI ANNIHILATION", color: "from-black to-secondary" },
-                { icon: <Cpu className="h-8 w-8" />, text: "4x DEVASTATION", color: "from-secondary to-black" },
-                { icon: <Clock className="h-8 w-8" />, text: "62% FASTER KILL", color: "from-black to-secondary" },
-                { icon: <Sparkles className="h-8 w-8" />, text: "HOUSTON OVERLORD", color: "from-secondary to-black" }
+                { icon: <Award className="h-7 w-7" />, text: "Museum-Grade Materials", color: "from-black to-secondary" },
+                { icon: <Sparkles className="h-7 w-7" />, text: "UV Conservation Glass", color: "from-secondary to-black" },
+                { icon: <Wand2 className="h-7 w-7" />, text: "Expert Design Consultation", color: "from-black to-secondary" },
+                { icon: <Clock className="h-7 w-7" />, text: "Local Houston Service", color: "from-secondary to-black" }
               ].map((feature, i) => (
                 <div 
                   key={i} 
-                  className="group text-center space-y-4 p-6 bg-gradient-to-br from-black/90 to-gray-900/80 backdrop-blur-xl rounded-none border-2 border-secondary/50 hover:border-secondary hover:shadow-neon transition-all duration-300 hover:scale-105 cursor-pointer transform hover:-skew-x-1"
+                  className="group text-center space-y-4 p-6 bg-gradient-to-br from-black/80 to-gray-900/60 backdrop-blur-xl rounded-xl border border-secondary/30 hover:border-secondary/60 hover:shadow-lg shadow-secondary/20 transition-all duration-300 hover:scale-105 cursor-pointer"
                   style={{ animationDelay: `${0.4 + (i * 0.1)}s` }}
                 >
-                  <div className={`bg-gradient-to-r ${feature.color} p-4 rounded-none mx-auto w-fit shadow-brutal group-hover:shadow-neon transition-all duration-300 border border-secondary/30`}>
+                  <div className={`bg-gradient-to-r ${feature.color} p-4 rounded-xl mx-auto w-fit shadow-lg group-hover:shadow-secondary/30 transition-all duration-300 border border-secondary/20`}>
                     <div className="text-white">{feature.icon}</div>
                   </div>
-                  <p className="text-white font-black text-xs tracking-widest">{feature.text}</p>
+                  <p className="text-white font-semibold text-sm">{feature.text}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="lg:w-2/5 relative mt-16 lg:mt-0 fade-in" style={{ animationDelay: "0.6s" }}>
-            {/* Brutal floating effects with teal glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black via-secondary/20 to-black rounded-none blur-2xl transform rotate-3 scale-110 shadow-brutal"></div>
-            <div className="absolute inset-4 bg-gradient-to-tl from-secondary/10 to-black rounded-none blur-xl transform -rotate-2"></div>
+            {/* Premium floating effects with teal glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black via-secondary/15 to-black rounded-2xl blur-2xl transform rotate-2 scale-110"></div>
+            <div className="absolute inset-4 bg-gradient-to-tl from-secondary/8 to-black rounded-2xl blur-xl transform -rotate-1"></div>
 
-            {/* Brutal interface terminal */}
-            <div className="relative bg-gradient-to-br from-black/95 to-gray-900/90 backdrop-blur-xl p-8 rounded-none border-2 border-secondary shadow-brutal transform hover:scale-105 transition-all duration-500 hover:shadow-neon">
-              {/* Brutal terminal interface header */}
-              <div className="bg-gradient-to-r from-black to-gray-900 p-4 rounded-none border-2 border-secondary/50 mb-6 shadow-brutal">
+            {/* Premium interface showcase */}
+            <div className="relative bg-gradient-to-br from-black/95 to-gray-900/90 backdrop-blur-xl p-8 rounded-2xl border border-secondary/50 shadow-2xl transform hover:scale-105 transition-all duration-500">
+              {/* Professional interface header */}
+              <div className="bg-gradient-to-r from-black to-gray-900 p-4 rounded-xl border border-secondary/30 mb-6 shadow-lg">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-3 h-3 bg-red-500 animate-pulse"></div>
-                  <div className="w-3 h-3 bg-yellow-500 animate-pulse" style={{ animationDelay: "0.3s" }}></div>
-                  <div className="w-3 h-3 bg-secondary animate-pulse" style={{ animationDelay: "0.6s" }}></div>
-                  <div className="bg-gradient-to-r from-black to-secondary h-6 rounded-none w-52 ml-4 flex items-center justify-center shadow-neon border border-secondary/30">
-                    <div className="flex items-center gap-2 text-white font-black text-xs tracking-wider">
-                      <Cpu className="h-3 w-3 animate-spin" />
-                      FRAME DOMINATION TERMINAL
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse" style={{ animationDelay: "0.3s" }}></div>
+                  <div className="w-3 h-3 bg-secondary rounded-full animate-pulse" style={{ animationDelay: "0.6s" }}></div>
+                  <div className="bg-gradient-to-r from-black to-secondary h-6 rounded-lg w-56 ml-4 flex items-center justify-center border border-secondary/30">
+                    <div className="flex items-center gap-2 text-white font-semibold text-xs">
+                      <Award className="h-3 w-3" />
+                      ARCHIVAL DESIGN ASSISTANT
                     </div>
                   </div>
                 </div>
