@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   Card,
   CardContent
@@ -58,6 +58,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Unique design ID for this framing session
   const [designId] = useState(`design-${Date.now()}`);
@@ -1559,42 +1560,50 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
 
             <div className="bg-white rounded-lg p-4 shadow-sm mb-4">
-              {/* Image Upload Section */}
-              <div className="mb-4">
-                <label className="block text-xs font-medium text-neutral-500 mb-2">
-                  Upload artwork image for AI analysis
+              {/* Image Upload Section - Enhanced Visibility */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-primary mb-3">
+                  📸 Upload Your Artwork for AI Analysis
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <input
                     type="file"
                     ref={fileInputRef}
-                    onChange={handleImageUpload}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleImageUploadFromPreview(file);
+                    }}
                     accept="image/*"
                     className="hidden"
                   />
                   <Button
                     type="button"
-                    variant="outline"
-                    size="sm"
+                    variant="default"
+                    size="lg"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex-1 border-accent text-accent hover:bg-accent/10"
+                    className="flex-1 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-white py-3 px-6 text-base font-medium shadow-lg"
                     disabled={isAnalyzing}
                   >
-                    <Upload className="h-4 w-4 mr-2" />
-                    {selectedFile ? selectedFile.name.substring(0, 20) + '...' : 'Upload Image'}
+                    <Upload className="h-5 w-5 mr-3" />
+                    {selectedFile ? `Selected: ${selectedFile.name.substring(0, 15)}...` : 'Upload Artwork Image'}
                   </Button>
                   {selectedFile && (
                     <Button
                       type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleImageReset}
-                      className="text-neutral-500 hover:text-neutral-700"
+                      variant="outline"
+                      size="lg"
+                      onClick={handleResetImage}
+                      className="border-red-300 text-red-600 hover:bg-red-50 px-4"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-5 w-5" />
                     </Button>
                   )}
                 </div>
+                {selectedFile && (
+                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                    <p className="text-sm text-green-700 font-medium">✓ Image ready for AI analysis</p>
+                  </div>
+                )}
               </div>
 
               {/* Text Description - Alternative Option */}
@@ -1619,7 +1628,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               <Button 
                 variant="default" 
                 className="w-full bg-accent hover:bg-accent/90 text-white py-2.5 group"
-                onClick={selectedFile ? () => handleImageUpload(selectedFile) : getAiRecommendations}
+                onClick={selectedFile ? () => handleImageUploadFromPreview(selectedFile) : getAiRecommendations}
                 disabled={isAnalyzing || (!selectedFile && !artworkDescription.trim())}
               >
                 {aiRecommendationMutation.isPending ? (
