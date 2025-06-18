@@ -82,11 +82,11 @@ const DynamicFramePreview = ({
     const aspectRatio = width / height;
     const displayWidth = 280;
     const displayHeight = displayWidth / aspectRatio;
-  
+
     // Default frame and mat widths (adjust as needed)
     const frameWidth = 10;
     const matWidth = 5;
-  
+
 
   // Open the AR preview modal
   const openARPreview = () => {
@@ -277,4 +277,3 @@ const DynamicFramePreview = ({
 };
 
 export default DynamicFramePreview;
-
