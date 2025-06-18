@@ -878,8 +878,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           )}
 
-          {/* Frame Preview - Moved Above Recommendations */}
-          <div className="mb-6">
+          {/* Frame Preview */}
+          <div className="mb-4">
             <DynamicFramePreview
               width={width}
               height={height}
@@ -898,6 +898,37 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               uploadedImage={previewUrl}
               onImageUpload={handleImageUploadFromPreview}
             />
+          </div>
+
+          {/* Size Container - Moved between preview and AI designer */}
+          <div className="mb-4">
+            <div className="bg-white p-3 shadow-sm rounded-lg">
+              <h3 className="text-sm font-serif font-bold mb-2 text-primary">Artwork Size</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="block text-xs mb-1 text-neutral-500">Width (in)</Label>
+                  <Input 
+                    type="number" 
+                    value={width}
+                    min={1}
+                    max={60}
+                    onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
+                    className="w-full p-2 text-sm border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <Label className="block text-xs mb-1 text-neutral-500">Height (in)</Label>
+                  <Input 
+                    type="number" 
+                    value={height}
+                    min={1}
+                    max={60}
+                    onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
+                    className="w-full p-2 text-sm border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* AI Recommendations Section - Moved Below Preview */}
