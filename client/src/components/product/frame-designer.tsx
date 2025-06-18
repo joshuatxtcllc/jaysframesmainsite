@@ -878,29 +878,101 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           )}
 
-          {/* Grid Layout for Top Elements */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {/* Frame Preview in First Column */}
-            <div className="md:col-span-2">
-              <DynamicFramePreview
-                width={width}
-                height={height}
-                selectedFrame={getSelectedFrameOption() || null}
-                selectedMat={getSelectedMatOption() || null}
-                selectedGlass={getSelectedGlassOption() || null}
-                topMatReveal={topMatReveal}
-                middleMatReveal={middleMatReveal}
-                bottomMatReveal={bottomMatReveal}
-                useMiddleMat={useMiddleMat}
-                useBottomMat={useBottomMat}
-                useStackedFrame={useStackedFrame}
-                selectedStackedFrame={getSelectedStackedFrameOption() || null}
-                selectedMiddleMat={getSelectedMiddleMatOption() || null}
-                selectedBottomMat={getSelectedBottomMatOption() || null}
-                uploadedImage={previewUrl}
-                onImageUpload={handleImageUploadFromPreview}
-              />
+          {/* Frame Preview - Moved Above Recommendations */}
+          <div className="mb-6">
+            <DynamicFramePreview
+              width={width}
+              height={height}
+              selectedFrame={getSelectedFrameOption() || null}
+              selectedMat={getSelectedMatOption() || null}
+              selectedGlass={getSelectedGlassOption() || null}
+              topMatReveal={topMatReveal}
+              middleMatReveal={middleMatReveal}
+              bottomMatReveal={bottomMatReveal}
+              useMiddleMat={useMiddleMat}
+              useBottomMat={useBottomMat}
+              useStackedFrame={useStackedFrame}
+              selectedStackedFrame={getSelectedStackedFrameOption() || null}
+              selectedMiddleMat={getSelectedMiddleMatOption() || null}
+              selectedBottomMat={getSelectedBottomMatOption() || null}
+              uploadedImage={previewUrl}
+              onImageUpload={handleImageUploadFromPreview}
+            />
+          </div>
+
+          {/* AI Recommendations Section - Moved Below Preview */}
+          {analysisResult && analysisResult.recommendations && (
+            <div className="mb-6 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg p-4 border border-cyan-200">
+              <div className="flex items-center mb-3">
+                <div className="w-6 h-6 bg-cyan-100 rounded-full flex items-center justify-center mr-2">
+                  <Trophy className="h-4 w-4 text-cyan-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">AI Recommendations</h3>
+              </div>
+              
+              <p className="text-sm text-gray-700 mb-3">{analysisResult.reasoning}</p>
+              
+              <div className="text-xs text-gray-600 mb-4 bg-white/60 p-2 rounded">
+                <strong>Analysis:</strong> {analysisResult.artworkType} • <strong>Style:</strong> {analysisResult.style} • <strong>Mood:</strong> {analysisResult.mood}
+              </div>
+
+              {/* Compact Frame Recommendations */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {analysisResult.recommendations.frames?.slice(0, 3).map((rec: any, index: number) => {
+                  const frame = databaseFrames.find((f: any) => f.id === rec.id);
+                  if (!frame) return null;
+                  
+                  return (
+                    <div key={rec.id} className="bg-white rounded-md p-3 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer" 
+                         onClick={() => setSelectedFrame(rec.id)}>
+                      <div className="flex items-center mb-1">
+                        <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: frame.color }}></div>
+                        <span className="text-sm font-medium text-gray-900">{frame.name}</span>
+                        <span className="ml-auto text-xs text-cyan-600 font-semibold">{rec.score}/10</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-1">{rec.reason}</p>
+                      <div className="text-xs text-gray-500">
+                        {frame.material} • ${(frame.pricePerInch / 100).toFixed(2)}/inch
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Compact Mat Recommendations */}
+              {analysisResult.recommendations.mats && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-gray-800 mb-2">Recommended Mat Options</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {analysisResult.recommendations.mats?.slice(0, 3).map((rec: any, index: number) => {
+                      const mat = databaseMats.find((m: any) => m.id === rec.id);
+                      if (!mat) return null;
+                      
+                      return (
+                        <div key={rec.id} className="bg-white rounded-md p-3 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer"
+                             onClick={() => setSelectedMat(rec.id)}>
+                          <div className="flex items-center mb-1">
+                            <div className="w-4 h-4 rounded-full mr-2 border border-gray-300" style={{ backgroundColor: mat.color }}></div>
+                            <span className="text-sm font-medium text-gray-900">{mat.name}</span>
+                            <span className="ml-auto text-xs text-cyan-600 font-semibold">{rec.score}/10</span>
+                          </div>
+                          <p className="text-xs text-gray-600 mb-1">{rec.reason}</p>
+                          <div className="text-xs text-gray-500">
+                            ${(mat.price / 100).toFixed(2)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
+          )}
+
+          {/* Grid Layout for Remaining Elements */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Empty div to maintain layout */}
+            <div className="md:col-span-2"></div>
 
             {/* Dimensions and Price in Second Column */}
             <div className="md:col-span-1">
