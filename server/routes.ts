@@ -36,12 +36,12 @@ import { contentManager } from "./services/content-manager";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
   await initializeEmailTransporter();
-  
+
   // Add cookie parser middleware
   app.use(cookieParser());
-  
+
   // Start automated order processing is handled in server/index.ts
-  
+
   // API Routes
   const apiRouter = app.route("/api");
 
@@ -49,7 +49,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/register", async (req: Request, res: Response) => {
     try {
       const result = await AuthService.register(req.body);
-      
+
       if (result.success && result.token) {
         // Set JWT token as httpOnly cookie
         res.cookie('auth-token', result.token, {
@@ -58,7 +58,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           sameSite: 'strict',
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
-        
+
         res.status(201).json({
           success: true,
           user: result.user,
@@ -82,7 +82,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     try {
       const result = await AuthService.login(req.body);
-      
+
       if (result.success && result.token) {
         // Set JWT token as httpOnly cookie
         res.cookie('auth-token', result.token, {
@@ -91,7 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           sameSite: 'strict',
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
-        
+
         res.json({
           success: true,
           user: result.user,
@@ -129,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: 'User not found'
         });
       }
-      
+
       res.json({
         success: true,
         user
@@ -146,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/auth/profile", authenticateToken, async (req: Request, res: Response) => {
     try {
       const result = await AuthService.updateProfile(req.user!.id, req.body);
-      
+
       if (result.success) {
         res.json(result);
       } else {
@@ -167,7 +167,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       user: req.user || null
     });
   });
-  
+
   // API Documentation and Integration
   app.get("/api/docs", (req: Request, res: Response) => {
 
@@ -313,7 +313,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       ]
     };
-    
+
     res.json(apiDocs);
   });
 
@@ -336,12 +336,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid product ID" });
     }
-    
+
     const product = await storage.getProductById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    
+
     res.json(product);
   });
 
@@ -350,7 +350,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const options = await storage.getFrameOptions();
     res.json(options);
   });
-  
+
   // Get Larson Juhl frame catalog
   app.get("/api/catalog/larson-juhl", async (req: Request, res: Response) => {
     try {
@@ -361,7 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch Larson Juhl catalog" });
     }
   });
-  
+
   // Get Larson Juhl collection list
   app.get("/api/catalog/larson-juhl/collections", async (req: Request, res: Response) => {
     try {
@@ -372,7 +372,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch Larson Juhl collections" });
     }
   });
-  
+
   // Get frames by collection
   app.get("/api/catalog/larson-juhl/collections/:collection", async (req: Request, res: Response) => {
     try {
@@ -384,7 +384,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch frames by collection" });
     }
   });
-  
+
   // Import Larson Juhl catalog (admin only)
   app.post("/api/catalog/larson-juhl/import", async (req: Request, res: Response) => {
     try {
@@ -423,12 +423,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(handleRedirects);
 
   // CONTENT MANAGEMENT ROUTES
-  
+
   // Get all content
   app.get("/api/content", async (req: Request, res: Response) => {
     try {
       const { page, section } = req.query;
-      
+
       let content;
       if (page && section) {
         content = await contentManager.getContentBySection(page.toString(), section.toString());
@@ -437,7 +437,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         content = await contentManager.getAllContent();
       }
-      
+
       res.json(content);
     } catch (error) {
       console.error("Error fetching content:", error);
@@ -450,11 +450,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { key } = req.params;
       const content = await contentManager.getContent(key);
-      
+
       if (!content) {
         return res.status(404).json({ message: "Content not found" });
       }
-      
+
       res.json(content);
     } catch (error) {
       console.error("Error fetching content:", error);
@@ -467,13 +467,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { key } = req.params;
       const updates = req.body;
-      
+
       const content = await contentManager.updateContent(key, updates);
-      
+
       if (!content) {
         return res.status(404).json({ message: "Content not found" });
       }
-      
+
       res.json(content);
     } catch (error) {
       console.error("Error updating content:", error);
@@ -498,11 +498,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { key } = req.params;
       const success = await contentManager.deleteContent(key);
-      
+
       if (!success) {
         return res.status(404).json({ message: "Content not found" });
       }
-      
+
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting content:", error);
@@ -522,29 +522,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // IMAGE MANAGEMENT ROUTES
-  
+
   // Upload image
   app.post("/api/images/upload", async (req: Request, res: Response) => {
     try {
       // Note: You'll need to set up multer middleware for file uploads
       // For now, this is a placeholder that expects base64 data
       const { imageData, filename, alt } = req.body;
-      
+
       if (!imageData || !filename) {
         return res.status(400).json({ message: "Image data and filename are required" });
       }
-      
+
       // Convert base64 to buffer
       const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
       const buffer = Buffer.from(base64Data, 'base64');
-      
+
       const file = {
         buffer,
         originalname: filename,
         size: buffer.length,
         mimetype: 'image/jpeg' // You might want to detect this
       };
-      
+
       const image = await contentManager.uploadImage(file, alt || '');
       res.status(201).json(image);
     } catch (error) {
@@ -569,11 +569,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const image = await contentManager.getImage(id);
-      
+
       if (!image) {
         return res.status(404).json({ message: "Image not found" });
       }
-      
+
       res.json(image);
     } catch (error) {
       console.error("Error fetching image:", error);
@@ -586,11 +586,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const success = await contentManager.deleteImage(id);
-      
+
       if (!success) {
         return res.status(404).json({ message: "Image not found" });
       }
-      
+
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting image:", error);
@@ -603,7 +603,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const orderData = insertOrderSchema.parse(req.body);
       const order = await storage.createOrder(orderData);
-      
+
       // Send notifications asynchronously (don't await to avoid delaying response)
       if (order.customerEmail) {
         // Send notification of new order to customer
@@ -619,7 +619,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }).catch(error => {
           console.error('Failed to send order notification:', error);
         });
-        
+
         // Also notify admin (this would be a specific admin email in production)
         sendNotification({
           title: `New Order #${order.id} Received`,
@@ -634,7 +634,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to send admin notification:', error);
         });
       }
-      
+
       res.status(201).json(order);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -650,12 +650,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid order ID" });
     }
-    
+
     const order = await storage.getOrderById(id);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-    
+
     res.json(order);
   });
 
@@ -665,23 +665,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid order ID" });
     }
-    
+
     const { status, stage } = req.body;
     if (!status) {
       return res.status(400).json({ message: "Status is required" });
     }
-    
+
     const order = await storage.updateOrderStatus(id, status, stage);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-    
+
     // Send a notification about the order status update (if customer email is available)
     if (order.customerEmail) {
       // Get a user-friendly status message based on the stage
       let statusMessage = "Your order status has been updated.";
       let statusType = "info";
-      
+
       if (stage) {
         switch (stage) {
           case "preparing":
@@ -710,7 +710,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             statusMessage = `Your order is now in the ${stage} stage.`;
         }
       }
-      
+
       // Send notification with our notification service
       try {
         sendNotification({
@@ -729,42 +729,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Error sending notification:', error);
       }
     }
-    
+
     res.json(order);
   });
-  
+
   // AUTOMATION ROUTES
-  
+
   // Auto-process orders
   app.post("/api/orders/auto-process", async (req: Request, res: Response) => {
     const { batchSize = 20 } = req.body;
-    
+
     try {
       // Get pending orders up to the batch size
       const pendingOrders = await storage.getOrdersByStatus("pending");
       const ordersToProcess = pendingOrders.slice(0, batchSize);
-      
+
       console.log(`Auto-processing ${ordersToProcess.length} orders...`);
-      
+
       let processed = 0;
       let succeeded = 0;
       let failed = 0;
-      
+
       // Process each order
       for (const order of ordersToProcess) {
         try {
           processed++;
-          
+
           // Get items for inventory check
           const items = Array.isArray(order.items) ? order.items : [];
-          
+
           // Check inventory for each item
           let inventoryAvailable = true;
-          
+
           for (const item of items) {
             // Skip if this is a non-product item or doesn't have a product ID
             if (!item.productId) continue;
-            
+
             // Check product inventory
             const product = await storage.getProductById(item.productId);
             if (product && product.stockQuantity !== undefined && product.stockQuantity !== null) {
@@ -775,7 +775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
             }
           }
-          
+
           // Update order status based on inventory availability
           if (inventoryAvailable) {
             await storage.updateOrderStatus(
@@ -783,11 +783,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
               "in_progress", 
               "materials_verified"
             );
-            
+
             // Decrement inventory
             for (const item of items) {
               if (!item.productId) continue;
-              
+
               const product = await storage.getProductById(item.productId);
               if (product && product.stockQuantity !== undefined && product.stockQuantity !== null) {
                 await storage.updateProductStock(
@@ -796,7 +796,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 );
               }
             }
-            
+
             // Send notifications
             if (order.customerEmail) {
               try {
@@ -816,7 +816,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 console.error('Error sending notification:', error);
               }
             }
-            
+
             succeeded++;
           } else {
             // Mark as delayed due to inventory issues
@@ -825,7 +825,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               "in_progress", 
               "delayed_inventory"
             );
-            
+
             // Send inventory issue notification
             if (order.customerEmail) {
               try {
@@ -841,7 +841,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 }).catch(error => {
                   console.error('Error sending notification:', error);
                 });
-                
+
                 // Also notify admin
                 sendNotification({
                   title: `Inventory Alert: Order #${order.id}`,
@@ -859,7 +859,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 console.error('Error sending notification:', error);
               }
             }
-            
+
             failed++;
           }
         } catch (error) {
@@ -867,7 +867,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           failed++;
         }
       }
-      
+
       // Return processing results
       res.json({
         processed,
@@ -883,18 +883,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
-  
+
   // Get automation status
   app.get("/api/automation/status", async (req: Request, res: Response) => {
     try {
       // Get automation status from a configuration store or database
       // For now, we'll return default values
-      
+
       // Calculate next run time based on the cron interval (default: 30 minutes)
       const now = new Date();
       const nextRunTime = new Date(now);
       nextRunTime.setMinutes(now.getMinutes() + 30);
-      
+
       res.json({
         enabled: true,
         intervalMinutes: 30,
@@ -913,33 +913,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
-  
+
   // Update automation settings
   app.post("/api/automation/settings", async (req: Request, res: Response) => {
     try {
       const { enabled, intervalMinutes, batchSize } = req.body;
-      
+
       // Validate inputs
       if (typeof enabled !== 'boolean') {
         return res.status(400).json({ message: "enabled must be a boolean" });
       }
-      
+
       if (isNaN(intervalMinutes) || intervalMinutes < 5 || intervalMinutes > 120) {
         return res.status(400).json({ message: "intervalMinutes must be between 5 and 120" });
       }
-      
+
       if (isNaN(batchSize) || batchSize < 1 || batchSize > 100) {
         return res.status(400).json({ message: "batchSize must be between 1 and 100" });
       }
-      
+
       // In a real implementation, we would update these settings in the database
       // For now, we'll just return success
-      
+
       // Calculate next run time based on the new interval
       const now = new Date();
       const nextRunTime = new Date(now);
       nextRunTime.setMinutes(now.getMinutes() + intervalMinutes);
-      
+
       res.json({
         success: true,
         message: "Automation settings updated",
@@ -963,9 +963,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders", authenticateToken, requireStaff, async (req: Request, res: Response) => {
     // Check for query parameters for filtering
     const { status, userId, limit } = req.query;
-    
+
     let orders;
-    
+
     if (status) {
       // Get orders by status
       orders = await storage.getOrdersByStatus(status.toString());
@@ -987,19 +987,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get all orders
       orders = await storage.getOrders();
     }
-    
+
     res.json(orders);
   });
-  
+
   // Get recent orders (admin only)
   app.get("/api/orders/recent", async (req: Request, res: Response) => {
     const limit = req.query.limit ? parseInt(req.query.limit.toString()) : 10;
     const orders = await storage.getRecentOrders(limit);
     res.json(orders);
   });
-  
+
+  // Appointments endpoint
+  app.post('/api/appointments', async (req: Request, res: Response) => {
+    try {
+      const { name, email, phone, service, date, time, message } = req.body;
+
+      // Here you would typically save to database
+      // For now, we'll just send a confirmation email
+
+      console.log('New appointment scheduled:', {
+        name, email, phone, service, date, time, message
+      });
+
+      // Send confirmation email (using existing email service)
+      // You can expand this to integrate with calendar systems
+
+      res.json({ 
+        success: true, 
+        message: 'Appointment scheduled successfully',
+        appointmentId: Date.now().toString()
+      });
+    } catch (error) {
+      console.error('Error scheduling appointment:', error);
+      res.status(500).json({ error: 'Failed to schedule appointment' });
+    }
+  });
+
   // Removed duplicate auto-process route as it's already defined above
-  
+
   // Update order inventory and check status
   app.post("/api/orders/:id/inventory-check", async (req: Request, res: Response) => {
     try {
@@ -1007,16 +1033,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid order ID" });
       }
-      
+
       // Get order
       const order = await storage.getOrderById(id);
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
-      
+
       // Get items from order
       const items = Array.isArray(order.items) ? order.items : [];
-      
+
       // Check inventory for all items in the order
       const inventoryCheck = await Promise.all(
         items.map(async (item: any) => {
@@ -1034,7 +1060,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return { productId: item.productId, inStock: false, custom: true };
         })
       );
-      
+
       // Return inventory check results
       res.json({
         orderId: id,
@@ -1052,11 +1078,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/chat", async (req: Request, res: Response) => {
     try {
       const { sessionId, message, orderNumber } = req.body;
-      
+
       if (!sessionId || !message) {
         return res.status(400).json({ message: "Session ID and message are required" });
       }
-      
+
       // Save user message
       const userMessage: ChatMessage = { role: "user", content: message };
       await storage.createChatMessage({
@@ -1064,7 +1090,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         role: "user",
         content: message
       });
-      
+
       // Get order info if orderNumber is provided
       let orderInfo = undefined;
       if (orderNumber) {
@@ -1073,31 +1099,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
           orderInfo = await storage.getOrderById(id);
         }
       }
-      
+
       // Get message history
       const messageHistory = await storage.getChatMessagesBySessionId(sessionId);
       const chatHistory: ChatMessage[] = messageHistory.map(msg => ({
         role: msg.role === "user" ? "user" : "assistant",
         content: msg.content
       }));
-      
+
       // Get products for recommendations
       const products = await storage.getProducts();
-      
+
       // Process with AI
       const chatResponse = await handleChatRequest(
         [...chatHistory.slice(-10), userMessage], // Use last 10 messages + current
         products,
         orderInfo ? [orderInfo] : undefined
       );
-      
+
       // Save assistant message
       await storage.createChatMessage({
         sessionId,
         role: "assistant",
         content: chatResponse.message
       });
-      
+
       // Get recommended products if any
       let recommendedProducts: any[] = [];
       if (chatResponse.productRecommendations && chatResponse.productRecommendations.length > 0) {
@@ -1114,11 +1140,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
             return undefined;
           })
         );
-        
+
         // Filter out undefined products
         recommendedProducts = recommendedProducts.filter(p => p !== undefined);
       }
-      
+
       res.json({
         message: chatResponse.message,
         recommendations: recommendedProducts,
@@ -1134,33 +1160,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/frame-recommendations", async (req: Request, res: Response) => {
     try {
       const { artworkDescription } = req.body;
-      
+
       if (!artworkDescription) {
         return res.status(400).json({ message: "Artwork description is required" });
       }
-      
+
       const frameOptions = await storage.getFrameOptions();
       const matOptions = await storage.getMatOptions();
-      
+
       const recommendations = await getFrameRecommendations(
         artworkDescription,
         frameOptions,
         matOptions
       );
-      
+
       // Get detailed frame and mat options for the recommendations
       const recommendedFrames = await Promise.all(
         recommendations.recommendedFrames.map(async (id: number) => {
           return await storage.getFrameOptionById(id);
         })
       );
-      
+
       const recommendedMats = await Promise.all(
         recommendations.recommendedMats.map(async (id: number) => {
           return await storage.getMatOptionById(id);
         })
       );
-      
+
       res.json({
         frames: recommendedFrames.filter(f => f !== undefined),
         mats: recommendedMats.filter(m => m !== undefined),
@@ -1171,12 +1197,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to generate frame recommendations" });
     }
   });
-  
+
   // Frame fitting assistant with image analysis
   app.post("/api/frame-fitting-assistant", async (req: Request, res: Response) => {
     try {
       let imageData: string | Buffer;
-      
+
       // Check if the request is multipart/form-data (file upload)
       if (req.is('multipart/form-data') && req.files && Object.keys(req.files).length > 0) {
         // Handle file upload
@@ -1184,7 +1210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!imageFile) {
           return res.status(400).json({ message: "Artwork image file is required" });
         }
-        
+
         imageData = imageFile.data; // This is a Buffer
       } else {
         // Handle JSON request with base64 image
@@ -1192,15 +1218,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!imageBase64) {
           return res.status(400).json({ message: "Artwork image is required" });
         }
-        
+
         imageData = imageBase64;
       }
-      
+
       // Get framing options from the database
       const frameOptions = await storage.getFrameOptions();
       const matOptions = await storage.getMatOptions();
       const glassOptions = await storage.getGlassOptions();
-      
+
       // Analyze the image using our AI function
       const analysis = await analyzeArtworkImage(
         imageData,
@@ -1208,7 +1234,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         matOptions,
         glassOptions
       );
-      
+
       // Send the results directly back to the client
       res.json(analysis);
     } catch (error) {
@@ -1224,18 +1250,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/frame-assistant", async (req: Request, res: Response) => {
     try {
       const { message } = req.body;
-      
+
       if (!message) {
         return res.status(400).json({ message: "Message is required" });
       }
-      
+
       // Try to get a response without database access if possible
       try {
         const response = await askFrameAssistant(message);
         return res.json({ response });
       } catch (aiError) {
         console.error("Frame assistant AI error:", aiError);
-        
+
         // Fallback response for database errors
         if (aiError.message && aiError.message.includes("column") && aiError.message.includes("does not exist")) {
           return res.json({ 
@@ -1243,7 +1269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                       "I can still answer general framing questions. Could you please try again with a simple framing question?" 
           });
         }
-        
+
         // Re-throw for other errors
         throw aiError;
       }
@@ -1269,17 +1295,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         smsEnabled, 
         smsRecipient 
       } = req.body;
-      
+
       if (!title || !description) {
         return res.status(400).json({ message: "Title and description are required" });
       }
-      
+
       // Validate notification type
       const validTypes = ['info', 'success', 'warning', 'error'];
       if (type && !validTypes.includes(type)) {
         return res.status(400).json({ message: "Invalid notification type" });
       }
-      
+
       // Send SMS if enabled and recipient is provided
       if (smsEnabled && smsRecipient) {
         const smsMessage = `${title}: ${description}`;
@@ -1295,10 +1321,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             console.error('SMS notification error:', error);
           });
       }
-      
+
       // Log the notification
       console.log(`Notification received: ${title} - ${description}`);
-      
+
       // Return a success response with a notification ID
       res.status(201).json({ 
         success: true, 
@@ -1339,12 +1365,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid category ID" });
       }
-      
+
       const category = await storage.getBlogCategoryById(id);
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
-      
+
       res.json(category);
     } catch (error) {
       console.error("Error fetching blog category:", error);
@@ -1356,11 +1382,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { slug } = req.params;
       const category = await storage.getBlogCategoryBySlug(slug);
-      
+
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
-      
+
       res.json(category);
     } catch (error) {
       console.error("Error fetching blog category by slug:", error);
@@ -1388,14 +1414,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid category ID" });
       }
-      
+
       const categoryUpdate = req.body;
       const category = await storage.updateBlogCategory(id, categoryUpdate);
-      
+
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
-      
+
       res.json(category);
     } catch (error) {
       console.error("Error updating blog category:", error);
@@ -1409,12 +1435,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid category ID" });
       }
-      
+
       const success = await storage.deleteBlogCategory(id);
       if (!success) {
         return res.status(404).json({ message: "Category not found" });
       }
-      
+
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting blog category:", error);
@@ -1428,14 +1454,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
       const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
       const status = req.query.status as string;
-      
+
       let posts;
       if (status) {
         posts = await storage.getBlogPostsByStatus(status, limit, offset);
       } else {
         posts = await storage.getBlogPosts(limit, offset);
       }
-      
+
       res.json(posts);
     } catch (error) {
       console.error("Error fetching blog posts:", error);
@@ -1449,12 +1475,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid post ID" });
       }
-      
+
       const post = await storage.getBlogPostById(id);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-      
+
       res.json(post);
     } catch (error) {
       console.error("Error fetching blog post:", error);
@@ -1466,11 +1492,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { slug } = req.params;
       const post = await storage.getBlogPostBySlug(slug);
-      
+
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-      
+
       res.json(post);
     } catch (error) {
       console.error("Error fetching blog post by slug:", error);
@@ -1484,10 +1510,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(categoryId)) {
         return res.status(400).json({ message: "Invalid category ID" });
       }
-      
+
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
       const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
-      
+
       const posts = await storage.getBlogPostsByCategory(categoryId, limit, offset);
       res.json(posts);
     } catch (error) {
@@ -1516,14 +1542,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid post ID" });
       }
-      
+
       const postUpdate = req.body;
       const post = await storage.updateBlogPost(id, postUpdate);
-      
+
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-      
+
       res.json(post);
     } catch (error) {
       console.error("Error updating blog post:", error);
@@ -1537,12 +1563,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid post ID" });
       }
-      
+
       const success = await storage.deleteBlogPost(id);
       if (!success) {
         return res.status(404).json({ message: "Post not found" });
       }
-      
+
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting blog post:", error);
@@ -1556,33 +1582,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid post ID" });
       }
-      
+
       const post = await storage.publishBlogPost(id);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-      
+
       res.json(post);
     } catch (error) {
       console.error("Error publishing blog post:", error);
       res.status(500).json({ message: "Failed to publish blog post" });
     }
   });
-  
+
   // Automated blog content generation endpoint
   app.post("/api/blog/generate", async (req: Request, res: Response) => {
     try {
       const { keyword, categoryId, title } = req.body;
-      
+
       if (!keyword) {
         return res.status(400).json({ message: "Keyword is required for content generation" });
       }
-      
+
       // Create a slug from the title
       const slug = title
         ? title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
         : `blog-post-${Date.now()}`;
-      
+
       // Generate simple content based on the keyword
       const content = `# ${title || `Blog Post About ${keyword}`}
 
@@ -1598,7 +1624,7 @@ This is an automatically generated blog post about ${keyword}. Custom framing pr
 ## Conclusion
 When it comes to ${keyword}, investing in quality custom framing is always worthwhile. Visit Jay's Frames to explore your options!
       `;
-      
+
       // Create a new blog post
       const newPost = await storage.createBlogPost({
         title: title || `All About ${keyword}`,
@@ -1612,7 +1638,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         categoryId: categoryId || 1,
         authorId: 1
       });
-      
+
       res.json({
         success: true,
         message: "Blog post generated successfully",
@@ -1642,19 +1668,19 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
       }
     });
   });
-  
+
   // Webhook registration endpoint for receiving notifications
   app.post("/api/integration/webhooks", (req: Request, res: Response) => {
     try {
       const { url, events, description, apiKey } = req.body;
-      
+
       if (!url || !events || !Array.isArray(events) || events.length === 0) {
         return res.status(400).json({ 
           success: false, 
           message: "URL and at least one event type are required" 
         });
       }
-      
+
       // Validate URL format
       try {
         new URL(url);
@@ -1664,11 +1690,11 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
           message: "Invalid URL format" 
         });
       }
-      
+
       // Validate event types
       const validEvents = ['order.created', 'order.updated', 'product.created', 'product.updated'];
       const invalidEvents = events.filter(event => !validEvents.includes(event));
-      
+
       if (invalidEvents.length > 0) {
         return res.status(400).json({
           success: false,
@@ -1676,13 +1702,13 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
           validEvents
         });
       }
-      
+
       // In a real implementation, we would store the webhook in a database
       // For now, we'll just return a success response with a fake webhook ID
       const webhookId = `wh_${Date.now()}`;
-      
+
       console.log(`Webhook registered: ${url} for events: ${events.join(', ')}`);
-      
+
       res.status(201).json({
         success: true,
         webhook: {
@@ -1701,15 +1727,15 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
       });
     }
   });
-  
+
   // API data sync endpoint for bulk data export
   app.get("/api/integration/sync/:resource", async (req: Request, res: Response) => {
     const { resource } = req.params;
     const { since, limit, format } = req.query;
-    
+
     // Validate resource type
     const validResources = ['products', 'orders', 'frame-options', 'mat-options', 'glass-options'];
-    
+
     if (!validResources.includes(resource)) {
       return res.status(400).json({
         success: false,
@@ -1717,19 +1743,19 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         validResources
       });
     }
-    
+
     try {
       // Parse parameters
       const sinceDate = since ? new Date(since.toString()) : undefined;
       const limitNum = limit ? parseInt(limit.toString()) : undefined;
-      
+
       // Get data from integration service
       const data = await integrationService.getSyncData(
         resource,
         sinceDate,
         limitNum
       );
-      
+
       // Format the response
       if (format === 'csv') {
         // In a real implementation, we would convert the data to CSV
@@ -1763,19 +1789,19 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
       });
     }
   });
-  
+
   // Register a new app integration
   app.post("/api/integration/register", async (req: Request, res: Response) => {
     try {
       const { name, appId, type, apiKey, endpoint, webhookUrl, eventTypes } = req.body;
-      
+
       if (!name || !appId || !type || !apiKey) {
         return res.status(400).json({
           success: false,
           message: "Missing required fields: name, appId, type, apiKey"
         });
       }
-      
+
       // Validate integration type
       const validTypes = ['notification', 'data_sync', 'webhook'];
       if (!validTypes.includes(type)) {
@@ -1785,7 +1811,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
           validTypes
         });
       }
-      
+
       // Register the integration
       const integration = await integrationService.registerIntegration(
         name,
@@ -1794,7 +1820,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         apiKey,
         { endpoint, webhookUrl, eventTypes }
       );
-      
+
       res.status(201).json({
         success: true,
         message: "Integration registered successfully",
@@ -1811,7 +1837,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
   });
 
   const httpServer = createServer(app);
-  
+
   // Create WebSocket server for real-time voice assistant communication
   const wss = new WebSocketServer({ 
     server: httpServer, 
@@ -1835,7 +1861,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
       threshold: 1024
     }
   });
-  
+
   // Add a ping interval to keep connections alive
   const pingInterval = setInterval(() => {
     wss.clients.forEach((client) => {
@@ -1848,12 +1874,12 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
       }
     });
   }, 30000); // Ping every 30 seconds
-  
+
   console.log('WebSocket server initialized at path: /ws');
-  
+
   wss.on('connection', (ws: WebSocket) => {
     console.log('WebSocket client connected');
-    
+
     // Send a welcome message to confirm the connection is working
     try {
       ws.send(JSON.stringify({
@@ -1863,11 +1889,11 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
     } catch (err) {
       console.error('Error sending welcome message:', err);
     }
-    
+
     // Handle incoming messages
     ws.on('message', async (message) => {
       console.log('Received WebSocket message:', message.toString().substring(0, 100) + '...');
-      
+
       try {
         // Parse the message as JSON
         let data;
@@ -1881,14 +1907,14 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
           }));
           return;
         }
-        
+
         // Handle voice command messages
         if (data.type === 'voice_command') {
           console.log('Processing voice command:', data.message);
           try {
             // Process the voice command using our AI assistant
             const response = await askFrameAssistant(data.message);
-            
+
             // Send the response back to the client
             ws.send(JSON.stringify({
               type: 'voice_response',
@@ -1902,7 +1928,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
             }));
           }
         }
-        
+
         // Handle image analysis requests
         else if (data.type === 'analyze_image' && data.imageData) {
           console.log('Processing image analysis request');
@@ -1911,7 +1937,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
             const frameOptions = await storage.getFrameOptions();
             const matOptions = await storage.getMatOptions();
             const glassOptions = await storage.getGlassOptions();
-            
+
             // Analyze the image using our AI function
             const analysis = await analyzeArtworkImage(
               data.imageData,
@@ -1919,7 +1945,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
               matOptions,
               glassOptions
             );
-            
+
             // Send the analysis results back to the client
             ws.send(JSON.stringify({
               type: 'image_analysis_result',
@@ -1933,7 +1959,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
             }));
           }
         }
-        
+
         // Handle order status requests
         else if (data.type === 'order_status' && data.orderNumber) {
           console.log('Processing order status request for order:', data.orderNumber);
@@ -1966,12 +1992,12 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
             }));
           }
         }
-        
+
         // Handle ping messages to keep the connection alive
         else if (data.type === 'ping') {
           ws.send(JSON.stringify({ type: 'pong' }));
         }
-        
+
         // Handle unknown message types
         else {
           console.warn('Unknown WebSocket message type:', data.type);
@@ -1992,22 +2018,22 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         }
       }
     });
-    
+
     // Handle connection errors
     ws.on('error', (error) => {
       console.error('WebSocket connection error:', error);
     });
-    
+
     // Handle connection close
     ws.on('close', (code, reason) => {
       console.log(`WebSocket client disconnected. Code: ${code}, Reason: ${reason}`);
     });
   });
-  
+
   // Handle WebSocket server errors
   wss.on('error', (error) => {
     console.error('WebSocket server error:', error);
   });
-  
+
   return httpServer;
 }

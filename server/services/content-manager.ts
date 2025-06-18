@@ -147,7 +147,7 @@ class ContentManager {
         key: 'contact_email',
         type: 'text',
         title: 'Contact Email',
-        value: 'info@jaysframes.com',
+        value: 'Frames@Jaysframes.com',
         description: 'Primary email address',
         section: 'contact',
         page: 'global'
@@ -156,7 +156,7 @@ class ContentManager {
         key: 'contact_address',
         type: 'text',
         title: 'Contact Address',
-        value: '218 W 27th St. Houston Heights, TX 77008',
+        value: '218 W 27th St. Houston, TX 77008',
         description: 'Physical address',
         section: 'contact',
         page: 'global'

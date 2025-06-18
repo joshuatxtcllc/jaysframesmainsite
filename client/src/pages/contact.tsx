@@ -66,7 +66,7 @@ export default function Contact() {
             "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times and AI-powered design assistants.",
             "url": "https://jaysframes.com",
             "telephone": "+18328933794",
-            "email": "info@jaysframes.com",
+            "email": "Frames@Jaysframes.com",
             "logo": "https://jaysframes.com/images/logo.png",
             "image": "https://jaysframes.com/images/storefront.jpg",
             "currenciesAccepted": "USD",
@@ -136,7 +136,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-base">Email</h3>
-                      <a href="mailto:info@jaysframes.com" className="text-muted-foreground hover:text-primary transition-colors">info@jaysframes.com</a>
+                      <a href="mailto:Frames@Jaysframes.com" className="text-muted-foreground hover:text-primary transition-colors">Frames@Jaysframes.com</a>
                       <p className="text-sm text-muted-foreground mt-1">We typically respond within 24 hours</p>
                     </div>
                   </div>
@@ -147,8 +147,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-base">Location</h3>
-                      <a href="https://maps.google.com/?q=1440+Yale+St,+Houston,+TX+77008" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">
-                        1440 Yale St.<br/>
+                      <a href="https://maps.google.com/?q=218+W+27th+St,+Houston,+TX+77008" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">
+                        218 W 27th St.<br/>
                         Houston, TX 77008
                       </a>
                       <p className="text-sm text-muted-foreground mt-1">Visit our newly redesigned shop</p>
