@@ -196,6 +196,44 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     setShowImageUpload(true);
   };
 
+  // Wrapper for image upload to handle File object directly
+  const handleImageUploadFromPreview = (file: File) => {
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setAnalysisResult(null);
+    
+    // Automatically analyze the image
+    const formData = new FormData();
+    formData.append('image', file);
+    setIsAnalyzing(true);
+
+    fetch('/api/frame-fitting-assistant', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(result => {
+      setAnalysisResult(result);
+      
+      // Apply AI recommendations automatically
+      if (result.recommendations) {
+        const { frames, mats } = result.recommendations;
+        if (frames && frames.length > 0) {
+          setSelectedFrame(frames[0].id);
+        }
+        if (mats && mats.length > 0) {
+          setSelectedMat(mats[0].id);
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Error analyzing image:", error);
+    })
+    .finally(() => {
+      setIsAnalyzing(false);
+    });
+  };
+
   // Fallback sample data if API fails to load
   useEffect(() => {
     if (databaseFrames.length === 0) {
@@ -846,6 +884,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                 selectedStackedFrame={getSelectedStackedFrameOption() || null}
                 selectedMiddleMat={getSelectedMiddleMatOption() || null}
                 selectedBottomMat={getSelectedBottomMatOption() || null}
+                uploadedImage={previewUrl}
+                onImageUpload={handleFileChange}
               />
             </div>
 

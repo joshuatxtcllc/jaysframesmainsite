@@ -21,6 +21,8 @@ interface DynamicFramePreviewProps {
   selectedStackedFrame?: FrameOption | null;
   selectedMiddleMat?: MatOption | null;
   selectedBottomMat?: MatOption | null;
+  uploadedImage?: string | null;
+  onImageUpload?: (file: File) => void;
 }
 
 const DynamicFramePreview = ({ 
@@ -37,7 +39,9 @@ const DynamicFramePreview = ({
   useStackedFrame = false,
   selectedStackedFrame = null,
   selectedMiddleMat = null,
-  selectedBottomMat = null
+  selectedBottomMat = null,
+  uploadedImage = null,
+  onImageUpload
 }: DynamicFramePreviewProps) => {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [showARPreview, setShowARPreview] = useState<boolean>(false);
@@ -51,12 +55,18 @@ const DynamicFramePreview = ({
     const file = e.target.files?.[0];
     if (file) {
       setIsLoading(true);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setUserImage(event.target?.result as string);
+      // Use the callback if provided, otherwise handle locally
+      if (onImageUpload) {
+        onImageUpload(file);
         setIsLoading(false);
-      };
-      reader.readAsDataURL(file);
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setUserImage(event.target?.result as string);
+          setIsLoading(false);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -197,7 +207,7 @@ const DynamicFramePreview = ({
 
             {/* Artwork Area */}
             <div 
-              className="absolute bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 flex items-center justify-center"
+              className="absolute border border-gray-200 flex items-center justify-center overflow-hidden"
               style={{
                 top: `${artworkOffset}px`,
                 left: `${artworkOffset}px`,
@@ -206,13 +216,28 @@ const DynamicFramePreview = ({
                 borderRadius: '1px'
               }}
             >
-              <div className="text-center text-xs text-gray-400">
-                <div className="w-8 h-8 mx-auto mb-1 bg-gray-300 rounded flex items-center justify-center">
-                  <Image className="w-4 h-4" />
+              {(uploadedImage || userImage) ? (
+                <img 
+                  src={(uploadedImage || userImage) as string} 
+                  alt="Your artwork" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="text-center text-xs text-gray-400 relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center justify-center">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  <div className="w-8 h-8 mx-auto mb-1 bg-cyan-400 rounded flex items-center justify-center">
+                    <Upload className="w-4 h-4 text-white" />
+                  </div>
+                  <p className="font-medium text-gray-600">Upload Image</p>
+                  <p className="text-[10px]">{width}" × {height}"</p>
                 </div>
-                <p>Your Artwork</p>
-                <p className="text-[10px]">{width}" × {height}"</p>
-              </div>
+              )}
             </div>
           </div>
         </CardContent>
