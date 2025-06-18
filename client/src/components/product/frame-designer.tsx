@@ -14,7 +14,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { FrameOption, MatOption, GlassOption } from "@/types";
-import { Lightbulb, ShoppingCart, Trophy, Target, Download } from "lucide-react";
+import { Lightbulb, ShoppingCart, Trophy, Target, Download, Upload, Camera, Image as ImageIcon, X, Loader2 } from "lucide-react";
 import DynamicFramePreview from "./dynamic-frame-preview";
 import { ProgressTracker, ProgressBar } from "@/components/design-progress";
 import { useDesignProgress } from "@/contexts/design-progress-context";
@@ -52,6 +52,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     mats: MatOption[];
     explanation: string;
   } | null>(null);
+
+  // Image upload state
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [showImageUpload, setShowImageUpload] = useState(true);
 
   // Unique design ID for this framing session
   const [designId] = useState(`design-${Date.now()}`);
@@ -112,6 +119,82 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
     fetchOptions();
   }, []);
+
+  // Image upload handlers
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) return;
+
+    // Check if the file is an image
+    if (!file.type.startsWith('image/')) {
+      alert("Please upload an image file (JPEG, PNG, WebP, etc.)");
+      return;
+    }
+
+    // Check file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("Please upload an image smaller than 10MB");
+      return;
+    }
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setAnalysisResult(null);
+  };
+
+  // Analyze uploaded image
+  const analyzeImage = async () => {
+    if (!selectedFile) return;
+
+    setIsAnalyzing(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+
+      const response = await fetch('/api/frame-fitting-assistant', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze image');
+      }
+
+      const result = await response.json();
+      setAnalysisResult(result);
+      
+      // Apply AI recommendations automatically
+      if (result.recommendations) {
+        const { frames, mats } = result.recommendations;
+        if (frames && frames.length > 0) {
+          setSelectedFrame(frames[0].id);
+        }
+        if (mats && mats.length > 0) {
+          setSelectedMat(mats[0].id);
+        }
+      }
+
+      setShowImageUpload(false);
+    } catch (error) {
+      console.error("Error analyzing image:", error);
+      alert("We couldn't analyze this image. Please try a different image or try again later.");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // Reset image upload
+  const handleResetImage = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setAnalysisResult(null);
+    setShowImageUpload(true);
+  };
 
   // Fallback sample data if API fails to load
   useEffect(() => {
@@ -652,6 +735,97 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               </Button>
             </div>
           </div>
+
+          {/* AI Image Analysis Section */}
+          {showImageUpload && (
+            <div className="mb-6 p-6 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl border-2 border-dashed border-cyan-200">
+              <div className="text-center">
+                <div className="mx-auto w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mb-4">
+                  <Camera className="h-8 w-8 text-cyan-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">AI Frame Analysis</h3>
+                <p className="text-gray-600 mb-4">Upload your artwork for instant AI-powered frame recommendations</p>
+                
+                {!previewUrl ? (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      id="artwork-upload"
+                    />
+                    <label htmlFor="artwork-upload" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-cyan-600 hover:bg-cyan-700 cursor-pointer transition-colors">
+                      <Upload className="h-5 w-5 mr-2" />
+                      Upload Artwork Image
+                    </label>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="relative inline-block">
+                      <img 
+                        src={previewUrl} 
+                        alt="Artwork preview" 
+                        className="max-w-xs max-h-48 object-contain rounded-lg shadow-md"
+                      />
+                      <button
+                        onClick={handleResetImage}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <div className="flex space-x-3 justify-center">
+                      <Button 
+                        onClick={analyzeImage}
+                        disabled={isAnalyzing}
+                        className="bg-cyan-600 hover:bg-cyan-700"
+                      >
+                        {isAnalyzing ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Analyzing...
+                          </>
+                        ) : (
+                          <>
+                            <ImageIcon className="h-4 w-4 mr-2" />
+                            Get AI Recommendations
+                          </>
+                        )}
+                      </Button>
+                      <Button variant="outline" onClick={handleResetImage}>
+                        Upload Different Image
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Analysis Results */}
+          {analysisResult && (
+            <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
+              <div className="flex items-center mb-2">
+                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2">
+                  <Trophy className="h-4 w-4 text-green-600" />
+                </div>
+                <h4 className="font-semibold text-green-800">AI Analysis Complete</h4>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowImageUpload(true)}
+                  className="ml-auto text-green-600 hover:text-green-700"
+                >
+                  Upload New Image
+                </Button>
+              </div>
+              <p className="text-green-700 text-sm mb-3">{analysisResult.reasoning}</p>
+              <div className="text-xs text-green-600">
+                <strong>Detected:</strong> {analysisResult.artworkType} • <strong>Style:</strong> {analysisResult.style} • <strong>Mood:</strong> {analysisResult.mood}
+              </div>
+            </div>
+          )}
 
           {/* Grid Layout for Top Elements */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
