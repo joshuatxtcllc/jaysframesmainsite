@@ -1539,64 +1539,6 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
       {/* Right Sidebar Options */}
       <div className="bg-gradient-to-tr from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant">
-        {/* Design Progress Tracker */}
-        <div className="bg-white rounded-lg p-5 shadow-sm mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-serif font-bold text-primary flex items-center">
-              <Target className="h-5 w-5 mr-2 text-accent" />
-              Your Design Journey
-            </h3>
-            <div className="flex items-center">
-              <Trophy className="h-4 w-4 text-yellow-500 mr-1" />
-              <span className="text-sm font-medium text-secondary">
-                {progress?.totalPoints || 0} pts
-              </span>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-4">
-            <ProgressBar />
-          </div>
-
-          {/* Progress Tracker */}
-          <div className="space-y-2">
-            <ProgressTracker />
-          </div>
-
-          {/* Design Tips based on current step */}
-          {progress?.currentStep && (
-            <div className="mt-4 pt-4 border-t border-neutral-100">
-              <h4 className="font-medium text-primary mb-2 text-sm">Design Tips</h4>
-              {progress.currentStep === 'sizing' && (
-                <p className="text-xs text-neutral-500">
-                  Make sure to measure your artwork precisely. For best results, measure the visible area you want to display, not including any existing borders or mats.
-                </p>
-              )}
-              {progress.currentStep === 'frame_selection' && (
-                <p className="text-xs text-neutral-500">
-                  Choose a frame color that complements your artwork. For bold pieces, consider neutral frames. For subtle artwork, try a more colorful frame.
-                </p>
-              )}
-              {progress.currentStep === 'mat_selection' && (
-                <p className="text-xs text-neutral-500">
-                  Mats create visual space between your art and frame. For a classic look, choose a lighter mat color. For drama, try deeper colors that complement your artwork.
-                </p>
-              )}
-              {progress.currentStep === 'glass_selection' && (
-                <p className="text-xs text-neutral-500">
-                  UV protection glass helps prevent your artwork from fading. Consider museum glass for valuable artwork or pieces exposed to direct sunlight.
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="bg-white rounded-lg p-4 shadow-sm mb-6 text-center">
-          <h3 className="text-xl font-serif font-bold text-primary mb-1">Design Assistance</h3>
-          <p className="text-sm text-neutral-500">Get expert help for your perfect frame</p>
-        </div>
-
         {/* AI Designer */}
         <div className="mb-8 relative overflow-hidden rounded-xl shadow-highlight">
           <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent/30 z-0"></div>
