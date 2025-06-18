@@ -250,8 +250,8 @@ export async function askFrameAssistant(userMessage: string): Promise<string> {
       return "I apologize, but the AI service is not properly configured. Please contact the site administrator.";
     }
 
-    const response = await openai.chat.completions.create({
-      model,
+    const response = await openai!.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
       messages: [
         {
           role: "system",
@@ -351,8 +351,8 @@ Respond in JSON format with the following structure:
 `
     };
     
-    const response = await openai.chat.completions.create({
-      model,
+    const response = await openai!.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
       messages: [systemPrompt as any, ...messages],
       response_format: { type: "json_object" },
     });
@@ -393,8 +393,8 @@ export async function getFrameRecommendations(
       };
     }
 
-    const response = await openai.chat.completions.create({
-      model,
+    const response = await openai!.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
       messages: [
         {
           role: "system",

@@ -720,13 +720,27 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     onSuccess: (data) => {
       console.log("Setting recommendations:", data);
       setAiRecommendations(data);
-      // Auto-select the first recommendations
-      if (data.frames.length > 0) {
-        setSelectedFrame(data.frames[0].id);
+      
+      // Auto-select the first recommendations and update preview
+      if (data.frames && data.frames.length > 0) {
+        const recommendedFrame = data.frames[0];
+        setSelectedFrame(recommendedFrame.id);
+        console.log("Applied AI frame recommendation:", recommendedFrame.name);
       }
-      if (data.mats.length > 0) {
-        setSelectedMat(data.mats[0].id);
+      
+      if (data.mats && data.mats.length > 0) {
+        const recommendedMat = data.mats[0];
+        setSelectedMat(recommendedMat.id);
+        console.log("Applied AI mat recommendation:", recommendedMat.name);
       }
+      
+      // Scroll to preview to show the applied recommendations
+      setTimeout(() => {
+        const previewElement = document.querySelector('[data-preview-container]');
+        if (previewElement) {
+          previewElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 500);
     },
     onError: (error) => {
       console.error("Mutation error:", error);
