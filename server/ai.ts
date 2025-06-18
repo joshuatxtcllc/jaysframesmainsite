@@ -77,6 +77,18 @@ async function analyzeWithClaude(base64Image: string, frameOptions: any[], matOp
   const frameList = frameOptions.slice(0, 8).map(f => `${f.id}:${f.name}(${f.color})`).join(',');
   const matList = matOptions.slice(0, 8).map(m => `${m.id}:${m.name}(${m.color})`).join(',');
   
+  // Detect image format from base64 data
+  let mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif" = "image/jpeg"; // default
+  if (base64Image.startsWith("/9j/")) {
+    mediaType = "image/jpeg";
+  } else if (base64Image.startsWith("iVBORw0KGgo")) {
+    mediaType = "image/png";
+  } else if (base64Image.startsWith("UklGR")) {
+    mediaType = "image/webp";
+  } else if (base64Image.startsWith("R0lGODlh")) {
+    mediaType = "image/gif";
+  }
+  
   const prompt = `Analyze artwork and recommend framing. Return JSON only:
 {
   "artworkType": "type",
@@ -107,7 +119,7 @@ Mats: ${matList}`;
           type: "image",
           source: {
             type: "base64",
-            media_type: "image/jpeg",
+            media_type: mediaType,
             data: base64Image
           }
         }
@@ -383,30 +395,49 @@ export async function getFrameRecommendations(
   matOptions: any[]
 ): Promise<any> {
   try {
-    // Check if API key is available
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("Error: OPENAI_API_KEY not available when calling Frame Recommendations API");
-      return { 
-        recommendedFrames: [], 
-        recommendedMats: [], 
-        explanation: "I apologize, but the AI service is not properly configured. Please contact the site administrator."
-      };
+    const frameList = frameOptions.slice(0, 8).map(f => `${f.id}:${f.name}(${f.color})`).join(',');
+    const matList = matOptions.slice(0, 8).map(m => `${m.id}:${m.name}(${m.color})`).join(',');
+
+    // Try Claude first if available
+    if (anthropic) {
+      console.log("Using Claude for text-based frame recommendations...");
+      
+      const response = await anthropic.messages.create({
+        model: anthropicModel,
+        max_tokens: 2000,
+        system: "You are an expert framing consultant. Always respond with valid JSON only, no additional text.",
+        messages: [{
+          role: "user",
+          content: `Analyze this artwork description and recommend framing. Return JSON only:
+{
+  "recommendedFrames": [1-3 frame IDs],
+  "recommendedMats": [1-3 mat IDs], 
+  "explanation": "brief reasoning"
+}
+
+Artwork: ${artworkDescription}
+Frames: ${frameList}
+Mats: ${matList}`
+        }]
+      });
+
+      const content = response.content[0].type === 'text' ? response.content[0].text : '';
+      return JSON.parse(content);
     }
 
-    const response = await openai!.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-      messages: [
-        {
-          role: "system",
-          content: `You are the Frame Design Assistant, a creative tool that helps users explore and select visual designs for framing their images or artwork. You assist with matboard and frame selection using real-world catalogs such as Larson-Juhl and Crescent. Suggest frame types, mat color combinations, and pricing tiers based on user needs.
+    // Fall back to OpenAI if Claude not available
+    if (openai) {
+      console.log("Using OpenAI for text-based frame recommendations...");
+      
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `You are an expert framing consultant. Recommend frames and mats based on artwork descriptions.
 
-Given a description of artwork, recommend the best frame and mat options from our catalog.
-Consider artwork style, colors, and dimensions when making recommendations.
-
-Available frame options: ${JSON.stringify(frameOptions)}
-Available mat options: ${JSON.stringify(matOptions)}
-
-Frame and mat styles must always feel tailored and aesthetically aligned with the user's artwork or decor style. 
+Available frames: ${frameList}
+Available mats: ${matList}
 
 Respond in JSON format with:
 {
@@ -414,36 +445,29 @@ Respond in JSON format with:
   "recommendedMats": [array of 1-3 mat IDs],
   "explanation": "Detailed reasoning for your recommendations"
 }`
-        },
-        {
-          role: "user",
-          content: `Please recommend framing options for this artwork: ${artworkDescription}`
-        }
-      ],
-      response_format: { type: "json_object" },
-    });
+          },
+          {
+            role: "user",
+            content: `Please recommend framing options for this artwork: ${artworkDescription}`
+          }
+        ],
+        response_format: { type: "json_object" },
+      });
 
-    const content = response.choices[0].message.content;
-    if (!content) {
-      throw new Error("Empty response from AI");
-    }
-
-    try {
+      const content = response.choices[0].message.content;
+      if (!content) throw new Error("Empty response from AI");
       return JSON.parse(content);
-    } catch (e) {
-      console.error("Failed to parse AI recommendations:", content);
-      return { 
-        recommendedFrames: [], 
-        recommendedMats: [], 
-        explanation: "I'm sorry, but I couldn't generate recommendations based on your description. Please provide more details or contact our design team for personalized assistance."
-      };
     }
+
+    // No AI service available
+    throw new Error("No AI service available");
+    
   } catch (error) {
     console.error("AI frame recommendations error:", error);
     return { 
-      recommendedFrames: [], 
-      recommendedMats: [], 
-      explanation: "I'm sorry, but our recommendations service is temporarily unavailable. Please try again later."
+      recommendedFrames: frameOptions.slice(0, 2).map(f => f.id), 
+      recommendedMats: matOptions.slice(0, 2).map(m => m.id), 
+      explanation: "AI service temporarily unavailable. Showing popular frame and mat options based on your description."
     };
   }
 }
