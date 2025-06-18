@@ -59,8 +59,15 @@ export async function analyzeArtworkImage(
     } else {
       throw new Error("No AI service available. Please configure ANTHROPIC_API_KEY or OPENAI_API_KEY.");
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error analyzing artwork image:", error);
+    
+    // Handle rate limits gracefully
+    if (error.status === 429) {
+      const resetTime = error.headers?.['anthropic-ratelimit-input-tokens-reset'] || error.headers?.['retry-after'];
+      throw new Error(`AI service temporarily unavailable due to rate limits. Please try again in a few minutes.${resetTime ? ` (Reset at ${resetTime})` : ''}`);
+    }
+    
     throw new Error(`Failed to analyze artwork: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
