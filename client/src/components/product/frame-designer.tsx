@@ -175,7 +175,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
         }
       }
 
-      setShowImageUpload(false);
+      // Image analyzed successfully
     } catch (error) {
       console.error("Error analyzing image:", error);
       alert("We couldn't analyze this image. Please try a different image or try again later.");
@@ -192,7 +192,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     setSelectedFile(null);
     setPreviewUrl(null);
     setAnalysisResult(null);
-    setShowImageUpload(true);
+    // Reset complete
   };
 
   // Wrapper for image upload to handle File object directly
@@ -773,18 +773,92 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
 
-          {/* Analysis Results */}
-          {analysisResult && (
-            <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
-              <div className="flex items-center mb-2">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2">
-                  <Trophy className="h-4 w-4 text-green-600" />
+          {/* AI Design Recommendations */}
+          {analysisResult && analysisResult.recommendations && (
+            <div className="mb-8 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl p-6 border border-cyan-200">
+              <div className="flex items-center mb-4">
+                <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center mr-3">
+                  <Trophy className="h-5 w-5 text-cyan-600" />
                 </div>
-                <h4 className="font-semibold text-green-800">AI Analysis Complete</h4>
+                <h3 className="text-xl font-semibold text-gray-900">AI Design Recommendations</h3>
               </div>
-              <p className="text-green-700 text-sm mb-3">{analysisResult.reasoning}</p>
-              <div className="text-xs text-green-600">
-                <strong>Detected:</strong> {analysisResult.artworkType} • <strong>Style:</strong> {analysisResult.style} • <strong>Mood:</strong> {analysisResult.mood}
+              
+              <p className="text-gray-700 mb-4">{analysisResult.reasoning}</p>
+              
+              <div className="text-sm text-gray-600 mb-6 bg-white/60 p-3 rounded-lg">
+                <strong>Artwork Analysis:</strong> {analysisResult.artworkType} • <strong>Style:</strong> {analysisResult.style} • <strong>Mood:</strong> {analysisResult.mood}
+              </div>
+
+              {/* Frame Recommendations */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <h4 className="md:col-span-3 text-lg font-semibold text-gray-800 mb-2">Recommended Frame Options</h4>
+                {analysisResult.recommendations.frames?.slice(0, 3).map((rec: any, index: number) => {
+                  const frame = databaseFrames.find((f: any) => f.id === rec.id);
+                  if (!frame) return null;
+                  
+                  return (
+                    <div key={rec.id} className="bg-white rounded-lg p-4 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer" 
+                         onClick={() => setSelectedFrame(rec.id)}>
+                      <div className="flex items-center mb-2">
+                        <div className="w-6 h-6 rounded-full mr-2" style={{ backgroundColor: frame.color }}></div>
+                        <span className="font-medium text-gray-900">{frame.name}</span>
+                        <span className="ml-auto text-sm text-cyan-600 font-semibold">Score: {rec.score}/10</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">{rec.reason}</p>
+                      <div className="text-sm text-gray-500">
+                        {frame.material} • ${(frame.pricePerInch / 100).toFixed(2)}/inch
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Mat Recommendations */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <h4 className="md:col-span-3 text-lg font-semibold text-gray-800 mb-2">Recommended Mat Options</h4>
+                {analysisResult.recommendations.mats?.slice(0, 3).map((rec: any, index: number) => {
+                  const mat = enrichedMatOptions.find((m: any) => m.id === rec.id);
+                  if (!mat) return null;
+                  
+                  return (
+                    <div key={rec.id} className="bg-white rounded-lg p-4 border border-gray-200 hover:border-cyan-300 transition-colors cursor-pointer"
+                         onClick={() => setSelectedMat(rec.id)}>
+                      <div className="flex items-center mb-2">
+                        <div className="w-6 h-6 rounded-full mr-2 border border-gray-300" style={{ backgroundColor: mat.color }}></div>
+                        <span className="font-medium text-gray-900">{mat.name}</span>
+                        <span className="ml-auto text-sm text-cyan-600 font-semibold">Score: {rec.score}/10</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">{rec.reason}</p>
+                      <div className="text-sm text-gray-500">
+                        ${(mat.price / 100).toFixed(2)} per mat
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button 
+                    onClick={addToCartHandler}
+                    disabled={!getSelectedFrameOption() || !getSelectedMatOption() || !getSelectedGlassOption()}
+                    className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                    size="lg"
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Add Recommended Design to Cart
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    className="border-cyan-300 text-cyan-700 hover:bg-cyan-50"
+                    onClick={() => {
+                      // Reset to allow manual customization
+                      setAnalysisResult(null);
+                    }}
+                  >
+                    Customize Design Manually
+                  </Button>
+                </div>
               </div>
             </div>
           )}
