@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardContent
@@ -14,10 +14,11 @@ import { apiRequest } from "@/lib/queryClient";
 import { useCart } from "@/context/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { FrameOption, MatOption, GlassOption } from "@/types";
-import { Lightbulb, ShoppingCart, Trophy, Target, Download, Upload, Camera, Image as ImageIcon, X, Loader2 } from "lucide-react";
+import { Lightbulb, ShoppingCart, Trophy, Target, Download, Upload, Camera, Loader2, AlertCircle, Sparkles } from "lucide-react";
 import DynamicFramePreview from "./dynamic-frame-preview";
 import { ProgressTracker, ProgressBar } from "@/components/design-progress";
 import { useDesignProgress } from "@/contexts/design-progress-context";
+import { useToast } from "@/hooks/use-toast";
 
 interface FrameDesignerProps {
   initialWidth?: number;
@@ -53,12 +54,12 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     explanation: string;
   } | null>(null);
 
-  // Image upload state
+  // Image upload and AI analysis states
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isAnalyzingImage, setIsAnalyzingImage] = useState(false);
+  const [imageAnalysisResult, setImageAnalysisResult] = useState<any>(null);
+  const { toast } = useToast();
 
   // Unique design ID for this framing session
   const [designId] = useState(`design-${Date.now()}`);
@@ -119,120 +120,6 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
     fetchOptions();
   }, []);
-
-  // Image upload handlers
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (!file) return;
-
-    // Check if the file is an image
-    if (!file.type.startsWith('image/')) {
-      alert("Please upload an image file (JPEG, PNG, WebP, etc.)");
-      return;
-    }
-
-    // Check file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      alert("Please upload an image smaller than 10MB");
-      return;
-    }
-
-    setSelectedFile(file);
-    setPreviewUrl(URL.createObjectURL(file));
-    setAnalysisResult(null);
-  };
-
-  // Analyze uploaded image
-  const analyzeImage = async () => {
-    if (!selectedFile) return;
-
-    setIsAnalyzing(true);
-    
-    try {
-      const formData = new FormData();
-      formData.append('image', selectedFile);
-
-      const response = await fetch('/api/frame-fitting-assistant', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to analyze image');
-      }
-
-      const result = await response.json();
-      setAnalysisResult(result);
-      
-      // Apply AI recommendations automatically
-      if (result.recommendations) {
-        const { frames, mats } = result.recommendations;
-        if (frames && frames.length > 0) {
-          setSelectedFrame(frames[0].id);
-        }
-        if (mats && mats.length > 0) {
-          setSelectedMat(mats[0].id);
-        }
-      }
-
-      // Image analyzed successfully
-    } catch (error) {
-      console.error("Error analyzing image:", error);
-      alert("We couldn't analyze this image. Please try a different image or try again later.");
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
-
-  // Reset image upload
-  const handleResetImage = () => {
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-    setSelectedFile(null);
-    setPreviewUrl(null);
-    setAnalysisResult(null);
-    // Reset complete
-  };
-
-  // Wrapper for image upload to handle File object directly
-  const handleImageUploadFromPreview = (file: File) => {
-    setSelectedFile(file);
-    setPreviewUrl(URL.createObjectURL(file));
-    setAnalysisResult(null);
-    
-    // Automatically analyze the image
-    const formData = new FormData();
-    formData.append('image', file);
-    setIsAnalyzing(true);
-
-    fetch('/api/frame-fitting-assistant', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(result => {
-      setAnalysisResult(result);
-      
-      // Apply AI recommendations automatically
-      if (result.recommendations) {
-        const { frames, mats } = result.recommendations;
-        if (frames && frames.length > 0) {
-          setSelectedFrame(frames[0].id);
-        }
-        if (mats && mats.length > 0) {
-          setSelectedMat(mats[0].id);
-        }
-      }
-    })
-    .catch(error => {
-      console.error("Error analyzing image:", error);
-    })
-    .finally(() => {
-      setIsAnalyzing(false);
-    });
-  };
 
   // Fallback sample data if API fails to load
   useEffect(() => {
@@ -720,27 +607,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     onSuccess: (data) => {
       console.log("Setting recommendations:", data);
       setAiRecommendations(data);
-      
-      // Auto-select the first recommendations and update preview
-      if (data.frames && data.frames.length > 0) {
-        const recommendedFrame = data.frames[0];
-        setSelectedFrame(recommendedFrame.id);
-        console.log("Applied AI frame recommendation:", recommendedFrame.name);
+      // Auto-select the first recommendations
+      if (data.frames.length > 0) {
+        setSelectedFrame(data.frames[0].id);
       }
-      
-      if (data.mats && data.mats.length > 0) {
-        const recommendedMat = data.mats[0];
-        setSelectedMat(recommendedMat.id);
-        console.log("Applied AI mat recommendation:", recommendedMat.name);
+      if (data.mats.length > 0) {
+        setSelectedMat(data.mats[0].id);
       }
-      
-      // Scroll to preview to show the applied recommendations
-      setTimeout(() => {
-        const previewElement = document.querySelector('[data-preview-container]');
-        if (previewElement) {
-          previewElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 500);
     },
     onError: (error) => {
       console.error("Mutation error:", error);
@@ -752,6 +625,96 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     console.log("Getting AI recommendations for:", artworkDescription);
     aiRecommendationMutation.mutate(artworkDescription);
   };
+
+  // Handle image file selection
+  const handleImageFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) return;
+
+    // Check if the file is an image
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file format",
+        description: "Please upload an image file (JPEG, PNG, WebP, etc.)",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Check file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast({
+        title: "File too large",
+        description: "Please upload an image smaller than 10MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setImageAnalysisResult(null);
+  };
+
+  // Analyze uploaded image with AI
+  const analyzeImageForFraming = async () => {
+    if (!selectedFile) return;
+
+    setIsAnalyzingImage(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+
+      const response = await fetch('/api/frame-fitting-assistant', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze image');
+      }
+
+      const result = await response.json();
+      setImageAnalysisResult(result);
+      
+      // Auto-apply the recommendations
+      if (result.recommendations?.frames?.length > 0) {
+        const recommendedFrame = result.recommendations.frames[0];
+        setSelectedFrame(recommendedFrame.id);
+      }
+      
+      if (result.recommendations?.mats?.length > 0) {
+        const recommendedMat = result.recommendations.mats[0];
+        setSelectedMat(recommendedMat.id);
+      }
+      
+      toast({
+        title: "Image analysis complete",
+        description: "AI recommendations have been applied to your design",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error analyzing image:", error);
+      toast({
+        title: "Analysis failed",
+        description: "There was a problem analyzing your image",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzingImage(false);
+    }
+  };
+
+  // Clean up preview URL when component unmounts
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   // Frame border style for preview
   const getFrameStyle = () => {
@@ -772,7 +735,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Left Column with Frame Preview */}
-      <div className="lg:col-span-2" data-preview-container>
+      <div className="lg:col-span-2">
         <div className="bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant h-full">
           <div className="flex justify-between items-start mb-4">
             <h2 className="text-2xl font-serif font-bold text-primary">Custom Frame Designer</h2>
@@ -788,122 +751,58 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
             </div>
           </div>
 
-
-
-          {/* Frame Preview */}
-          <div className="mb-4">
-            <DynamicFramePreview
-              width={width}
-              height={height}
-              selectedFrame={getSelectedFrameOption() || null}
-              selectedMat={getSelectedMatOption() || null}
-              selectedGlass={getSelectedGlassOption() || null}
-              topMatReveal={topMatReveal}
-              middleMatReveal={middleMatReveal}
-              bottomMatReveal={bottomMatReveal}
-              useMiddleMat={useMiddleMat}
-              useBottomMat={useBottomMat}
-              useStackedFrame={useStackedFrame}
-              selectedStackedFrame={getSelectedStackedFrameOption() || null}
-              selectedMiddleMat={getSelectedMiddleMatOption() || null}
-              selectedBottomMat={getSelectedBottomMatOption() || null}
-              uploadedImage={previewUrl}
-              onImageUpload={handleImageUploadFromPreview}
-            />
-          </div>
-
-          {/* Size Container - Moved between preview and AI designer */}
-          <div className="mb-4">
-            <div className="bg-white p-3 shadow-sm rounded-lg">
-              <h3 className="text-sm font-serif font-bold mb-2 text-primary">Artwork Size</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="block text-xs mb-1 text-neutral-500">Width (in)</Label>
-                  <Input 
-                    type="number" 
-                    value={width}
-                    min={1}
-                    max={60}
-                    onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
-                    className="w-full p-2 text-sm border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <Label className="block text-xs mb-1 text-neutral-500">Height (in)</Label>
-                  <Input 
-                    type="number" 
-                    value={height}
-                    min={1}
-                    max={60}
-                    onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
-                    className="w-full p-2 text-sm border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Minimal AI Recommendations */}
-          {analysisResult && analysisResult.recommendations && (
-            <div className="mb-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded p-2 border border-cyan-200">
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center">
-                  <Trophy className="h-3 w-3 text-cyan-600 mr-1" />
-                  <span className="text-xs font-semibold text-gray-900">AI Picks</span>
-                </div>
-                <span className="text-xs text-gray-600">{analysisResult.artworkType}</span>
-              </div>
-              
-              {/* Single Row Layout */}
-              <div className="flex gap-2">
-                {/* Top Frame */}
-                {analysisResult.recommendations.frames?.[0] && (() => {
-                  const frame = databaseFrames.find((f: any) => f.id === analysisResult.recommendations.frames[0].id);
-                  if (!frame) return null;
-                  
-                  return (
-                    <div className="flex-1 bg-white rounded p-1 border border-gray-200 hover:border-cyan-300 cursor-pointer" 
-                         onClick={() => setSelectedFrame(frame.id)}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 rounded-full mr-1" style={{ backgroundColor: frame.color }}></div>
-                          <span className="text-xs font-medium text-gray-900 truncate">{frame.name}</span>
-                        </div>
-                        <span className="text-xs text-cyan-600">{analysisResult.recommendations.frames[0].score}</span>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Top Mat */}
-                {analysisResult.recommendations.mats?.[0] && (() => {
-                  const mat = databaseMats.find((m: any) => m.id === analysisResult.recommendations.mats[0].id);
-                  if (!mat) return null;
-                  
-                  return (
-                    <div className="flex-1 bg-white rounded p-1 border border-gray-200 hover:border-cyan-300 cursor-pointer"
-                         onClick={() => setSelectedMat(mat.id)}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 rounded-full mr-1 border border-gray-300" style={{ backgroundColor: mat.color }}></div>
-                          <span className="text-xs font-medium text-gray-900 truncate">{mat.name}</span>
-                        </div>
-                        <span className="text-xs text-cyan-600">{analysisResult.recommendations.mats[0].score}</span>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-          )}
-
-          {/* Grid Layout for Remaining Elements */}
+          {/* Grid Layout for Top Elements */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {/* Empty div to maintain layout */}
-            <div className="md:col-span-2"></div>
+            {/* Frame Preview in First Column */}
+            <div className="md:col-span-2">
+              <DynamicFramePreview
+                width={width}
+                height={height}
+                selectedFrame={getSelectedFrameOption() || null}
+                selectedMat={getSelectedMatOption() || null}
+                selectedGlass={getSelectedGlassOption() || null}
+                topMatReveal={topMatReveal}
+                middleMatReveal={middleMatReveal}
+                bottomMatReveal={bottomMatReveal}
+                useMiddleMat={useMiddleMat}
+                useBottomMat={useBottomMat}
+                useStackedFrame={useStackedFrame}
+                selectedStackedFrame={getSelectedStackedFrameOption() || null}
+                selectedMiddleMat={getSelectedMiddleMatOption() || null}
+                selectedBottomMat={getSelectedBottomMatOption() || null}
+              />
+            </div>
 
-            {/* Price Summary in Second Column */}
+            {/* Dimensions and Price in Second Column */}
             <div className="md:col-span-1">
+              {/* Dimensions */}
+              <div className="bg-white p-4 shadow-sm rounded-lg mb-4">
+                <h3 className="text-md font-serif font-bold mb-2 text-primary">Artwork Size</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label className="block text-xs mb-1 text-neutral-500">Width (in)</Label>
+                    <Input 
+                      type="number" 
+                      value={width}
+                      min={1}
+                      max={60}
+                      onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
+                      className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                  <div>
+                    <Label className="block text-xs mb-1 text-neutral-500">Height (in)</Label>
+                    <Input 
+                      type="number" 
+                      value={height}
+                      min={1}
+                      max={60}
+                      onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
+                      className="w-full p-2 border-neutral-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                    />
+                  </div>
+                </div>
+              </div>
 
               {/* Frame Specifications Summary */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
@@ -1526,7 +1425,65 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
       {/* Right Sidebar Options */}
       <div className="bg-gradient-to-tr from-neutral-50 to-neutral-100 rounded-xl p-6 shadow-elegant">
-        {/* AI Designer */}
+        {/* Design Progress Tracker */}
+        <div className="bg-white rounded-lg p-5 shadow-sm mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-serif font-bold text-primary flex items-center">
+              <Target className="h-5 w-5 mr-2 text-accent" />
+              Your Design Journey
+            </h3>
+            <div className="flex items-center">
+              <Trophy className="h-4 w-4 text-yellow-500 mr-1" />
+              <span className="text-sm font-medium text-secondary">
+                {progress?.totalPoints || 0} pts
+              </span>
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <ProgressBar />
+          </div>
+
+          {/* Progress Tracker */}
+          <div className="space-y-2">
+            <ProgressTracker />
+          </div>
+
+          {/* Design Tips based on current step */}
+          {progress?.currentStep && (
+            <div className="mt-4 pt-4 border-t border-neutral-100">
+              <h4 className="font-medium text-primary mb-2 text-sm">Design Tips</h4>
+              {progress.currentStep === 'sizing' && (
+                <p className="text-xs text-neutral-500">
+                  Make sure to measure your artwork precisely. For best results, measure the visible area you want to display, not including any existing borders or mats.
+                </p>
+              )}
+              {progress.currentStep === 'frame_selection' && (
+                <p className="text-xs text-neutral-500">
+                  Choose a frame color that complements your artwork. For bold pieces, consider neutral frames. For subtle artwork, try a more colorful frame.
+                </p>
+              )}
+              {progress.currentStep === 'mat_selection' && (
+                <p className="text-xs text-neutral-500">
+                  Mats create visual space between your art and frame. For a classic look, choose a lighter mat color. For drama, try deeper colors that complement your artwork.
+                </p>
+              )}
+              {progress.currentStep === 'glass_selection' && (
+                <p className="text-xs text-neutral-500">
+                  UV protection glass helps prevent your artwork from fading. Consider museum glass for valuable artwork or pieces exposed to direct sunlight.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white rounded-lg p-4 shadow-sm mb-6 text-center">
+          <h3 className="text-xl font-serif font-bold text-primary mb-1">Design Assistance</h3>
+          <p className="text-sm text-neutral-500">Get expert help for your perfect frame</p>
+        </div>
+
+        {/* AI Image Analysis */}
         <div className="mb-8 relative overflow-hidden rounded-xl shadow-highlight">
           <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent/30 z-0"></div>
           <div className="absolute top-0 right-0 h-24 w-24 bg-accent/10 rounded-full -mr-8 -mt-8 z-0"></div>
@@ -1535,127 +1492,156 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
           <div className="relative z-10 p-6">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0 bg-accent rounded-full p-2.5 shadow-md">
-                <Lightbulb className="h-5 w-5 text-white" />
+                <Sparkles className="h-5 w-5 text-white" />
               </div>
               <div className="ml-3">
-                <h4 className="text-base font-serif font-bold text-primary">AI Visual Frame Designer</h4>
+                <h4 className="text-base font-serif font-bold text-primary">AI Image Analysis</h4>
                 <p className="text-sm text-neutral-600">
-                  Upload your artwork for AI visual analysis and smart frame recommendations
+                  Upload your artwork for instant AI recommendations
                 </p>
               </div>
             </div>
 
             <div className="bg-white rounded-lg p-4 shadow-sm mb-4">
-              {/* Image Upload Section - Enhanced Visibility */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-primary mb-3">
-                  📸 Upload Your Artwork for Visual AI Analysis
-                </label>
-                <div className="flex gap-3">
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleImageUploadFromPreview(file);
-                    }}
-                    accept="image/*"
-                    className="hidden"
-                  />
-                  <Button
-                    type="button"
-                    variant="default"
-                    size="lg"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex-1 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-white py-3 px-6 text-base font-medium shadow-lg"
-                    disabled={isAnalyzing}
-                  >
-                    <Upload className="h-5 w-5 mr-3" />
-                    {selectedFile ? `Selected: ${selectedFile.name.substring(0, 15)}...` : 'Upload Artwork Image'}
+              {!previewUrl ? (
+                <div className="border-2 border-dashed border-neutral-200 rounded-lg p-6 text-center">
+                  <Upload className="h-8 w-8 text-neutral-400 mx-auto mb-3" />
+                  <p className="text-sm text-neutral-600 mb-3">Upload your artwork</p>
+                  <Button asChild variant="outline" size="sm">
+                    <label className="cursor-pointer">
+                      <Input 
+                        type="file"
+                        className="hidden"
+                        onChange={handleImageFileChange}
+                        accept="image/*"
+                      />
+                      <Camera className="mr-2 h-4 w-4" />
+                      Choose Image
+                    </label>
                   </Button>
-                  {selectedFile && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="lg"
-                      onClick={handleResetImage}
-                      className="border-red-300 text-red-600 hover:bg-red-50 px-4"
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="relative rounded-lg overflow-hidden border border-neutral-200">
+                    <img 
+                      src={previewUrl} 
+                      alt="Artwork preview" 
+                      className="w-full h-32 object-cover"
+                    />
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setPreviewUrl(null);
+                        setImageAnalysisResult(null);
+                      }}
+                      className="flex-1"
                     >
-                      <X className="h-5 w-5" />
+                      Change
                     </Button>
-                  )}
-                </div>
-                {selectedFile && (
-                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
-                    <p className="text-sm text-green-700 font-medium">✓ Image ready for AI analysis</p>
+                    <Button 
+                      onClick={analyzeImageForFraming}
+                      disabled={isAnalyzingImage}
+                      size="sm"
+                      className="flex-1 bg-accent hover:bg-accent/90 text-white"
+                    >
+                      {isAnalyzingImage ? (
+                        <>
+                          <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                          Analyzing...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="mr-2 h-3 w-3" />
+                          Analyze
+                        </>
+                      )}
+                    </Button>
                   </div>
-                )}
-              </div>
-
-              {/* Auto-analyze message */}
-              {selectedFile && !isAnalyzing && !analysisResult && (
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <Lightbulb className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm text-blue-700">
-                        Image ready! AI will analyze colors, style, and composition to recommend the perfect frame and mat combination.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Analysis in progress */}
-              {isAnalyzing && (
-                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <svg className="animate-spin h-5 w-5 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm text-amber-700 font-medium">
-                        Analyzing your artwork...
-                      </p>
-                      <p className="text-xs text-amber-600 mt-1">
-                        Examining colors, style, and composition
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Regenerate button for completed analysis */}
-              {selectedFile && analysisResult && !isAnalyzing && (
-                <div className="mt-3 flex justify-center">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => selectedFile && handleImageUploadFromPreview(selectedFile)}
-                    className="text-xs px-3 py-1 border-accent/30 text-accent hover:bg-accent/5"
-                  >
-                    <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    Regenerate
-                  </Button>
                 </div>
               )}
             </div>
 
-            {aiRecommendations && (
-              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-accent/30 mb-1">
+            {imageAnalysisResult && (
+              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-accent/30 mb-4">
                 <div className="flex items-center mb-2">
                   <div className="w-4 h-4 rounded-full bg-accent/20 flex items-center justify-center mr-2">
                     <div className="w-2 h-2 rounded-full bg-accent"></div>
                   </div>
-                  <h5 className="text-sm font-bold text-primary">AI Recommendation</h5>
+                  <h5 className="text-sm font-bold text-primary">AI Analysis Complete</h5>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">Style:</span>
+                    <span className="font-medium">{imageAnalysisResult.style}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">Mood:</span>
+                    <span className="font-medium">{imageAnalysisResult.mood}</span>
+                  </div>
+                  {imageAnalysisResult.dominantColors && (
+                    <div>
+                      <span className="text-neutral-500">Colors:</span>
+                      <div className="flex space-x-1 mt-1">
+                        {imageAnalysisResult.dominantColors.slice(0, 4).map((color: string, index: number) => (
+                          <div 
+                            key={index}
+                            className="w-4 h-4 rounded-full border border-neutral-200" 
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-neutral-600 mt-3">{imageAnalysisResult.reasoning}</p>
+              </div>
+            )}
+
+            {/* Text-based AI recommendations fallback */}
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <label className="block text-xs font-medium text-neutral-500 mb-2">
+                Or describe your artwork
+              </label>
+              <Textarea 
+                placeholder="E.g. 'A vibrant sunset watercolor painting with orange and purple hues'"
+                className="text-sm mb-3 min-h-[60px] border-neutral-200 focus:border-accent focus:ring-1 focus:ring-accent"
+                value={artworkDescription}
+                onChange={(e) => setArtworkDescription(e.target.value)}
+              />
+
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="w-full"
+                onClick={getAiRecommendations}
+                disabled={aiRecommendationMutation.isPending || !artworkDescription.trim()}
+              >
+                {aiRecommendationMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                    Getting recommendations...
+                  </>
+                ) : (
+                  <>
+                    <Lightbulb className="mr-2 h-3 w-3" />
+                    Get Text Recommendations
+                  </>
+                )}
+              </Button>
+            </div>
+
+            {aiRecommendations && (
+              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-accent/30 mt-4">
+                <div className="flex items-center mb-2">
+                  <div className="w-4 h-4 rounded-full bg-accent/20 flex items-center justify-center mr-2">
+                    <div className="w-2 h-2 rounded-full bg-accent"></div>
+                  </div>
+                  <h5 className="text-sm font-bold text-primary">Text-Based Recommendation</h5>
                 </div>
                 <p className="text-sm text-neutral-700 mb-3">{aiRecommendations.explanation}</p>
 
@@ -1663,7 +1649,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <div className="flex items-center justify-center gap-6 bg-neutral-50 rounded-md p-3">
                     <div className="text-center">
                       <div 
-                        className="w-10 h-10 mx-auto rounded-md mb-1 border border-neutral-300"
+                        className="w-8 h-8 mx-auto rounded-md mb-1 border border-neutral-300"
                         style={{ 
                           backgroundColor: aiRecommendations.frames[0]?.color,
                           opacity: 0.8 
@@ -1673,7 +1659,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                     </div>
                     <div className="text-center">
                       <div 
-                        className="w-10 h-10 mx-auto rounded-full mb-1 border border-neutral-300"
+                        className="w-8 h-8 mx-auto rounded-full mb-1 border border-neutral-300"
                         style={{ 
                           backgroundColor: aiRecommendations.mats[0]?.color,
                           opacity: 0.8 
@@ -1686,8 +1672,8 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               </div>
             )}
 
-            <p className="text-center text-xs text-neutral-500 italic">
-              Powered by AI to analyze color, composition, and style
+            <p className="text-center text-xs text-neutral-500 italic mt-4">
+              AI-powered analysis for perfect frame selection
             </p>
           </div>
         </div>

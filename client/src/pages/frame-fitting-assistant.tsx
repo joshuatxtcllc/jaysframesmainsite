@@ -223,95 +223,47 @@ const FrameFittingAssistant = () => {
             Upload a photo of your artwork and our AI will analyze it to suggest the perfect framing options that complement its style, colors, and composition.
           </p>
 
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Upload Your Artwork</CardTitle>
-              <CardDescription>
-                For best results, use a clear, well-lit photo of your artwork without any existing frame.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {!previewUrl ? (
-                <div className="border-2 border-dashed border-neutral-200 rounded-lg p-12 text-center">
-                  <div className="flex flex-col items-center">
-                    <UploadCloud className="h-12 w-12 text-neutral-400 mb-4" />
-                    <h3 className="text-lg font-medium text-neutral-700 mb-2">
-                      Drop your image here or click to browse
-                    </h3>
-                    <p className="text-sm text-neutral-500 mb-6">
-                      Supports JPG, PNG, WebP (max 10MB)
-                    </p>
-                    <Button asChild>
-                      <label className="cursor-pointer">
-                        <Input 
-                          type="file"
-                          className="hidden"
-                          onChange={handleFileChange}
-                          accept="image/*"
-                        />
-                        <div className="flex items-center">
-                          <ImageIcon className="mr-2 h-4 w-4" />
-                          Select Image
-                        </div>
-                      </label>
-                    </Button>
+          <Card className="mb-8 bg-gradient-to-br from-accent/5 to-accent/15 border-accent/20">
+            <CardContent className="text-center py-12">
+              <div className="max-w-md mx-auto">
+                <div className="mb-6">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
+                    <Sparkles className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-primary mb-3">
+                    AI-Powered Frame Designer
+                  </h3>
+                  <p className="text-neutral-600 mb-6">
+                    Upload your artwork and let our AI analyze the perfect frame and mat combination for your piece. Get instant, personalized recommendations based on your art's colors, style, and composition.
+                  </p>
+                </div>
+                
+                <Button 
+                  asChild
+                  size="lg"
+                  className="bg-accent hover:bg-accent/90 text-white px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <a href="/custom-framing">
+                    <Camera className="mr-3 h-5 w-5" />
+                    Start AI Frame Design
+                  </a>
+                </Button>
+                
+                <div className="mt-6 flex items-center justify-center space-x-6 text-sm text-neutral-500">
+                  <div className="flex items-center">
+                    <Check className="h-4 w-4 mr-1 text-green-500" />
+                    Instant Analysis
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="h-4 w-4 mr-1 text-green-500" />
+                    Smart Recommendations
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="h-4 w-4 mr-1 text-green-500" />
+                    Professional Results
                   </div>
                 </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="relative rounded-lg overflow-hidden border border-neutral-200">
-                    <img 
-                      src={previewUrl} 
-                      alt="Preview" 
-                      className="w-full h-auto max-h-[400px] object-contain bg-neutral-50"
-                    />
-                  </div>
-                  
-                  <div className="flex space-x-3">
-                    <Button 
-                      variant="secondary" 
-                      onClick={handleReset}
-                      className="flex items-center"
-                    >
-                      <Camera className="mr-2 h-4 w-4" />
-                      Change Image
-                    </Button>
-                    <Button 
-                      onClick={analyzeImage}
-                      disabled={isAnalyzing}
-                      className="flex-1 text-white"
-                    >
-                      {isAnalyzing ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Analyzing Artwork...
-                        </>
-                      ) : (
-                        "Get Frame Recommendations"
-                      )}
-                    </Button>
-                  </div>
-                  
-                  {isAnalyzing && (
-                    <div className="space-y-2">
-                      <p className="text-sm text-neutral-500">
-                        Our AI is analyzing your artwork to find the perfect framing options...
-                      </p>
-                      <Progress value={isAnalyzing ? 70 : 100} className="h-2" />
-                    </div>
-                  )}
-                  
-                  {analysisError && (
-                    <div className="bg-red-50 text-red-600 p-4 rounded-lg flex items-start">
-                      <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-medium">Analysis failed</p>
-                        <p className="text-sm">{analysisError}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+              </div>
             </CardContent>
           </Card>
           
