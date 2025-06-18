@@ -92,78 +92,9 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right side - Interactive preview */}
+          {/* Right side - Space for future content */}
           <div className="lg:w-2/5 relative">
-            {/* Floating card effect */}
-            <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/20 shadow-2xl">
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-6">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                </div>
-                <div className="bg-black/50 px-4 py-1 rounded-lg">
-                  <span className="text-cyan-400 text-xs font-mono">Archival Design Assistant</span>
-                </div>
-              </div>
-
-              {/* Preview area */}
-              <div className="relative h-64 bg-gradient-to-br from-black/80 to-gray-900/80 rounded-xl flex items-center justify-center overflow-hidden border border-white/10">
-                {/* Artwork placeholder */}
-                <div className="relative w-40 h-32 bg-white rounded-lg shadow-xl">
-                  <div className="absolute inset-2 bg-gradient-to-br from-gray-100 to-gray-50 rounded-md"></div>
-                  <div className="absolute inset-4 bg-gray-100 rounded-sm flex items-center justify-center">
-                    <span className="text-gray-500 text-xs font-medium">Your Artwork</span>
-                  </div>
-                </div>
-
-                {/* Analysis overlay */}
-                <div className="absolute bottom-4 left-4 right-4 bg-black/90 backdrop-blur-lg p-3 rounded-lg border border-cyan-400/30">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Award className="h-4 w-4 text-cyan-400" />
-                      <span className="text-white text-sm font-medium">Analyzing for conservation quality...</span>
-                    </div>
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Services list */}
-              <div className="space-y-3 mt-6">
-                <h3 className="text-white font-semibold text-lg mb-4">Houston's Premier Custom Framing</h3>
-                {[
-                  "Custom Framing Houston",
-                  "Museum-Grade Conservation",
-                  "Canvas Stretching Houston", 
-                  "Archival UV-Filtering Glass"
-                ].map((service, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
-                    <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
-                    <span className="text-white/80 text-sm font-medium">{service}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Bottom CTAs */}
-              <div className="flex gap-3 mt-6">
-                <Link href="/custom-framing">
-                  <div className="bg-cyan-500 hover:bg-cyan-400 px-6 py-2 rounded-lg text-black font-semibold text-sm transition-colors cursor-pointer">
-                    Start Project
-                  </div>
-                </Link>
-                <Link href="/contact">
-                  <div className="border border-cyan-400 hover:bg-cyan-400/10 px-6 py-2 rounded-lg text-cyan-400 font-semibold text-sm transition-colors cursor-pointer">
-                    Get Quote
-                  </div>
-                </Link>
-              </div>
-            </div>
+            {/* Reserved space */}
           </div>
         </div>
       </div>

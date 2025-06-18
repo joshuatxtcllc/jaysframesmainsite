@@ -137,10 +137,12 @@ Jay's Frames is a comprehensive e-commerce platform for a custom framing studio 
   - Focused messaging on archival acid-free materials, conservation glass, and premium clientele
 
 ## Recent Changes
-- June 18, 2025: Completed AI-powered artwork analysis integration
+- June 18, 2025: Enhanced AI system with Claude integration and UI improvements
+  - Upgraded AI service to use Claude (Anthropic) as primary provider with OpenAI fallback
+  - Removed Design Journey container for cleaner, focused interface
+  - Removed interactive preview from hero section for simplified layout
   - Implemented image upload functionality in Custom Frame Designer
   - Added AI recommendations interface with scoring system for frames and mats
-  - Streamlined user experience by removing Design Journey tracker
   - Positioned AI Frame Designer prominently in sidebar
   - Created dual workflow: AI analysis OR manual customization
 - Professional rebranding with emphasis on archival museum-grade custom framing
