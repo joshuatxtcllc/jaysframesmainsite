@@ -464,10 +464,37 @@ Respond in JSON format with:
     
   } catch (error) {
     console.error("AI frame recommendations error:", error);
+    
+    // Provide intelligent fallback recommendations based on artwork description
+    const description = artworkDescription.toLowerCase();
+    let recommendedFrames = [];
+    let recommendedMats = [];
+    let explanation = "";
+
+    // Smart fallback logic based on description keywords
+    if (description.includes('modern') || description.includes('abstract') || description.includes('contemporary')) {
+      recommendedFrames = frameOptions.filter(f => f.material === 'Metal' || f.color.includes('#000') || f.color.includes('#C0C0C0')).slice(0, 2);
+      recommendedMats = matOptions.filter(m => m.name.includes('White') || m.name.includes('Black')).slice(0, 2);
+      explanation = "For modern artwork, we recommend sleek metal frames with clean white or black mats to emphasize the contemporary style.";
+    } else if (description.includes('vintage') || description.includes('classic') || description.includes('traditional')) {
+      recommendedFrames = frameOptions.filter(f => f.material === 'Wood' && (f.color.includes('#8B4513') || f.color.includes('#D4AF37'))).slice(0, 2);
+      recommendedMats = matOptions.filter(m => m.name.includes('Ivory') || m.name.includes('Cream')).slice(0, 2);
+      explanation = "For traditional artwork, we suggest warm wood frames with classic ivory or cream mats to complement the timeless aesthetic.";
+    } else if (description.includes('colorful') || description.includes('vibrant') || description.includes('bright')) {
+      recommendedFrames = frameOptions.filter(f => f.material === 'Wood' && f.name.includes('Natural')).slice(0, 2);
+      recommendedMats = matOptions.filter(m => m.name.includes('White') || m.name.includes('Ivory')).slice(0, 2);
+      explanation = "For vibrant artwork, we recommend neutral wood frames with white or ivory mats to let the colors shine without competing.";
+    } else {
+      // Default recommendations
+      recommendedFrames = frameOptions.slice(0, 2);
+      recommendedMats = matOptions.slice(0, 2);
+      explanation = "Based on your artwork description, we've selected versatile frame and mat options that work well with most pieces.";
+    }
+
     return { 
-      recommendedFrames: frameOptions.slice(0, 2).map(f => f.id), 
-      recommendedMats: matOptions.slice(0, 2).map(m => m.id), 
-      explanation: "AI service temporarily unavailable. Showing popular frame and mat options based on your description."
+      recommendedFrames: recommendedFrames.map(f => f.id), 
+      recommendedMats: recommendedMats.map(m => m.id), 
+      explanation
     };
   }
 }
