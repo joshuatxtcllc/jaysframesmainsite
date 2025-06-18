@@ -42,9 +42,9 @@ const Hero = () => {
               </h1>
 
               <p className="text-xl md:text-2xl text-white/70 leading-relaxed max-w-2xl font-light">
-                Houston's premier archival conservation framing studio specializing in 
-                <span className="text-cyan-400 font-medium"> museum-grade custom framing</span>, 
-                UV-filtering glass, and innovative designs for discerning collectors.
+                A-list voters choice for best local frame shop, Jay's Frames is your premier archival conservation custom art framing studio specializing in 
+                <span className="text-cyan-400 font-medium"> museum-grade framing</span>, 
+                using UV-filtering glass, acid free materials, decades of experience, centuries of methodologies, ever changing conservation techniques, and innovative, trend-setting designs for discerning collectors, locally in the Houston Heights area for the past 15 years.
               </p>
             </div>
 
