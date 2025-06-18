@@ -232,7 +232,7 @@ const DynamicFramePreview = ({
                   <div className="w-8 h-8 mx-auto mb-1 bg-cyan-400 rounded flex items-center justify-center">
                     <Upload className="w-4 h-4 text-white" />
                   </div>
-                  <p className="font-medium text-gray-600">Upload Image</p>
+                  <p className="font-bold text-lg text-gray-700">Upload Image</p>
                   <p className="text-[10px]">{width}" × {height}"</p>
                 </div>
               )}
