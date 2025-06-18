@@ -817,7 +817,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <h4 className="md:col-span-3 text-lg font-semibold text-gray-800 mb-2">Recommended Mat Options</h4>
                 {analysisResult.recommendations.mats?.slice(0, 3).map((rec: any, index: number) => {
-                  const mat = enrichedMatOptions.find((m: any) => m.id === rec.id);
+                  const mat = databaseMats.find((m: any) => m.id === rec.id);
                   if (!mat) return null;
                   
                   return (
@@ -840,7 +840,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button 
-                    onClick={addToCartHandler}
+                    onClick={handleAddToCart}
                     disabled={!getSelectedFrameOption() || !getSelectedMatOption() || !getSelectedGlassOption()}
                     className="bg-cyan-600 hover:bg-cyan-700 text-white"
                     size="lg"
