@@ -604,35 +604,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const orderData = insertOrderSchema.parse(req.body);
       const order = await storage.createOrder(orderData);
 
-      // Send notifications asynchronously (don't await to avoid delaying response)
-      if (order.customerEmail) {
-        // Send notification of new order to customer
-        sendNotification({
-          title: `Order #${order.id} Received`,
-          description: "Thank you for your order! We'll begin processing it right away.",
-          source: 'order-system',
-          sourceId: order.id.toString(),
-          type: "success",
-          actionable: true,
-          link: `/order-status?orderId=${order.id}`,
-          recipient: order.customerEmail
-        }).catch(error => {
-          console.error('Failed to send order notification:', error);
-        });
+      // Push order to POS system for records and pricing
+      try {
+        const { externalAPIService } = await import('./services/external-api');
+        
+        const posOrderData = {
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone || undefined,
+          items: Array.isArray(order.items) ? order.items.map((item: any) => ({
+            productId: item.productId,
+            name: item.name || item.productName || 'Custom Frame',
+            description: item.description || '',
+            quantity: item.quantity || 1,
+            unitPrice: item.unitPrice || item.price || 0,
+            totalPrice: item.totalPrice || (item.price * item.quantity) || 0
+          })) : [],
+          totalAmount: order.totalAmount,
+          orderDate: order.createdAt?.toISOString() || new Date().toISOString(),
+          specialInstructions: order.notes || undefined
+        };
 
-        // Also notify admin (this would be a specific admin email in production)
-        sendNotification({
-          title: `New Order #${order.id} Received`,
-          description: `New order from ${order.customerName || 'customer'}. Total: $${order.totalAmount?.toFixed(2) || '0.00'}`,
-          source: 'order-system',
-          sourceId: order.id.toString(),
-          type: "info",
-          actionable: true,
-          link: `/admin/orders/${order.id}`,
-          recipient: "admin@jaysframes.com"
-        }).catch(error => {
-          console.error('Failed to send admin notification:', error);
-        });
+        const posResult = await externalAPIService.pushOrderToPOS(posOrderData);
+        
+        if (posResult.success && posResult.posOrderId) {
+          // Update order with POS reference
+          await storage.updateOrder(order.id, {
+            adminNotes: `POS Order ID: ${posResult.posOrderId}${order.adminNotes ? '\n' + order.adminNotes : ''}`
+          });
+          console.log(`Order ${order.id} successfully pushed to POS with ID: ${posResult.posOrderId}`);
+        }
+      } catch (posError) {
+        console.error('Failed to push order to POS system:', posError);
+        // Don't fail the order creation if POS push fails
       }
 
       res.status(201).json(order);
@@ -644,7 +648,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get order by ID
+  // Get order by ID (enhanced with Kanban status)
   app.get("/api/orders/:id", async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
@@ -656,7 +660,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    res.json(order);
+    // Try to get real-time status from Kanban app
+    try {
+      const { externalAPIService } = await import('./services/external-api');
+      const kanbanStatus = await externalAPIService.getOrderStatusFromKanban(id.toString());
+      
+      if (kanbanStatus) {
+        // Merge Kanban status with local order data
+        const enhancedOrder = {
+          ...order,
+          kanbanStatus: {
+            status: kanbanStatus.status,
+            stage: kanbanStatus.stage,
+            estimatedCompletion: kanbanStatus.estimatedCompletion,
+            notes: kanbanStatus.notes,
+            lastUpdated: kanbanStatus.lastUpdated
+          }
+        };
+        res.json(enhancedOrder);
+      } else {
+        // Return local order data if Kanban lookup fails
+        res.json(order);
+      }
+    } catch (kanbanError) {
+      console.warn('Kanban lookup failed for order', id, ':', kanbanError);
+      // Return local order data if Kanban lookup fails
+      res.json(order);
+    }
   });
 
   // Update order status (admin only)
@@ -1022,10 +1052,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create appointment in database
       const appointment = await storage.createAppointment(appointmentData);
-      
-      // Send notifications using the new notification service
-      const { sendNewAppointmentNotification } = await import('./services/appointment-notifications');
-      await sendNewAppointmentNotification(appointment, { name, email, phone, message });
 
       res.json({ 
         success: true, 
@@ -1039,139 +1065,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all appointments (staff only)
-  app.get('/api/appointments', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+  // EXTERNAL API INTEGRATION ROUTES
+
+  // Get order status from Kanban app
+  app.get('/api/external/kanban/orders/:orderId', async (req: Request, res: Response) => {
     try {
-      const { status, date, limit = 50 } = req.query;
+      const { orderId } = req.params;
+      const { externalAPIService } = await import('./services/external-api');
       
-      let appointments;
-      if (status) {
-        appointments = await storage.getAppointmentsByStatus(status.toString());
-      } else if (date) {
-        const searchDate = new Date(date.toString());
-        const nextDay = new Date(searchDate.getTime() + 24 * 60 * 60 * 1000);
-        appointments = await storage.getAppointmentsByDateRange(searchDate, nextDay);
+      const orderStatus = await externalAPIService.getOrderStatusFromKanban(orderId);
+      
+      if (!orderStatus) {
+        return res.status(404).json({ 
+          message: 'Order not found in Kanban system',
+          orderId 
+        });
+      }
+
+      res.json(orderStatus);
+    } catch (error) {
+      console.error('Error fetching order from Kanban:', error);
+      res.status(500).json({ 
+        error: 'Failed to retrieve order status from Kanban',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Push order to POS system
+  app.post('/api/external/pos/orders', async (req: Request, res: Response) => {
+    try {
+      const orderData = req.body;
+      const { externalAPIService } = await import('./services/external-api');
+      
+      const result = await externalAPIService.pushOrderToPOS(orderData);
+      
+      if (result.success) {
+        res.json({
+          success: true,
+          posOrderId: result.posOrderId,
+          message: result.message
+        });
       } else {
-        appointments = await storage.getAppointments();
+        res.status(400).json({
+          success: false,
+          message: result.message
+        });
       }
+    } catch (error) {
+      console.error('Error pushing order to POS:', error);
+      res.status(500).json({ 
+        error: 'Failed to push order to POS',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
 
-      // Limit results
-      const limitedAppointments = appointments.slice(0, parseInt(limit.toString()));
+  // Test external API connections
+  app.get('/api/external/status', async (req: Request, res: Response) => {
+    try {
+      const { externalAPIService } = await import('./services/external-api');
       
-      res.json(limitedAppointments);
+      const [kanbanStatus, posStatus] = await Promise.all([
+        externalAPIService.testKanbanConnection(),
+        externalAPIService.testPOSConnection()
+      ]);
+
+      const configStatus = externalAPIService.getConfigurationStatus();
+
+      res.json({
+        configuration: configStatus,
+        connections: {
+          kanban: kanbanStatus,
+          pos: posStatus
+        }
+      });
     } catch (error) {
-      console.error('Error fetching appointments:', error);
-      res.status(500).json({ error: 'Failed to fetch appointments' });
+      console.error('Error testing external APIs:', error);
+      res.status(500).json({ 
+        error: 'Failed to test external API connections',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
-  // Get specific appointment
-  app.get('/api/appointments/:id', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+  // Update external API configuration (admin only)
+  app.patch('/api/external/config', authenticateToken, requireStaff, async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid appointment ID" });
-      }
-
-      const appointment = await storage.getAppointmentById(id);
-      if (!appointment) {
-        return res.status(404).json({ message: "Appointment not found" });
-      }
-
-      res.json(appointment);
-    } catch (error) {
-      console.error('Error fetching appointment:', error);
-      res.status(500).json({ error: 'Failed to fetch appointment' });
-    }
-  });
-
-  // Update appointment status
-  app.patch('/api/appointments/:id/status', authenticateToken, requireStaff, async (req: Request, res: Response) => {
-    try {
-      const id = parseInt(req.params.id);
-      const { status, staffNotes } = req.body;
-
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid appointment ID" });
-      }
-
-      // Get current appointment
-      const currentAppointment = await storage.getAppointmentById(id);
-      if (!currentAppointment) {
-        return res.status(404).json({ message: "Appointment not found" });
-      }
-
-      const oldStatus = currentAppointment.status;
-
-      // Update appointment
-      const updateData: any = { status };
-      if (staffNotes) {
-        updateData.staffNotes = staffNotes;
-      }
-
-      const updatedAppointment = await storage.updateAppointment(id, updateData);
+      const { kanbanApiUrl, kanbanApiKey, posApiUrl, posApiKey } = req.body;
+      const { externalAPIService } = await import('./services/external-api');
       
-      if (updatedAppointment) {
-        // Send status change notification
-        const { sendAppointmentStatusNotification } = await import('./services/appointment-notifications');
-        await sendAppointmentStatusNotification(updatedAppointment, oldStatus, status);
-      }
+      externalAPIService.updateConfiguration({
+        kanbanApiUrl,
+        kanbanApiKey,
+        posApiUrl,
+        posApiKey
+      });
 
-      res.json(updatedAppointment);
+      res.json({ 
+        success: true, 
+        message: 'External API configuration updated' 
+      });
     } catch (error) {
-      console.error('Error updating appointment status:', error);
-      res.status(500).json({ error: 'Failed to update appointment status' });
-    }
-  });
-
-  // Get upcoming appointments for dashboard
-  app.get('/api/appointments/upcoming', async (req: Request, res: Response) => {
-    try {
-      const days = parseInt(req.query.days?.toString() || '7');
-      const { getUpcomingAppointments } = await import('./services/appointment-notifications');
-      const appointments = await getUpcomingAppointments(days);
-      
-      res.json(appointments);
-    } catch (error) {
-      console.error('Error fetching upcoming appointments:', error);
-      res.status(500).json({ error: 'Failed to fetch upcoming appointments' });
-    }
-  });
-
-  // Get appointment notification settings
-  app.get('/api/appointments/notifications/config', authenticateToken, requireStaff, async (req: Request, res: Response) => {
-    try {
-      const { getNotificationConfig } = await import('./services/appointment-notifications');
-      const config = getNotificationConfig();
-      res.json(config);
-    } catch (error) {
-      console.error('Error fetching notification config:', error);
-      res.status(500).json({ error: 'Failed to fetch notification config' });
-    }
-  });
-
-  // Update appointment notification settings
-  app.patch('/api/appointments/notifications/config', authenticateToken, requireStaff, async (req: Request, res: Response) => {
-    try {
-      const { updateNotificationConfig } = await import('./services/appointment-notifications');
-      updateNotificationConfig(req.body);
-      res.json({ success: true, message: 'Notification settings updated' });
-    } catch (error) {
-      console.error('Error updating notification config:', error);
-      res.status(500).json({ error: 'Failed to update notification config' });
-    }
-  });
-
-  // Send test notification
-  app.post('/api/appointments/notifications/test', authenticateToken, requireStaff, async (req: Request, res: Response) => {
-    try {
-      const { email, phone } = req.body;
-      const { sendTestNotification } = await import('./services/appointment-notifications');
-      await sendTestNotification(email, phone);
-      res.json({ success: true, message: 'Test notifications sent' });
-    } catch (error) {
-      console.error('Error sending test notification:', error);
-      res.status(500).json({ error: 'Failed to send test notification' });
+      console.error('Error updating external API config:', error);
+      res.status(500).json({ 
+        error: 'Failed to update external API configuration',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
