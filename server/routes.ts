@@ -998,66 +998,180 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(orders);
   });
 
-  // Appointments endpoint
+  // Create new appointment
   app.post('/api/appointments', async (req: Request, res: Response) => {
     try {
-      const { name, email, phone, service, date, time, message } = req.body;
+      const { name, email, phone, service, date, time, message, location = 'store' } = req.body;
+      
+      // Parse date and time into proper datetime
+      const appointmentDate = new Date(`${date} ${time}`);
+      const endTime = new Date(appointmentDate.getTime() + 60 * 60 * 1000); // 1 hour duration
+      
+      // Create appointment data
+      const appointmentData = {
+        title: `${service} - ${name}`,
+        description: `Customer: ${name}, Email: ${email}, Phone: ${phone || 'Not provided'}, Message: ${message || 'None'}`,
+        type: service,
+        startTime: appointmentDate,
+        endTime: endTime,
+        location: location,
+        status: 'scheduled',
+        customerNotes: message || null,
+        notes: `Contact: ${email}, ${phone || 'No phone'}`
+      };
 
-      const appointmentId = Date.now().toString();
-
-      // Here you would typically save to database
-      console.log('New appointment scheduled:', {
-        appointmentId, name, email, phone, service, date, time, message
-      });
-
-      // Send confirmation notification to customer
-      if (email) {
-        sendNotification({
-          title: `Consultation Scheduled - ${appointmentId}`,
-          description: `Thank you ${name}! Your ${service} consultation is scheduled for ${date} at ${time}. We'll see you at 218 W 27th St., Houston, TX 77008.`,
-          source: 'scheduling-system',
-          sourceId: appointmentId,
-          type: "success",
-          actionable: true,
-          link: `/contact`,
-          recipient: email
-        }).catch(error => {
-          console.error('Failed to send customer notification:', error);
-        });
-      }
-
-      // Send notification to staff/admin
-      sendNotification({
-        title: `New Consultation Scheduled - ${appointmentId}`,
-        description: `${name} scheduled a ${service} consultation for ${date} at ${time}. Contact: ${email}, ${phone}. Message: ${message || 'None'}`,
-        source: 'scheduling-system',
-        sourceId: appointmentId,
-        type: "info",
-        actionable: true,
-        link: `/admin/appointments/${appointmentId}`,
-        recipient: "Frames@Jaysframes.com"
-      }).catch(error => {
-        console.error('Failed to send admin notification:', error);
-      });
-
-      // Send SMS notification to staff if enabled
-      if (process.env.STAFF_PHONE) {
-        sendSmsNotification(
-          `New consultation: ${name} - ${service} on ${date} at ${time}. Phone: ${phone}`,
-          process.env.STAFF_PHONE
-        ).catch(error => {
-          console.error('Failed to send staff SMS:', error);
-        });
-      }
+      // Create appointment in database
+      const appointment = await storage.createAppointment(appointmentData);
+      
+      // Send notifications using the new notification service
+      const { sendNewAppointmentNotification } = await import('./services/appointment-notifications');
+      await sendNewAppointmentNotification(appointment, { name, email, phone, message });
 
       res.json({ 
         success: true, 
         message: 'Appointment scheduled successfully',
-        appointmentId
+        appointmentId: appointment.id,
+        appointment: appointment
       });
     } catch (error) {
       console.error('Error scheduling appointment:', error);
       res.status(500).json({ error: 'Failed to schedule appointment' });
+    }
+  });
+
+  // Get all appointments (staff only)
+  app.get('/api/appointments', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+    try {
+      const { status, date, limit = 50 } = req.query;
+      
+      let appointments;
+      if (status) {
+        appointments = await storage.getAppointmentsByStatus(status.toString());
+      } else if (date) {
+        const searchDate = new Date(date.toString());
+        const nextDay = new Date(searchDate.getTime() + 24 * 60 * 60 * 1000);
+        appointments = await storage.getAppointmentsByDateRange(searchDate, nextDay);
+      } else {
+        appointments = await storage.getAppointments();
+      }
+
+      // Limit results
+      const limitedAppointments = appointments.slice(0, parseInt(limit.toString()));
+      
+      res.json(limitedAppointments);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      res.status(500).json({ error: 'Failed to fetch appointments' });
+    }
+  });
+
+  // Get specific appointment
+  app.get('/api/appointments/:id', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid appointment ID" });
+      }
+
+      const appointment = await storage.getAppointmentById(id);
+      if (!appointment) {
+        return res.status(404).json({ message: "Appointment not found" });
+      }
+
+      res.json(appointment);
+    } catch (error) {
+      console.error('Error fetching appointment:', error);
+      res.status(500).json({ error: 'Failed to fetch appointment' });
+    }
+  });
+
+  // Update appointment status
+  app.patch('/api/appointments/:id/status', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status, staffNotes } = req.body;
+
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid appointment ID" });
+      }
+
+      // Get current appointment
+      const currentAppointment = await storage.getAppointmentById(id);
+      if (!currentAppointment) {
+        return res.status(404).json({ message: "Appointment not found" });
+      }
+
+      const oldStatus = currentAppointment.status;
+
+      // Update appointment
+      const updateData: any = { status };
+      if (staffNotes) {
+        updateData.staffNotes = staffNotes;
+      }
+
+      const updatedAppointment = await storage.updateAppointment(id, updateData);
+      
+      if (updatedAppointment) {
+        // Send status change notification
+        const { sendAppointmentStatusNotification } = await import('./services/appointment-notifications');
+        await sendAppointmentStatusNotification(updatedAppointment, oldStatus, status);
+      }
+
+      res.json(updatedAppointment);
+    } catch (error) {
+      console.error('Error updating appointment status:', error);
+      res.status(500).json({ error: 'Failed to update appointment status' });
+    }
+  });
+
+  // Get upcoming appointments for dashboard
+  app.get('/api/appointments/upcoming', async (req: Request, res: Response) => {
+    try {
+      const days = parseInt(req.query.days?.toString() || '7');
+      const { getUpcomingAppointments } = await import('./services/appointment-notifications');
+      const appointments = await getUpcomingAppointments(days);
+      
+      res.json(appointments);
+    } catch (error) {
+      console.error('Error fetching upcoming appointments:', error);
+      res.status(500).json({ error: 'Failed to fetch upcoming appointments' });
+    }
+  });
+
+  // Get appointment notification settings
+  app.get('/api/appointments/notifications/config', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+    try {
+      const { getNotificationConfig } = await import('./services/appointment-notifications');
+      const config = getNotificationConfig();
+      res.json(config);
+    } catch (error) {
+      console.error('Error fetching notification config:', error);
+      res.status(500).json({ error: 'Failed to fetch notification config' });
+    }
+  });
+
+  // Update appointment notification settings
+  app.patch('/api/appointments/notifications/config', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+    try {
+      const { updateNotificationConfig } = await import('./services/appointment-notifications');
+      updateNotificationConfig(req.body);
+      res.json({ success: true, message: 'Notification settings updated' });
+    } catch (error) {
+      console.error('Error updating notification config:', error);
+      res.status(500).json({ error: 'Failed to update notification config' });
+    }
+  });
+
+  // Send test notification
+  app.post('/api/appointments/notifications/test', authenticateToken, requireStaff, async (req: Request, res: Response) => {
+    try {
+      const { email, phone } = req.body;
+      const { sendTestNotification } = await import('./services/appointment-notifications');
+      await sendTestNotification(email, phone);
+      res.json({ success: true, message: 'Test notifications sent' });
+    } catch (error) {
+      console.error('Error sending test notification:', error);
+      res.status(500).json({ error: 'Failed to send test notification' });
     }
   });
 

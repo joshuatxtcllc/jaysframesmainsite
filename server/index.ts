@@ -6,6 +6,7 @@ import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
 import { larsonJuhlCatalogService } from './services/catalog'; // Import the service
+import { initializeAppointmentNotifications } from './services/appointment-notifications';
 import { db } from './db';
 import { blogCategories, blogPosts } from '../shared/schema'; // Import blog schema
 import cors from 'cors'; // Import cors
@@ -149,6 +150,15 @@ app.use((req, res, next) => {
 
     // Start the automation system after server is running
     startAutomationSystem();
+    
+    // Initialize appointment notification system
+    initializeAppointmentNotifications({
+      reminderHours: [24, 2], // 24 hours and 2 hours before
+      enableSms: true,
+      enableEmail: true,
+      staffPhone: process.env.STAFF_PHONE,
+      staffEmail: process.env.STAFF_EMAIL || 'Frames@Jaysframes.com'
+    });
   });
 })();
 
