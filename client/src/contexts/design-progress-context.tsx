@@ -133,11 +133,7 @@ export function DesignProgressProvider({ children, designId = 'default' }: {
   // Mutation for updating design progress
   const updateProgressMutation = useMutation({
     mutationFn: async (data: UpdateDesignProgress) => {
-      return apiRequest({
-        url: `/api/design/progress/${designIdState}`,
-        method: 'PATCH',
-        data,
-      });
+      return apiRequest('PATCH', `/api/design/progress/${designIdState}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/design/progress', designIdState] });

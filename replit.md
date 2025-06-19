@@ -137,6 +137,14 @@ Jay's Frames is a comprehensive e-commerce platform for a custom framing studio 
   - Focused messaging on archival acid-free materials, conservation glass, and premium clientele
 
 ## Recent Changes
+- June 19, 2025: Implemented comprehensive appointment notification system
+  - Automated reminder system sending notifications 24 hours and 2 hours before appointments
+  - Full database integration for appointment tracking and management
+  - Multi-channel notifications (email confirmations, SMS alerts to staff)
+  - Real-time status change notifications for appointment updates
+  - Staff management interface for viewing and updating appointment status
+  - Automatic customer confirmations and follow-up communications
+  - Test notification system for setup verification
 - June 18, 2025: Enhanced AI system with Claude integration and UI improvements
   - Upgraded AI service to use Claude (Anthropic) as primary provider with OpenAI fallback
   - Removed Design Journey container for cleaner, focused interface
