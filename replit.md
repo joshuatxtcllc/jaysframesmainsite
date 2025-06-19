@@ -137,14 +137,14 @@ Jay's Frames is a comprehensive e-commerce platform for a custom framing studio 
   - Focused messaging on archival acid-free materials, conservation glass, and premium clientele
 
 ## Recent Changes
-- June 19, 2025: Implemented comprehensive appointment notification system
-  - Automated reminder system sending notifications 24 hours and 2 hours before appointments
-  - Full database integration for appointment tracking and management
-  - Multi-channel notifications (email confirmations, SMS alerts to staff)
-  - Real-time status change notifications for appointment updates
-  - Staff management interface for viewing and updating appointment status
-  - Automatic customer confirmations and follow-up communications
-  - Test notification system for setup verification
+- June 19, 2025: Implemented external API integration system for Kanban and POS applications
+  - Created external API service for connecting to Kanban app (order status retrieval)
+  - Created external API service for connecting to POS system (order push for records/pricing)
+  - Enhanced order creation to automatically push orders to POS system
+  - Enhanced order status lookup to fetch real-time status from Kanban app
+  - Added configuration endpoints for managing external API credentials
+  - Added connection testing endpoints for both Kanban and POS systems
+  - Removed notification system in favor of external integration approach
 - June 18, 2025: Enhanced AI system with Claude integration and UI improvements
   - Upgraded AI service to use Claude (Anthropic) as primary provider with OpenAI fallback
   - Removed Design Journey container for cleaner, focused interface

@@ -22,7 +22,7 @@ import Reinvented from "@/pages/reinvented";
 import About from "@/pages/about";
 import Contact from "@/pages/contact";
 import ApiDocs from "@/pages/api-docs";
-import VirtualRoomVisualizer from "@/pages/virtual-room-visualizer"; // Added import
+import VirtualRoomVisualizer from "@/pages/virtual-room-visualizer";
 // Blog Pages
 import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog/[slug]";
@@ -33,18 +33,8 @@ import { AuthProvider } from "./context/auth-context";
 import { lazy, useEffect } from 'react';
 import CatalogManagement from './pages/admin/catalog-management';
 import BlogManager from './pages/admin/blog-manager';
-import './lib/seo-monitor'; // Import SEO monitoring
+import './lib/seo-monitor';
 import ErrorBoundary from "@/components/ui/error-boundary";
-
-const newQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    },
-  },
-});
 
 function Router() {
   return (
@@ -83,7 +73,7 @@ function Router() {
 function App() {
   useEffect(() => {
     // Handle unhandled promise rejections
-    const handleUnhandledRejection = (event) => {
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
       console.error('Unhandled promise rejection:', event.reason);
       event.preventDefault(); // Prevent the default browser behavior
     };
@@ -96,7 +86,7 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={newQueryClient}>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
           <div className="flex flex-col min-h-screen">

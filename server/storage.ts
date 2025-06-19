@@ -36,6 +36,7 @@ export interface IStorage {
   getOrders(): Promise<Order[]>;
   getOrderById(id: number): Promise<Order | undefined>;
   createOrder(order: InsertOrder): Promise<Order>;
+  updateOrder(id: number, updates: Partial<Order>): Promise<Order | undefined>;
   updateOrderStatus(id: number, status: string, stage?: string): Promise<Order | undefined>;
   getOrdersByUserId(userId: number): Promise<Order[]>;
   getOrdersByStatus(status: string): Promise<Order[]>;
@@ -450,6 +451,28 @@ class DatabaseStorage implements IStorage {
     }
   }
 
+  async updateOrder(id: number, updates: Partial<Order>): Promise<Order | undefined> {
+    if (!await this.checkDb()) return undefined;
+
+    try {
+      const updateValues = {
+        ...updates,
+        updatedAt: new Date()
+      };
+
+      const [updatedOrder] = await db
+        .update(orders)
+        .set(updateValues)
+        .where(eq(orders.id, id))
+        .returning();
+
+      return updatedOrder;
+    } catch (error) {
+      console.error(`Error updating order ${id}:`, error);
+      return undefined;
+    }
+  }
+
   async updateOrderStatus(id: number, status: string, stage?: string): Promise<Order | undefined> {
     if (!await this.checkDb()) return undefined;
 
@@ -473,21 +496,12 @@ class DatabaseStorage implements IStorage {
         }
       }
 
-      // Update the updatedAt timestamp
-      updateValues.updatedAt = new Date();
-
-      // If status is 'completed', update thecompletedAt date
+      // If status is 'completed', update the completedAt date
       if (status === 'completed' && !updateValues.completedAt) {
         updateValues.completedAt = new Date();
       }
 
-      const [updatedOrder] = await db
-        .update(orders)
-        .set(updateValues)
-        .where(eq(orders.id, id))
-        .returning();
-
-      return updatedOrder;
+      return await this.updateOrder(id, updateValues);
     } catch (error) {
       console.error(`Error updating order status for order ${id}:`, error);
       return undefined;
