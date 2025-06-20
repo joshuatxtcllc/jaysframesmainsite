@@ -1568,37 +1568,111 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
             {imageAnalysisResult && (
               <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-accent/30 mb-4">
-                <div className="flex items-center mb-2">
+                <div className="flex items-center mb-3">
                   <div className="w-4 h-4 rounded-full bg-accent/20 flex items-center justify-center mr-2">
                     <div className="w-2 h-2 rounded-full bg-accent"></div>
                   </div>
-                  <h5 className="text-sm font-bold text-primary">AI Analysis Complete</h5>
+                  <h5 className="text-sm font-bold text-primary">AI Recommendations</h5>
                 </div>
-                <div className="space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-neutral-500">Style:</span>
-                    <span className="font-medium">{imageAnalysisResult.style}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-500">Mood:</span>
-                    <span className="font-medium">{imageAnalysisResult.mood}</span>
-                  </div>
-                  {imageAnalysisResult.dominantColors && (
-                    <div>
-                      <span className="text-neutral-500">Colors:</span>
-                      <div className="flex space-x-1 mt-1">
-                        {imageAnalysisResult.dominantColors.slice(0, 4).map((color: string, index: number) => (
-                          <div 
-                            key={index}
-                            className="w-4 h-4 rounded-full border border-neutral-200" 
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
+
+                {/* Visual Design Preview */}
+                <div className="bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-lg p-4 mb-4">
+                  <p className="text-xs text-neutral-600 mb-3 text-center">
+                    {imageAnalysisResult.reasoning}
+                  </p>
+                  
+                  {imageAnalysisResult.recommendations && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Top Frame Recommendations */}
+                      <div>
+                        <h6 className="text-xs font-medium text-neutral-500 mb-2">Top Frame Picks</h6>
+                        <div className="space-y-2">
+                          {imageAnalysisResult.recommendations.frames.slice(0, 2).map((frameRec: any, index: number) => {
+                            const frame = frameOptions.find(f => f.id === frameRec.id);
+                            return frame ? (
+                              <div key={index} className="flex items-center space-x-2 bg-white rounded-md p-2 cursor-pointer hover:bg-accent/5 transition-colors"
+                                   onClick={() => setSelectedFrame(frame.id)}>
+                                <div 
+                                  className="w-6 h-6 rounded border border-neutral-300 flex-shrink-0"
+                                  style={{ backgroundColor: frame.color }}
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-medium text-primary truncate">{frame.name}</p>
+                                  <div className="flex items-center space-x-1">
+                                    <div className="flex">
+                                      {[...Array(5)].map((_, i) => (
+                                        <div key={i} className={`w-1 h-1 rounded-full ${i < Math.floor(frameRec.score / 2) ? 'bg-accent' : 'bg-neutral-200'}`} />
+                                      ))}
+                                    </div>
+                                    <span className="text-xs text-neutral-500">{frameRec.score}/10</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : null;
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Top Mat Recommendations */}
+                      <div>
+                        <h6 className="text-xs font-medium text-neutral-500 mb-2">Top Mat Picks</h6>
+                        <div className="space-y-2">
+                          {imageAnalysisResult.recommendations.mats.slice(0, 2).map((matRec: any, index: number) => {
+                            const mat = matOptions.find(m => m.id === matRec.id);
+                            return mat ? (
+                              <div key={index} className="flex items-center space-x-2 bg-white rounded-md p-2 cursor-pointer hover:bg-accent/5 transition-colors"
+                                   onClick={() => setSelectedMat(mat.id)}>
+                                <div 
+                                  className="w-6 h-6 rounded-full border border-neutral-300 flex-shrink-0"
+                                  style={{ backgroundColor: mat.color }}
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-medium text-primary truncate">{mat.name}</p>
+                                  <div className="flex items-center space-x-1">
+                                    <div className="flex">
+                                      {[...Array(5)].map((_, i) => (
+                                        <div key={i} className={`w-1 h-1 rounded-full ${i < Math.floor(matRec.score / 2) ? 'bg-accent' : 'bg-neutral-200'}`} />
+                                      ))}
+                                    </div>
+                                    <span className="text-xs text-neutral-500">{matRec.score}/10</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : null;
+                          })}
+                        </div>
                       </div>
                     </div>
                   )}
+
+                  {/* Analysis Details */}
+                  <div className="mt-3 pt-3 border-t border-neutral-200">
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-neutral-500">Style:</span>
+                        <span className="font-medium">{imageAnalysisResult.style}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-neutral-500">Mood:</span>
+                        <span className="font-medium">{imageAnalysisResult.mood}</span>
+                      </div>
+                    </div>
+                    {imageAnalysisResult.dominantColors && (
+                      <div className="mt-2">
+                        <span className="text-neutral-500 text-xs">Dominant Colors:</span>
+                        <div className="flex space-x-1 mt-1">
+                          {imageAnalysisResult.dominantColors.slice(0, 4).map((color: string, index: number) => (
+                            <div 
+                              key={index}
+                              className="w-4 h-4 rounded-full border border-neutral-200" 
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs text-neutral-600 mt-3">{imageAnalysisResult.reasoning}</p>
               </div>
             )}
 
