@@ -137,6 +137,12 @@ Jay's Frames is a comprehensive e-commerce platform for a custom framing studio 
   - Focused messaging on archival acid-free materials, conservation glass, and premium clientele
 
 ## Recent Changes
+- June 20, 2025: Enhanced frame designer visual accuracy and functionality
+  - Reduced mat width scaling from 20px to 8px per inch for realistic proportions (1"-4" range)
+  - Made Save and Add to Cart buttons functional in frame preview section
+  - Enhanced AI visual recommendations with clickable frame and mat options
+  - Fixed text rendering clarity with optimized font smoothing
+  - Updated business hours: Mon-Fri 9am-5pm, Sat 10am-3pm, Sun by appointment
 - June 19, 2025: Implemented external API integration system for Kanban and POS applications
   - Created external API service for connecting to Kanban app (order status retrieval)
   - Created external API service for connecting to POS system (order push for records/pricing)
