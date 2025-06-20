@@ -154,7 +154,7 @@ const Home = () => {
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start">
                     <div className="bg-secondary rounded-full p-1 mr-3 mt-1">
-                      <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
                     </div>
@@ -418,7 +418,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
       <Testimonials />
 
       {/* Chatbot */}
