@@ -32,6 +32,13 @@ import {
 import { larsonJuhlCatalogService } from "./services/catalog";
 import { integrationService } from "./services/integrations";
 import { contentManager } from "./services/content-manager";
+import Stripe from "stripe";
+
+// Initialize Stripe
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.warn('STRIPE_SECRET_KEY not found. Payment processing will be disabled.');
+}
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
@@ -2031,6 +2038,95 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         success: false,
         message: "Failed to register integration",
         error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  // Stripe Payment Routes
+  app.post("/api/create-payment-intent", async (req: Request, res: Response) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ 
+          message: "Payment processing is not configured. Contact support." 
+        });
+      }
+
+      const { amount, currency = "usd", metadata = {} } = req.body;
+
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ 
+          message: "Invalid amount provided" 
+        });
+      }
+
+      // Create payment intent with Stripe
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency,
+        metadata,
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error: any) {
+      console.error("Error creating payment intent:", error);
+      res.status(500).json({ 
+        message: "Error creating payment intent: " + error.message 
+      });
+    }
+  });
+
+  // Payment confirmation endpoint
+  app.post("/api/confirm-payment", async (req: Request, res: Response) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ 
+          message: "Payment processing is not configured" 
+        });
+      }
+
+      const { paymentIntentId, orderId } = req.body;
+
+      if (!paymentIntentId) {
+        return res.status(400).json({ 
+          message: "Payment intent ID is required" 
+        });
+      }
+
+      // Retrieve payment intent from Stripe
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+      if (paymentIntent.status === 'succeeded') {
+        // Update order status to paid if orderId provided
+        if (orderId) {
+          try {
+            await storage.updateOrderStatus(parseInt(orderId), 'paid');
+          } catch (error) {
+            console.error("Error updating order status:", error);
+          }
+        }
+
+        res.json({ 
+          success: true,
+          status: paymentIntent.status,
+          amount: paymentIntent.amount / 100 // Convert back to dollars
+        });
+      } else {
+        res.json({ 
+          success: false,
+          status: paymentIntent.status,
+          message: "Payment not completed"
+        });
+      }
+    } catch (error: any) {
+      console.error("Error confirming payment:", error);
+      res.status(500).json({ 
+        message: "Error confirming payment: " + error.message 
       });
     }
   });

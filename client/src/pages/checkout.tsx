@@ -1,249 +1,163 @@
-import { useState } from "react";
-import { useCart } from "@/context/cart-context";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { formatPrice } from "@/lib/utils";
-import { ArrowLeft, Check, CreditCard, Lock, ShieldCheck, Truck } from "lucide-react";
-import { apiRequest } from "@/lib/queryClient";
-import { OrderItem } from "@/types";
+import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
+import { apiRequest } from "@/lib/queryClient";
+import { CreditCard, Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { SeoHead } from "@/components/seo";
 
-const Checkout = () => {
+interface CheckoutFormData {
+  email: string;
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  phone: string;
+}
+
+export default function Checkout() {
+  const [, setLocation] = useLocation();
   const { cartItems, getCartTotal, clearCart } = useCart();
-  const [, navigate] = useLocation();
+  const items = cartItems;
+  const total = getCartTotal();
   const { toast } = useToast();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+  
+  const [formData, setFormData] = useState<CheckoutFormData>({
     email: "",
+    name: "",
     address: "",
     city: "",
     state: "",
     zipCode: "",
-    country: "United States",
-    cardNumber: "",
-    cardName: "",
-    expiryDate: "",
-    cvv: "",
-    shippingNotes: ""
+    phone: ""
   });
-  const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentIntent, setPaymentIntent] = useState<any>(null);
 
-  if (cartItems.length === 0) {
-    navigate("/products");
-    return null;
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleCreditCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Format credit card number with spaces every 4 digits
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 16) value = value.slice(0, 16);
-    // Add spaces every 4 digits
-    const parts = [];
-    for (let i = 0; i < value.length; i += 4) {
-      parts.push(value.slice(i, i + 4));
-    }
-    const formattedValue = parts.join(' ');
-    setFormData({ ...formData, cardNumber: formattedValue });
-  };
-
-  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Format expiry date as MM/YY
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 4) value = value.slice(0, 4);
-    if (value.length > 2) {
-      value = value.slice(0, 2) + '/' + value.slice(2);
-    }
-    setFormData({ ...formData, expiryDate: value });
-  };
-
-  const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Limit CVV to 3 or 4 digits
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 4) value = value.slice(0, 4);
-    setFormData({ ...formData, cvv: value });
-  };
-
-  const validateForm = () => {
-    const requiredFields = [
-      'firstName', 'lastName', 'email', 'address', 'city', 'state', 'zipCode'
-    ];
-
-    for (const field of requiredFields) {
-      if (formData[field as keyof typeof formData].trim() === '') {
-        toast({
-          title: "Missing information",
-          description: `Please fill in all required fields`,
-          variant: "destructive"
-        });
-        return false;
-      }
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+  // Redirect if cart is empty
+  useEffect(() => {
+    if (items.length === 0) {
+      setLocation("/");
       toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address",
+        title: "Cart is empty",
+        description: "Add items to your cart before checking out.",
         variant: "destructive"
       });
-      return false;
     }
+  }, [items, setLocation, toast]);
 
-    // Validate payment fields if credit card is selected
-    if (paymentMethod === "credit-card") {
-      if (
-        formData.cardNumber.replace(/\s/g, '').length < 16 ||
-        formData.cardName.trim() === '' ||
-        formData.expiryDate.trim() === '' ||
-        formData.cvv.trim() === ''
-      ) {
-        toast({
-          title: "Payment information incomplete",
-          description: "Please fill in all payment fields",
-          variant: "destructive"
-        });
-        return false;
-      }
-    }
-
-    return true;
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price / 100);
   };
 
-  const [discountCode, setDiscountCode] = useState("");
-  const [appliedDiscount, setAppliedDiscount] = useState({ code: "", percentage: 0, amount: 0 });
-  const [isValidatingDiscount, setIsValidatingDiscount] = useState(false);
+  const handleInputChange = (field: keyof CheckoutFormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
-  const validateDiscountCode = async () => {
-    if (!discountCode.trim()) return;
-
-    setIsValidatingDiscount(true);
+  const createPaymentIntent = async () => {
     try {
-      const response = await apiRequest("POST", "/api/validate-discount", {
-        code: discountCode,
-        orderTotal: getCartTotal()
+      const response = await apiRequest("POST", "/api/create-payment-intent", {
+        amount: total,
+        metadata: {
+          items: JSON.stringify(items.map(item => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+          }))),
+          customerEmail: formData.email,
+          customerName: formData.name
+        }
       });
 
-      if (response.ok) {
-        const discountData = await response.json();
-        const discountAmount = Math.round(getCartTotal() * (discountData.percentage / 100));
-        setAppliedDiscount({
-          code: discountCode,
-          percentage: discountData.percentage,
-          amount: discountAmount
-        });
-        toast({
-          title: "Discount Applied!",
-          description: `${discountData.percentage}% discount applied`,
-        });
-      } else {
-        toast({
-          title: "Invalid Discount Code",
-          description: "Please check your discount code and try again",
-          variant: "destructive",
-        });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create payment intent");
       }
+
+      return data;
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to validate discount code",
-        variant: "destructive",
-      });
-    } finally {
-      setIsValidatingDiscount(false);
+      console.error("Error creating payment intent:", error);
+      throw error;
     }
   };
 
-  const removeDiscount = () => {
-    setAppliedDiscount({ code: "", percentage: 0, amount: 0 });
-    setDiscountCode("");
-  };
-
-  const calculateFinalTotal = () => {
-    const subtotal = getCartTotal();
-    const shipping = subtotal > 10000 ? 0 : 1500;
-    const tax = Math.round(subtotal * 0.0825);
-    const discount = appliedDiscount.amount;
-    return subtotal + shipping + tax - discount;
-  };
-
-  const handleSubmitOrder = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
+    
+    if (!formData.email || !formData.name || !formData.address) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     setIsProcessing(true);
 
     try {
-      // Create order items from cart items
-      const orderItems: OrderItem[] = cartItems.map(item => ({
-        productId: item.productId,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        details: item.details || {}
-      }));
+      // Create payment intent
+      const paymentData = await createPaymentIntent();
+      
+      // In a real implementation, you would integrate with Stripe Elements here
+      // For now, we'll simulate a successful payment
+      
+      // Create order
+      const orderResponse = await apiRequest("POST", "/api/orders", {
+        items: items.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          price: item.price,
+          details: item.details
+        })),
+        totalAmount: total,
+        shippingAddress: {
+          name: formData.name,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode
+        },
+        customerInfo: {
+          email: formData.email,
+          phone: formData.phone
+        },
+        paymentIntentId: paymentData.paymentIntentId
+      });
 
-      // Create the order
-      const orderData = {
-        customerName: `${formData.firstName} ${formData.lastName}`,
-        customerEmail: formData.email,
-        totalAmount: calculateFinalTotal(),
-        items: orderItems,
-        notes: formData.shippingNotes || `Shipping Address: ${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}, ${formData.country}`,
-        couponCode: appliedDiscount.code,
-        discount: appliedDiscount.amount
-      };
-
-      // Submit order to API
-      const response = await apiRequest('POST', '/api/orders', orderData);
-
-      if (!response.ok) {
-        throw new Error('Failed to create order');
+      if (!orderResponse.ok) {
+        throw new Error("Failed to create order");
       }
 
-      const order = await response.json();
+      const order = await orderResponse.json();
 
-      // Simulate payment processing
-      await simulatePaymentProcess();
-
-      // Process bank deposit (in a real application, this would connect to a payment gateway)
-      await simulateBankDeposit(order.id, calculateFinalTotal());
-
-      // Send confirmation email (in a real application, this would connect to an email service)
-      await sendOrderConfirmationEmail(order.id, formData.email);
-
-      // Clear cart and redirect to confirmation
+      // Clear cart and redirect to success
       clearCart();
-
-      // Navigate to order confirmation page
-      navigate(`/order-confirmation/${order.id}`);
-
-    } catch (error) {
-      console.error('Checkout error:', error);
+      
       toast({
-        title: "Checkout failed",
-        description: "There was a problem processing your order. Please try again.",
+        title: "Order placed successfully!",
+        description: `Order #${order.id} has been created. You'll receive a confirmation email shortly.`,
+      });
+
+      // Redirect to order confirmation or home
+      setLocation("/");
+      
+    } catch (error: any) {
+      console.error("Checkout error:", error);
+      toast({
+        title: "Payment failed",
+        description: error.message || "Something went wrong during checkout. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -251,430 +165,217 @@ const Checkout = () => {
     }
   };
 
-  // Simulate payment processing delay
-  const simulatePaymentProcess = () => {
-    return new Promise<void>(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, 1500);
-    });
-  };
-
-  // Simulate bank deposit
-  const simulateBankDeposit = async (orderId: number, amount: number) => {
-    console.log(`Processing deposit for order #${orderId}: ${formatPrice(amount)}`);
-    return new Promise<void>(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-  };
-
-  // Send confirmation email
-  const sendOrderConfirmationEmail = async (orderId: number, email: string) => {
-    console.log(`Sending confirmation email for order #${orderId} to ${email}`);
-    return new Promise<void>(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-  };
+  if (items.length === 0) {
+    return null; // Will redirect in useEffect
+  }
 
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-12">
-      <Button 
-        variant="ghost" 
-        className="mb-8 flex items-center text-primary"
-        onClick={() => window.history.back()}
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Cart
-      </Button>
+    <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white">
+      <SeoHead 
+        title="Checkout - Jay's Frames"
+        description="Complete your custom framing order with secure payment processing."
+        keywords="checkout, payment, custom framing order, Jay's Frames"
+      />
+      
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <Button 
+          variant="ghost" 
+          onClick={() => setLocation("/cart")}
+          className="mb-6 text-primary hover:text-primary/80"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Cart
+        </Button>
 
-      <h1 className="text-3xl font-serif font-bold text-primary mb-12">Checkout</h1>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Checkout Form */}
-        <div className="lg:col-span-2">
-          <form onSubmit={handleSubmitOrder}>
-            <Card className="mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Checkout Form */}
+          <div>
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center text-xl">
-                  <Truck className="mr-2 h-5 w-5 text-secondary" />
-                  Shipping Information
+                <CardTitle className="flex items-center text-primary">
+                  <CreditCard className="mr-2 h-5 w-5" />
+                  Checkout Information
                 </CardTitle>
-                <CardDescription>
-                  Enter your shipping details
-                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name*</Label>
-                    <Input 
-                      id="firstName" 
-                      name="firstName" 
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name*</Label>
-                    <Input 
-                      id="lastName" 
-                      name="lastName" 
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email*</Label>
-                  <Input 
-                    id="email" 
-                    name="email" 
-                    type="email" 
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address*</Label>
-                  <Input 
-                    id="address" 
-                    name="address" 
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="city">City*</Label>
-                    <Input 
-                      id="city" 
-                      name="city" 
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="state">State*</Label>
-                    <Input 
-                      id="state" 
-                      name="state" 
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="zipCode">ZIP Code*</Label>
-                    <Input 
-                      id="zipCode" 
-                      name="zipCode" 
-                      value={formData.zipCode}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="country">Country*</Label>
-                  <Input 
-                    id="country" 
-                    name="country" 
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="shippingNotes">Shipping Notes (Optional)</Label>
-                  <Textarea
-                    id="shippingNotes"
-                    name="shippingNotes"
-                    placeholder="Special delivery instructions, best times to deliver, etc."
-                    value={formData.shippingNotes}
-                    onChange={handleInputChange}
-                    className="resize-none"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center text-xl">
-                  <CreditCard className="mr-2 h-5 w-5 text-secondary" />
-                  Payment Method
-                </CardTitle>
-                <CardDescription>
-                  All transactions are secure and encrypted
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Tabs 
-                  defaultValue="credit-card" 
-                  className="w-full"
-                  value={paymentMethod}
-                  onValueChange={setPaymentMethod}
-                >
-                  <TabsList className="grid w-full grid-cols-2 mb-4">
-                    <TabsTrigger value="credit-card">Credit Card</TabsTrigger>
-                    <TabsTrigger value="bank-transfer">Bank Transfer</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="credit-card" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="cardNumber">Card Number*</Label>
-                      <Input 
-                        id="cardNumber" 
-                        name="cardNumber" 
-                        placeholder="1234 5678 9012 3456"
-                        value={formData.cardNumber}
-                        onChange={handleCreditCardNumberChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="cardName">Name on Card*</Label>
-                      <Input 
-                        id="cardName" 
-                        name="cardName"
-                        value={formData.cardName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="expiryDate">Expiry Date*</Label>
-                        <Input 
-                          id="expiryDate" 
-                          name="expiryDate" 
-                          placeholder="MM/YY"
-                          value={formData.expiryDate}
-                          onChange={handleExpiryDateChange}
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Contact Information */}
+                  <div>
+                    <h3 className="font-medium mb-4">Contact Information</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="email">Email Address *</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange("email", e.target.value)}
+                          placeholder="your.email@example.com"
                           required
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cvv">CVV*</Label>
-                        <Input 
-                          id="cvv" 
-                          name="cvv" 
-                          placeholder="123"
-                          value={formData.cvv}
-                          onChange={handleCVVChange}
+                      
+                      <div>
+                        <Label htmlFor="name">Full Name *</Label>
+                        <Input
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => handleInputChange("name", e.target.value)}
+                          placeholder="John Doe"
+                          required
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange("phone", e.target.value)}
+                          placeholder="(555) 123-4567"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Shipping Address */}
+                  <div>
+                    <h3 className="font-medium mb-4">Shipping Address</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="address">Street Address *</Label>
+                        <Input
+                          id="address"
+                          value={formData.address}
+                          onChange={(e) => handleInputChange("address", e.target.value)}
+                          placeholder="123 Main Street"
+                          required
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="city">City *</Label>
+                          <Input
+                            id="city"
+                            value={formData.city}
+                            onChange={(e) => handleInputChange("city", e.target.value)}
+                            placeholder="Houston"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="state">State *</Label>
+                          <Input
+                            id="state"
+                            value={formData.state}
+                            onChange={(e) => handleInputChange("state", e.target.value)}
+                            placeholder="TX"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="zipCode">ZIP Code *</Label>
+                        <Input
+                          id="zipCode"
+                          value={formData.zipCode}
+                          onChange={(e) => handleInputChange("zipCode", e.target.value)}
+                          placeholder="77008"
                           required
                         />
                       </div>
                     </div>
+                  </div>
 
-                    <div className="flex items-center mt-2 p-3 bg-secondary/10 rounded-md text-sm">
-                      <Lock className="h-4 w-4 mr-2 text-secondary" />
-                      Your payment information is encrypted and secure
-                    </div>
-                  </TabsContent>
+                  <Separator />
 
-                  <TabsContent value="bank-transfer" className="space-y-4">
-                    <div className="p-4 bg-secondary/10 rounded-md space-y-3">
-                      <h3 className="font-medium text-primary">Bank Transfer Details</h3>
-                      <p className="text-sm text-neutral-600">
-                        Please use the following details to make a bank transfer:
+                  {/* Payment Section */}
+                  <div>
+                    <h3 className="font-medium mb-4 flex items-center">
+                      <Lock className="mr-2 h-4 w-4" />
+                      Secure Payment
+                    </h3>
+                    <div className="bg-neutral-50 p-4 rounded-lg">
+                      <p className="text-sm text-neutral-600 mb-4">
+                        Your payment information is secured with industry-standard encryption.
                       </p>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="font-medium">Bank Name:</span>
-                          <span>First National Bank</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">Account Name:</span>
-                          <span>Jay's Frames Inc.</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">Account Number:</span>
-                          <span>1234567890</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">Routing Number:</span>
-                          <span>087654321</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">Reference:</span>
-                          <span>Your Order ID (will be provided)</span>
-                        </div>
-                      </div>
-                      <p className="text-sm text-neutral-600 mt-3">
-                        Once you complete your order, we will send you an email with payment instructions and your Order ID for reference.
-                      </p>
+                      <Button 
+                        type="submit" 
+                        className="w-full bg-primary hover:bg-primary/90 text-white"
+                        disabled={isProcessing}
+                      >
+                        {isProcessing ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Processing Payment...
+                          </>
+                        ) : (
+                          <>
+                            <Lock className="mr-2 h-4 w-4" />
+                            Complete Order - {formatPrice(total)}
+                          </>
+                        )}
+                      </Button>
                     </div>
-                  </TabsContent>
-                </Tabs>
+                  </div>
+                </form>
               </CardContent>
             </Card>
+          </div>
 
-            <Button 
-              type="submit" 
-              className="w-full btn-secondary py-6 text-base"
-              disabled={isProcessing}
-            >
-              {isProcessing ? (
-                <>Processing Order...</>
-              ) : (
-                <>Complete Order</>
-              )}
-            </Button>
-          </form>
-        </div>
-
-        {/* Order Summary */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">Order Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {cartItems.map((item) => (
-                <div key={item.id} className="flex justify-between items-center">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-16 h-16 bg-neutral-100 rounded overflow-hidden flex-shrink-0">
-                      <img
-                        src={item.imageUrl || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
+          {/* Order Summary */}
+          <div>
+            <Card className="sticky top-6">
+              <CardHeader>
+                <CardTitle className="text-primary">Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm">{item.name}</h4>
+                        <p className="text-xs text-neutral-500">Qty: {item.quantity}</p>
+                        {item.details && (
+                          <p className="text-xs text-neutral-500">
+                            {item.details.width}" × {item.details.height}"
+                          </p>
+                        )}
+                      </div>
+                      <span className="font-medium">{formatPrice(item.price * item.quantity)}</span>
                     </div>
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-neutral-500">Qty: {item.quantity}</p>
-                      {item.details && (
-                        <p className="text-xs text-neutral-500 mt-1">
-                          {item.details.width && item.details.height 
-                            ? `${item.details.width}" × ${item.details.height}"`
-                            : ''
-                          }
-                          {item.details.dimensions && ` ${item.details.dimensions}`}
-                        </p>
-                      )}
-                    </div>
+                  ))}
+                  
+                  <Separator />
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">Subtotal</span>
+                    <span>{formatPrice(total)}</span>
                   </div>
-                  <p className="font-medium text-secondary">{formatPrice(item.price * item.quantity)}</p>
-                </div>
-              ))}
-
-              <Separator className="my-4" />
-
-              {/* Discount Code Section */}
-              <div className="space-y-3">
-                <Label htmlFor="discount-code">Discount Code</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="discount-code"
-                    value={discountCode}
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                    placeholder="Enter discount code"
-                    disabled={appliedDiscount.code !== ""}
-                  />
-                  {appliedDiscount.code ? (
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={removeDiscount}
-                      className="whitespace-nowrap"
-                    >
-                      Remove
-                    </Button>
-                  ) : (
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={validateDiscountCode}
-                      disabled={!discountCode.trim() || isValidatingDiscount}
-                      className="whitespace-nowrap"
-                    >
-                      {isValidatingDiscount ? "Validating..." : "Apply"}
-                    </Button>
-                  )}
-                </div>
-                {appliedDiscount.code && (
-                  <div className="text-sm text-green-600 font-medium">
-                    ✓ Discount "{appliedDiscount.code}" applied ({appliedDiscount.percentage}% off)
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-neutral-600">Shipping</span>
+                    <span className="text-sm">FREE</span>
                   </div>
-                )}
-              </div>
-
-              <Separator className="my-4" />
-
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-neutral-500">Subtotal</span>
-                  <span>{formatPrice(getCartTotal())}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-neutral-500">Shipping</span>
-                  <span>{getCartTotal() > 10000 ? 'Free' : formatPrice(1500)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-neutral-500">Tax</span>
-                  <span>{formatPrice(getCartTotal() * 0.0825)}</span>
-                </div>
-                {appliedDiscount.amount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount ({appliedDiscount.percentage}%)</span>
-                    <span>-{formatPrice(appliedDiscount.amount)}</span>
+                  
+                  <Separator />
+                  
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span>Total</span>
+                    <span className="text-primary">{formatPrice(total)}</span>
                   </div>
-                )}
-              </div>
-
-              <Separator className="my-4" />
-
-              <div className="flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span className="text-primary">
-                  {formatPrice(calculateFinalTotal())}
-                </span>
-              </div>
-            </CardContent>
-
-            <CardFooter className="flex-col space-y-4">
-              <div className="flex items-center p-3 bg-green-50 text-green-700 rounded-md text-sm w-full">
-                <ShieldCheck className="h-4 w-4 mr-2" />
-                All custom frames include a 30-day satisfaction guarantee
-              </div>
-
-              <div className="w-full space-y-2">
-                <div className="flex items-center text-sm font-medium">
-                  <Check className="h-4 w-4 text-green-600 mr-2" />
-                  Free shipping on orders over $100
                 </div>
-                <div className="flex items-center text-sm font-medium">
-                  <Check className="h-4 w-4 text-green-600 mr-2" />
-                  Secure payment processing
-                </div>
-                <div className="flex items-center text-sm font-medium">
-                  <Check className="h-4 w-4 text-green-600 mr-2" />
-                  Dedicated customer support
-                </div>
-              </div>
-            </CardFooter>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default Checkout;
+}
