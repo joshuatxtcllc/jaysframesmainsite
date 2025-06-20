@@ -64,17 +64,33 @@ export default function Hero() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="max-w-6xl mx-auto"
         >
-          {/* Main heading with enhanced contrast and lighter colors */}
+          {/* Main heading with enhanced metallic sheen and high contrast */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none">
             <span className="block font-heading relative">
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-sm opacity-70"></span>
-              <span className="relative bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent drop-shadow-2xl text-shadow-lg">
+              {/* Multiple shadow layers for depth */}
+              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent blur-lg opacity-40"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-md opacity-60"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-sm opacity-80"></span>
+              {/* Main text with metallic sheen gradient */}
+              <span className="relative bg-gradient-to-r from-gray-100 via-white to-gray-100 bg-clip-text text-transparent" 
+                    style={{
+                      filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.8)) drop-shadow(0 4px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 40px rgba(255,255,255,0.4))',
+                      textShadow: '0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4), 0 4px 8px rgba(0,0,0,0.9)'
+                    }}>
                 The Future of
               </span>
             </span>
             <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 font-heading relative">
-              <span className="absolute inset-0 bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent blur-sm opacity-80"></span>
-              <span className="relative bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent drop-shadow-2xl glow-effect-purple">
+              {/* Neon glow layers */}
+              <span className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent blur-xl opacity-30"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent blur-lg opacity-50"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent blur-md opacity-70"></span>
+              {/* Main neon text with enhanced glow */}
+              <span className="relative bg-gradient-to-r from-cyan-100 via-blue-200 to-purple-300 bg-clip-text text-transparent"
+                    style={{
+                      filter: 'drop-shadow(0 0 25px rgba(6,182,212,0.9)) drop-shadow(0 0 50px rgba(139,92,246,0.6)) drop-shadow(0 4px 12px rgba(0,0,0,0.8)) drop-shadow(0 0 75px rgba(6,182,212,0.3))',
+                      textShadow: '0 0 20px rgba(6,182,212,1), 0 0 40px rgba(139,92,246,0.8), 0 0 60px rgba(6,182,212,0.6), 0 4px 12px rgba(0,0,0,0.9)'
+                    }}>
                 Custom Framing
               </span>
             </span>
