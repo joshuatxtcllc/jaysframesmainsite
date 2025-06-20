@@ -100,15 +100,13 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
-            <a 
-              href="https://calendly.com/frames-jaysframes/30min?month=2025-06"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link 
+              to="/custom-framing"
               className="group relative px-10 py-5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-lg rounded-2xl transition-all duration-500 hover:scale-105 shadow-neon-cyan hover:shadow-neon-purple transform hover:-translate-y-2"
             >
-              <span className="relative z-10">Schedule Appointment</span>
+              <span className="relative z-10">Start Your Design</span>
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </a>
+            </Link>
 
             <Link 
               to="/about"
