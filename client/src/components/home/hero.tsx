@@ -14,14 +14,9 @@ export default function Hero() {
       {/* Luxury room background with dark panels and wood flooring */}
       <div className="absolute inset-0">
         <img 
-          src="https://ci3.googleusercontent.com/mail-img-att/AGAZnRo9GrIrfSCRzUYZRMRZ4WZFvtc2twwJ2AA1pygIEr1N56irV3W6UfZcoBwq10qPBdi4zq0qXjDRMlIxQhVjE26lu_BnyEBzNcTtSPkjwE5K__dFVJ6M-6ldFRMECikZW_OJg5N_MsGAiX_k6Ik8tHXIrunfTybswG8OXJghxicmHj5QBK9oFPu4YdLI05wq8Clu2WVPsu0_c7JZvBPd_aOzOueoVWDve0FZo4GMyrpMntYCyQrywLWUCrqWlaXzO7YxuF2wugRd9IkhltixiqklFbK8IErT3Bv1F3Eu57Smg06geyDr6vi03hcowCNOQ3c51rZe9j-BjZJCpFv3DB6tR-IWt6HwuXipwFponNPVhaMDnVeYox6NspAypCFcPpROz17EH7YxW1zcOmK0GdEouDL7YU2nkbuHmOJUahJ6KwN_wwKCkkg9r04JRmQub5TemV5ugsAwmaDqgxJEvmyvxxY42fr2SSNdeXNjlMA6BkKfD7ioqqEMqxnJUXNOyKyrB1lNgfyovyxDtIeAl1BWIXIcuMirkUtkHbn3czmNMpJ1dxMtusBmxvXgCvop3orCUHfjh6Jo2gcDxu0cIuQK_B2i_52_eH2FEQKJnuCqH2VTP4gRYR8rR_3mimFXAo0nN2sOiPtC3lZ83F6yY99YwAv8uIDoTOaUFpFMdJne0JowH8BKdTeV88-KMx3yIR3qzOWDCpQNHuR97az61TlGI0_43rKrVAYGHFjS28Z8f1f09Pack_HeCBW9s-vR6EntbrlKppe00qIvDWKIGBxpJTnYd16Y2TfjUaRa8uPVZm8InXOBz_wxwV0v1PIIsHRx_xbB6zR3LseyXMVV6K62yWC125EKXpUi94TCSMxesFix5e2Ufpy3nNiZ3oIkr7e53SPAf6XWe7QT4plJI2CqDJ8aN34n2f8rZ-r7-HVt1T661Y83cER7lZGsgakejMzuDzjbgA-Q-GPTsMqUcCmZChGZfNUayFY4IJXtrfiICJIJ5OIAnIsGP2BL1BnTGIpSb-pUb_QzHtUH2ccgzU_lw7wTN2Cw=s0-l75-ft"
+          src="/attached_assets/hero_1750446618858.jpeg"
           alt="Luxury interior room with sophisticated design"
           className="w-full h-full object-cover"
-          onError={(e) => {
-            // Fallback to local image if external URL fails
-            const target = e.target as HTMLImageElement;
-            target.src = "/attached_assets/image_1750445988441.png";
-          }}
         />
         {/* Subtle overlay to enhance text contrast while keeping the luxury feel */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40" />
