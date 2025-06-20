@@ -14,9 +14,23 @@ export default function Hero() {
       {/* Luxury room background with dark panels and wood flooring */}
       <div className="absolute inset-0">
         <img 
-          src="/attached_assets/hero_1750446618858.jpeg"
+          src="/attached_assets/dane-deaner-JNpmCYZID68-unsplash.jpeg"
           alt="Luxury interior room with sophisticated design"
           className="w-full h-full object-cover"
+          onError={(e) => {
+            // Fallback images if the first one fails
+            const target = e.target as HTMLImageElement;
+            const fallbackImages = [
+              "/attached_assets/egor-myznik-sSjPuD8QJxs-unsplash.jpeg",
+              "/attached_assets/frank-weichelt-Bvug_bTD9Vg-unsplash.jpeg",
+              "/attached_assets/faan-wunsing-yj6lJnNNfVQ-unsplash.jpeg",
+              "/attached_assets/f-aint-1RQYwlbGUgA-unsplash.jpeg"
+            ];
+            const currentIndex = fallbackImages.indexOf(target.src.split('/').pop() || '');
+            if (currentIndex < fallbackImages.length - 1) {
+              target.src = fallbackImages[currentIndex + 1];
+            }
+          }}
         />
         {/* Subtle overlay to enhance text contrast while keeping the luxury feel */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40" />
