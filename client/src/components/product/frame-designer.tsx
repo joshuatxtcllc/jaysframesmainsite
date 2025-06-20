@@ -1588,7 +1588,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         <h6 className="text-xs font-medium text-neutral-500 mb-2">Top Frame Picks</h6>
                         <div className="space-y-2">
                           {imageAnalysisResult.recommendations.frames.slice(0, 2).map((frameRec: any, index: number) => {
-                            const frame = frameOptions.find(f => f.id === frameRec.id);
+                            const frame = databaseFrames.find((f: any) => f.id === frameRec.id);
                             return frame ? (
                               <div key={index} className="flex items-center space-x-2 bg-white rounded-md p-2 cursor-pointer hover:bg-accent/5 transition-colors"
                                    onClick={() => setSelectedFrame(frame.id)}>
@@ -1618,7 +1618,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                         <h6 className="text-xs font-medium text-neutral-500 mb-2">Top Mat Picks</h6>
                         <div className="space-y-2">
                           {imageAnalysisResult.recommendations.mats.slice(0, 2).map((matRec: any, index: number) => {
-                            const mat = matOptions.find(m => m.id === matRec.id);
+                            const mat = databaseMats.find((m: any) => m.id === matRec.id);
                             return mat ? (
                               <div key={index} className="flex items-center space-x-2 bg-white rounded-md p-2 cursor-pointer hover:bg-accent/5 transition-colors"
                                    onClick={() => setSelectedMat(mat.id)}>

@@ -83,9 +83,26 @@ const DynamicFramePreview = ({
     const displayWidth = 280;
     const displayHeight = displayWidth / aspectRatio;
 
-    // Default frame and mat widths (adjust as needed)
-    const frameWidth = 10;
-    const matWidth = 5;
+    // Calculate frame and mat widths based on selections
+    const frameWidth = selectedFrame?.width || 10;
+    
+    // Convert mat reveal ID to actual inches and then to pixels
+    const getMatWidthInInches = (revealId: number) => {
+      const revealMap: { [key: number]: number } = {
+        1: 0.125, // 1/8"
+        2: 0.25,  // 1/4" 
+        3: 0.375, // 3/8"
+        4: 0.5,   // 1/2"
+        5: 1,     // 1"
+        6: 2,     // 2"
+        7: 3,     // 3"
+        8: 4      // 4"
+      };
+      return revealMap[revealId] || 2; // Default to 2" if not found
+    };
+    
+    // Scale mat width for display (1 inch = 20 pixels for better visibility)
+    const matWidth = getMatWidthInInches(topMatReveal) * 20;
 
 
   // Open the AR preview modal
