@@ -1,5 +1,8 @@
-import { TrendingUp, Users, Award } from "lucide-react";
+import { TrendingUp, Users, Award, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 export default function AboutSection() {
   const [ref, inView] = useInView({
@@ -14,7 +17,7 @@ export default function AboutSection() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
       </div>
 
-      {/* Animated background elements */}
+      {/* Animated background elements with 3D geometric shapes */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{ 
@@ -34,6 +37,25 @@ export default function AboutSection() {
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-cyan-500/15 to-blue-500/15 rounded-full blur-2xl"
         />
+        
+        {/* Floating 3D Geometric Elements */}
+        <div className="absolute top-1/3 left-1/4 geometric-accent cube">
+          <div className="geo-face geo-front"></div>
+          <div className="geo-face geo-back"></div>
+          <div className="geo-face geo-right"></div>
+          <div className="geo-face geo-left"></div>
+          <div className="geo-face geo-top"></div>
+          <div className="geo-face geo-bottom"></div>
+        </div>
+        
+        <div className="absolute bottom-1/3 right-1/4 geometric-accent cube" style={{ animationDelay: '-3s' }}>
+          <div className="geo-face geo-front"></div>
+          <div className="geo-face geo-back"></div>
+          <div className="geo-face geo-right"></div>
+          <div className="geo-face geo-left"></div>
+          <div className="geo-face geo-top"></div>
+          <div className="geo-face geo-bottom"></div>
+        </div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -72,9 +94,9 @@ export default function AboutSection() {
             transition={{ duration: 1, delay: 0.4 }}
             className="space-y-10"
           >
-            <div className="glass-card p-8 hover:shadow-luxury transition-all duration-500">
+            <div className="glass-frame-3d p-8 hover:shadow-luxury transition-all duration-500">
               <div className="flex items-start space-x-6">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-neon-cyan">
+                <div className="flex-shrink-0 glow-icon-button bg-gradient-to-br from-cyan-500 to-blue-600">
                   <Award className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -87,9 +109,9 @@ export default function AboutSection() {
               </div>
             </div>
 
-            <div className="glass-card p-8 hover:shadow-luxury transition-all duration-500">
+            <div className="glass-frame-3d p-8 hover:shadow-luxury transition-all duration-500">
               <div className="flex items-start space-x-6">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-neon-purple">
+                <div className="flex-shrink-0 glow-icon-button bg-gradient-to-br from-purple-500 to-violet-600">
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -102,9 +124,9 @@ export default function AboutSection() {
               </div>
             </div>
 
-            <div className="glass-card p-8 hover:shadow-luxury transition-all duration-500">
+            <div className="glass-frame-3d p-8 hover:shadow-luxury transition-all duration-500">
               <div className="flex items-start space-x-6">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center glow-effect">
+                <div className="flex-shrink-0 glow-icon-button bg-gradient-to-br from-pink-500 to-rose-600">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
                 <div>

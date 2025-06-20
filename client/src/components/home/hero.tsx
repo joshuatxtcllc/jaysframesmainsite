@@ -1,3 +1,8 @@
+import { Link } from "wouter";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import GlassFrameShowcase from "@/components/ui/glass-frame-showcase";
+
 export default function Hero() {
   const [ref, inView] = useInView({
     triggerOnce: true,

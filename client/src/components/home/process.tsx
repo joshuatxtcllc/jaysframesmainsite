@@ -103,12 +103,12 @@ export default function Process() {
                 transition={{ duration: 1, delay: index * 0.2 }}
                 className="relative group"
               >
-                <div className="glass-card p-8 text-center h-full card-hover-lift group-hover:shadow-luxury">
-                  <div className={`w-20 h-20 mx-auto mb-8 rounded-3xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-neon-cyan group-hover:shadow-neon-purple transition-all duration-500`}>
+                <div className="glass-frame-3d p-8 text-center h-full group-hover:shadow-luxury">
+                  <div className={`w-20 h-20 mx-auto mb-8 rounded-3xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-neon-cyan group-hover:shadow-neon-purple transition-all duration-500 glow-icon-button`}>
                     <Icon className="h-10 w-10 text-white" />
                   </div>
 
-                  <div className="text-5xl font-bold gradient-text mb-6">{step.number}</div>
+                  <div className="text-5xl font-bold holographic mb-6">{step.number}</div>
                   <h3 className="text-2xl font-bold gradient-text mb-6">{step.title}</h3>
                   <p className="text-gray-300 leading-relaxed text-lg">{step.description}</p>
                 </div>
