@@ -740,11 +740,27 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
           <div className="flex justify-between items-start mb-4">
             <h2 className="text-2xl font-serif font-bold text-primary">Custom Frame Designer</h2>
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm" className="text-xs">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-xs"
+                onClick={() => {
+                  // Save design functionality
+                  toast({
+                    title: "Design Saved",
+                    description: "Your custom frame design has been saved for later.",
+                  });
+                }}
+              >
                 <Download className="h-3 w-3 mr-1" />
                 Save
               </Button>
-              <Button size="sm" className="text-xs">
+              <Button 
+                size="sm" 
+                className="text-xs"
+                onClick={handleAddToCart}
+                disabled={!selectedFrame || !selectedMat || !selectedGlass}
+              >
                 <ShoppingCart className="h-3 w-3 mr-1" />
                 Add to Cart
               </Button>

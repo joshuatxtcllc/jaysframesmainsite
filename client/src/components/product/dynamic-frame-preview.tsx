@@ -101,8 +101,8 @@ const DynamicFramePreview = ({
       return revealMap[revealId] || 2; // Default to 2" if not found
     };
     
-    // Scale mat width for display (1 inch = 20 pixels for better visibility)
-    const matWidth = getMatWidthInInches(topMatReveal) * 20;
+    // Scale mat width for display (1 inch = 8 pixels for realistic proportions)
+    const matWidth = getMatWidthInInches(topMatReveal) * 8;
 
 
   // Open the AR preview modal
