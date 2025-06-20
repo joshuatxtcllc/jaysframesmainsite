@@ -19,8 +19,8 @@ export default function Hero() {
           className="w-full h-full object-cover"
           loading="eager"
         />
-        {/* Subtle overlay to enhance text contrast while keeping the luxury feel */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40" />
+        {/* Darkened overlay to enhance text contrast while keeping the luxury feel */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/60" />
       </div>
 
       {/* Futuristic ambient lighting */}
