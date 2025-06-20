@@ -38,7 +38,7 @@ const Testimonials = () => {
           alt="Happy customers with custom frames"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/75" />
+
       </div>
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
