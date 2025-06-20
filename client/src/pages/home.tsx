@@ -283,8 +283,8 @@ const Home = () => {
                   />
                 ) : (
                   <img 
-                    src="https://images.unsplash.com/photo-1552610470-98f65b5df6cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                    alt="Shadowbox Example" 
+                    src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
+                    alt="Black Shadowbox Example" 
                     className="object-cover w-full h-full"
                   />
                 )}
