@@ -9,9 +9,9 @@ export default function AboutSection() {
 
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Full-page gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-black">
-        <div className="absolute inset-0 bg-gradient-to-t from-purple-900/10 via-transparent to-cyan-900/10" />
+      {/* Full-page gradient background - Matching user's aesthetic */}
+      <div className="absolute inset-0 aurora-gradient-2">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
       </div>
 
       {/* Animated background elements */}

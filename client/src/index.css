@@ -517,31 +517,74 @@ img[width][height] {
     background-size: cover;
   }
 
-  /* Enhanced gradient backgrounds */
+  /* Background utility classes for the new gradients */
+  .bg-luxury-1 { background: var(--luxury-gradient-1); }
+  .bg-luxury-2 { background: var(--luxury-gradient-2); }
+  .bg-luxury-3 { background: var(--luxury-gradient-3); }
+  .bg-luxury-4 { background: var(--luxury-gradient-4); }
+  .bg-aurora-1 { background: var(--aurora-gradient-1); }
+  .bg-aurora-2 { background: var(--aurora-gradient-2); }
+  .bg-studio { background: var(--studio-gradient); }
+
+  /* Enhanced gradient backgrounds - Matching user's exact designs */
   .luxury-gradient-1 {
     background: linear-gradient(135deg, 
-      #0f0f23 0%, 
-      #1a1a2e 25%, 
-      #16213e 50%, 
-      #0f3460 75%, 
-      #0f0f23 100%);
+      #001122 0%, 
+      #002244 20%, 
+      #003366 40%, 
+      #0066cc 60%, 
+      #4d9fff 80%, 
+      #80bfff 100%);
   }
 
   .luxury-gradient-2 {
     background: linear-gradient(135deg, 
-      #000000 0%, 
-      #1a0033 25%, 
-      #330066 50%, 
-      #0d1b2a 75%, 
-      #000000 100%);
+      #0a1a1a 0%, 
+      #1a2f2f 25%, 
+      #2d4747 50%, 
+      #006666 75%, 
+      #009999 100%);
   }
 
   .luxury-gradient-3 {
     background: linear-gradient(135deg, 
-      #0a0a0a 0%, 
-      #1a1a2e 30%, 
-      #16213e 60%, 
-      #0a0a0a 100%);
+      #0d1f2d 0%, 
+      #1a3d5c 25%, 
+      #2d5a8a 50%, 
+      #4077b8 75%, 
+      #5294e6 100%);
+  }
+
+  .luxury-gradient-4 {
+    background: linear-gradient(180deg, 
+      #001a1a 0%, 
+      #003333 30%, 
+      #004d4d 60%, 
+      #006666 100%);
+  }
+
+  /* Aurora-like gradient backgrounds */
+  .aurora-gradient-1 {
+    background: 
+      radial-gradient(ellipse 80% 50% at 20% 40%, rgba(0, 100, 200, 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(0, 150, 255, 0.3) 0%, transparent 50%),
+      linear-gradient(135deg, #001122 0%, #002244 50%, #003366 100%);
+  }
+
+  .aurora-gradient-2 {
+    background: 
+      radial-gradient(ellipse 70% 60% at 30% 20%, rgba(0, 200, 200, 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 40% at 70% 80%, rgba(0, 100, 150, 0.4) 0%, transparent 60%),
+      linear-gradient(135deg, #0a1a1a 0%, #1a2f2f 50%, #2d4747 100%);
+  }
+
+  .studio-gradient {
+    background: linear-gradient(180deg, 
+      #0d2318 0%, 
+      #1a3d2d 25%, 
+      #2d5a47 50%, 
+      #4d7a6b 75%, 
+      #6d9a8f 100%);
   }
 
   /* Text glow effects */
@@ -572,20 +615,34 @@ img[width][height] {
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 
-  /* Gradient mesh backgrounds */
+  /* Gradient mesh backgrounds - Updated to match user's aesthetic */
   .gradient-mesh-1 {
     background: 
-      radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-      linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      radial-gradient(ellipse 60% 80% at 20% 80%, rgba(0, 150, 255, 0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(0, 200, 200, 0.15) 0%, transparent 70%),
+      radial-gradient(circle at 40% 40%, rgba(77, 154, 255, 0.1) 0%, transparent 50%),
+      linear-gradient(135deg, #001122 0%, #002244 50%, #003366 100%);
   }
 
   .gradient-mesh-2 {
     background: 
-      radial-gradient(circle at 60% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 60%),
-      radial-gradient(circle at 20% 70%, rgba(6, 182, 212, 0.15) 0%, transparent 60%),
-      radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 60%),
-      linear-gradient(135deg, #000000 0%, #0f0f23 50%, #000000 100%);
+      radial-gradient(ellipse 70% 50% at 60% 20%, rgba(0, 100, 200, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 70% at 20% 70%, rgba(0, 150, 150, 0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(45, 90, 138, 0.15) 0%, transparent 60%),
+      linear-gradient(135deg, #0a1a1a 0%, #1a2f2f 50%, #2d4747 100%);
+  }
+
+  .gradient-mesh-3 {
+    background: 
+      radial-gradient(ellipse 80% 60% at 30% 30%, rgba(82, 148, 230, 0.2) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 70% 70%, rgba(0, 102, 204, 0.15) 0%, transparent 60%),
+      linear-gradient(180deg, #0d1f2d 0%, #2d5a8a 100%);
+  }
+
+  .gradient-mesh-4 {
+    background: 
+      radial-gradient(ellipse 100% 50% at 50% 0%, rgba(0, 102, 102, 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0, 153, 153, 0.2) 0%, transparent 70%),
+      linear-gradient(180deg, #001a1a 0%, #006666 100%);
   }
 }

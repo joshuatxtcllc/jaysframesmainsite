@@ -64,7 +64,7 @@ export default function Process() {
   ];
 
   return (
-    <section className="full-section gradient-mesh-1">
+    <section className="full-section gradient-mesh-3">
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
           ref={ref}
