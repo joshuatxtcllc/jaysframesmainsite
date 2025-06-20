@@ -98,15 +98,25 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
             <Link 
               to="/custom-framing"
-              className="group relative px-10 py-5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-lg rounded-2xl transition-all duration-500 hover:scale-105 shadow-neon-cyan hover:shadow-neon-purple transform hover:-translate-y-2"
+              className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-lg rounded-2xl transition-all duration-500 hover:scale-105 shadow-neon-cyan hover:shadow-neon-purple transform hover:-translate-y-2"
             >
               <span className="relative z-10">Start Your Design</span>
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </Link>
+
+            <a 
+              href="https://calendly.com/frames-jaysframes/30min?month=2025-06"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 text-white font-bold text-lg rounded-2xl transition-all duration-500 hover:scale-105 shadow-neon-cyan hover:shadow-neon-purple transform hover:-translate-y-2"
+            >
+              <span className="relative z-10">Schedule Appointment</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </a>
 
             <Link 
               to="/about"
