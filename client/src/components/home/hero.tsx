@@ -64,17 +64,17 @@ export default function Hero() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="max-w-6xl mx-auto"
         >
-          {/* Main heading with enhanced contrast */}
+          {/* Main heading with enhanced contrast and lighter colors */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none">
             <span className="block font-heading relative">
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent blur-sm opacity-50"></span>
-              <span className="relative bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">
+              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-sm opacity-70"></span>
+              <span className="relative bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent drop-shadow-2xl text-shadow-lg">
                 The Future of
               </span>
             </span>
             <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 font-heading relative">
-              <span className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent blur-sm opacity-60"></span>
-              <span className="relative bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent drop-shadow-2xl glow-effect-purple">
+              <span className="absolute inset-0 bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent blur-sm opacity-80"></span>
+              <span className="relative bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent drop-shadow-2xl glow-effect-purple">
                 Custom Framing
               </span>
             </span>
@@ -100,13 +100,15 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
-            <Link 
-              to="/custom-framing"
+            <a 
+              href="https://calendly.com/frames-jaysframes/30min?month=2025-06"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group relative px-10 py-5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-lg rounded-2xl transition-all duration-500 hover:scale-105 shadow-neon-cyan hover:shadow-neon-purple transform hover:-translate-y-2"
             >
-              <span className="relative z-10">Start Your Design</span>
+              <span className="relative z-10">Schedule Appointment</span>
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </Link>
+            </a>
 
             <Link 
               to="/about"
