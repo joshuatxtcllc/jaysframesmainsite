@@ -37,12 +37,14 @@ import './lib/seo-monitor';
 import ErrorBoundary from "@/components/ui/error-boundary";
 import PerformanceOptimizer from "@/components/seo/performance-optimizer";
 import FAQ from "@/pages/faq";
+import Shadowboxes from "@/pages/shadowboxes";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/products" component={Products} />
+      <Route path="/shadowboxes" component={Shadowboxes} />
       <Route path="/custom-framing" component={CustomFraming} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />

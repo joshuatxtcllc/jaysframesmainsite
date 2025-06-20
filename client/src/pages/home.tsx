@@ -267,7 +267,7 @@ const Home = () => {
                   Tailored framing solutions with a 62% faster turnaround time using our revolutionary hybrid production model and AI design assistant.
                 </p>
                 <Link href="/custom-framing">
-                  <Button variant="outline" className="w-full">View Custom Options</Button>
+                  <Button variant="outline" className="w-full">Start Designing</Button>
                 </Link>
               </CardContent>
             </Card>
@@ -294,8 +294,8 @@ const Home = () => {
                 <p className="text-neutral-500 text-sm mb-4">
                   Preserve and display your memorabilia, medals, sports jerseys, or 3D objects with our custom-designed shadowboxes.
                 </p>
-                <Link href="/products/category/shadowbox">
-                  <Button variant="outline" className="w-full">Explore Shadowboxes</Button>
+                <Link href="/shadowboxes">
+                  <Button variant="outline" className="w-full">Shop Shadowboxes</Button>
                 </Link>
               </CardContent>
             </Card>
