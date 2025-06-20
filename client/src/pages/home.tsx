@@ -32,115 +32,12 @@ const Home = () => {
 
   return (
     <>
-      <SeoHead
-        title="Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio"
-        description="Award-winning custom framing with our revolutionary hybrid production model that saves $140,000 and 6,363 labor hours annually with 62% faster turnaround times. Experience 4x production capacity with our AI design assistant."
-        keywords="custom framing Houston, 62% faster framing, Jay's hybrid model, AI frame design, ready-made frames, one day framing, 24/7 customer service, museum-quality framing, Houston Heights frame shop, reduced turnaround time"
-        canonicalUrl="/"
-        ogTitle="Jay's Frames | 62% Faster Custom Framing | Houston's Premier Frame Studio"
-        ogDescription="Our revolutionary hybrid model with wholesale partnerships and AI technology saves $140,000 and 6,363 labor hours annually, providing 62% faster turnaround times and 4x production capacity."
-        ogImage="/images/og-image.jpg"
-        ogType="website"
-        twitterCard="summary_large_image"
-      >
-        {/* Schema.org structured data */}
-        <script type="application/ld+json">{`
-          {
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            "name": "Jay's Frames",
-            "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times, saves $140,000 annually, and includes AI-powered design assistants that learn Jay's precise framing style.",
-            "telephone": "+18328933794",
-            "email": "Frames@Jaysframes.com",
-            "url": "https://jaysframes.com",
-            "logo": "https://jaysframes.com/images/logo.png",
-            "image": "https://jaysframes.com/images/storefront.jpg",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "218 W 27th St.",
-              "addressLocality": "Houston",
-              "addressRegion": "TX",
-              "postalCode": "77008",
-              "addressCountry": "US"
-            },
-            "geo": {
-              "@type": "GeoCoordinates",
-              "latitude": "29.7904",
-              "longitude": "-95.3988"
-            },
-            "priceRange": "$$",
-            "areaServed": {
-              "@type": "GeoCircle",
-              "geoMidpoint": {
-                "@type": "GeoCoordinates",
-                "latitude": "29.7604",
-                "longitude": "-95.3698"
-              },
-              "geoRadius": "30000"
-            },
-            "openingHoursSpecification": [
-              {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                "opens": "10:00",
-                "closes": "18:00"
-              }
-            ],
-            "sameAs": [
-              "https://facebook.com/jaysframes",
-              "https://instagram.com/jaysframes",
-              "https://twitter.com/jaysframes"
-            ],
-            "hasOfferCatalog": {
-              "@type": "OfferCatalog",
-              "name": "Framing Services",
-              "itemListElement": [
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Custom Framing",
-                    "description": "Expert custom framing with 62% faster turnaround times"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Ready Made Framing",
-                    "description": "One-day turnaround framing options at a lower price point"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Museum-Quality Art Preservation",
-                    "description": "Long-term protection for your artwork using acid-free materials and UV-protective glass"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Art Installation Services",
-                    "description": "Professional installation ensuring correct and safe display to enhance presentation"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "AI-Powered Frame Design",
-                    "description": "Intelligent frame recommendations using our AI assistant that mimics Jay's design style"
-                  }
-                }
-              ]
-            },
-            "award": "Voted 'Best Frame Shop in Houston' by The Houston A-List"
-          }
-        `}</script>
-      </SeoHead>
+      <SeoHead 
+        title="Houston Custom Framing | Jay's Frames Studio"
+        description="Houston's premier custom framing studio. Museum-quality picture framing, art preservation & design consultation in Houston Heights. 25+ years experience."
+        keywords="custom framing Houston, picture framing Houston Heights, museum quality framing, art preservation Houston, frame shop near me, professional framing services"
+        canonical="https://jaysframes.com/"
+      />
 
       <Hero />
       <LocationSection />
