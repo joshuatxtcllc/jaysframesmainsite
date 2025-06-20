@@ -1,11 +1,19 @@
-
 import { Shield, Layers, Zap, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ArchivalScienceSection = () => {
   return (
-    <section className="bg-slate-900 text-white py-20">
-      <div className="container mx-auto px-6">
+    <section className="relative text-white py-20 overflow-hidden">
+      {/* Luxury interior background */}
+      <div className="absolute inset-0">
+        <img 
+          src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+          alt="Luxury interior background"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/75" />
+      </div>
+      <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">

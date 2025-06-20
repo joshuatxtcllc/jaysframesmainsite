@@ -18,8 +18,17 @@ const LocationSection = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-black">
-      <div className="container mx-auto max-w-6xl">
+    <section className="relative text-white py-20 overflow-hidden">
+      {/* Luxury interior background */}
+      <div className="absolute inset-0">
+        <img 
+          src="https://images.unsplash.com/photo-1571847140471-1d7766e825ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+          alt="Houston custom framing location"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/80" />
+      </div>
+      <div className="container mx-auto max-w-6xl relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Visit Our Houston Heights Location

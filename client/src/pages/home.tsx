@@ -49,14 +49,23 @@ const Home = () => {
       <Testimonials />
 
       {/* AI Frame Designer Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="relative py-16 overflow-hidden">
+        {/* Luxury interior background */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Luxury interior background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/75" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <div className="inline-block p-3 rounded-full bg-secondary/20 mb-4">
               <Wand2 className="h-8 w-8 text-secondary" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">AI-Powered Frame Designer</h2>
-            <p className="text-neutral-500 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">AI-Powered Frame Designer</h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Try our revolutionary Houston-based design assistant that mimics Jay's 15+ years of framing expertise to help you create the perfect custom frame for your artwork in minutes, with museum-quality recommendations and eco-friendly options.
             </p>
           </div>
@@ -117,14 +126,23 @@ const Home = () => {
       </section>
 
       {/* Ask Frame Assistant Section */}
-      <section className="py-16 bg-neutral-100">
-        <div className="container mx-auto px-4">
+      <section className="relative py-16 overflow-hidden">
+        {/* Luxury interior background */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Luxury interior background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/75" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <div className="inline-block p-3 rounded-full bg-secondary/20 mb-4">
               <MessageSquare className="h-8 w-8 text-secondary" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Ask Our Frame Design Assistant</h2>
-            <p className="text-neutral-500 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Ask Our Frame Design Assistant</h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Get expert Houston framing advice from our AI assistant, trained to perfectly mimic Jay's 15+ years of expertise across thousands of professional framing projects, providing instant recommendations for eco-friendly, museum-quality framing.
             </p>
           </div>
@@ -201,14 +219,23 @@ const Home = () => {
       </section>
 
       {/* Product Showcase */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="relative py-16 overflow-hidden">
+        {/* Luxury interior background */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Luxury interior background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/75" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <div className="inline-block p-3 rounded-full bg-secondary/20 mb-4">
               <Lightbulb className="h-8 w-8 text-secondary" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Our Framing Solutions</h2>
-            <p className="text-neutral-500 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Our Framing Solutions</h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Discover our range of custom framing options, from readymade frames to museum-quality conservation framing and eco-friendly solutions.
             </p>
           </div>
@@ -305,8 +332,17 @@ const Home = () => {
       </section>
 
       {/* Art Installation Section */}
-      <section className="py-16 bg-neutral-50">
-        <div className="container mx-auto px-4">
+      <section className="relative py-16 overflow-hidden">
+        {/* Luxury interior background */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Luxury interior background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/75" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
@@ -314,8 +350,8 @@ const Home = () => {
                   <div className="inline-block p-3 rounded-full bg-secondary/20 mb-4">
                     <ShieldCheck className="h-8 w-8 text-secondary" />
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">Professional Art Installation</h2>
-                  <p className="text-neutral-500">
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Professional Art Installation</h2>
+                  <p className="text-gray-300">
                     Our Houston-based installation team ensures your art is displayed perfectly in your home or office, 
                     with expert precision and care to enhance your space's aesthetic.
                   </p>

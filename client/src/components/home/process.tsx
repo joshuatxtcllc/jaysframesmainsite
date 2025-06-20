@@ -64,10 +64,15 @@ export default function Process() {
   ];
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Gallery showroom with forest accent wall and warm wood flooring */}
-      <div className="absolute inset-0 showroom-backdrop-forest">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+    <section className="relative py-20 bg-black text-white overflow-hidden">
+      {/* Workshop/process background */}
+      <div className="absolute inset-0">
+        <img 
+          src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+          alt="Custom framing workshop process"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/85" />
       </div>
       <div className="container mx-auto px-6 relative z-10">
         <motion.div

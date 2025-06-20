@@ -30,15 +30,24 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="py-16 bg-neutral-100">
-      <div className="container mx-auto px-4">
+    <section className="relative py-20 bg-black text-white overflow-hidden">
+      {/* Customer testimonial background */}
+      <div className="absolute inset-0">
+        <img 
+          src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+          alt="Happy customers with custom frames"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/75" />
+      </div>
+      <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">What Our Customers Say</h2>
           <p className="text-neutral-500 max-w-2xl mx-auto">
             Don't just take our word for it - hear from customers who have experienced our AI-powered framing service.
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {testimonials.map((testimonial) => (
             <Card key={testimonial.id} className="bg-white shadow-md">

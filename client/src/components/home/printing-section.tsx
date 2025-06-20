@@ -1,16 +1,24 @@
-
 import { CheckCircle, Palette, Shield, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const PrintingSection = () => {
   return (
-    <section className="bg-black text-white py-20">
-      <div className="container mx-auto px-6">
+    <section className="relative py-20 overflow-hidden">
+      {/* Luxury interior background */}
+      <div className="absolute inset-0">
+        <img 
+          src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+          alt="Luxury interior background"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/75" />
+      </div>
+      <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-white">
                 Fine Art & <span className="text-cyan-400">Limited Edition Printing</span>
               </h2>
               <p className="text-xl text-gray-300 leading-relaxed">
@@ -23,7 +31,7 @@ const PrintingSection = () => {
               <p className="text-gray-300 mb-6">
                 Our advanced printing process delivers exceptional color accuracy and longevity, using archival inks and papers that meet museum exhibition standards.
               </p>
-              
+
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-cyan-400" />
