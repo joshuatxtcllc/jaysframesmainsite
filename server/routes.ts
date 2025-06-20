@@ -1481,7 +1481,8 @@ app.post("/api/validate-discount", async (req, res) => {
         console.error("Frame assistant AI error:", aiError);
 
         // Fallback response for database errors
-        if (aiError instanceof Error && aiError.message && aiError.message.includes("column") && aiError.message.includes("does not exist")) {
+        const errorMessage = aiError instanceof Error ? aiError.message : String(aiError);
+        if (errorMessage.includes("column") && errorMessage.includes("does not exist")) {
           return res.json({ 
             response: "I'm currently experiencing database issues and can't access all my frame information. " +
                       "I can still answer general framing questions. Could you please try again with a simple framing question?" 
