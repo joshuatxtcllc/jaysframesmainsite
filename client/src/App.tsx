@@ -50,6 +50,7 @@ function Router() {
       <Route path="/admin/dashboard" component={lazy(() => import('./pages/admin/dashboard'))} />
       <Route path="/admin/catalog-management" component={lazy(() => import('./pages/admin/catalog-management'))} />
       <Route path="/admin/blog-manager" component={BlogManager} />
+      <Route path="/admin/external-api-config" component={lazy(() => import('./pages/admin/external-api-config'))} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
       <Route path="/voice-frame-assistant" component={VoiceFrameAssistant} />
       <Route path="/frame-fitting-assistant" component={FrameFittingAssistant} />

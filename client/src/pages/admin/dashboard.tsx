@@ -283,7 +283,20 @@ const AdminDashboard = () => {
   return (
     <div className="bg-neutral-100 min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-primary mb-8">Admin Dashboard</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
+          <div className="flex gap-2">
+            <Button variant="outline" asChild>
+              <a href="/admin/catalog-management">Catalog Management</a>
+            </Button>
+            <Button variant="outline" asChild>
+              <a href="/admin/blog-manager">Blog Manager</a>
+            </Button>
+            <Button variant="outline" asChild>
+              <a href="/admin/external-api-config">API Configuration</a>
+            </Button>
+          </div>
+        </div>
 
         {/* Automation Control Panel */}
         <Card className="mb-8">
