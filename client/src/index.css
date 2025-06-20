@@ -151,12 +151,8 @@ img[width][height] {
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight;
-    text-shadow: var(--text-shadow-luxury);
-    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 50%, #ffffff 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    @apply font-serif tracking-tight text-white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
@@ -169,18 +165,16 @@ img[width][height] {
 
 @layer components {
   .glass-card {
-    @apply backdrop-blur-xl border border-white/20 rounded-2xl;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-    box-shadow: var(--card-shadow-3d);
-    transform: translateZ(0);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply backdrop-blur-lg border border-white/10 rounded-xl;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
   }
 
   .glass-card:hover {
-    transform: translateY(-8px) rotateX(2deg);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 
-                0 15px 30px rgba(139, 92, 246, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.08);
   }
   
   .gradient-text {

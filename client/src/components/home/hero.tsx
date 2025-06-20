@@ -19,8 +19,8 @@ export default function Hero() {
           className="w-full h-full object-cover"
           loading="eager"
         />
-        {/* Darkened overlay to enhance text contrast while keeping the luxury feel */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/60" />
+        {/* Stronger dark overlay for cohesive design */}
+        <div className="absolute inset-0 bg-black/75" />
       </div>
 
       {/* Futuristic ambient lighting */}
@@ -64,36 +64,13 @@ export default function Hero() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="max-w-6xl mx-auto"
         >
-          {/* Main heading with enhanced metallic sheen and high contrast */}
+          {/* Main heading with clean, minimal styling */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none">
-            <span className="block font-heading relative">
-              {/* Subtle shadow layers for depth */}
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent blur-lg opacity-30"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-md opacity-50"></span>
-              {/* Main text with strong metallic fill and minimal glow */}
-              <span className="relative bg-gradient-to-r from-gray-200 via-white via-gray-200 via-white via-gray-200 to-white bg-clip-text text-transparent" 
-                    style={{
-                      filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,1))',
-                      textShadow: '0 0 8px rgba(255,255,255,0.8), 0 4px 8px rgba(0,0,0,1)',
-                      backgroundSize: '400% 100%',
-                      backgroundImage: 'linear-gradient(90deg, #e5e7eb 0%, #ffffff 15%, #f3f4f6 30%, #ffffff 45%, #e5e7eb 60%, #ffffff 75%, #f3f4f6 90%, #ffffff 100%)'
-                    }}>
-                The Future of
-              </span>
+            <span className="block font-heading text-white drop-shadow-lg">
+              The Future of
             </span>
-            <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 font-heading relative">
-              {/* Neon glow layers */}
-              <span className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent blur-xl opacity-30"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent blur-lg opacity-50"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-cyan-200 via-blue-300 to-purple-400 bg-clip-text text-transparent blur-md opacity-70"></span>
-              {/* Main neon text with enhanced glow */}
-              <span className="relative bg-gradient-to-r from-cyan-100 via-blue-200 to-purple-300 bg-clip-text text-transparent"
-                    style={{
-                      filter: 'drop-shadow(0 0 25px rgba(6,182,212,0.9)) drop-shadow(0 0 50px rgba(139,92,246,0.6)) drop-shadow(0 4px 12px rgba(0,0,0,0.8)) drop-shadow(0 0 75px rgba(6,182,212,0.3))',
-                      textShadow: '0 0 20px rgba(6,182,212,1), 0 0 40px rgba(139,92,246,0.8), 0 0 60px rgba(6,182,212,0.6), 0 4px 12px rgba(0,0,0,0.9)'
-                    }}>
-                Custom Framing
-              </span>
+            <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 font-heading text-cyan-400 drop-shadow-lg">
+              Custom Framing
             </span>
           </h1>
 
@@ -110,7 +87,7 @@ export default function Hero() {
             </span>
           </motion.p>
 
-          {/* CTA Buttons with 3D effects */}
+          {/* CTA Buttons with clean, minimal styling */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -119,25 +96,23 @@ export default function Hero() {
           >
             <Link 
               to="/custom-framing"
-              className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-lg rounded-2xl transition-all duration-500 hover:scale-105 shadow-neon-cyan hover:shadow-neon-purple transform hover:-translate-y-2"
+              className="px-8 py-4 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-lg rounded-lg transition-all duration-300 hover:scale-105"
             >
-              <span className="relative z-10">Start Your Design</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              Start Your Design
             </Link>
 
             <a 
               href="https://calendly.com/frames-jaysframes/30min?month=2025-06"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 text-white font-bold text-lg rounded-2xl transition-all duration-500 hover:scale-105 shadow-neon-cyan hover:shadow-neon-purple transform hover:-translate-y-2"
+              className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-lg rounded-lg transition-all duration-300 hover:scale-105"
             >
-              <span className="relative z-10">Schedule Appointment</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              Schedule Appointment
             </a>
 
             <Link 
               to="/about"
-              className="minimal-button-3d group text-lg font-semibold"
+              className="px-8 py-4 border border-white/20 text-white hover:bg-white/10 font-semibold text-lg rounded-lg transition-all duration-300"
             >
               Discover Our Story
             </Link>
