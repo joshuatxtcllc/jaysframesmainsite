@@ -166,7 +166,7 @@ export default function AboutSection() {
               className="absolute -top-8 -right-8 glass-card p-8 shadow-elegant"
             >
               <div className="text-center">
-                <div className="text-4xl font-bold gradient-text mb-2">10,000+</div>
+                <div className="text-4xl font-bold gradient-text mb-2">50,000+</div>
                 <div className="text-gray-300 font-medium">Frames Created</div>
               </div>
             </motion.div>
