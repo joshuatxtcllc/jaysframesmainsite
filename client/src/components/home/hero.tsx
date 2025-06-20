@@ -11,45 +11,16 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Futuristic dark luxury panel background */}
+      {/* Luxury room background with dark panels and wood flooring */}
       <div className="absolute inset-0">
         <div 
           className="w-full h-full bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('data:image/svg+xml,${encodeURIComponent(`
-              <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="panelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:%23141b2d;stop-opacity:1" />
-                    <stop offset="50%" style="stop-color:%231a2332;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:%23243447;stop-opacity:1" />
-                  </linearGradient>
-                  <linearGradient id="floorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:%232a2a2a;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:%231a1a1a;stop-opacity:1" />
-                  </linearGradient>
-                </defs>
-                <!-- Main wall panels -->
-                <rect x="0" y="0" width="250" height="400" fill="url(%23panelGrad)" stroke="%23334155" stroke-width="2"/>
-                <rect x="260" y="0" width="280" height="400" fill="url(%23panelGrad)" stroke="%23334155" stroke-width="2"/>
-                <rect x="550" y="0" width="250" height="400" fill="url(%23panelGrad)" stroke="%23334155" stroke-width="2"/>
-                <!-- Floor -->
-                <rect x="0" y="400" width="800" height="200" fill="url(%23floorGrad)"/>
-                <!-- Floor planks -->
-                <line x1="0" y1="450" x2="800" y2="450" stroke="%23404040" stroke-width="1"/>
-                <line x1="0" y1="500" x2="800" y2="500" stroke="%23404040" stroke-width="1"/>
-                <line x1="0" y1="550" x2="800" y2="550" stroke="%23404040" stroke-width="1"/>
-                <!-- Panel details -->
-                <rect x="20" y="50" width="210" height="120" fill="none" stroke="%23475569" stroke-width="1"/>
-                <rect x="20" y="200" width="210" height="120" fill="none" stroke="%23475569" stroke-width="1"/>
-                <rect x="280" y="50" width="240" height="120" fill="none" stroke="%23475569" stroke-width="1"/>
-                <rect x="280" y="200" width="240" height="120" fill="none" stroke="%23475569" stroke-width="1"/>
-                <rect x="570" y="50" width="210" height="120" fill="none" stroke="%23475569" stroke-width="1"/>
-                <rect x="570" y="200" width="210" height="120" fill="none" stroke="%23475569" stroke-width="1"/>
-              </svg>
-            `)}`
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAoAFADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6pooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9k=')`
           }}
         />
+        {/* Subtle overlay to enhance text contrast while keeping the luxury feel */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-black/30" />
       </div>
 
       {/* Futuristic ambient lighting */}
