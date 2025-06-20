@@ -35,6 +35,8 @@ import CatalogManagement from './pages/admin/catalog-management';
 import BlogManager from './pages/admin/blog-manager';
 import './lib/seo-monitor';
 import ErrorBoundary from "@/components/ui/error-boundary";
+import PerformanceOptimizer from "@/components/seo/performance-optimizer";
+import FAQ from "@/pages/faq";
 
 function Router() {
   return (
@@ -64,6 +66,7 @@ function Router() {
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/virtual-room-visualizer" component={VirtualRoomVisualizer} /> {/* Added route */}
+      <Route path="/faq" component={FAQ} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
@@ -87,20 +90,21 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <CartProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <ErrorBoundary>
-                <Router />
-              </ErrorBoundary>
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </CartProvider>
-      </AuthProvider>
+      <ErrorBoundary>
+        <PerformanceOptimizer>
+          <AuthProvider>
+            <CartProvider>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-grow">
+                  <Router />
+                </main>
+                <Footer />
+              </div>
+            </CartProvider>
+          </AuthProvider>
+        </PerformanceOptimizer>
+      </ErrorBoundary>
     </QueryClientProvider>
   );
 }

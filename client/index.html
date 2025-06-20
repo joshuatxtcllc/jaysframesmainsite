@@ -1,33 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Houston's premier archival custom framing studio. Museum-grade conservation materials, UV glass, and expert designs for collectors." />
-  <meta name="keywords" content="custom framing Houston, Houston art frame shop, frame shop near me Houston, Houston Heights picture framing, local frame shop Houston, canvas stretching Houston, museum grade framing, archival framing, UV conservation glass, acid free materials" />
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://jaysframes.com/" />
-  <meta property="og:title" content="Custom Framing Houston | Jay's Frames" />
-  <meta property="og:description" content="Houston's premier archival custom framing studio. Museum-grade conservation materials and expert designs." />
-  <meta property="og:image" content="/images/jaysframes-storefront.jpg" />
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://jaysframes.com/" />
-  <meta property="twitter:title" content="Custom Framing Houston | Jay's Frames" />
-  <meta property="twitter:description" content="Houston's premier archival custom framing studio. Museum-grade conservation materials and expert designs." />
-  <meta property="twitter:image" content="/images/jaysframes-storefront.jpg" />
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/images/favicon.png" />
-  
-  <!-- Preload critical resources -->
-  
-  <title>Custom Framing Houston | Jay's Frames</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Performance and SEO Critical Meta Tags -->
+    <title>Jay's Frames - Custom Framing Houston | Professional Picture Framing Services</title>
+    <meta name="description" content="Houston's premier custom framing studio. Professional picture framing, shadow boxes, and art preservation. Located in Houston Heights. Fast turnaround, expert craftsmanship." />
+
+    <!-- Mobile Optimization -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="format-detection" content="telephone=yes" />
+
+    <!-- Performance Hints -->
+    <meta http-equiv="x-dns-prefetch-control" content="on" />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//images.unsplash.com" />
+
+    <!-- Critical CSS Inlining Hint -->
+    <link rel="preload" href="/src/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+
+    <!-- Local Business Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Jay's Frames",
+      "image": "https://jaysframes.repl.co/images/logo.png",
+      "description": "Custom framing studio in Houston Heights specializing in picture framing, shadow boxes, and art preservation",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "218 W 27th St",
+        "addressLocality": "Houston",
+        "addressRegion": "TX",
+        "postalCode": "77008",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "29.8027",
+        "longitude": "-95.4084"
+      },
+      "telephone": "(832) 893-3794",
+      "email": "Frames@Jaysframes.com",
+      "url": "https://jaysframes.repl.co",
+      "openingHours": [
+        "Mo-Fr 10:00-18:00",
+        "Sa 11:00-17:00"
+      ],
+      "priceRange": "$$",
+      "servedBy": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": "29.8027",
+          "longitude": "-95.4084"
+        },
+        "geoRadius": "50000"
+      }
+    }
+    </script>
+  </head>
+  <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>

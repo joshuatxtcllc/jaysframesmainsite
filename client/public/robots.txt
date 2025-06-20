@@ -1,15 +1,17 @@
 
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /checkout/
-Disallow: /api/
-Disallow: /api-docs/
 
-# Allow product pages to be indexed
+# Sitemap location
+Sitemap: https://jaysframes.repl.co/sitemap.xml
+
+# Allow all search engines to crawl the site
+# Prioritize important pages for crawling
 Allow: /products
 Allow: /custom-framing
-Allow: /order-status
+Allow: /about
+Allow: /contact
+Allow: /blog
 
-# Specify the sitemap location
-Sitemap: https://jaysframes.com/sitemap.xml
+# Optional: Crawl-delay for politeness (not blocking)
+Crawl-delay: 1

@@ -363,6 +363,18 @@ const Header = () => {
                 </Button>
               )}
 
+              <Button asChild className="hidden md:inline-flex">
+                <a href="/contact">Contact</a>
+              </Button>
+
+              {/* Mobile-first click-to-call */}
+              <Button asChild className="md:hidden bg-primary hover:bg-primary/90">
+                <a href="tel:+18328933794" className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  Call Now
+                </a>
+              </Button>
+
               <Link href="/custom-framing" className="hidden md:block">
                 <Button className="bg-secondary hover:bg-secondary/80 text-white text-sm">
                   Start Framing
