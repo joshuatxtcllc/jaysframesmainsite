@@ -40,6 +40,14 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
 
+// Utility function for price formatting
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(price / 100);
+};
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize services
   await initializeEmailTransporter();
@@ -1259,8 +1267,12 @@ app.post("/api/validate-discount", async (req, res) => {
 
     // Check minimum order amount
     if (discount.minOrderAmount && orderTotal < discount.minOrderAmount) {
+      const formattedMinAmount = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(discount.minOrderAmount / 100);
       return res.status(400).json({ 
-        error: `Minimum order amount of ${formatPrice(discount.minOrderAmount)} required` 
+        error: `Minimum order amount of ${formattedMinAmount} required` 
       });
     }
 
@@ -1469,7 +1481,7 @@ app.post("/api/validate-discount", async (req, res) => {
         console.error("Frame assistant AI error:", aiError);
 
         // Fallback response for database errors
-        if (aiError.message && aiError.message.includes("column") && aiError.message.includes("does not exist")) {
+        if (aiError instanceof Error && aiError.message && aiError.message.includes("column") && aiError.message.includes("does not exist")) {
           return res.json({ 
             response: "I'm currently experiencing database issues and can't access all my frame information. " +
                       "I can still answer general framing questions. Could you please try again with a simple framing question?" 

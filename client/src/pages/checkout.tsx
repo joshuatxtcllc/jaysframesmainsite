@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { CreditCard, Lock, ArrowLeft, Loader2 } from "lucide-react";
 import { SeoHead } from "@/components/seo";
+import { CartItem } from "@/types";
 
 interface CheckoutFormData {
   email: string;
@@ -69,7 +70,7 @@ export default function Checkout() {
       const response = await apiRequest("POST", "/api/create-payment-intent", {
         amount: total,
         metadata: {
-          items: JSON.stringify(items.map(item => ({
+          items: JSON.stringify(items.map((item: CartItem) => ({
             id: item.id,
             name: item.name,
             quantity: item.quantity,
@@ -115,7 +116,7 @@ export default function Checkout() {
       
       // Create order
       const orderResponse = await apiRequest("POST", "/api/orders", {
-        items: items.map(item => ({
+        items: items.map((item: CartItem) => ({
           productId: item.productId,
           quantity: item.quantity,
           price: item.price,
@@ -337,7 +338,7 @@ export default function Checkout() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {items.map((item) => (
+                  {items.map((item: CartItem) => (
                     <div key={item.id} className="flex justify-between items-start">
                       <div className="flex-1">
                         <h4 className="font-medium text-sm">{item.name}</h4>
