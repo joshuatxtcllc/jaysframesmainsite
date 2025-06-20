@@ -607,7 +607,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Push order to POS system for records and pricing
       try {
         const { externalAPIService } = await import('./services/external-api');
-        
+
         const posOrderData = {
           customerName: order.customerName,
           customerEmail: order.customerEmail,
@@ -626,7 +626,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
 
         const posResult = await externalAPIService.pushOrderToPOS(posOrderData);
-        
+
         if (posResult.success && posResult.posOrderId) {
           // Update order with POS reference
           await storage.updateOrder(order.id, {
@@ -664,7 +664,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { externalAPIService } = await import('./services/external-api');
       const kanbanStatus = await externalAPIService.getOrderStatusFromKanban(id.toString());
-      
+
       if (kanbanStatus) {
         // Merge Kanban status with local order data
         const enhancedOrder = {
@@ -955,8 +955,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (isNaN(intervalMinutes) || intervalMinutes < 5 || intervalMinutes > 120) {
-        return res.status(400).json({ message: "intervalMinutes must be between 5 and 120" });
-      }
+        return res.status(400).json({ message: "intervalMinutes must be between 5 and 120" });        }
 
       if (isNaN(batchSize) || batchSize < 1 || batchSize > 100) {
         return res.status(400).json({ message: "batchSize must be between 1 and 100" });
@@ -1032,11 +1031,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/appointments', async (req: Request, res: Response) => {
     try {
       const { name, email, phone, service, date, time, message, location = 'store' } = req.body;
-      
+
       // Parse date and time into proper datetime
       const appointmentDate = new Date(`${date} ${time}`);
       const endTime = new Date(appointmentDate.getTime() + 60 * 60 * 1000); // 1 hour duration
-      
+
       // Create appointment data
       const appointmentData = {
         title: `${service} - ${name}`,
@@ -1072,9 +1071,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { orderId } = req.params;
       const { externalAPIService } = await import('./services/external-api');
-      
+
       const orderStatus = await externalAPIService.getOrderStatusFromKanban(orderId);
-      
+
       if (!orderStatus) {
         return res.status(404).json({ 
           message: 'Order not found in Kanban system',
@@ -1097,9 +1096,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const orderData = req.body;
       const { externalAPIService } = await import('./services/external-api');
-      
+
       const result = await externalAPIService.pushOrderToPOS(orderData);
-      
+
       if (result.success) {
         res.json({
           success: true,
@@ -1125,7 +1124,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/external/status', async (req: Request, res: Response) => {
     try {
       const { externalAPIService } = await import('./services/external-api');
-      
+
       const [kanbanStatus, posStatus] = await Promise.all([
         externalAPIService.testKanbanConnection(),
         externalAPIService.testPOSConnection()
@@ -1154,7 +1153,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { kanbanApiUrl, kanbanApiKey, posApiUrl, posApiKey } = req.body;
       const { externalAPIService } = await import('./services/external-api');
-      
+
       externalAPIService.updateConfiguration({
         kanbanApiUrl,
         kanbanApiKey,
@@ -1224,6 +1223,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to check inventory" });
     }
   });
+
+  // Validate discount code
+app.post("/api/validate-discount", async (req, res) => {
+  try {
+    const { code, orderTotal } = req.body;
+
+    if (!code || typeof code !== 'string') {
+      return res.status(400).json({ error: "Discount code is required" });
+    }
+
+    // Get discount by code from database
+    const discount = await storage.getDiscountByCode(code.toUpperCase());
+
+    if (!discount) {
+      return res.status(404).json({ error: "Invalid discount code" });
+    }
+
+    // Check if discount is active
+    if (!discount.isActive) {
+      return res.status(400).json({ error: "Discount code is not active" });
+    }
+
+    // Check if discount has expired
+    if (discount.expiresAt && new Date() > new Date(discount.expiresAt)) {
+      return res.status(400).json({ error: "Discount code has expired" });
+    }
+
+    // Check minimum order amount
+    if (discount.minOrderAmount && orderTotal < discount.minOrderAmount) {
+      return res.status(400).json({ 
+        error: `Minimum order amount of ${formatPrice(discount.minOrderAmount)} required` 
+      });
+    }
+
+    // Check usage limit
+    if (discount.usageLimit && discount.usedCount >= discount.usageLimit) {
+      return res.status(400).json({ error: "Discount code usage limit reached" });
+    }
+
+    res.json({
+      code: discount.code,
+      percentage: discount.percentage,
+      description: discount.description
+    });
+  } catch (error) {
+    console.error("Error validating discount:", error);
+    res.status(500).json({ error: "Failed to validate discount code" });
+  }
+});
 
   // AI Chatbot endpoint
   app.post("/api/chat", async (req: Request, res: Response) => {
@@ -1985,6 +2033,82 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         error: error instanceof Error ? error.message : String(error)
       });
     }
+  });
+
+  // Admin discount codes routes
+app.get("/api/admin/discount-codes", authenticateToken, requireStaff, async (req: Request, res: Response) => {
+  try {
+    const discountCodes = await storage.getDiscountCodes();
+    res.json(discountCodes);
+  } catch (error) {
+    console.error("Error fetching discount codes:", error);
+    res.status(500).json({ message: "Failed to fetch discount codes" });
+  }
+});
+
+app.post("/api/admin/discount-codes", authenticateToken, requireStaff, async (req: Request, res: Response) => {
+  try {
+    const discountData = req.body;
+    const newDiscount = await storage.createDiscountCode(discountData);
+    res.status(201).json(newDiscount);
+  } catch (error) {
+    console.error("Error creating discount code:", error);
+    res.status(500).json({ message: "Failed to create discount code" });
+  }
+});
+
+app.put("/api/admin/discount-codes/:id", authenticateToken, requireStaff, async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    const updates = req.body;
+    const discount = await storage.updateDiscountCode(id, updates);
+    res.json(discount);
+  } catch (error) {
+    console.error("Error updating discount code:", error);
+    res.status(500).json({ message: "Failed to update discount code" });
+  }
+});
+
+app.delete("/api/admin/discount-codes/:id", authenticateToken, requireStaff, async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    await storage.deleteDiscountCode(id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting discount code:", error);
+    res.status(500).json({ message: "Failed to delete discount code" });
+  }
+});
+  // Admin routes
+  app.get("/api/admin/orders", authenticateToken, requireStaff, async (req: Request, res: Response) => {
+    // Check for query parameters for filtering
+    const { status, userId, limit } = req.query;
+
+    let orders;
+
+    if (status) {
+      // Get orders by status
+      orders = await storage.getOrdersByStatus(status.toString());
+    } else if (userId) {
+      // Get orders by user ID
+      const userIdNum = parseInt(userId.toString());
+      if (isNaN(userIdNum)) {
+        return res.status(400).json({ message: "Invalid user ID" });
+      }
+      orders = await storage.getOrdersByUserId(userIdNum);
+    } else if (limit) {
+      // Get recent orders with limit
+      const limitNum = parseInt(limit.toString());
+      if (isNaN(limitNum)) {
+        return res.status(400).json({ message: "Invalid limit" });
+      }
+      orders = await storage.getRecentOrders(limitNum);
+    } else {
+      // Get all orders
+      orders = await storage.getOrders();
+    }
+
+    res.json(orders);
   });
 
   const httpServer = createServer(app);

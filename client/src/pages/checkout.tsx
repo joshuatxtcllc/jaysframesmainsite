@@ -87,7 +87,7 @@ const Checkout = () => {
     const requiredFields = [
       'firstName', 'lastName', 'email', 'address', 'city', 'state', 'zipCode'
     ];
-    
+
     for (const field of requiredFields) {
       if (formData[field as keyof typeof formData].trim() === '') {
         toast({
@@ -130,13 +130,70 @@ const Checkout = () => {
     return true;
   };
 
+  const [discountCode, setDiscountCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState({ code: "", percentage: 0, amount: 0 });
+  const [isValidatingDiscount, setIsValidatingDiscount] = useState(false);
+
+  const validateDiscountCode = async () => {
+    if (!discountCode.trim()) return;
+
+    setIsValidatingDiscount(true);
+    try {
+      const response = await apiRequest("POST", "/api/validate-discount", {
+        code: discountCode,
+        orderTotal: getCartTotal()
+      });
+
+      if (response.ok) {
+        const discountData = await response.json();
+        const discountAmount = Math.round(getCartTotal() * (discountData.percentage / 100));
+        setAppliedDiscount({
+          code: discountCode,
+          percentage: discountData.percentage,
+          amount: discountAmount
+        });
+        toast({
+          title: "Discount Applied!",
+          description: `${discountData.percentage}% discount applied`,
+        });
+      } else {
+        toast({
+          title: "Invalid Discount Code",
+          description: "Please check your discount code and try again",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to validate discount code",
+        variant: "destructive",
+      });
+    } finally {
+      setIsValidatingDiscount(false);
+    }
+  };
+
+  const removeDiscount = () => {
+    setAppliedDiscount({ code: "", percentage: 0, amount: 0 });
+    setDiscountCode("");
+  };
+
+  const calculateFinalTotal = () => {
+    const subtotal = getCartTotal();
+    const shipping = subtotal > 10000 ? 0 : 1500;
+    const tax = Math.round(subtotal * 0.0825);
+    const discount = appliedDiscount.amount;
+    return subtotal + shipping + tax - discount;
+  };
+
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsProcessing(true);
-    
+
     try {
       // Create order items from cart items
       const orderItems: OrderItem[] = cartItems.map(item => ({
@@ -151,9 +208,11 @@ const Checkout = () => {
       const orderData = {
         customerName: `${formData.firstName} ${formData.lastName}`,
         customerEmail: formData.email,
-        totalAmount: getCartTotal(),
+        totalAmount: calculateFinalTotal(),
         items: orderItems,
-        notes: formData.shippingNotes || `Shipping Address: ${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}, ${formData.country}`
+        notes: formData.shippingNotes || `Shipping Address: ${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}, ${formData.country}`,
+        couponCode: appliedDiscount.code,
+        discount: appliedDiscount.amount
       };
 
       // Submit order to API
@@ -167,19 +226,19 @@ const Checkout = () => {
 
       // Simulate payment processing
       await simulatePaymentProcess();
-      
+
       // Process bank deposit (in a real application, this would connect to a payment gateway)
-      await simulateBankDeposit(order.id, getCartTotal());
-      
+      await simulateBankDeposit(order.id, calculateFinalTotal());
+
       // Send confirmation email (in a real application, this would connect to an email service)
       await sendOrderConfirmationEmail(order.id, formData.email);
 
       // Clear cart and redirect to confirmation
       clearCart();
-      
+
       // Navigate to order confirmation page
       navigate(`/order-confirmation/${order.id}`);
-      
+
     } catch (error) {
       console.error('Checkout error:', error);
       toast({
@@ -231,9 +290,9 @@ const Checkout = () => {
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Cart
       </Button>
-      
+
       <h1 className="text-3xl font-serif font-bold text-primary mb-12">Checkout</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Form */}
         <div className="lg:col-span-2">
@@ -271,7 +330,7 @@ const Checkout = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Email*</Label>
                   <Input 
@@ -283,7 +342,7 @@ const Checkout = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="address">Address*</Label>
                   <Input 
@@ -294,7 +353,7 @@ const Checkout = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="city">City*</Label>
@@ -327,7 +386,7 @@ const Checkout = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="country">Country*</Label>
                   <Input 
@@ -352,7 +411,7 @@ const Checkout = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center text-xl">
@@ -374,7 +433,7 @@ const Checkout = () => {
                     <TabsTrigger value="credit-card">Credit Card</TabsTrigger>
                     <TabsTrigger value="bank-transfer">Bank Transfer</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="credit-card" className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="cardNumber">Card Number*</Label>
@@ -387,7 +446,7 @@ const Checkout = () => {
                         required
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="cardName">Name on Card*</Label>
                       <Input 
@@ -398,7 +457,7 @@ const Checkout = () => {
                         required
                       />
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="expiryDate">Expiry Date*</Label>
@@ -423,13 +482,13 @@ const Checkout = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center mt-2 p-3 bg-secondary/10 rounded-md text-sm">
                       <Lock className="h-4 w-4 mr-2 text-secondary" />
                       Your payment information is encrypted and secure
                     </div>
                   </TabsContent>
-                  
+
                   <TabsContent value="bank-transfer" className="space-y-4">
                     <div className="p-4 bg-secondary/10 rounded-md space-y-3">
                       <h3 className="font-medium text-primary">Bank Transfer Details</h3>
@@ -466,7 +525,7 @@ const Checkout = () => {
                 </Tabs>
               </CardContent>
             </Card>
-            
+
             <Button 
               type="submit" 
               className="w-full btn-secondary py-6 text-base"
@@ -480,7 +539,7 @@ const Checkout = () => {
             </Button>
           </form>
         </div>
-        
+
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <Card>
@@ -515,9 +574,50 @@ const Checkout = () => {
                   <p className="font-medium text-secondary">{formatPrice(item.price * item.quantity)}</p>
                 </div>
               ))}
-              
+
               <Separator className="my-4" />
-              
+
+              {/* Discount Code Section */}
+              <div className="space-y-3">
+                <Label htmlFor="discount-code">Discount Code</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="discount-code"
+                    value={discountCode}
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                    placeholder="Enter discount code"
+                    disabled={appliedDiscount.code !== ""}
+                  />
+                  {appliedDiscount.code ? (
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={removeDiscount}
+                      className="whitespace-nowrap"
+                    >
+                      Remove
+                    </Button>
+                  ) : (
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={validateDiscountCode}
+                      disabled={!discountCode.trim() || isValidatingDiscount}
+                      className="whitespace-nowrap"
+                    >
+                      {isValidatingDiscount ? "Validating..." : "Apply"}
+                    </Button>
+                  )}
+                </div>
+                {appliedDiscount.code && (
+                  <div className="text-sm text-green-600 font-medium">
+                    ✓ Discount "{appliedDiscount.code}" applied ({appliedDiscount.percentage}% off)
+                  </div>
+                )}
+              </div>
+
+              <Separator className="my-4" />
+
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-neutral-500">Subtotal</span>
@@ -531,28 +631,30 @@ const Checkout = () => {
                   <span className="text-neutral-500">Tax</span>
                   <span>{formatPrice(getCartTotal() * 0.0825)}</span>
                 </div>
+                {appliedDiscount.amount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount ({appliedDiscount.percentage}%)</span>
+                    <span>-{formatPrice(appliedDiscount.amount)}</span>
+                  </div>
+                )}
               </div>
-              
+
               <Separator className="my-4" />
-              
+
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
                 <span className="text-primary">
-                  {formatPrice(
-                    getCartTotal() + 
-                    (getCartTotal() > 10000 ? 0 : 1500) + 
-                    (getCartTotal() * 0.0825)
-                  )}
+                  {formatPrice(calculateFinalTotal())}
                 </span>
               </div>
             </CardContent>
-            
+
             <CardFooter className="flex-col space-y-4">
               <div className="flex items-center p-3 bg-green-50 text-green-700 rounded-md text-sm w-full">
                 <ShieldCheck className="h-4 w-4 mr-2" />
                 All custom frames include a 30-day satisfaction guarantee
               </div>
-              
+
               <div className="w-full space-y-2">
                 <div className="flex items-center text-sm font-medium">
                   <Check className="h-4 w-4 text-green-600 mr-2" />

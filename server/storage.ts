@@ -10,7 +10,12 @@ import {
   blogCategories, type BlogCategory, type InsertBlogCategory,
   blogPosts, type BlogPost, type InsertBlogPost,
   appointments, type Appointment, type InsertAppointment,
-  serviceAvailability, type ServiceAvailability, type InsertServiceAvailability
+  serviceAvailability, type ServiceAvailability, type InsertServiceAvailability,
+  designAchievements, type DesignAchievement, type InsertDesignAchievement,
+  userDesignProgress, type UserDesignProgress, type InsertUserDesignProgress,
+  userAchievements, type UserAchievement, type InsertUserAchievement,
+  designSteps, type DesignStep, type InsertDesignStep,
+  discountCodes, type DiscountCode, type InsertDiscountCode
 } from "@shared/schema";
 
 import { db } from "./db";
@@ -104,6 +109,14 @@ export interface IStorage {
   updateAvailability(id: number, availability: Partial<InsertServiceAvailability>): Promise<ServiceAvailability | undefined>;
   deleteAvailability(id: number): Promise<boolean>;
   getAvailableTimeSlots(date: Date): Promise<{startTime: Date, endTime: Date, available: boolean}[]>;
+
+  // Discount Code methods
+  createDiscountCode(discount: InsertDiscountCode): Promise<DiscountCode | null>;
+  getDiscountCodes(): Promise<DiscountCode[]>;
+  getDiscountByCode(code: string): Promise<DiscountCode | null>;
+  updateDiscountUsage(id: number): Promise<boolean>;
+  updateDiscountCode(id: number, updates: Partial<InsertDiscountCode>): Promise<boolean>;
+  deleteDiscountCode(id: number): Promise<boolean>;
 }
 
 class DatabaseStorage implements IStorage {
@@ -907,7 +920,7 @@ class DatabaseStorage implements IStorage {
     if (!availability.openTime || !availability.closeTime) {
       return []; // No valid times available
     }
-    
+
     const [openHour, openMinute] = availability.openTime.split(':').map(Number);
     const [closeHour, closeMinute] = availability.closeTime.split(':').map(Number);
 
@@ -968,6 +981,74 @@ class DatabaseStorage implements IStorage {
     }
 
     return timeSlots;
+  }
+
+  // Discount Code methods
+  async createDiscountCode(discount: InsertDiscountCode): Promise<DiscountCode | null> {
+    if (!await this.checkDb()) return null;
+    try {
+      const [newDiscount] = await db.insert(discountCodes).values(discount).returning();
+      return newDiscount;
+    } catch (error) {
+      console.error("Error creating discount code:", error);
+      return null;
+    }
+  }
+
+  async getDiscountCodes(): Promise<DiscountCode[]> {
+    if (!await this.checkDb()) return [];
+    try {
+      return await db.select().from(discountCodes).orderBy(desc(discountCodes.createdAt));
+    } catch (error) {
+      console.error("Error fetching discount codes:", error);
+      return [];
+    }
+  }
+
+  async getDiscountByCode(code: string): Promise<DiscountCode | null> {
+    if (!await this.checkDb()) return null;
+    try {
+      const [discount] = await db.select().from(discountCodes).where(eq(discountCodes.code, code));
+      return discount || null;
+    } catch (error) {
+      console.error("Error fetching discount by code:", error);
+      return null;
+    }
+  }
+
+  async updateDiscountUsage(id: number): Promise<boolean> {
+    if (!await this.checkDb()) return false;
+    try {
+      await db.update(discountCodes)
+        .set({ usedCount: sql`${discountCodes.usedCount} + 1` })
+        .where(eq(discountCodes.id, id));
+      return true;
+    } catch (error) {
+      console.error("Error updating discount usage:", error);
+      return false;
+    }
+  }
+
+  async updateDiscountCode(id: number, updates: Partial<InsertDiscountCode>): Promise<boolean> {
+    if (!await this.checkDb()) return false;
+    try {
+      await db.update(discountCodes).set(updates).where(eq(discountCodes.id, id));
+      return true;
+    } catch (error) {
+      console.error("Error updating discount code:", error);
+      return false;
+    }
+  }
+
+  async deleteDiscountCode(id: number): Promise<boolean> {
+    if (!await this.checkDb()) return false;
+    try {
+      await db.delete(discountCodes).where(eq(discountCodes.id, id));
+      return true;
+    } catch (error) {
+      console.error("Error deleting discount code:", error);
+      return false;
+    }
   }
 }
 

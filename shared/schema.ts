@@ -368,6 +368,28 @@ export const insertDesignStepSchema = createInsertSchema(designSteps).omit({
   id: true,
 });
 
+// Discount Codes
+export const discountCodes = pgTable("discount_codes", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  description: text("description"),
+  percentage: integer("percentage").notNull(), // Discount percentage (0-100)
+  minOrderAmount: integer("min_order_amount"), // Minimum order amount in cents
+  maxDiscountAmount: integer("max_discount_amount"), // Maximum discount amount in cents
+  usageLimit: integer("usage_limit"), // Maximum number of uses (null for unlimited)
+  usedCount: integer("used_count").default(0).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  expiresAt: timestamp("expires_at"), // Expiration date (null for no expiration)
+  createdBy: integer("created_by").references(() => users.id),
+});
+
+export const insertDiscountCodeSchema = createInsertSchema(discountCodes).omit({
+  id: true,
+  usedCount: true,
+  createdAt: true,
+});
+
 // Export types for the new schemas
 export type DesignAchievement = typeof designAchievements.$inferSelect;
 export type InsertDesignAchievement = z.infer<typeof insertDesignAchievementSchema>;
@@ -380,3 +402,6 @@ export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;
 
 export type DesignStep = typeof designSteps.$inferSelect;
 export type InsertDesignStep = z.infer<typeof insertDesignStepSchema>;
+
+export type DiscountCode = typeof discountCodes.$inferSelect;
+export type InsertDiscountCode = z.infer<typeof insertDiscountCodeSchema>;

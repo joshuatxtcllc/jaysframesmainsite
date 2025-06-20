@@ -66,6 +66,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from 'next/link';
+import DiscountCodesManager from "@/components/admin/discount-codes-manager";
 
 const AdminDashboard = () => {
   const { toast } = useToast();
@@ -607,6 +608,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="pending">Pending</TabsTrigger>
             <TabsTrigger value="in_progress">In Progress</TabsTrigger>
             <TabsTrigger value="completed">Completed</TabsTrigger>
+            <TabsTrigger value="discounts">Discounts</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">
@@ -643,6 +645,9 @@ const AdminDashboard = () => {
               onStatusUpdate={handleStatusUpdate} 
               isPending={updateOrderStatus.isPending}
             />
+          </TabsContent>
+           <TabsContent value="discounts">
+            <DiscountCodesManager />
           </TabsContent>
         </Tabs>
       </div>
