@@ -1,0 +1,203 @@
+> rest-express@1.0.0 dev
+> tsx server/index.ts
+
+🔗 Connecting to PostgreSQL database...
+Using DATABASE_URL: postgresql://neondb_owner:npg_...
+✅ Database connection established successfully
+🔄 Running database migrations...
+Twilio client initialized for SMS messaging
+Initializing Larson Juhl catalog...
+✅ Database migrations completed successfully
+🎉 Database initialization complete
+Using test account. Emails can be viewed at https://ethereal.email
+Checking and initializing blog tables...
+Blog categories table exists
+Using test account. Emails can be viewed at https://ethereal.email
+WebSocket server initialized at path: /ws
+7:57:41 PM [express] serving on port 5000
+Starting automated order processing cron job (runs every 30 minutes)
+Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Starting automatic order processing (batch size: 20)...
+Error in auto-processing: error: You've exceeded the rate limit. Please wait a moment and try again.
+    at file:///home/runner/workspace/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async NeonPreparedQuery.execute (/home/runner/workspace/node_modules/src/neon-serverless/session.ts:102:18)
+    at async DatabaseStorage.getOrdersByStatus (/home/runner/workspace/server/storage.ts:533:12)
+    at async processOrders (/home/runner/workspace/server/services/automation.ts:27:27)
+    at async CronJob.<anonymous> (/home/runner/workspace/server/services/automation.ts:235:11) {
+  length: 88,
+  severity: 'ERROR',
+  code: 'XX000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: undefined,
+  line: undefined,
+  routine: undefined
+}
+Error in automated order processing: error: You've exceeded the rate limit. Please wait a moment and try again.
+    at file:///home/runner/workspace/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async NeonPreparedQuery.execute (/home/runner/workspace/node_modules/src/neon-serverless/session.ts:102:18)
+    at async DatabaseStorage.getOrdersByStatus (/home/runner/workspace/server/storage.ts:533:12)
+    at async processOrders (/home/runner/workspace/server/services/automation.ts:27:27)
+    at async CronJob.<anonymous> (/home/runner/workspace/server/services/automation.ts:235:11) {
+  length: 88,
+  severity: 'ERROR',
+  code: 'XX000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: undefined,
+  line: undefined,
+  routine: undefined
+}
+8:09:09 PM [vite] page reload src/main.tsx
+8:09:10 PM [vite] hmr update /src/App.tsx?v=v_3mA12PaJLeLDcotdqqS, /src/index.css?v=v_3mA12PaJLeLDcotdqqS, /src/index.css?direct
+8:09:12 PM [vite] hmr update /src/components/seo/seo-head.tsx, /src/index.css?v=v_3mA12PaJLeLDcotdqqS, /src/index.css?direct
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Starting automatic order processing (batch size: 20)...
+Found 0 pending orders, processing 0...
+Auto-processing complete. Processed: 0, Succeeded: 0, Failed: 0
+Starting automatic order processing (batch size: 20)...
+Found 0 pending orders, processing 0...
+Auto-processing complete. Processed: 0, Succeeded: 0, Failed: 0
+Starting automatic order processing (batch size: 20)...
+Found 0 pending orders, processing 0...
+Auto-processing complete. Processed: 0, Succeeded: 0, Failed: 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

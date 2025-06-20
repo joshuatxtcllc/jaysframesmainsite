@@ -4,9 +4,9 @@ import { CronJob } from 'cron';
 
 // Configuration state for automation
 let automationConfig = {
-  enabled: true,
-  intervalMinutes: 30,
-  batchSize: 20,
+  enabled: false,
+  intervalMinutes: 120,
+  batchSize: 5,
   lastRun: null as Date | null,
   processedCount: 0,
   successCount: 0,
