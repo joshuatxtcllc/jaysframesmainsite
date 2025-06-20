@@ -64,7 +64,11 @@ export default function Process() {
   ];
 
   return (
-    <section className="full-section gradient-mesh-3">
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Gallery showroom with forest accent wall and warm wood flooring */}
+      <div className="absolute inset-0 showroom-backdrop-forest">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+      </div>
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
           ref={ref}

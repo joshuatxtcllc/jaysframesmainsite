@@ -69,6 +69,29 @@ img[width][height] {
     --card-shadow-3d: 0 20px 40px rgba(0, 0, 0, 0.5), 
                       0 10px 20px rgba(139, 92, 246, 0.1),
                       inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    
+    /* Wood Texture Patterns */
+    --wood-grain-light: repeating-linear-gradient(90deg, 
+      rgba(222, 184, 135, 0.1) 0px, 
+      rgba(205, 164, 113, 0.15) 2px, 
+      rgba(188, 143, 91, 0.1) 4px, 
+      rgba(222, 184, 135, 0.05) 8px);
+    --wood-grain-dark: repeating-linear-gradient(90deg, 
+      rgba(101, 67, 33, 0.3) 0px, 
+      rgba(85, 55, 29, 0.4) 1px, 
+      rgba(69, 46, 22, 0.35) 3px, 
+      rgba(101, 67, 33, 0.2) 6px);
+    --wood-planks: repeating-linear-gradient(0deg, 
+      rgba(139, 106, 70, 0.1) 0px, 
+      rgba(160, 123, 82, 0.15) 40px, 
+      rgba(139, 106, 70, 0.1) 42px, 
+      rgba(118, 89, 58, 0.05) 82px);
+      
+    /* Dark Accent Wall Colors */
+    --accent-wall-navy: #1e293b;
+    --accent-wall-charcoal: #374151;
+    --accent-wall-forest: #1f2937;
+    --accent-wall-midnight: #0f172a;
   }
 
   * {
@@ -525,6 +548,203 @@ img[width][height] {
   .bg-aurora-1 { background: var(--aurora-gradient-1); }
   .bg-aurora-2 { background: var(--aurora-gradient-2); }
   .bg-studio { background: var(--studio-gradient); }
+
+  /* Wood Texture and Dark Accent Wall Combinations */
+  .showroom-backdrop-navy {
+    background: linear-gradient(135deg, var(--accent-wall-navy) 0%, #334155 100%);
+    position: relative;
+  }
+
+  .showroom-backdrop-navy::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background: linear-gradient(0deg, 
+      rgba(222, 184, 135, 0.8) 0%, 
+      rgba(205, 164, 113, 0.6) 20%, 
+      transparent 100%);
+    background-image: var(--wood-planks);
+    background-size: 100% 80px;
+  }
+
+  .showroom-backdrop-charcoal {
+    background: linear-gradient(135deg, var(--accent-wall-charcoal) 0%, #4b5563 100%);
+    position: relative;
+  }
+
+  .showroom-backdrop-charcoal::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25%;
+    background: linear-gradient(0deg, 
+      rgba(160, 123, 82, 0.9) 0%, 
+      rgba(139, 106, 70, 0.7) 15%, 
+      transparent 100%);
+    background-image: var(--wood-grain-light);
+    background-size: 200% 100%;
+  }
+
+  .showroom-backdrop-forest {
+    background: linear-gradient(135deg, var(--accent-wall-forest) 0%, #374151 100%);
+    position: relative;
+  }
+
+  .showroom-backdrop-forest::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35%;
+    background: linear-gradient(0deg, 
+      rgba(101, 67, 33, 0.95) 0%, 
+      rgba(85, 55, 29, 0.8) 25%, 
+      transparent 100%);
+    background-image: var(--wood-grain-dark);
+    background-size: 150% 100%;
+  }
+
+  .showroom-backdrop-midnight {
+    background: linear-gradient(135deg, var(--accent-wall-midnight) 0%, #1e293b 100%);
+    position: relative;
+  }
+
+  .showroom-backdrop-midnight::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(0deg, 
+      rgba(139, 106, 70, 0.85) 0%, 
+      rgba(160, 123, 82, 0.6) 30%, 
+      transparent 100%);
+    background-image: var(--wood-planks), var(--wood-grain-light);
+    background-size: 100% 60px, 180% 100%;
+  }
+
+  /* Wood Texture Overlays for Components */
+  .wood-overlay-light {
+    position: relative;
+  }
+
+  .wood-overlay-light::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--wood-grain-light);
+    background-size: 150% 100%;
+    opacity: 0.3;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .wood-overlay-dark {
+    position: relative;
+  }
+
+  .wood-overlay-dark::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--wood-grain-dark);
+    background-size: 120% 100%;
+    opacity: 0.4;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Accent Wood Streaks for Cards */
+  .wood-accent-streak {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wood-accent-streak::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10%;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(45deg, 
+      rgba(101, 67, 33, 0.6) 0%, 
+      rgba(139, 106, 70, 0.8) 50%, 
+      rgba(85, 55, 29, 0.6) 100%);
+    background-image: var(--wood-grain-dark);
+    background-size: 100% 100%;
+    transform: skewX(-15deg);
+    opacity: 0;
+    transition: all 0.6s ease;
+  }
+
+  .wood-accent-streak:hover::after {
+    opacity: 1;
+    left: 85%;
+  }
+
+  /* Gallery Frame Showcase Backgrounds */
+  .gallery-wall-dark {
+    background: linear-gradient(135deg, 
+      var(--accent-wall-midnight) 0%, 
+      var(--accent-wall-navy) 50%, 
+      var(--accent-wall-charcoal) 100%);
+    position: relative;
+  }
+
+  .gallery-wall-dark::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: linear-gradient(0deg, 
+      rgba(222, 184, 135, 0.7) 0%, 
+      rgba(205, 164, 113, 0.4) 50%, 
+      transparent 100%);
+    background-image: var(--wood-planks);
+    background-size: 100% 40px;
+  }
+
+  /* Wood Panel Sections */
+  .wood-panel-section {
+    background: linear-gradient(135deg, 
+      rgba(222, 184, 135, 0.95) 0%, 
+      rgba(205, 164, 113, 0.9) 50%, 
+      rgba(188, 143, 91, 0.95) 100%);
+    background-image: var(--wood-grain-light), var(--wood-planks);
+    background-size: 180% 100%, 100% 80px;
+    position: relative;
+  }
+
+  .wood-panel-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+      transparent 0%, 
+      rgba(139, 92, 246, 0.05) 25%, 
+      transparent 50%, 
+      rgba(6, 182, 212, 0.05) 75%, 
+      transparent 100%);
+  }
 
   /* Enhanced gradient backgrounds - Matching user's exact designs */
   .luxury-gradient-1 {

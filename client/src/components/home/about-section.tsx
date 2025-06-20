@@ -37,7 +37,7 @@ export default function AboutSection() {
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-cyan-500/15 to-blue-500/15 rounded-full blur-2xl"
         />
-        
+
         {/* Floating 3D Geometric Elements */}
         <div className="absolute top-1/3 left-1/4 geometric-accent cube">
           <div className="geo-face geo-front"></div>
@@ -47,7 +47,7 @@ export default function AboutSection() {
           <div className="geo-face geo-top"></div>
           <div className="geo-face geo-bottom"></div>
         </div>
-        
+
         <div className="absolute bottom-1/3 right-1/4 geometric-accent cube" style={{ animationDelay: '-3s' }}>
           <div className="geo-face geo-front"></div>
           <div className="geo-face geo-back"></div>
@@ -94,7 +94,7 @@ export default function AboutSection() {
             transition={{ duration: 1, delay: 0.4 }}
             className="space-y-10"
           >
-            <div className="glass-frame-3d p-8 hover:shadow-luxury transition-all duration-500">
+            <div className="glass-frame-3d wood-accent-streak p-8 hover:shadow-luxury transition-all duration-500">
               <div className="flex items-start space-x-6">
                 <div className="flex-shrink-0 glow-icon-button bg-gradient-to-br from-cyan-500 to-blue-600">
                   <Award className="h-8 w-8 text-white" />
@@ -109,7 +109,7 @@ export default function AboutSection() {
               </div>
             </div>
 
-            <div className="glass-frame-3d p-8 hover:shadow-luxury transition-all duration-500">
+            <div className="glass-frame-3d wood-accent-streak p-8 hover:shadow-luxury transition-all duration-500">
               <div className="flex items-start space-x-6">
                 <div className="flex-shrink-0 glow-icon-button bg-gradient-to-br from-purple-500 to-violet-600">
                   <Users className="h-8 w-8 text-white" />
@@ -124,7 +124,7 @@ export default function AboutSection() {
               </div>
             </div>
 
-            <div className="glass-frame-3d p-8 hover:shadow-luxury transition-all duration-500">
+            <div className="glass-frame-3d wood-accent-streak p-8 hover:shadow-luxury transition-all duration-500">
               <div className="flex items-start space-x-6">
                 <div className="flex-shrink-0 glow-icon-button bg-gradient-to-br from-pink-500 to-rose-600">
                   <Heart className="h-8 w-8 text-white" />

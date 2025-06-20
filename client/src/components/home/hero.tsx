@@ -11,9 +11,9 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Full-page gradient background - Matching user's exact aesthetic */}
-      <div className="absolute inset-0 aurora-gradient-1">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+      {/* Showroom backdrop with dark accent wall and wood flooring */}
+      <div className="absolute inset-0 showroom-backdrop-navy">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
       </div>
 
       {/* Animated gradient orbs */}
