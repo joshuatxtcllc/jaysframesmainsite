@@ -67,19 +67,16 @@ export default function Hero() {
           {/* Main heading with enhanced metallic sheen and high contrast */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none">
             <span className="block font-heading relative">
-              {/* Enhanced multiple shadow layers for maximum depth and contrast */}
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-2xl opacity-20"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent blur-xl opacity-40"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-lg opacity-60"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-md opacity-80"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-sm opacity-90"></span>
-              {/* Main text with enhanced platinum metallic sheen */}
-              <span className="relative bg-gradient-to-r from-gray-50 via-white via-gray-50 via-white to-gray-50 bg-clip-text text-transparent" 
+              {/* Subtle shadow layers for depth */}
+              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent blur-lg opacity-30"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-white via-gray-50 to-white bg-clip-text text-transparent blur-md opacity-50"></span>
+              {/* Main text with strong metallic fill and minimal glow */}
+              <span className="relative bg-gradient-to-r from-gray-200 via-white via-gray-200 via-white via-gray-200 to-white bg-clip-text text-transparent" 
                     style={{
-                      filter: 'drop-shadow(0 0 30px rgba(255,255,255,1)) drop-shadow(0 0 60px rgba(255,255,255,0.8)) drop-shadow(0 4px 12px rgba(0,0,0,1)) drop-shadow(0 0 100px rgba(255,255,255,0.5)) drop-shadow(0 8px 16px rgba(0,0,0,0.8))',
-                      textShadow: '0 0 20px rgba(255,255,255,1), 0 0 40px rgba(255,255,255,0.9), 0 0 80px rgba(255,255,255,0.7), 0 4px 12px rgba(0,0,0,1), 0 8px 16px rgba(0,0,0,0.8)',
-                      backgroundSize: '300% 100%',
-                      animation: 'shimmer 3s ease-in-out infinite alternate'
+                      filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,1))',
+                      textShadow: '0 0 8px rgba(255,255,255,0.8), 0 4px 8px rgba(0,0,0,1)',
+                      backgroundSize: '400% 100%',
+                      backgroundImage: 'linear-gradient(90deg, #e5e7eb 0%, #ffffff 15%, #f3f4f6 30%, #ffffff 45%, #e5e7eb 60%, #ffffff 75%, #f3f4f6 90%, #ffffff 100%)'
                     }}>
                 The Future of
               </span>
