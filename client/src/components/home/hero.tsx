@@ -10,7 +10,7 @@ export default function Hero() {
   });
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-0">
       {/* Luxury room background with dark panels and wood flooring */}
       <div className="absolute inset-0">
         <img 
@@ -56,7 +56,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="container mx-auto px-6 text-center z-10 relative">
+      <div className="container mx-auto px-6 pt-8 md:pt-0 text-center z-10 relative">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 40 }}
