@@ -193,20 +193,20 @@ const Home = () => {
               </div>
               <div className="p-6 md:col-span-3">
                 <div className="bg-neutral-50 rounded-lg p-4 mb-4">
-                  <p className="font-medium">What frame would work best for a watercolor painting?</p>
+                  <p className="font-medium text-gray-800">What frame would work best for a watercolor painting?</p>
                 </div>
                 <div className="bg-secondary/10 rounded-lg p-4 mb-4">
-                  <p className="text-sm">
+                  <p className="text-sm text-gray-700">
                     For watercolor paintings, I'd recommend a light wood frame like maple or a thin metal frame in silver or gold. 
                     These complement the delicate nature of watercolors without overwhelming them. Consider adding a double mat 
                     with a neutral outer mat and a colored inner mat that picks up a hue from your painting.
                   </p>
                 </div>
                 <div className="bg-neutral-50 rounded-lg p-4 mb-4">
-                  <p className="font-medium">What's the difference between conservation and museum glass?</p>
+                  <p className="font-medium text-gray-800">What's the difference between conservation and museum glass?</p>
                 </div>
                 <div className="bg-secondary/10 rounded-lg p-4">
-                  <p className="text-sm">
+                  <p className="text-sm text-gray-700">
                     Both conservation and museum glass provide UV protection to prevent artwork fading. 
                     The key difference is that museum glass has an anti-reflective coating that makes it virtually invisible, 
                     providing the clearest view of your artwork, while conservation glass may have some reflection.
