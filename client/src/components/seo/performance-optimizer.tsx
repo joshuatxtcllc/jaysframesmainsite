@@ -9,6 +9,19 @@ const PerformanceOptimizer = ({ children }: PerformanceOptimizerProps) => {
   useEffect(() => {
     // Preload critical resources
     const preloadCriticalResources = () => {
+      // Add preconnect for external domains
+      const preconnectDomains = [
+        'https://fonts.googleapis.com',
+        'https://images.unsplash.com'
+      ];
+
+      preconnectDomains.forEach(domain => {
+        const link = document.createElement('link');
+        link.rel = 'preconnect';
+        link.href = domain;
+        document.head.appendChild(link);
+      });
+
       // Preload critical images
       const criticalImages = [
         '/images/hero-background.jpg',

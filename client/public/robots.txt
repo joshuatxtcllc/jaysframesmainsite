@@ -1,17 +1,31 @@
-
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://jaysframes.repl.co/sitemap.xml
-
-# Allow all search engines to crawl the site
-# Prioritize important pages for crawling
+# Important pages for indexing
 Allow: /products
 Allow: /custom-framing
 Allow: /about
 Allow: /contact
 Allow: /blog
+Allow: /faq
 
-# Optional: Crawl-delay for politeness (not blocking)
+# SEO optimizations
+Sitemap: https://jaysframes.repl.co/sitemap.xml
+
+# Performance optimizations - allow all static assets
+Allow: /images/
+Allow: /js/
+Allow: /css/
+Allow: /_app/
+Allow: /api/docs
+
+# Block admin and sensitive areas
+Disallow: /admin/
+Disallow: /api/auth/
+Disallow: /api/admin/
+Disallow: /checkout
+Disallow: /order-confirmation
+Disallow: /order-status
+
+# Crawl-delay for politeness
 Crawl-delay: 1

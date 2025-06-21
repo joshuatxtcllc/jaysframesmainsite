@@ -37,14 +37,13 @@ import './lib/seo-monitor';
 import ErrorBoundary from "@/components/ui/error-boundary";
 import PerformanceOptimizer from "@/components/seo/performance-optimizer";
 import FAQ from "@/pages/faq";
-import Shadowboxes from "@/pages/shadowboxes";
+import { loadCriticalCSS } from "./lib/critical-css";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/products" component={Products} />
-      <Route path="/shadowboxes" component={Shadowboxes} />
       <Route path="/custom-framing" component={CustomFraming} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
@@ -52,7 +51,6 @@ function Router() {
       <Route path="/admin/dashboard" component={lazy(() => import('./pages/admin/dashboard'))} />
       <Route path="/admin/catalog-management" component={lazy(() => import('./pages/admin/catalog-management'))} />
       <Route path="/admin/blog-manager" component={BlogManager} />
-      <Route path="/admin/external-api-config" component={lazy(() => import('./pages/admin/external-api-config'))} />
       <Route path="/frame-assistant-test" component={FrameAssistantTest} />
       <Route path="/voice-frame-assistant" component={VoiceFrameAssistant} />
       <Route path="/frame-fitting-assistant" component={FrameFittingAssistant} />
@@ -77,6 +75,23 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Load critical CSS for faster initial paint
+    loadCriticalCSS();
+    
+    // Handle unhandled promise rejections
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('Unhandled promise rejection:', event.reason);
+      event.preventDefault(); // Prevent the default browser behavior
+    };
+
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>

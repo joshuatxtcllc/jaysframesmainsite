@@ -1,0 +1,16 @@
+
+/* TEAM */
+Owner/Developer: Jay's Frames Team
+Contact: frames@jaysframes.com
+Location: Houston, TX
+
+/* SITE */
+Last update: 2025/01/18
+Standards: HTML5, CSS3, JavaScript ES6+
+Components: React, TypeScript, Tailwind CSS
+Software: Vite, Node.js
+
+/* THANKS */
+Built with modern web technologies for optimal performance
+Focused on accessibility and user experience
+Custom framing expertise since 1999

@@ -48,7 +48,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Facebook, Instagram } from 'lucide-react';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -150,7 +149,7 @@ const Header = () => {
                 <MapPin className="h-3.5 w-3.5 mr-2 text-cyan-400" />
                 <span>218 W 27th St, Houston Heights, TX 77008</span>
               </div>
-              <span className="text-white/60">Mon-Fri: 10am-6pm · Sat: 11am-5pm · Sunday: Closed</span>
+              <span className="text-white/60">Mon-Sat: 10am-6pm · Sunday: Closed</span>
             </div>
             <div className="flex space-x-4">
               <Link href="/order-status">

@@ -43,7 +43,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Main footer content */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
@@ -68,7 +68,7 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          
+
           <div className="md:col-span-2">
             <h3 className="text-lg font-bold mb-5 pb-2 border-b border-white/10">Products</h3>
             <ul className="space-y-3">
@@ -79,7 +79,7 @@ const Footer = () => {
               <FooterLink href="/products" label="All Products" />
             </ul>
           </div>
-          
+
           <div className="md:col-span-2">
             <h3 className="text-lg font-bold mb-5 pb-2 border-b border-white/10">Company</h3>
             <ul className="space-y-3">
@@ -91,7 +91,7 @@ const Footer = () => {
               <FooterLink href="/api-docs" label="API Documentation" />
             </ul>
           </div>
-          
+
           <div className="md:col-span-4">
             <h3 className="text-lg font-bold mb-5 pb-2 border-b border-white/10">Contact Us</h3>
             <ul className="space-y-4">
@@ -114,7 +114,7 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        
+
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
@@ -124,8 +124,8 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-6">
-            <a href="#" className="text-neutral-400 hover:text-secondary transition-colors duration-200 text-sm">Privacy Policy</a>
-            <a href="#" className="text-neutral-400 hover:text-secondary transition-colors duration-200 text-sm">Terms of Service</a>
+            <a href="/faq" className="text-neutral-400 hover:text-secondary transition-colors duration-200 text-sm">FAQ</a>
+            <a href="/contact" className="text-neutral-400 hover:text-secondary transition-colors duration-200 text-sm">Contact Us</a>
             <a href="#" className="text-neutral-400 hover:text-secondary transition-colors duration-200 text-sm">Accessibility</a>
           </div>
         </div>
