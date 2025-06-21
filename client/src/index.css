@@ -153,15 +153,14 @@ img[width][height] {
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight text-white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    @apply font-serif tracking-tight;
     font-weight: 700;
     letter-spacing: -0.02em;
+    color: inherit;
   }
 
   p, span, div {
-    color: rgba(255, 255, 255, 0.92);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    color: inherit;
   }
 }
 
@@ -233,13 +232,8 @@ img[width][height] {
   }
 
   .luxury-text-3d {
-    text-shadow: 
-      0 1px 0 rgba(255, 255, 255, 0.1),
-      0 2px 0 rgba(0, 0, 0, 0.9),
-      0 3px 0 rgba(0, 0, 0, 0.8),
-      0 4px 0 rgba(0, 0, 0, 0.7),
-      0 5px 10px rgba(0, 0, 0, 0.6),
-      0 10px 20px rgba(139, 92, 246, 0.2);
+    font-weight: 600;
+    color: inherit;
   }
 
   .minimal-button-3d {
@@ -286,7 +280,6 @@ img[width][height] {
   
   .text-primary {
     color: #ffffff;
-    text-shadow: var(--text-shadow-luxury);
   }
   
   .bg-secondary {
@@ -296,7 +289,6 @@ img[width][height] {
   
   .text-secondary {
     color: #06b6d4;
-    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
     font-weight: 600;
   }
   
@@ -322,7 +314,6 @@ img[width][height] {
   
   .text-accent {
     color: #a78bfa;
-    text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
     font-weight: 600;
   }
   
@@ -403,7 +394,7 @@ img[width][height] {
     transform: translateZ(0);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--card-shadow-3d);
-    text-shadow: var(--text-shadow-luxury);
+    
   }
 
   .btn-primary:hover {
@@ -474,7 +465,7 @@ img[width][height] {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateZ(0);
     backdrop-filter: blur(10px);
-    text-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+    
   }
 
   .btn-outline:hover {
@@ -805,17 +796,13 @@ img[width][height] {
 
   /* Text glow effects */
   .text-glow-cyan {
-    text-shadow: 
-      0 0 10px rgba(6, 182, 212, 0.5),
-      0 0 20px rgba(6, 182, 212, 0.3),
-      0 0 30px rgba(6, 182, 212, 0.2);
+    color: #06b6d4;
+    font-weight: 600;
   }
 
   .text-glow-purple {
-    text-shadow: 
-      0 0 10px rgba(139, 92, 246, 0.5),
-      0 0 20px rgba(139, 92, 246, 0.3),
-      0 0 30px rgba(139, 92, 246, 0.2);
+    color: #8b5cf6;
+    font-weight: 600;
   }
 
   /* Enhanced card hover effects */
