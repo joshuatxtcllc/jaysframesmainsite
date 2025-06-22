@@ -1,21 +1,8 @@
 import { MapPin, Clock, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SchedulingSystem from "@/components/ui/scheduling-system";
-import { useState } from "react";
 
 const LocationSection = () => {
-  const [showScheduling, setShowScheduling] = useState(false);
-
-  const handleScheduleClick = () => {
-    setShowScheduling(true);
-    // Scroll to the scheduling system
-    setTimeout(() => {
-      const schedulingElement = document.querySelector('.scheduling-system');
-      if (schedulingElement) {
-        schedulingElement.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
 
   return (
     <section className="relative text-white py-20 overflow-hidden">
@@ -86,7 +73,7 @@ const LocationSection = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
-                onClick={handleScheduleClick}
+                onClick={() => window.open('https://calendly.com/frames-jaysframes/30min?month=2025-06', '_blank', 'noopener,noreferrer')}
                 className="bg-cyan-500 hover:bg-cyan-400 text-black font-semibold"
               >
                 Schedule Consultation
