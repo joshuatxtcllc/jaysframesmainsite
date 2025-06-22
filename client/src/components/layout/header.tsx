@@ -382,7 +382,7 @@ const Header = () => {
               </Link>
 
               <button 
-                className="md:hidden text-primary hover:text-secondary transition-colors" 
+                className="md:hidden text-white/80 hover:text-cyan-400 transition-colors p-2 -mr-2" 
                 onClick={toggleMobileMenu}
                 aria-label="Menu"
               >
@@ -397,45 +397,54 @@ const Header = () => {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden pt-5 pb-3 border-t border-gray-100 mt-3 fade-in">
+            <div className="md:hidden pt-5 pb-3 border-t border-white/20 mt-3 bg-black/95 backdrop-blur-xl animate-in slide-in-from-top-2 duration-200">
               <div className="flex flex-col space-y-4">
                 {navLinks.map((link) => (
                   <Link key={link.href} href={link.href}>
                     <div 
-                      className={`${location === link.href ? 'text-secondary' : 'text-primary'} hover:text-secondary flex justify-between items-center font-medium transition-colors duration-200 cursor-pointer`}
+                      className={`${location === link.href ? 'text-cyan-400' : 'text-white/80'} hover:text-cyan-400 flex items-center justify-between font-medium transition-colors duration-200 cursor-pointer py-3 px-2 rounded-md hover:bg-white/5`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      {link.icon}
-                      {link.label}
-                      <ChevronRight className="h-4 w-4 ml-auto" />
+                      <div className="flex items-center">
+                        {link.icon}
+                        <span className="ml-2">{link.label}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4" />
                     </div>
                   </Link>
                 ))}
 
                 {/* Custom Framing section in mobile menu */}
-                <div className="pt-2 border-t border-gray-100">
-                  <div className="font-medium text-primary mb-3">Custom Framing</div>
+                <div className="pt-2 border-t border-white/20">
+                  <div className="font-medium text-white mb-3 px-2 py-2">Custom Framing</div>
                   {customFramingSubMenu.map((item) => (
                     <Link key={item.href} href={item.href}>
                       <div 
                         className={`${
-                          item.highlight ? 'bg-secondary text-white rounded-md' :
-                          location === item.href ? 'text-secondary' : 'text-primary'
-                        } hover:text-secondary flex items-center font-medium transition-colors duration-200 cursor-pointer pl-2 py-2 text-sm`}
+                          item.highlight ? 'bg-cyan-400 text-black rounded-md font-semibold' :
+                          location === item.href ? 'text-cyan-400 bg-white/10' : 'text-white/80'
+                        } hover:text-cyan-400 hover:bg-white/5 flex items-center font-medium transition-colors duration-200 cursor-pointer pl-4 pr-2 py-3 mx-2 rounded-md text-sm`}
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        {item.icon}
-                        {item.label}
+                        <div className="flex items-center">
+                          {item.icon}
+                          <span className="ml-2">{item.label}</span>
+                        </div>
                       </div>
                     </Link>
                   ))}
                 </div>
 
-                <Link href="/custom-framing">
-                  <Button className="bg-secondary hover:bg-secondary/80 text-white w-full mt-2 text-sm">
-                    Start Framing
-                  </Button>
-                </Link>
+                <div className="px-2 pt-4">
+                  <Link href="/custom-framing">
+                    <Button 
+                      className="bg-cyan-400 hover:bg-cyan-300 text-black w-full text-sm font-semibold"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Start Framing
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           )}
