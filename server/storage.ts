@@ -901,8 +901,7 @@ class DatabaseStorage implements IStorage {
   async updateAvailability(id: number, availabilityUpdate: Partial<InsertServiceAvailability>): Promise<ServiceAvailability | undefined> {
     const [updatedAvailability] = await db
       .update(serviceAvailability)
-      .```python
-set(availabilityUpdate)
+      .set(availabilityUpdate)
       .where(eq(serviceAvailability.id, id))
       .returning();
 
