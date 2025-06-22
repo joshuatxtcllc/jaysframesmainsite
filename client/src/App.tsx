@@ -38,6 +38,7 @@ import ErrorBoundary from "@/components/ui/error-boundary";
 import PerformanceOptimizer from "@/components/seo/performance-optimizer";
 import FAQ from "@/pages/faq";
 import { loadCriticalCSS } from "./lib/critical-css";
+import Gallery from "./pages/gallery";
 
 function Router() {
   return (
@@ -68,6 +69,7 @@ function Router() {
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/virtual-room-visualizer" component={VirtualRoomVisualizer} /> {/* Added route */}
       <Route path="/faq" component={FAQ} />
+      <Route path="/gallery" component={Gallery} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
@@ -78,7 +80,7 @@ function App() {
   useEffect(() => {
     // Load critical CSS for faster initial paint
     loadCriticalCSS();
-    
+
     // Handle unhandled promise rejections
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
       console.error('Unhandled promise rejection:', event.reason);

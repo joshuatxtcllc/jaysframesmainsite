@@ -613,6 +613,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // GALLERY ROUTES
+
+  // Get all gallery images
+  app.get("/api/gallery/images", async (req: Request, res: Response) => {
+    try {
+      const images = await storage.getGalleryImages();
+      res.json(images);
+    } catch (error) {
+      console.error("Error fetching gallery images:", error);
+      res.status(500).json({ message: "Failed to fetch gallery images" });
+    }
+  });
+
+  // Upload gallery image  
+  app.post("/api/gallery/images", async (req: Request, res: Response) => {
+    try {
+      // Handle multipart form data (need to add multer middleware)
+      const multer = require('multer');
+      const path = require('path');
+      
+      const storage_config = multer.diskStorage({
+        destination: (req: any, file: any, cb: any) => {
+          cb(null, path.join(process.cwd(), 'client/public/uploads/gallery'));
+        },
+        filename: (req: any, file: any, cb: any) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          cb(null, 'gallery-' + uniqueSuffix + path.extname(file.originalname));
+        }
+      });
+
+      const upload = multer({ 
+        storage: storage_config,
+        fileFilter: (req: any, file: any, cb: any) => {
+          if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+          } else {
+            cb(new Error('Only image files are allowed'));
+          }
+        },
+        limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+      }).single('image');
+
+      upload(req, res, async (err: any) => {
+        if (err) {
+          return res.status(400).json({ message: err.message });
+        }
+
+        if (!req.file) {
+          return res.status(400).json({ message: "No image file provided" });
+        }
+
+        const { title, description, category, featured } = req.body;
+
+        const galleryImage = await storage.createGalleryImage({
+          filename: req.file.filename,
+          originalName: req.file.originalname,
+          url: `/uploads/gallery/${req.file.filename}`,
+          alt: title || 'Gallery image',
+          title: title || '',
+          description: description || '',
+          category: category || '',
+          featured: featured === 'on' || featured === 'true',
+          size: req.file.size,
+          mimeType: req.file.mimetype
+        });
+
+        res.status(201).json(galleryImage);
+      });
+    } catch (error) {
+      console.error("Error uploading gallery image:", error);
+      res.status(500).json({ message: "Failed to upload gallery image" });
+    }
+  });
+
+  // Delete gallery image
+  app.delete("/api/gallery/images/:id", async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteGalleryImage(id);
+
+      if (!success) {
+        return res.status(404).json({ message: "Gallery image not found" });
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting gallery image:", error);
+      res.status(500).json({ message: "Failed to delete gallery image" });
+    }
+  });
+
   // Create new order
   app.post("/api/orders", async (req: Request, res: Response) => {
     try {

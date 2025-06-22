@@ -117,6 +117,11 @@ export interface IStorage {
   updateDiscountUsage(id: number): Promise<boolean>;
   updateDiscountCode(id: number, updates: Partial<InsertDiscountCode>): Promise<boolean>;
   deleteDiscountCode(id: number): Promise<boolean>;
+
+  // Gallery methods
+  getGalleryImages(): Promise<any[]>;
+  createGalleryImage(imageData: any): Promise<any>;
+  deleteGalleryImage(id: string): Promise<boolean>;
 }
 
 class DatabaseStorage implements IStorage {
@@ -896,7 +901,8 @@ class DatabaseStorage implements IStorage {
   async updateAvailability(id: number, availabilityUpdate: Partial<InsertServiceAvailability>): Promise<ServiceAvailability | undefined> {
     const [updatedAvailability] = await db
       .update(serviceAvailability)
-      .set(availabilityUpdate)
+      .```python
+set(availabilityUpdate)
       .where(eq(serviceAvailability.id, id))
       .returning();
 
@@ -1049,6 +1055,61 @@ class DatabaseStorage implements IStorage {
       console.error("Error deleting discount code:", error);
       return false;
     }
+  }
+
+  // Gallery methods
+  async getGalleryImages(): Promise<any[]> {
+    try {
+      // For now, return mock data since we don't have a gallery table yet
+      // In a real implementation, you'd query from a gallery_images table
+      return [
+        {
+          id: "1",
+          filename: "family-portrait-frame.jpg",
+          originalName: "family-portrait-frame.jpg",
+          url: "/images/gallery/family-portrait-frame.jpg",
+          alt: "Custom family portrait framing",
+          title: "Family Portrait in Gold Frame",
+          description: "Beautiful family portrait custom framed with museum glass and conservation matting.",
+          category: "Family Photos",
+          featured: true,
+          uploadedAt: new Date().toISOString()
+        },
+        {
+          id: "2", 
+          filename: "art-piece-shadow-box.jpg",
+          originalName: "art-piece-shadow-box.jpg",
+          url: "/images/gallery/art-piece-shadow-box.jpg",
+          alt: "Contemporary art shadow box",
+          title: "Contemporary Art Shadow Box",
+          description: "Modern artwork displayed in a custom shadow box with LED lighting.",
+          category: "Fine Art",
+          featured: false,
+          uploadedAt: new Date().toISOString()
+        }
+      ];
+    } catch (error) {
+      console.error("Database error:", error);
+      return [];
+    }
+  }
+
+  async createGalleryImage(imageData: any): Promise<any> {
+    // For now, return mock created image
+    // In a real implementation, you'd insert into gallery_images table
+    const newImage = {
+      id: Date.now().toString(),
+      ...imageData,
+      uploadedAt: new Date().toISOString()
+    };
+
+    return newImage;
+  }
+
+  async deleteGalleryImage(id: string): Promise<boolean> {
+    // For now, return success
+    // In a real implementation, you'd delete from gallery_images table
+    return true;
   }
 }
 
