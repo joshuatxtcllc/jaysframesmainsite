@@ -31,15 +31,7 @@ const testimonials = [
 const Testimonials = () => {
   return (
     <section className="relative py-20 bg-black text-white overflow-hidden">
-      {/* Customer testimonial background */}
-      <div className="absolute inset-0">
-        <img 
-          src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-          alt="Happy customers with custom frames"
-          className="w-full h-full object-cover"
-        />
-
-      </div>
+      
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">What Our Customers Say</h2>
