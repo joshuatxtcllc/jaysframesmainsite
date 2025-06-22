@@ -89,7 +89,7 @@ export default function BlogPage() {
   return (
     <div className="container mx-auto py-10">
       <Helmet>
-        <title>Custom Framing Blog | Jay's Frames Houston</title>
+        <title>Framing Blog | Jay's Frames Houston</title>
         <meta name="description" content="Expert framing advice, preservation techniques, and art installation tips from Houston's premier custom framing specialists." />
         <meta name="keywords" content={uniqueKeywords} />
         <meta property="og:title" content="Custom Framing Blog | Jay's Frames Houston" />

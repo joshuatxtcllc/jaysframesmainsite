@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { Helmet } from "react-helmet-async";
+import SeoHead from '@/components/seo/seo-head';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -108,12 +107,15 @@ const Gallery = () => {
 
   return (
     <div className="bg-white">
-      <Helmet>
-        <title>Framing Gallery | Jay's Frames Houston</title>
-        <meta name="description" content="Explore our gallery of custom framing projects. See examples of our expert craftsmanship and find inspiration for your own artwork framing needs." />
-        <meta name="keywords" content="custom framing gallery, picture framing portfolio, Houston framing examples, art preservation showcase, Jay's Frames work" />
-        <link rel="canonical" href="https://jaysframes.repl.co/gallery" />
-      </Helmet>
+      <SeoHead
+        title="Custom Frame Gallery | Jay's Frames Houston"
+        description="Explore our gallery of custom framed artwork, photography, and memorabilia. See examples of our professional picture framing work in Houston Heights."
+        keywords="custom framing gallery, picture framing examples, Houston framing studio, framed artwork, professional framing"
+        canonicalUrl="/gallery"
+        ogTitle="Custom Frame Gallery | Jay's Frames Houston"
+        ogDescription="Explore our gallery of custom framed artwork, photography, and memorabilia from Houston's premier framing studio."
+        ogImage="/images/gallery-hero.jpg"
+      />
 
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5">
@@ -301,7 +303,7 @@ const Gallery = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 cursor-pointer"
                         onClick={() => setSelectedImage(image)}
                       />
-                      
+
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
@@ -333,7 +335,7 @@ const Gallery = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     {(image.title || image.description) && (
                       <div className="p-4">
                         {image.title && (
@@ -387,7 +389,7 @@ const Gallery = () => {
                 <div className="text-sm text-neutral-500">
                   Uploaded: {new Date(selectedImage.uploadedAt).toLocaleDateString()}
                 </div>
-                
+
                 <div className="pt-4">
                   <Button className="w-full">
                     <Heart className="h-4 w-4 mr-2" />

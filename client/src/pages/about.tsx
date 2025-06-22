@@ -20,7 +20,7 @@ export default function About() {
   return (
     <div className="bg-white">
       <SeoHead
-        title="About Jay's Frames | Houston Custom Framing | 62% Faster Turnaround | Eco-Friendly Framing"
+        title="About Jay's Frames | Houston Custom Framing Studio"
         description="Discover Jay's Frames, Houston's premier custom framing studio featuring our revolutionary hybrid production model that provides 62% faster turnaround times and increases capacity by 4x. Our eco-friendly framing solutions and museum-quality conservation techniques combine exceptional craftsmanship with sustainability. Visit our Houston custom frame shop for artwork framing, shadow boxes, and more."
         keywords="Jay's Frames, custom framing Houston, Houston frame shop, picture framing, hybrid production model, eco-friendly framing, museum-quality framing, shadow box framing, art framing, AI design assistant, 62% faster framing, conservation framing, 4x production capacity, custom frame shop, Heights framing studio, locally-sourced framing"
         canonicalUrl="/about"

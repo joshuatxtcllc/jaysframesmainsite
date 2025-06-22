@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
@@ -6,9 +5,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Performance Optimizations */
+/* Base styles */
 * {
   box-sizing: border-box;
+}
+
+/* Performance optimizations */
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+/* Prevent layout shift */
+.hero-section {
+  min-height: 60vh;
+}
+
+/* Reduce CLS for dynamic content */
+.dynamic-content {
+  min-height: 200px;
+}
+
+/* Optimize font loading */
+@font-face {
+  font-display: swap;
 }
 
 html {
@@ -71,7 +91,7 @@ img[width][height] {
     --card-shadow-3d: 0 20px 40px rgba(0, 0, 0, 0.5), 
                       0 10px 20px rgba(139, 92, 246, 0.1),
                       inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    
+
     /* Wood Texture Patterns */
     --wood-grain-light: repeating-linear-gradient(90deg, 
       rgba(222, 184, 135, 0.1) 0px, 
@@ -88,7 +108,7 @@ img[width][height] {
       rgba(160, 123, 82, 0.15) 40px, 
       rgba(139, 106, 70, 0.1) 42px, 
       rgba(118, 89, 58, 0.05) 82px);
-      
+
     /* Dark Accent Wall Colors */
     --accent-wall-navy: #1e293b;
     --accent-wall-charcoal: #374151;
@@ -135,7 +155,7 @@ img[width][height] {
       opacity: 0.5;
     }
   }
-  
+
   /* Hide 'Made on Replit' banner and any other Replit UI elements */
   .replit-ui-floating-panel,
   .replit-ui-floating-button,
@@ -177,7 +197,7 @@ img[width][height] {
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
     background: rgba(255, 255, 255, 0.08);
   }
-  
+
   .gradient-text {
     background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 50%, #ffffff 100%);
     background-clip: text;
@@ -208,7 +228,7 @@ img[width][height] {
                 0 10px 20px rgba(6, 182, 212, 0.4),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
-  
+
   .modern-card {
     @apply backdrop-blur-xl border border-white/15 rounded-2xl;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
@@ -224,7 +244,7 @@ img[width][height] {
                 0 10px 25px rgba(139, 92, 246, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
-  
+
   .glow-effect {
     box-shadow: 0 0 30px rgba(6, 182, 212, 0.4),
                 0 0 60px rgba(139, 92, 246, 0.2),
@@ -277,54 +297,54 @@ img[width][height] {
   .bg-primary {
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
   }
-  
+
   .text-primary {
     color: #ffffff;
   }
-  
+
   .bg-secondary {
     background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
     box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
   }
-  
+
   .text-secondary {
     color: #06b6d4;
     font-weight: 600;
   }
-  
+
   .hover\:bg-secondary\/80:hover {
     background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
     transform: translateY(-2px);
     box-shadow: 0 15px 35px rgba(6, 182, 212, 0.4);
   }
-  
+
   .bg-secondary\/10 {
     background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
   }
-  
+
   .bg-secondary\/20 {
     background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, rgba(6, 182, 212, 0.1) 100%);
   }
-  
+
   /* Accent color (purple) with luxury styling */
   .bg-accent {
     background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 50%, #7c3aed 100%);
     box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
   }
-  
+
   .text-accent {
     color: #a78bfa;
     font-weight: 600;
   }
-  
+
   .bg-accent\/10 {
     background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
   }
-  
+
   .bg-accent\/20 {
     background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
   }
-  
+
   .hover\:bg-accent\/80:hover {
     background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
     transform: translateY(-2px);
@@ -339,7 +359,7 @@ img[width][height] {
       0 5px 15px rgba(139, 92, 246, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
-  
+
   .shadow-highlight {
     box-shadow: 
       0 25px 50px -5px rgba(6, 182, 212, 0.5),
@@ -394,7 +414,7 @@ img[width][height] {
     transform: translateZ(0);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--card-shadow-3d);
-    
+
   }
 
   .btn-primary:hover {
@@ -406,7 +426,7 @@ img[width][height] {
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
     border-color: rgba(139, 92, 246, 0.3);
   }
-  
+
   .btn-secondary {
     background: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
     color: white;
@@ -430,7 +450,7 @@ img[width][height] {
       0 15px 30px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
-  
+
   .btn-accent {
     background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 50%, #7c3aed 100%);
     color: white;
@@ -454,7 +474,7 @@ img[width][height] {
       0 15px 30px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
-  
+
   .btn-outline {
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
     border: 2px solid rgba(139, 92, 246, 0.5);
@@ -465,7 +485,7 @@ img[width][height] {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateZ(0);
     backdrop-filter: blur(10px);
-    
+
   }
 
   .btn-outline:hover {
@@ -478,20 +498,20 @@ img[width][height] {
       0 10px 20px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
-  
+
   /* Typography enhancements */
   .heading-xl {
     @apply font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
   }
-  
+
   .heading-lg {
     @apply font-serif text-3xl md:text-4xl font-bold leading-tight;
   }
-  
+
   .heading-md {
     @apply font-serif text-2xl md:text-3xl font-bold leading-tight;
   }
-  
+
   .body-lg {
     @apply text-lg leading-relaxed;
   }
@@ -500,11 +520,11 @@ img[width][height] {
   .hover-lift {
     @apply transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg;
   }
-  
+
   .fade-in {
     @apply opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards];
   }
-  
+
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -609,6 +629,7 @@ img[width][height] {
     left: 0;
     right: 0;
     height: 40%;
+```text
     background: linear-gradient(0deg, 
       rgba(139, 106, 70, 0.85) 0%, 
       rgba(160, 123, 82, 0.6) 30%, 

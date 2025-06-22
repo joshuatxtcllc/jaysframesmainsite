@@ -33,7 +33,7 @@ const Home = () => {
   return (
     <>
       <SeoHead 
-        title="Houston Custom Framing | Jay's Frames Studio"
+        title="Houston Custom Framing | Jay's Frames"
         description="Houston's premier custom framing studio. Museum-quality picture framing, art preservation & design consultation in Houston Heights. 25+ years experience."
         keywords="custom framing Houston, picture framing Houston Heights, museum quality framing, art preservation Houston, frame shop near me, professional framing services"
         canonicalUrl="https://jaysframes.com/"
