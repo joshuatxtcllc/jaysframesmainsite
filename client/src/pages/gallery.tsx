@@ -109,9 +109,10 @@ const Gallery = () => {
   return (
     <div className="bg-white">
       <Helmet>
-        <title>Gallery | Jay's Frames Custom Framing Portfolio</title>
+        <title>Framing Gallery | Jay's Frames Houston</title>
         <meta name="description" content="Explore our gallery of custom framing projects. See examples of our expert craftsmanship and find inspiration for your own artwork framing needs." />
         <meta name="keywords" content="custom framing gallery, picture framing portfolio, Houston framing examples, art preservation showcase, Jay's Frames work" />
+        <link rel="canonical" href="https://jaysframes.repl.co/gallery" />
       </Helmet>
 
       {/* Hero Section */}
