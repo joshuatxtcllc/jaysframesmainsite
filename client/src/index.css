@@ -629,7 +629,6 @@ img[width][height] {
     left: 0;
     right: 0;
     height: 40%;
-    ```text
     background: linear-gradient(0deg, 
       rgba(139, 106, 70, 0.85) 0%, 
       rgba(160, 123, 82, 0.6) 30%, 
