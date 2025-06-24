@@ -31,6 +31,11 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
   // Default image for items without an image
   const defaultImage = "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
 
+  // Add safety check to prevent hook errors
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="w-full sm:max-w-md overflow-y-auto border-l border-neutral-100 p-0">
