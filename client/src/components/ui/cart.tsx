@@ -18,6 +18,7 @@ interface CartProps {
 }
 
 const Cart = ({ isOpen, onClose }: CartProps) => {
+  console.log('Cart component rendered with isOpen:', isOpen);
   const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
 
   const handleQuantityChange = (id: string, change: number, currentQuantity: number) => {

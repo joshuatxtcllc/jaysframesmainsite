@@ -108,10 +108,12 @@ const Header = () => {
   };
 
   const toggleCart = () => {
+    console.log('Cart toggle clicked, current state:', cartOpen);
     setCartOpen(!cartOpen);
   };
 
   const closeCart = () => {
+    console.log('Closing cart');
     setCartOpen(false);
   };
 
@@ -136,6 +138,15 @@ const Header = () => {
 
   return (
     <>
+      {/* Cart Component */}
+      <Cart isOpen={cartOpen} onClose={closeCart} />
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
+
       {/* Top info bar */}
       <div className="bg-black border-b border-white/10 py-2 hidden md:block">
         <div className="container mx-auto px-4">
@@ -310,7 +321,12 @@ const Header = () => {
 
               <button 
                 className="text-white/80 hover:text-cyan-400 transition-colors relative" 
-                onClick={toggleCart}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('Cart button clicked!');
+                  toggleCart();
+                }}
                 aria-label="Shopping cart"
               >
                 <ShoppingCart className="h-5 w-5" />
