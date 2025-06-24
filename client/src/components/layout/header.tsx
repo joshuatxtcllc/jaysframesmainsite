@@ -138,8 +138,8 @@ const Header = () => {
 
   return (
     <>
-      {/* Cart Component */}
-      <Cart isOpen={cartOpen} onClose={closeCart} />
+      {/* Cart Component - Temporarily disabled due to React hook error */}
+      {/* <Cart isOpen={cartOpen} onClose={closeCart} /> */}
       
       {/* Auth Modal */}
       <AuthModal 

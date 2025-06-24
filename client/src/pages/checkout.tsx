@@ -427,6 +427,23 @@ export default function Checkout() {
     return null; // Will redirect in useEffect
   }
 
+  if (!stripePromise) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <h2 className="text-xl font-semibold mb-2">Payment Unavailable</h2>
+                <p className="text-neutral-600">Payment processing is currently unavailable. Please contact support.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Elements stripe={stripePromise}>
       <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white">
