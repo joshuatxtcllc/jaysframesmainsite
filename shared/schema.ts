@@ -95,12 +95,28 @@ export const orders = pgTable("orders", {
   adminNotes: text("admin_notes"), // Notes visible only to admins/staff
 });
 
-export const insertOrderSchema = createInsertSchema(orders).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  completedAt: true,
-  stageHistory: true,
+export const insertOrderSchema = z.object({
+  customerName: z.string().min(1),
+  customerEmail: z.string().email(),
+  customerPhone: z.string().optional(),
+  items: z.array(z.object({
+    productId: z.number(),
+    quantity: z.number(),
+    price: z.number(),
+    name: z.string().optional(),
+    details: z.any().optional()
+  })),
+  totalAmount: z.number(),
+  status: z.string().default("pending"),
+  shippingAddress: z.object({
+    name: z.string(),
+    address: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zipCode: z.string()
+  }).optional(),
+  notes: z.string().optional(),
+  paymentIntentId: z.string().optional()
 });
 
 // Frame options model
