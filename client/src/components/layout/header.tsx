@@ -179,12 +179,12 @@ const Header = () => {
 
       {/* Main header */}
       <header className={`bg-black/95 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-2xl border-b border-white/10 py-3' : 'py-4'}`}>
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center">
+            <div className="flex items-center flex-shrink-0 min-w-0">
               <Link href="/">
                 <div className="flex items-center cursor-pointer">
-                  <span className="text-2xl font-bold text-white font-serif tracking-wide">
+                  <span className="text-lg sm:text-2xl font-bold text-white font-serif tracking-wide truncate">
                     Jay's <span className="text-cyan-400">Frames</span>
                   </span>
                 </div>
@@ -240,8 +240,8 @@ const Header = () => {
               </Popover>
             </nav>
 
-            <div className="flex items-center space-x-5">
-              <button className="text-white/80 hover:text-cyan-400 transition-colors" aria-label="Search">
+            <div className="flex items-center space-x-2 sm:space-x-5 flex-shrink-0">
+              <button className="hidden sm:block text-white/80 hover:text-cyan-400 transition-colors" aria-label="Search">
                 <Search className="h-5 w-5" />
               </button>
 
@@ -249,7 +249,7 @@ const Header = () => {
               <Popover>
                 <PopoverTrigger asChild>
                   <button 
-                    className="text-white/80 hover:text-cyan-400 transition-colors relative" 
+                    className="hidden sm:block text-white/80 hover:text-cyan-400 transition-colors relative" 
                     aria-label="Notifications"
                     onClick={() => setHasUnread(false)}
                   >
@@ -337,11 +337,11 @@ const Header = () => {
                 )}
               </button>
 
-              {/* User Authentication */}
+              {/* User Authentication - Hidden on mobile for space */}
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center space-x-2 text-white/80 hover:text-cyan-400 bg-transparent hover:bg-white/5">
+                    <Button variant="ghost" className="hidden sm:flex items-center space-x-2 text-white/80 hover:text-cyan-400 bg-transparent hover:bg-white/5">
                       <User className="h-4 w-4" />
                       <span className="hidden md:inline">{user.firstName || user.username}</span>
                     </Button>
@@ -372,7 +372,7 @@ const Header = () => {
                 <Button 
                   variant="ghost" 
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="text-primary hover:text-secondary"
+                  className="hidden sm:flex text-primary hover:text-secondary"
                 >
                   <User className="h-4 w-4 mr-2" />
                   Sign In
@@ -384,10 +384,10 @@ const Header = () => {
               </Button>
 
               {/* Mobile-first click-to-call */}
-              <Button asChild className="md:hidden bg-primary hover:bg-primary/90">
-                <a href="tel:+18328933794" className="flex items-center gap-2">
-                  <Phone className="h-4 w-4" />
-                  Call Now
+              <Button asChild className="md:hidden bg-primary hover:bg-primary/90 text-xs px-2 py-1">
+                <a href="tel:+18328933794" className="flex items-center gap-1">
+                  <Phone className="h-3 w-3" />
+                  <span className="hidden xs:inline">Call</span>
                 </a>
               </Button>
 
@@ -398,14 +398,14 @@ const Header = () => {
               </Link>
 
               <button 
-                className="md:hidden text-white/80 hover:text-cyan-400 transition-colors p-2 -mr-2" 
+                className="md:hidden text-white/80 hover:text-cyan-400 transition-colors p-1" 
                 onClick={toggleMobileMenu}
                 aria-label="Menu"
               >
                 {mobileMenuOpen ? (
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5" />
                 ) : (
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-5 w-5" />
                 )}
               </button>
             </div>

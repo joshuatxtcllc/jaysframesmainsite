@@ -41,12 +41,10 @@ const Home = () => {
 
       <Hero />
       <LocationSection />
-      <PrintingSection />
       <AboutSection />
       <CustomizationSection />
       <ArchivalScienceSection />
       <Process />
-      <Testimonials />
 
       {/* AI Frame Designer Section */}
       <section className="relative py-16 overflow-hidden">
@@ -419,6 +417,7 @@ const Home = () => {
       </section>
 
       <Testimonials />
+      <PrintingSection />
 
       {/* Chatbot */}
       <div className="fixed bottom-6 right-6 z-50">

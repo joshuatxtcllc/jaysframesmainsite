@@ -588,6 +588,20 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     });
   };
 
+    // Function to fetch frame recommendations from the API
+    const getFrameRecommendations = async (description: string) => {
+        try {
+            const res = await apiRequest("POST", "/api/frame-recommendations", {
+                artworkDescription: description
+            });
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            console.error("Error getting frame recommendations:", error);
+            throw error;
+        }
+    };
+
   // AI Recommendation mutation
   const aiRecommendationMutation = useMutation({
     mutationFn: async (description: string) => {
@@ -657,15 +671,13 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
     setImageAnalysisResult(null);
   };
 
-  // Analyze uploaded image with AI
-  const analyzeImageForFraming = async () => {
-    if (!selectedFile) return;
-
+    const handleImageAnalysis = async (file: File) => {
     setIsAnalyzingImage(true);
-    
+    setImageAnalysisResult(null);
+
     try {
       const formData = new FormData();
-      formData.append('image', selectedFile);
+      formData.append('image', file);
 
       const response = await fetch('/api/frame-fitting-assistant', {
         method: 'POST',
@@ -678,18 +690,18 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
 
       const result = await response.json();
       setImageAnalysisResult(result);
-      
+
       // Auto-apply the recommendations
       if (result.recommendations?.frames?.length > 0) {
         const recommendedFrame = result.recommendations.frames[0];
         setSelectedFrame(recommendedFrame.id);
       }
-      
+
       if (result.recommendations?.mats?.length > 0) {
         const recommendedMat = result.recommendations.mats[0];
         setSelectedMat(recommendedMat.id);
       }
-      
+
       toast({
         title: "Image analysis complete",
         description: "AI recommendations have been applied to your design",
@@ -1545,7 +1557,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                       className="w-full h-32 object-cover"
                     />
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <Button 
                       variant="outline" 
@@ -1596,7 +1608,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                   <p className="text-xs text-neutral-600 mb-3 text-center">
                     {imageAnalysisResult.reasoning}
                   </p>
-                  
+
                   {imageAnalysisResult.recommendations && (
                     <div className="grid grid-cols-2 gap-3">
                       {/* Top Frame Recommendations */}
@@ -1617,7 +1629,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                                   <div className="flex items-center space-x-1">
                                     <div className="flex">
                                       {[...Array(5)].map((_, i) => (
-                                        <div key={i} className={`w-1 h-1 rounded-full ${i < Math.floor(frameRec.score / 2) ? 'bg-accent' : 'bg-neutral-200'}`} />
+                                        <div key={i} className={`w-1 h-1 rounded-full ${i < Math.floor(frameRec.score 2) ? 'bg-accent' : 'bg-neutral-200'}`} />
                                       ))}
                                     </div>
                                     <span className="text-xs text-neutral-500">{frameRec.score}/10</span>
