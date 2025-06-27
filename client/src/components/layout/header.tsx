@@ -164,7 +164,7 @@ const Header = () => {
             </div>
             <div className="flex space-x-4">
               <Link href="/order-status">
-                <span className="hover:text-cyan-400 transition-colors cursor-pointer">Track Order</span>
+                <span className="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors cursor-pointer bg-cyan-400/10 px-2 py-1 rounded-md border border-cyan-400/20">Track Order</span>
               </Link>
               <Link href="#">
                 <span className="hover:text-cyan-400 transition-colors cursor-pointer">FAQ</span>
