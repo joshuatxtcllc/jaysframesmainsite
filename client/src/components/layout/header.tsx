@@ -178,13 +178,13 @@ const Header = () => {
       </div>
 
       {/* Main header */}
-      <header className={`bg-black/95 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-2xl border-b border-white/10 py-3' : 'py-4'}`}>
-        <div className="container mx-auto px-2 sm:px-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center flex-shrink-0 min-w-0">
+      <header className={`bg-black/95 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-2xl border-b border-white/10 py-2 md:py-3' : 'py-3 md:py-4'}`}>
+        <div className="container mx-auto px-2 md:px-4">
+          <div className="flex justify-between items-center min-h-[44px] md:min-h-[52px]">
+            <div className="flex items-center flex-shrink-0">
               <Link href="/">
                 <div className="flex items-center cursor-pointer">
-                  <span className="text-lg sm:text-2xl font-bold text-white font-serif tracking-wide truncate">
+                  <span className="text-lg md:text-2xl font-bold text-white font-serif tracking-wide">
                     Jay's <span className="text-cyan-400">Frames</span>
                   </span>
                 </div>
@@ -240,16 +240,17 @@ const Header = () => {
               </Popover>
             </nav>
 
-            <div className="flex items-center space-x-2 sm:space-x-5 flex-shrink-0">
-              <button className="hidden sm:block text-white/80 hover:text-cyan-400 transition-colors" aria-label="Search">
+            <div className="flex items-center space-x-3 md:space-x-5">
+              {/* Search - Hidden on mobile */}
+              <button className="hidden md:block text-white/80 hover:text-cyan-400 transition-colors" aria-label="Search">
                 <Search className="h-5 w-5" />
               </button>
 
-              {/* Notifications Bell */}
+              {/* Notifications Bell - Hidden on mobile */}
               <Popover>
                 <PopoverTrigger asChild>
                   <button 
-                    className="hidden sm:block text-white/80 hover:text-cyan-400 transition-colors relative" 
+                    className="hidden md:block text-white/80 hover:text-cyan-400 transition-colors relative" 
                     aria-label="Notifications"
                     onClick={() => setHasUnread(false)}
                   >
@@ -319,6 +320,7 @@ const Header = () => {
                 </PopoverContent>
               </Popover>
 
+              {/* Cart button - Always visible */}
               <button 
                 className="text-white/80 hover:text-cyan-400 transition-colors relative" 
                 onClick={(e) => {
@@ -329,21 +331,21 @@ const Header = () => {
                 }}
                 aria-label="Shopping cart"
               >
-                <ShoppingCart className="h-5 w-5" />
+                <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
                 {cartItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+                  <span className="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center shadow-sm text-[10px] md:text-xs">
                     {cartItems.length}
                   </span>
                 )}
               </button>
 
-              {/* User Authentication - Hidden on mobile for space */}
+              {/* User Authentication - Simplified for mobile */}
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="hidden sm:flex items-center space-x-2 text-white/80 hover:text-cyan-400 bg-transparent hover:bg-white/5">
+                    <Button variant="ghost" className="flex items-center space-x-1 md:space-x-2 text-white/80 hover:text-cyan-400 bg-transparent hover:bg-white/5 p-1 md:p-2">
                       <User className="h-4 w-4" />
-                      <span className="hidden md:inline">{user.firstName || user.username}</span>
+                      <span className="hidden sm:inline text-xs md:text-sm">{user.firstName || user.username}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
@@ -372,33 +374,36 @@ const Header = () => {
                 <Button 
                   variant="ghost" 
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="hidden sm:flex text-primary hover:text-secondary"
+                  className="text-primary hover:text-secondary p-1 md:p-2"
                 >
-                  <User className="h-4 w-4 mr-2" />
-                  Sign In
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-1 md:ml-2 text-xs md:text-sm">Sign In</span>
                 </Button>
               )}
 
-              <Button asChild className="hidden md:inline-flex">
+              {/* Contact button - Hidden on mobile */}
+              <Button asChild className="hidden lg:inline-flex">
                 <a href="/contact">Contact</a>
               </Button>
 
-              {/* Mobile-first click-to-call */}
+              {/* Mobile-first click-to-call - Smaller on mobile */}
               <Button asChild className="md:hidden bg-primary hover:bg-primary/90 text-xs px-2 py-1">
                 <a href="tel:+18328933794" className="flex items-center gap-1">
                   <Phone className="h-3 w-3" />
-                  <span className="hidden xs:inline">Call</span>
+                  Call
                 </a>
               </Button>
 
-              <Link href="/custom-framing" className="hidden md:block">
+              {/* Start Framing button - Hidden on mobile */}
+              <Link href="/custom-framing" className="hidden lg:block">
                 <Button className="bg-secondary hover:bg-secondary/80 text-white text-sm">
                   Start Framing
                 </Button>
               </Link>
 
+              {/* Hamburger menu - Properly positioned */}
               <button 
-                className="md:hidden text-white/80 hover:text-cyan-400 transition-colors p-1" 
+                className="md:hidden text-white/80 hover:text-cyan-400 transition-colors p-1 ml-2" 
                 onClick={toggleMobileMenu}
                 aria-label="Menu"
               >
