@@ -83,7 +83,7 @@ export default function Hero() {
           >
             <span className="text-white font-medium">Houston's Best Custom Frame Shop</span> where traditional craftsmanship meets cutting-edge technology.
             <span className="block mt-2 text-lg md:text-xl text-cyan-300 font-medium drop-shadow-md">
-              Luxury custom framing in Houston with museum-quality preservation.
+              Expert custom framing in Houston with museum-quality preservation.
             </span>
           </motion.p>
 
