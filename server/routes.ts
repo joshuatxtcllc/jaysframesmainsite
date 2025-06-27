@@ -2163,14 +2163,24 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         });
       }
 
+      // Enhanced metadata for better tracking
+      const enhancedMetadata = {
+        ...metadata,
+        timestamp: new Date().toISOString(),
+        source: 'jaysframes-checkout',
+        amount_dollars: (amount / 100).toString()
+      };
+
       // Create payment intent with Stripe
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Convert to cents
+        amount: Math.round(amount), // Amount should already be in cents from frontend
         currency,
-        metadata,
+        metadata: enhancedMetadata,
         automatic_payment_methods: {
           enabled: true,
         },
+        receipt_email: metadata.customerEmail || undefined,
+        description: `Jay's Frames Order - Custom Framing Services`,
       });
 
       res.json({ 
@@ -2231,6 +2241,119 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
       console.error("Error confirming payment:", error);
       res.status(500).json({ 
         message: "Error confirming payment: " + error.message 
+      });
+    }
+  });
+
+  // Stripe webhook endpoint for payment confirmations
+  app.post("/api/webhooks/stripe", async (req: Request, res: Response) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ 
+          message: "Payment processing is not configured" 
+        });
+      }
+
+      const sig = req.headers['stripe-signature'];
+      const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+      if (!sig || !endpointSecret) {
+        return res.status(400).json({ 
+          message: "Missing Stripe signature or webhook secret" 
+        });
+      }
+
+      let event;
+
+      try {
+        // Verify webhook signature
+        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+      } catch (err: any) {
+        console.error('Webhook signature verification failed:', err.message);
+        return res.status(400).json({ 
+          message: `Webhook signature verification failed: ${err.message}` 
+        });
+      }
+
+      // Handle the event
+      switch (event.type) {
+        case 'payment_intent.succeeded':
+          const paymentIntent = event.data.object;
+          console.log('Payment succeeded:', paymentIntent.id);
+          
+          // Extract order information from metadata
+          if (paymentIntent.metadata && paymentIntent.metadata.orderId) {
+            try {
+              await storage.updateOrderStatus(
+                parseInt(paymentIntent.metadata.orderId), 
+                'paid',
+                'payment_confirmed'
+              );
+              
+              // Send confirmation notification
+              if (paymentIntent.metadata.customerEmail) {
+                sendNotification({
+                  title: `Payment Confirmed - Order #${paymentIntent.metadata.orderId}`,
+                  description: "Your payment has been successfully processed.",
+                  source: 'stripe-webhook',
+                  sourceId: paymentIntent.metadata.orderId,
+                  type: "success",
+                  actionable: true,
+                  link: `/order-status?orderId=${paymentIntent.metadata.orderId}`,
+                  recipient: paymentIntent.metadata.customerEmail
+                }).catch(error => {
+                  console.error('Failed to send payment confirmation notification:', error);
+                });
+              }
+            } catch (error) {
+              console.error('Error updating order after payment:', error);
+            }
+          }
+          break;
+
+        case 'payment_intent.payment_failed':
+          const failedPayment = event.data.object;
+          console.log('Payment failed:', failedPayment.id);
+          
+          // Handle failed payment
+          if (failedPayment.metadata && failedPayment.metadata.orderId) {
+            try {
+              await storage.updateOrderStatus(
+                parseInt(failedPayment.metadata.orderId), 
+                'payment_failed',
+                'payment_error'
+              );
+              
+              // Send failure notification
+              if (failedPayment.metadata.customerEmail) {
+                sendNotification({
+                  title: `Payment Failed - Order #${failedPayment.metadata.orderId}`,
+                  description: "Your payment could not be processed. Please try again or contact support.",
+                  source: 'stripe-webhook',
+                  sourceId: failedPayment.metadata.orderId,
+                  type: "error",
+                  actionable: true,
+                  link: `/order-status?orderId=${failedPayment.metadata.orderId}`,
+                  recipient: failedPayment.metadata.customerEmail
+                }).catch(error => {
+                  console.error('Failed to send payment failure notification:', error);
+                });
+              }
+            } catch (error) {
+              console.error('Error updating order after payment failure:', error);
+            }
+          }
+          break;
+
+        default:
+          console.log(`Unhandled event type ${event.type}`);
+      }
+
+      res.json({ received: true });
+    } catch (error: any) {
+      console.error("Webhook error:", error);
+      res.status(500).json({ 
+        message: "Webhook error: " + error.message 
       });
     }
   });

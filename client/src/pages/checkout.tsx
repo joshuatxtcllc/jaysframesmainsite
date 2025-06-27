@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -8,45 +9,34 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { CreditCard, Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { CreditCard, Lock, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
 import { SeoHead } from "@/components/seo";
 import { CartItem } from "@/types";
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  Elements,
+  CardElement,
+  useElements,
+  useStripe
+} from '@stripe/react-stripe-js';
 
-// Stripe Elements components (simulated for now)
-const CardElement = ({ onChange }: { onChange: (event: any) => void }) => {
-  return (
-    <div className="border border-neutral-300 rounded-md p-3 bg-white">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div>
-          <Label htmlFor="card-number" className="text-xs text-neutral-600">Card Number</Label>
-          <Input
-            id="card-number"
-            placeholder="1234 5678 9012 3456"
-            className="border-0 p-0 text-sm"
-            onChange={(e) => onChange({ complete: e.target.value.length >= 16 })}
-          />
-        </div>
-        <div>
-          <Label htmlFor="card-expiry" className="text-xs text-neutral-600">MM/YY</Label>
-          <Input
-            id="card-expiry"
-            placeholder="12/34"
-            className="border-0 p-0 text-sm"
-            maxLength={5}
-          />
-        </div>
-        <div>
-          <Label htmlFor="card-cvc" className="text-xs text-neutral-600">CVC</Label>
-          <Input
-            id="card-cvc"
-            placeholder="123"
-            className="border-0 p-0 text-sm"
-            maxLength={4}
-          />
-        </div>
-      </div>
-    </div>
-  );
+// Initialize Stripe - Replace with your publishable key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51234567890abcdef');
+
+const CARD_ELEMENT_OPTIONS = {
+  style: {
+    base: {
+      fontSize: '16px',
+      color: '#424770',
+      '::placeholder': {
+        color: '#aab7c4',
+      },
+    },
+    invalid: {
+      color: '#9e2146',
+    },
+  },
+  hidePostalCode: false,
 };
 
 interface CheckoutFormData {
@@ -59,7 +49,9 @@ interface CheckoutFormData {
   phone: string;
 }
 
-export default function Checkout() {
+function CheckoutForm() {
+  const stripe = useStripe();
+  const elements = useElements();
   const [, setLocation] = useLocation();
   const { cartItems, getCartTotal, clearCart } = useCart();
   const items = cartItems;
@@ -77,9 +69,8 @@ export default function Checkout() {
   });
   
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentIntent, setPaymentIntent] = useState<any>(null);
-  const [cardComplete, setCardComplete] = useState(false);
   const [cardError, setCardError] = useState<string | null>(null);
+  const [cardComplete, setCardComplete] = useState(false);
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -104,9 +95,46 @@ export default function Checkout() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const createPaymentIntent = async () => {
+  const handleCardChange = (event: any) => {
+    setCardError(event.error ? event.error.message : null);
+    setCardComplete(event.complete);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!stripe || !elements) {
+      toast({
+        title: "Payment system loading",
+        description: "Please wait for the payment system to load and try again.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.email || !formData.name || !formData.address) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!cardComplete) {
+      toast({
+        title: "Payment information required",
+        description: "Please enter your complete credit card information.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+
     try {
-      const response = await apiRequest("POST", "/api/create-payment-intent", {
+      // Create payment intent on the server
+      const paymentIntentResponse = await apiRequest("POST", "/api/create-payment-intent", {
         amount: total,
         metadata: {
           items: JSON.stringify(items.map((item: CartItem) => ({
@@ -120,89 +148,86 @@ export default function Checkout() {
         }
       });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create payment intent");
+      if (!paymentIntentResponse.ok) {
+        const errorData = await paymentIntentResponse.json();
+        throw new Error(errorData.message || "Failed to create payment intent");
       }
 
-      return data;
-    } catch (error) {
-      console.error("Error creating payment intent:", error);
-      throw error;
-    }
-  };
+      const { clientSecret, paymentIntentId } = await paymentIntentResponse.json();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.email || !formData.name || !formData.address) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
-      });
-      return;
-    }
+      // Get card element
+      const cardElement = elements.getElement(CardElement);
+      if (!cardElement) {
+        throw new Error("Card element not found");
+      }
 
-    if (!cardComplete) {
-      toast({
-        title: "Payment information required",
-        description: "Please enter your credit card information.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsProcessing(true);
-
-    try {
-      // Create payment intent
-      const paymentData = await createPaymentIntent();
-      
-      // Simulate payment processing (in a real app, you'd use Stripe.js)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Create order with customer information
-      const orderResponse = await apiRequest("POST", "/api/orders", {
-        customerName: formData.name,
-        customerEmail: formData.email,
-        customerPhone: formData.phone,
-        items: items.map((item: CartItem) => ({
-          productId: item.productId || 1,
-          quantity: item.quantity,
-          price: item.price,
-          name: item.name,
-          details: item.details
-        })),
-        totalAmount: total,
-        status: "paid",
-        shippingAddress: {
-          name: formData.name,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          zipCode: formData.zipCode
+      // Confirm payment with Stripe
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: formData.name,
+            email: formData.email,
+            address: {
+              line1: formData.address,
+              city: formData.city,
+              state: formData.state,
+              postal_code: formData.zipCode,
+            },
+          },
         },
-        notes: `Payment processed via Stripe. Payment Intent: ${paymentData.paymentIntentId}`
       });
 
-      if (!orderResponse.ok) {
-        const errorData = await orderResponse.json();
-        throw new Error(errorData.message || "Failed to create order");
+      if (error) {
+        console.error('Payment confirmation error:', error);
+        throw new Error(error.message || "Payment failed");
       }
 
-      const order = await orderResponse.json();
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Create order after successful payment
+        const orderResponse = await apiRequest("POST", "/api/orders", {
+          customerName: formData.name,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          items: items.map((item: CartItem) => ({
+            productId: item.productId || 1,
+            quantity: item.quantity,
+            price: item.price,
+            name: item.name,
+            details: item.details
+          })),
+          totalAmount: total,
+          status: "paid",
+          shippingAddress: {
+            name: formData.name,
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zipCode: formData.zipCode
+          },
+          notes: `Payment processed via Stripe. Payment Intent: ${paymentIntentId}`
+        });
 
-      // Clear cart and redirect to success
-      clearCart();
-      
-      toast({
-        title: "Order placed successfully!",
-        description: `Order #${order.id} has been created. You'll receive a confirmation email shortly.`,
-      });
+        if (!orderResponse.ok) {
+          const errorData = await orderResponse.json();
+          throw new Error(errorData.message || "Failed to create order");
+        }
 
-      // Redirect to order confirmation
-      setLocation(`/order-confirmation/${order.id}`);
+        const order = await orderResponse.json();
+
+        // Clear cart and redirect to success
+        clearCart();
+        
+        toast({
+          title: "Payment successful!",
+          description: `Order #${order.id} has been created. You'll receive a confirmation email shortly.`,
+        });
+
+        // Redirect to order confirmation
+        setLocation(`/order-confirmation/${order.id}`);
+      } else {
+        throw new Error("Payment was not completed successfully");
+      }
       
     } catch (error: any) {
       console.error("Checkout error:", error);
@@ -356,14 +381,17 @@ export default function Checkout() {
                     <div className="space-y-4">
                       <div>
                         <Label className="text-sm font-medium">Credit Card Details</Label>
-                        <CardElement 
-                          onChange={(event) => {
-                            setCardComplete(event.complete);
-                            setCardError(event.error?.message || null);
-                          }}
-                        />
+                        <div className="border border-neutral-300 rounded-md p-3 bg-white">
+                          <CardElement
+                            options={CARD_ELEMENT_OPTIONS}
+                            onChange={handleCardChange}
+                          />
+                        </div>
                         {cardError && (
-                          <p className="text-sm text-red-600 mt-1">{cardError}</p>
+                          <div className="flex items-center space-x-2 mt-2">
+                            <AlertCircle className="h-4 w-4 text-red-600" />
+                            <p className="text-sm text-red-600">{cardError}</p>
+                          </div>
                         )}
                       </div>
                       
@@ -378,7 +406,7 @@ export default function Checkout() {
                         <Button 
                           type="submit" 
                           className="w-full bg-primary hover:bg-primary/90 text-white"
-                          disabled={isProcessing || !cardComplete}
+                          disabled={isProcessing || !cardComplete || !stripe}
                         >
                           {isProcessing ? (
                             <>
@@ -448,5 +476,13 @@ export default function Checkout() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Checkout() {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm />
+    </Elements>
   );
 }
