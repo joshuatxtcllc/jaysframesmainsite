@@ -9,6 +9,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, DollarSign, Package } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 const FAQ = () => {
   const faqCategories = [
@@ -86,9 +87,121 @@ const FAQ = () => {
     }
   ];
 
+  // Generate FAQ structured data
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqCategories.flatMap(category => 
+      category.questions.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    )
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto">
+      <Helmet>
+        <title>Custom Framing FAQ - Houston Heights | Jay's Frames</title>
+        <meta name="description" content="Get answers to the most common questions about professional picture framing in Houston. Learn about pricing, timeline, services, and our Heights location." />
+        <meta name="keywords" content="custom framing FAQ, Houston framing questions, picture framing cost, framing timeline, Jay's Frames FAQ, Heights framing shop" />
+        <link rel="canonical" href="https://jaysframes.com/faq" />
+        
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="Custom Framing FAQ - Houston Heights | Jay's Frames" />
+        <meta property="og:description" content="Get answers to the most common questions about professional picture framing in Houston. Learn about pricing, timeline, services, and our Heights location." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://jaysframes.com/faq" />
+        <meta property="og:image" content="https://jaysframes.com/images/jays-frames-og-image.jpg" />
+        
+        {/* Twitter Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Custom Framing FAQ - Houston Heights | Jay's Frames" />
+        <meta name="twitter:description" content="Get answers to the most common questions about professional picture framing in Houston. Learn about pricing, timeline, services, and our Heights location." />
+        <meta name="twitter:image" content="https://jaysframes.com/images/jays-frames-og-image.jpg" />
+        
+        {/* FAQ Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(faqStructuredData)}
+        </script>
+        
+        {/* Local Business Structured Data */}
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Jay's Frames",
+            "description": "Houston's premier custom framing studio in the Heights area featuring professional picture framing services with fast turnaround times.",
+            "url": "https://jaysframes.com",
+            "telephone": "+18328933794",
+            "email": "info@jaysframes.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "218 W 27th St",
+              "addressLocality": "Houston",
+              "addressRegion": "TX",
+              "postalCode": "77008",
+              "addressCountry": "US"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "29.7904",
+              "longitude": "-95.3988"
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "10:00",
+                "closes": "18:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Saturday",
+                "opens": "11:00",
+                "closes": "17:00"
+              }
+            ],
+            "priceRange": "$$",
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Custom Framing Services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Custom Picture Framing",
+                    "description": "Professional custom framing starting at $89"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Shadow Box Framing",
+                    "description": "Dimensional framing for memorabilia and 3D objects"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Conservation Framing",
+                    "description": "Museum-quality preservation framing for valuable artwork"
+                  }
+                }
+              ]
+            }
+          }
+        `}</script>
+      </Helmet>
+      
+      <div className="max-w-4xl mx-auto"></div>
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
