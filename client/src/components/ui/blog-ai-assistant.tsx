@@ -246,10 +246,10 @@ export function BlogAIAssistant() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
-              AI Blog Assistant
+              Custom Framing Blog Assistant
             </DialogTitle>
             <DialogDescription>
-              Ask me to generate blog posts, get writing tips, or help with content strategy.
+              Expert in custom framing topics - generate posts about conservation, materials, techniques, and Houston framing trends.
             </DialogDescription>
           </DialogHeader>
 
@@ -259,14 +259,16 @@ export function BlogAIAssistant() {
               {messages.length === 0 && (
                 <div className="text-center text-muted-foreground py-8">
                   <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Hi! I'm your AI blog assistant. I can help you:</p>
+                  <p>Hi! I'm your custom framing blog assistant. I specialize in:</p>
                   <ul className="mt-2 text-sm space-y-1">
-                    <li>• Generate engaging blog posts about framing</li>
-                    <li>• Provide SEO-optimized content ideas</li>
-                    <li>• Help with content strategy</li>
-                    <li>• Answer questions about your blog</li>
+                    <li>• Frame selection guides and material comparisons</li>
+                    <li>• Conservation and preservation techniques</li>
+                    <li>• Matting options and color coordination</li>
+                    <li>• Glass types and UV protection</li>
+                    <li>• Houston-specific framing trends and tips</li>
+                    <li>• Shadow box and dimensional framing</li>
                   </ul>
-                  <p className="mt-4 font-medium">Just ask me to "generate a blog post about..." to get started!</p>
+                  <p className="mt-4 font-medium">Try: "Generate a blog post about choosing the right mat color" or "Write about UV protection for artwork"</p>
                 </div>
               )}
 
@@ -362,7 +364,7 @@ export function BlogAIAssistant() {
           {/* Input Area */}
           <div className="flex gap-2 pt-4">
             <Input
-              placeholder="Ask me to generate a blog post or help with content..."
+              placeholder="Ask about custom framing topics, conservation, matting, or generate blog posts..."
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}

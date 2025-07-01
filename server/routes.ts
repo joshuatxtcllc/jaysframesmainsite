@@ -1914,8 +1914,23 @@ app.post("/api/validate-discount", async (req, res) => {
         return res.status(400).json({ message: "Message is required" });
       }
 
-      // Use existing AI service to get response
-      const response = await askFrameAssistant(`As a blog content expert for Jay's Frames custom framing business, help with this request: ${message}`);
+      // Use existing AI service to get response with specialized framing context
+      const framingContext = `As an expert custom framing blog content specialist for Jay's Frames in Houston, you have 15+ years of professional framing experience. You specialize in:
+
+- Conservation framing and archival materials
+- Frame material selection (wood vs metal profiles)
+- Matting techniques and color theory
+- Glass options (standard, UV-protective, museum glass)
+- Shadow box and dimensional framing
+- Houston climate considerations for artwork preservation
+- Larson-Juhl frame collections and Crescent mat selections
+- Professional mounting and preservation techniques
+
+Always provide detailed, professional advice that reflects Jay's expertise in custom framing. Include specific technical details, material recommendations, and practical tips that framers and customers would find valuable.
+
+Request: ${message}`;
+
+      const response = await askFrameAssistant(framingContext);
 
       res.json({ response });
     } catch (error) {
@@ -1937,56 +1952,97 @@ app.post("/api/validate-discount", async (req, res) => {
       const keyword = prompt.toLowerCase().replace(/generate|create|write|blog post|about/g, '').trim();
       
       // Generate chat response
-      const chatResponse = `I'll generate a blog post about "${keyword}" for you! Here's what I've created:`;
+      const chatResponse = `I'll create a professional custom framing blog post about "${keyword}" based on Jay's 15+ years of expertise! Here's what I've generated:`;
 
       let generatedPost = null;
 
       if (includeGeneration) {
-        // Create a slug from the keyword
-        const slug = keyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `blog-post-${Date.now()}`;
+        // Use AI to generate more sophisticated content
+        const framingPrompt = `As a custom framing expert with 15+ years of experience at Jay's Frames in Houston, create a detailed, professional blog post about "${keyword}" in custom framing. Include:
 
-        // Generate content
-        const title = `The Ultimate Guide to ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} in Custom Framing`;
-        
-        const content = `# ${title}
+1. Technical expertise and specific material recommendations
+2. Conservation techniques and archival considerations
+3. Houston climate factors when relevant
+4. Specific frame, mat, and glass recommendations
+5. Professional tips from years of experience
+6. Customer education on quality and value
+7. Call-to-action for Jay's Frames services
+
+Make it informative, authoritative, and helpful for both DIY framers and customers seeking professional services.`;
+
+        try {
+          const aiContent = await askFrameAssistant(framingPrompt);
+          
+          // Create a slug from the keyword
+          const slug = keyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `framing-guide-${Date.now()}`;
+
+          // Generate title with framing focus
+          const title = keyword.includes('frame') || keyword.includes('mat') || keyword.includes('glass') 
+            ? `Professional Guide to ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`
+            : `Custom Framing Guide: ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`;
+
+          const excerpt = `Professional insights on ${keyword} from Houston's premier custom framing experts. Learn techniques, materials, and tips from 15+ years of framing experience.`;
+
+          generatedPost = {
+            title,
+            content: aiContent,
+            excerpt,
+            keywords: `${keyword}, custom framing, professional framing, Houston framing, conservation framing, picture framing, Jay's Frames, archival materials, museum quality`,
+            categoryId: 1 // Default to first category
+          };
+        } catch (aiError) {
+          // Fallback to template if AI fails
+          const slug = keyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `framing-guide-${Date.now()}`;
+          const title = `Professional Custom Framing: ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`;
+          
+          const content = `# ${title}
 
 ## Introduction
-When it comes to ${keyword}, understanding the nuances of custom framing can make all the difference in preserving and showcasing your valuable pieces.
+At Jay's Frames, our 15+ years of custom framing experience in Houston has taught us the importance of ${keyword} in professional framing projects.
 
-## Why ${keyword} Matters in Custom Framing
-Professional custom framing for ${keyword} offers several key benefits:
-
-1. **Enhanced Protection**: Proper framing techniques protect your pieces from environmental damage
-2. **Visual Appeal**: The right frame selection enhances the aesthetic value of your ${keyword}
-3. **Preservation**: Museum-quality materials ensure long-term conservation
-4. **Professional Presentation**: Expert craftsmanship provides a polished, professional look
-
-## Expert Tips for ${keyword}
-At Jay's Frames, we've learned that successful ${keyword} requires attention to detail and quality materials. Here are our professional recommendations:
+## Professional Approach to ${keyword}
+When working with ${keyword}, we consider several critical factors:
 
 ### Material Selection
-Choose archival-quality materials that won't degrade over time. This includes acid-free mats, UV-protective glass, and conservation-grade mounting techniques.
+- **Archival Quality**: We use only acid-free, lignin-free materials
+- **UV Protection**: Museum-grade glass prevents fading and deterioration
+- **Climate Considerations**: Houston's humidity requires specific preservation techniques
 
-### Design Considerations
-The frame style should complement both the piece and the environment where it will be displayed. Consider factors like color harmony, proportion, and architectural elements.
+### Expert Techniques
+Our professional approach to ${keyword} includes:
+1. Proper assessment of the artwork or item
+2. Selection of appropriate conservation materials
+3. Precision cutting and assembly
+4. Quality control at every stage
 
-### Professional Installation
-Proper installation ensures your framed pieces are securely mounted and properly displayed.
+### Houston Climate Considerations
+Living in Houston presents unique challenges for artwork preservation. Our expertise in ${keyword} takes into account:
+- High humidity levels
+- Temperature fluctuations
+- UV exposure from intense Texas sun
+
+## Why Choose Professional Framing
+While DIY framing might seem cost-effective, professional ${keyword} ensures:
+- Long-term preservation of valuable pieces
+- Proper material selection and application
+- Expert craftsmanship and attention to detail
+- Warranty and ongoing support
 
 ## Conclusion
-Whether you're dealing with ${keyword} for personal or professional purposes, investing in quality custom framing is always worthwhile. Our team at Jay's Frames brings decades of experience to every project.
+Whether you're framing family photos, original artwork, or cherished memorabilia, understanding ${keyword} is crucial for proper preservation. At Jay's Frames, we bring decades of experience to every project.
 
-Contact us today to discuss how we can help with your ${keyword} framing needs. Visit our Houston Heights location or call (832) 893-3794 for a consultation.`;
+**Ready to discuss your framing project?** Visit our Houston Heights location at 218 W 27th St or call (832) 893-3794 for expert consultation on ${keyword} and all your custom framing needs.`;
 
-        const excerpt = `Learn everything you need to know about ${keyword} in custom framing. Expert tips and professional guidance from Houston's premier framing studio.`;
+          const excerpt = `Expert guidance on ${keyword} from Houston's premier custom framing studio. Professional techniques and materials for long-term preservation.`;
 
-        generatedPost = {
-          title,
-          content,
-          excerpt,
-          keywords: `${keyword}, custom framing, Houston framing, picture framing, art preservation, Jay's Frames`,
-          categoryId: 1 // Default to first category
-        };
+          generatedPost = {
+            title,
+            content,
+            excerpt,
+            keywords: `${keyword}, custom framing, professional framing, Houston framing, conservation framing, picture framing, Jay's Frames`,
+            categoryId: 1
+          };
+        }
       }
 
       res.json({
