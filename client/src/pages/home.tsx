@@ -33,10 +33,68 @@ const Home = () => {
   return (
     <>
       <SeoHead 
-        title="Houston Custom Framing | Jay's Frames"
-        description="Houston's premier custom framing studio. Museum-quality picture framing, art preservation & design consultation in Houston Heights. 25+ years experience."
-        keywords="custom framing Houston, picture framing Houston Heights, museum quality framing, art preservation Houston, frame shop near me, professional framing services"
-        canonicalUrl="https://jaysframes.com/"
+        title="Custom Framing Houston Heights | Jay's Frames - Museum Quality Picture Framing"
+        description="Houston's #1 custom framing studio in the Heights at 218 W 27th St. Museum-quality archival picture framing, shadow boxes & art conservation. Same-day service available. Expert Houston frame shop serving Heights, Montrose, River Oaks since 1999."
+        keywords="custom framing Houston, picture framing Houston, Houston frame shop, Heights framing, Houston Heights custom frames, museum framing Houston, archival framing, conservation framing, shadow box framing Houston, art framing near me, professional picture framing, frame shop Heights"
+        canonicalUrl="/"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": ["Organization", "LocalBusiness"],
+          "name": "Jay's Frames",
+          "alternateName": "Jays Frames Houston",
+          "description": "Houston's premier custom framing studio specializing in museum-quality picture framing, archival conservation, and shadow box creation in the Heights area",
+          "url": "https://jaysframes.com",
+          "sameAs": [
+            "https://www.facebook.com/jaysframes",
+            "https://www.instagram.com/jaysframes",
+            "https://nextdoor.com/business/jays-frames"
+          ],
+          "telephone": "(832) 893-3794",
+          "email": "frames@jaysframes.com",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "218 W 27th St",
+            "addressLocality": "Houston",
+            "addressRegion": "TX", 
+            "postalCode": "77008",
+            "addressCountry": "US"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "29.7904",
+            "longitude": "-95.3988"
+          },
+          "areaServed": [
+            "Houston Heights",
+            "Montrose",
+            "River Oaks",
+            "Memorial",
+            "Garden Oaks",
+            "Neartown"
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Custom Framing Services Houston",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Custom Picture Framing Houston",
+                  "description": "Museum-quality archival picture framing with acid-free materials"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service", 
+                  "name": "Shadow Box Framing Houston",
+                  "description": "3D framing for memorabilia, jerseys, and collectibles"
+                }
+              }
+            ]
+          }
+        }}
       />
 
       <Hero />

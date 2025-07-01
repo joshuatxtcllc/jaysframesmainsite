@@ -28,6 +28,7 @@ import {
   startAutomationSystem, 
   stopAutomationSystem 
 } from "./services/automation";
+import { handleRedirects } from "./redirects";
 import { larsonJuhlCatalogService } from "./services/catalog";
 import { integrationService } from "./services/integrations";
 import { contentManager } from "./services/content-manager";

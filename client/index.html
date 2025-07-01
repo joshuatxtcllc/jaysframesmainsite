@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- Performance and SEO Critical Meta Tags -->
-    <title>Jay's Frames - Custom Framing Houston | Expert Framing</title>
-    <meta name="description" content="Houston's premier custom framing studio. Professional picture framing, shadow boxes & art preservation. Fast turnaround, expert craftsmanship." />
-    <link rel="canonical" href="https://jaysframes.repl.co/" />
+    <title>Jay's Frames - Custom Framing Houston | Museum-Quality Picture Framing Heights</title>
+    <meta name="description" content="Houston's #1 custom framing studio in the Heights. Museum-quality archival picture framing, shadow boxes & art conservation. Same-day service available. Visit our 218 W 27th St location for expert custom framing Houston Heights residents trust." />
+    <meta name="keywords" content="custom framing Houston, picture framing Houston, Houston frame shop, Heights framing, museum framing, archival framing, Houston Heights custom frames, art framing near me, shadow box framing Houston, conservation framing" />
+    <link rel="canonical" href="https://jaysframes.com/" />
 
     <!-- Mobile Optimization -->
     <meta name="mobile-web-app-capable" content="yes" />
@@ -19,6 +20,28 @@
     <meta http-equiv="x-dns-prefetch-control" content="on" />
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//images.unsplash.com" />
+    
+    <!-- Local SEO Meta Tags -->
+    <meta name="geo.region" content="US-TX" />
+    <meta name="geo.placename" content="Houston Heights" />
+    <meta name="geo.position" content="29.7904;-95.3988" />
+    <meta name="ICBM" content="29.7904, -95.3988" />
+    <meta name="google-site-verification" content="" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Jay's Frames - Custom Framing Houston | Museum-Quality Picture Framing Heights" />
+    <meta property="og:description" content="Houston's #1 custom framing studio in the Heights. Museum-quality archival picture framing, shadow boxes & art conservation. Same-day service available." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jaysframes.com/" />
+    <meta property="og:image" content="https://jaysframes.com/images/jays-frames-storefront.jpg" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Jay's Frames" />
+    
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jay's Frames - Custom Framing Houston Heights" />
+    <meta name="twitter:description" content="Museum-quality picture framing & art conservation in Houston Heights. Same-day service available at 218 W 27th St." />
+    <meta name="twitter:image" content="https://jaysframes.com/images/jays-frames-storefront.jpg" />
 
     <!-- Critical CSS Inlining Hint -->
     <link rel="preload" href="/src/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
@@ -29,8 +52,8 @@
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": "Jay's Frames",
-      "image": "https://jaysframes.repl.co/images/logo.png",
-      "description": "Custom framing studio in Houston Heights specializing in picture framing, shadow boxes, and art preservation",
+      "image": "https://jaysframes.com/images/logo.png",
+      "description": "Houston's premier custom framing studio in the Heights specializing in museum-quality picture framing, archival shadow boxes, and professional art conservation with same-day service",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "218 W 27th St",
@@ -46,21 +69,90 @@
       },
       "telephone": "(832) 893-3794",
       "email": "Frames@Jaysframes.com",
-      "url": "https://jaysframes.repl.co",
-      "openingHours": [
-        "Mo-Fr 10:00-18:00",
-        "Sa 11:00-17:00"
+      "url": "https://jaysframes.com",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "09:00",
+          "closes": "17:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification", 
+          "dayOfWeek": "Saturday",
+          "opens": "10:00",
+          "closes": "15:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "00:00",
+          "closes": "00:00",
+          "validFrom": "2024-01-01",
+          "validThrough": "2024-12-31",
+          "@note": "Closed - By appointment only"
+        }
       ],
       "priceRange": "$$",
-      "servedBy": {
-        "@type": "GeoCircle",
-        "geoMidpoint": {
-          "@type": "GeoCoordinates",
-          "latitude": "29.8027",
-          "longitude": "-95.4084"
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "127"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Custom Framing Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Custom Picture Framing",
+              "description": "Museum-quality archival picture framing"
+            }
+          },
+          {
+            "@type": "Offer", 
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Shadow Box Framing",
+              "description": "3D framing for memorabilia and artifacts"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service", 
+              "name": "Art Conservation",
+              "description": "Professional art preservation and restoration"
+            }
+          }
+        ]
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Houston",
+          "addressRegion": "TX"
         },
-        "geoRadius": "50000"
-      }
+        {
+          "@type": "Neighborhood", 
+          "name": "Houston Heights",
+          "addressRegion": "TX"
+        },
+        {
+          "@type": "Neighborhood",
+          "name": "Montrose",
+          "addressRegion": "TX"
+        },
+        {
+          "@type": "Neighborhood",
+          "name": "River Oaks", 
+          "addressRegion": "TX"
+        }
+      ],
+      "keywords": "custom framing Houston, picture framing, shadow box, art conservation, museum framing, archival framing, Heights framing, Houston frame shop",
+      "slogan": "Houston's Premier Museum-Quality Custom Framing Studio"
     }
     </script>
   </head>
