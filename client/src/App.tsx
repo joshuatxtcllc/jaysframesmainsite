@@ -41,6 +41,8 @@ import FAQ from "@/pages/faq";
 import { loadCriticalCSS } from "./lib/critical-css";
 import Gallery from "./pages/gallery";
 import HoustonCustomFramingGuide from "./pages/blog/houston-custom-framing-guide";
+import HoustonNeighborhoodsPage from "./pages/houston-neighborhoods";
+import HoustonArtFramingPage from "./pages/houston-art-framing";
 
 function Router() {
   return (
@@ -73,6 +75,8 @@ function Router() {
       <Route path="/virtual-room-visualizer" component={VirtualRoomVisualizer} /> {/* Added route */}
       <Route path="/faq" component={FAQ} />
       <Route path="/gallery" component={Gallery} />
+      <Route path="/houston-neighborhoods" component={HoustonNeighborhoodsPage} />
+      <Route path="/houston-art-framing" component={HoustonArtFramingPage} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
