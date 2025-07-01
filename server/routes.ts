@@ -6,7 +6,6 @@ import { WebSocketServer, WebSocket } from 'ws';
 import cookieParser from 'cookie-parser';
 import { AuthService, registerSchema, loginSchema } from './services/auth';
 import { authenticateToken, requireAdmin, requireStaff, optionalAuth } from './middleware/auth';
-import { handleRedirects, handle404 } from './redirects';
 import { 
   insertOrderSchema, 
   insertChatMessageSchema, 
@@ -632,7 +631,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Handle multipart form data (need to add multer middleware)
       const multer = require('multer');
       const path = require('path');
-      
+
       const storage_config = multer.diskStorage({
         destination: (req: any, file: any, cb: any) => {
           cb(null, path.join(process.cwd(), 'client/public/uploads/gallery'));
@@ -1914,146 +1913,103 @@ app.post("/api/validate-discount", async (req, res) => {
         return res.status(400).json({ message: "Message is required" });
       }
 
-      // Use existing AI service to get response with specialized framing context
-      const framingContext = `As an expert custom framing blog content specialist for Jay's Frames in Houston, you have 15+ years of professional framing experience. You specialize in:
+    // Add custom framing expertise context
+    const framingExpertContext = `You are a custom framing specialist and blog content expert for Jay's Frames in Houston, Texas. 
+    You have deep knowledge of:
+    - Picture framing techniques and materials
+    - Art preservation and conservation
+    - Frame and mat selection
+    - Glass options (regular, UV-protective, museum glass)
+    - Shadow box and dimensional framing
+    - Mounting techniques
+    - Color theory for framing
+    - Houston art scene and local preferences
 
-- Conservation framing and archival materials
-- Frame material selection (wood vs metal profiles)
-- Matting techniques and color theory
-- Glass options (standard, UV-protective, museum glass)
-- Shadow box and dimensional framing
-- Houston climate considerations for artwork preservation
-- Larson-Juhl frame collections and Crescent mat selections
-- Professional mounting and preservation techniques
+    Provide helpful, professional advice about custom framing topics. If asked about blog content creation, 
+    suggest specific framing-related topics that would be valuable for customers. Always maintain a professional 
+    yet approachable tone.`;
 
-Always provide detailed, professional advice that reflects Jay's expertise in custom framing. Include specific technical details, material recommendations, and practical tips that framers and customers would find valuable.
+    const contextualMessage = `${framingExpertContext}\n\nCustomer question: ${message}`;
 
-Request: ${message}`;
+    const response = await generateAIResponse(contextualMessage);
 
-      const response = await askFrameAssistant(framingContext);
-
-      res.json({ response });
-    } catch (error) {
-      console.error("Error in AI blog chat:", error);
-      res.status(500).json({ message: "Failed to get AI response" });
-    }
-  });
+    res.json({ response });
+  } catch (error) {
+    console.error("Error in AI chat:", error);
+    res.status(500).json({ message: "Failed to generate AI response" });
+  }
+});
 
   // AI Blog Generation with Chat Response endpoint
   app.post("/api/blog/ai-generate", async (req: Request, res: Response) => {
     try {
       const { prompt, includeGeneration } = req.body;
 
-      if (!prompt) {
-        return res.status(400).json({ message: "Prompt is required" });
-      }
-
-      // Extract keyword and topic from prompt
-      const keyword = prompt.toLowerCase().replace(/generate|create|write|blog post|about/g, '').trim();
-      
-      // Generate chat response
-      const chatResponse = `I'll create a professional custom framing blog post about "${keyword}" based on Jay's 15+ years of expertise! Here's what I've generated:`;
-
-      let generatedPost = null;
-
-      if (includeGeneration) {
-        // Use AI to generate more sophisticated content
-        const framingPrompt = `As a custom framing expert with 15+ years of experience at Jay's Frames in Houston, create a detailed, professional blog post about "${keyword}" in custom framing. Include:
-
-1. Technical expertise and specific material recommendations
-2. Conservation techniques and archival considerations
-3. Houston climate factors when relevant
-4. Specific frame, mat, and glass recommendations
-5. Professional tips from years of experience
-6. Customer education on quality and value
-7. Call-to-action for Jay's Frames services
-
-Make it informative, authoritative, and helpful for both DIY framers and customers seeking professional services.`;
-
-        try {
-          const aiContent = await askFrameAssistant(framingPrompt);
-          
-          // Create a slug from the keyword
-          const slug = keyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `framing-guide-${Date.now()}`;
-
-          // Generate title with framing focus
-          const title = keyword.includes('frame') || keyword.includes('mat') || keyword.includes('glass') 
-            ? `Professional Guide to ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`
-            : `Custom Framing Guide: ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`;
-
-          const excerpt = `Professional insights on ${keyword} from Houston's premier custom framing experts. Learn techniques, materials, and tips from 15+ years of framing experience.`;
-
-          generatedPost = {
-            title,
-            content: aiContent,
-            excerpt,
-            keywords: `${keyword}, custom framing, professional framing, Houston framing, conservation framing, picture framing, Jay's Frames, archival materials, museum quality`,
-            categoryId: 1 // Default to first category
-          };
-        } catch (aiError) {
-          // Fallback to template if AI fails
-          const slug = keyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `framing-guide-${Date.now()}`;
-          const title = `Professional Custom Framing: ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`;
-          
-          const content = `# ${title}
-
-## Introduction
-At Jay's Frames, our 15+ years of custom framing experience in Houston has taught us the importance of ${keyword} in professional framing projects.
-
-## Professional Approach to ${keyword}
-When working with ${keyword}, we consider several critical factors:
-
-### Material Selection
-- **Archival Quality**: We use only acid-free, lignin-free materials
-- **UV Protection**: Museum-grade glass prevents fading and deterioration
-- **Climate Considerations**: Houston's humidity requires specific preservation techniques
-
-### Expert Techniques
-Our professional approach to ${keyword} includes:
-1. Proper assessment of the artwork or item
-2. Selection of appropriate conservation materials
-3. Precision cutting and assembly
-4. Quality control at every stage
-
-### Houston Climate Considerations
-Living in Houston presents unique challenges for artwork preservation. Our expertise in ${keyword} takes into account:
-- High humidity levels
-- Temperature fluctuations
-- UV exposure from intense Texas sun
-
-## Why Choose Professional Framing
-While DIY framing might seem cost-effective, professional ${keyword} ensures:
-- Long-term preservation of valuable pieces
-- Proper material selection and application
-- Expert craftsmanship and attention to detail
-- Warranty and ongoing support
-
-## Conclusion
-Whether you're framing family photos, original artwork, or cherished memorabilia, understanding ${keyword} is crucial for proper preservation. At Jay's Frames, we bring decades of experience to every project.
-
-**Ready to discuss your framing project?** Visit our Houston Heights location at 218 W 27th St or call (832) 893-3794 for expert consultation on ${keyword} and all your custom framing needs.`;
-
-          const excerpt = `Expert guidance on ${keyword} from Houston's premier custom framing studio. Professional techniques and materials for long-term preservation.`;
-
-          generatedPost = {
-            title,
-            content,
-            excerpt,
-            keywords: `${keyword}, custom framing, professional framing, Houston framing, conservation framing, picture framing, Jay's Frames`,
-            categoryId: 1
-          };
-        }
-      }
-
-      res.json({
-        response: chatResponse,
-        generatedPost
-      });
-    } catch (error) {
-      console.error("Error in AI blog generation:", error);
-      res.status(500).json({ message: "Failed to generate blog content" });
+    if (!prompt) {
+      return res.status(400).json({ message: "Prompt is required" });
     }
-  });
+
+    // Add custom framing context to the prompt
+    const framingContext = `You are a custom framing expert writing for Jay's Frames, a professional framing shop in Houston, Texas. 
+    Focus on topics related to picture framing, art preservation, conservation, frame selection, mat selection, glass options, 
+    shadow boxes, and professional framing techniques. Include practical advice and emphasize quality craftsmanship.`;
+
+    const contextualPrompt = `${framingContext}\n\nUser request: ${prompt}`;
+
+    // Generate AI response
+    const aiResponse = await generateAIResponse(contextualPrompt);
+
+    let generatedPost = null;
+    if (includeGeneration) {
+      // Generate actual blog post content with framing focus
+      const postPrompt = `${framingContext}
+
+      Generate a complete blog post based on this request: "${prompt}". 
+
+      Requirements:
+      - Title should be engaging and SEO-friendly for custom framing
+      - Content should be 600-1000 words, informative and professional
+      - Include practical tips and professional insights
+      - Mention Jay's Frames naturally where appropriate
+      - Include a brief excerpt (100-150 words) that summarizes the key points
+      - Provide relevant SEO keywords related to custom framing
+      - Focus on Houston/local market when relevant
+
+      Format the response as JSON with properties: title, content, excerpt, keywords, categoryId (use 1 for general framing topics).
+
+      Example topics to cover could include: frame materials, preservation techniques, mat selection, glass options, mounting methods, etc.`;
+
+      const postResponse = await generateAIResponse(postPrompt);
+
+      try {
+        // Try to parse the AI response as JSON
+        generatedPost = JSON.parse(postResponse);
+        generatedPost.categoryId = generatedPost.categoryId || 1;
+      } catch (parseError) {
+        // If JSON parsing fails, create a structured post from the text response
+        const title = prompt.toLowerCase().includes('frame') || prompt.toLowerCase().includes('mat') || prompt.toLowerCase().includes('art') 
+          ? `Professional Guide: ${prompt.charAt(0).toUpperCase() + prompt.slice(1).toLowerCase()}`
+          : `Custom Framing: ${prompt.charAt(0).toUpperCase() + prompt.slice(1).toLowerCase()}`;
+
+        generatedPost = {
+          title: title,
+          content: postResponse,
+          excerpt: postResponse.substring(0, 150) + "...",
+          keywords: "custom framing, picture frames, art preservation, professional framing, Houston framing, mat selection, frame selection",
+          categoryId: 1
+        };
+      }
+    }
+
+    res.json({ 
+      response: aiResponse,
+      generatedPost 
+    });
+  } catch (error) {
+    console.error("Error in AI blog generation:", error);
+    res.status(500).json({ message: "Failed to generate AI response" });
+  }
+});
 
   // Automated blog content generation endpoint
   app.post("/api/blog/generate", async (req: Request, res: Response) => {
@@ -2430,7 +2386,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         case 'payment_intent.succeeded':
           const paymentIntent = event.data.object;
           console.log('Payment succeeded:', paymentIntent.id);
-          
+
           // Extract order information from metadata
           if (paymentIntent.metadata && paymentIntent.metadata.orderId) {
             try {
@@ -2439,7 +2395,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
                 'paid',
                 'payment_confirmed'
               );
-              
+
               // Send confirmation notification
               if (paymentIntent.metadata.customerEmail) {
                 sendNotification({
@@ -2464,7 +2420,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
         case 'payment_intent.payment_failed':
           const failedPayment = event.data.object;
           console.log('Payment failed:', failedPayment.id);
-          
+
           // Handle failed payment
           if (failedPayment.metadata && failedPayment.metadata.orderId) {
             try {
@@ -2473,7 +2429,7 @@ When it comes to ${keyword}, investing in quality custom framing is always worth
                 'payment_failed',
                 'payment_error'
               );
-              
+
               // Send failure notification
               if (failedPayment.metadata.customerEmail) {
                 sendNotification({

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
@@ -135,7 +134,7 @@ export function BlogAIAssistant() {
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorMessage]);
-      
+
       toast({
         title: 'Error',
         description: error instanceof Error ? error.message : 'Failed to process request',
@@ -152,7 +151,7 @@ export function BlogAIAssistant() {
 
   const handlePublishPost = async (post: GeneratedPost) => {
     setIsPublishing(true);
-    
+
     try {
       const response = await fetch('/api/blog/posts', {
         method: 'POST',
@@ -169,10 +168,10 @@ export function BlogAIAssistant() {
           title: 'Success!',
           description: 'Blog post has been published successfully.',
         });
-        
+
         // Refresh blog posts
         queryClient.invalidateQueries({ queryKey: ['/api/blog/posts'] });
-        
+
         setPreviewPost(null);
       } else {
         const data = await response.json();
@@ -206,7 +205,7 @@ export function BlogAIAssistant() {
           title: 'Draft saved',
           description: 'Blog post has been saved as a draft.',
         });
-        
+
         queryClient.invalidateQueries({ queryKey: ['/api/blog/posts'] });
         setPreviewPost(null);
       } else {
@@ -249,7 +248,7 @@ export function BlogAIAssistant() {
               Custom Framing Blog Assistant
             </DialogTitle>
             <DialogDescription>
-              Expert in custom framing topics - generate posts about conservation, materials, techniques, and Houston framing trends.
+              Specialized AI assistant for creating custom framing blog content. Ask me to generate posts about framing techniques, preservation, art display, and more.
             </DialogDescription>
           </DialogHeader>
 
@@ -259,16 +258,14 @@ export function BlogAIAssistant() {
               {messages.length === 0 && (
                 <div className="text-center text-muted-foreground py-8">
                   <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Hi! I'm your custom framing blog assistant. I specialize in:</p>
+                  <p>Hi! I'm your AI blog assistant. I can help you:</p>
                   <ul className="mt-2 text-sm space-y-1">
-                    <li>• Frame selection guides and material comparisons</li>
-                    <li>• Conservation and preservation techniques</li>
-                    <li>• Matting options and color coordination</li>
-                    <li>• Glass types and UV protection</li>
-                    <li>• Houston-specific framing trends and tips</li>
-                    <li>• Shadow box and dimensional framing</li>
+                    <li>• Generate engaging blog posts about framing</li>
+                    <li>• Provide SEO-optimized content ideas</li>
+                    <li>• Help with content strategy</li>
+                    <li>• Answer questions about your blog</li>
                   </ul>
-                  <p className="mt-4 font-medium">Try: "Generate a blog post about choosing the right mat color" or "Write about UV protection for artwork"</p>
+                  <p className="mt-4 font-medium">Just ask me to "generate a blog post about..." to get started!</p>
                 </div>
               )}
 
@@ -287,7 +284,7 @@ export function BlogAIAssistant() {
                         <Bot className="h-4 w-4 text-white" />
                       )}
                     </div>
-                    
+
                     <div className={`space-y-2 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
                       <div className={`p-3 rounded-lg ${
                         message.type === 'user' 
@@ -296,7 +293,7 @@ export function BlogAIAssistant() {
                       }`}>
                         <p className="whitespace-pre-wrap">{message.content}</p>
                       </div>
-                      
+
                       {message.generatedPost && (
                         <Card className="mt-2">
                           <CardHeader className="pb-2">
@@ -335,7 +332,7 @@ export function BlogAIAssistant() {
                           </CardContent>
                         </Card>
                       )}
-                      
+
                       <div className="text-xs text-muted-foreground">
                         {message.timestamp.toLocaleTimeString()}
                       </div>
@@ -343,7 +340,7 @@ export function BlogAIAssistant() {
                   </div>
                 </div>
               ))}
-              
+
               {isGenerating && (
                 <div className="flex gap-3 justify-start">
                   <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
@@ -364,7 +361,7 @@ export function BlogAIAssistant() {
           {/* Input Area */}
           <div className="flex gap-2 pt-4">
             <Input
-              placeholder="Ask about custom framing topics, conservation, matting, or generate blog posts..."
+              placeholder="Ask me to generate a blog post or help with content..."
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -390,28 +387,28 @@ export function BlogAIAssistant() {
                 Review the generated content before publishing
               </DialogDescription>
             </DialogHeader>
-            
+
             <ScrollArea className="flex-1">
               <div className="space-y-4">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">{previewPost.title}</h2>
                   <Badge variant="outline">{getCategoryName(previewPost.categoryId)}</Badge>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div>
                   <h3 className="font-semibold mb-2">Excerpt</h3>
                   <p className="text-muted-foreground">{previewPost.excerpt}</p>
                 </div>
-                
+
                 <div>
                   <h3 className="font-semibold mb-2">Keywords</h3>
                   <p className="text-sm text-muted-foreground">{previewPost.keywords}</p>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div>
                   <h3 className="font-semibold mb-2">Content</h3>
                   <div className="prose prose-sm max-w-none">
@@ -420,7 +417,7 @@ export function BlogAIAssistant() {
                 </div>
               </div>
             </ScrollArea>
-            
+
             <DialogFooter className="flex gap-2">
               <Button
                 variant="outline"
