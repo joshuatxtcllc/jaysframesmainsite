@@ -6,6 +6,7 @@ import fileUpload from "express-fileupload";
 import twilio from 'twilio';
 import { startAutomationSystem } from './services/automation';
 import { larsonJuhlCatalogService } from './services/catalog'; // Import the service
+import { blogScheduler } from './blog-scheduler';
 
 import { db } from './db';
 import { blogCategories, blogPosts } from '../shared/schema'; // Import blog schema
@@ -150,6 +151,9 @@ app.use((req, res, next) => {
 
     // Start the automation system after server is running
     startAutomationSystem();
+    
+    // Start the blog automation scheduler
+    blogScheduler.start();
   });
 })();
 

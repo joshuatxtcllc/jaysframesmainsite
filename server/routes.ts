@@ -32,6 +32,8 @@ import { handleRedirects } from "./redirects";
 import { larsonJuhlCatalogService } from "./services/catalog";
 import { integrationService } from "./services/integrations";
 import { contentManager } from "./services/content-manager";
+import { createAutomatedBlogPost, previewNextBlogPost } from "./blog-automation";
+import { blogScheduler } from "./blog-scheduler";
 import Stripe from "stripe";
 
 // Initialize Stripe
@@ -1940,6 +1942,76 @@ app.post("/api/validate-discount", async (req, res) => {
     res.status(500).json({ message: "Failed to generate AI response" });
   }
 });
+
+  // Automated Blog Post Generation endpoints
+  app.post("/api/blog/automated/create", authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const success = await createAutomatedBlogPost();
+      
+      if (success) {
+        res.json({ 
+          success: true, 
+          message: "Automated blog post created successfully" 
+        });
+      } else {
+        res.status(400).json({ 
+          success: false, 
+          message: "Failed to create automated blog post - may already exist" 
+        });
+      }
+    } catch (error) {
+      console.error("Error creating automated blog post:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to create automated blog post" 
+      });
+    }
+  });
+
+  app.get("/api/blog/automated/preview", authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const preview = await previewNextBlogPost();
+      
+      if (preview) {
+        res.json({ 
+          success: true, 
+          preview 
+        });
+      } else {
+        res.status(500).json({ 
+          success: false, 
+          message: "Failed to generate blog post preview" 
+        });
+      }
+    } catch (error) {
+      console.error("Error generating blog post preview:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to generate blog post preview" 
+      });
+    }
+  });
+
+  // Blog Scheduler Management endpoints
+  app.get("/api/blog/scheduler/status", authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const status = blogScheduler.getStatus();
+      res.json({ success: true, status });
+    } catch (error) {
+      console.error("Error getting scheduler status:", error);
+      res.status(500).json({ success: false, message: "Failed to get scheduler status" });
+    }
+  });
+
+  app.post("/api/blog/scheduler/trigger", authenticateToken, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const success = await blogScheduler.triggerManualPost();
+      res.json({ success, message: success ? "Blog post generated successfully" : "Blog post already exists for this period" });
+    } catch (error) {
+      console.error("Error triggering manual blog post:", error);
+      res.status(500).json({ success: false, message: "Failed to trigger blog post generation" });
+    }
+  });
 
   // AI Blog Generation with Chat Response endpoint
   app.post("/api/blog/ai-generate", async (req: Request, res: Response) => {
