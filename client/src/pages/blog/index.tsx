@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BlogAIAssistant } from '@/components/ui/blog-ai-assistant';
 
 // Icons
 import { Calendar, Clock, Tag, ChevronRight } from 'lucide-react';
@@ -234,6 +235,9 @@ export default function BlogPage() {
           </Button>
         </div>
       </div>
+      
+      {/* AI Blog Assistant */}
+      <BlogAIAssistant />
     </div>
   );
 }

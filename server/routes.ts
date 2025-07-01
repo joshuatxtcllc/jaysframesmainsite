@@ -1905,6 +1905,100 @@ app.post("/api/validate-discount", async (req, res) => {
     }
   });
 
+  // AI Blog Assistant Chat endpoint
+  app.post("/api/blog/ai-chat", async (req: Request, res: Response) => {
+    try {
+      const { message } = req.body;
+
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+
+      // Use existing AI service to get response
+      const response = await askFrameAssistant(`As a blog content expert for Jay's Frames custom framing business, help with this request: ${message}`);
+
+      res.json({ response });
+    } catch (error) {
+      console.error("Error in AI blog chat:", error);
+      res.status(500).json({ message: "Failed to get AI response" });
+    }
+  });
+
+  // AI Blog Generation with Chat Response endpoint
+  app.post("/api/blog/ai-generate", async (req: Request, res: Response) => {
+    try {
+      const { prompt, includeGeneration } = req.body;
+
+      if (!prompt) {
+        return res.status(400).json({ message: "Prompt is required" });
+      }
+
+      // Extract keyword and topic from prompt
+      const keyword = prompt.toLowerCase().replace(/generate|create|write|blog post|about/g, '').trim();
+      
+      // Generate chat response
+      const chatResponse = `I'll generate a blog post about "${keyword}" for you! Here's what I've created:`;
+
+      let generatedPost = null;
+
+      if (includeGeneration) {
+        // Create a slug from the keyword
+        const slug = keyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `blog-post-${Date.now()}`;
+
+        // Generate content
+        const title = `The Ultimate Guide to ${keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} in Custom Framing`;
+        
+        const content = `# ${title}
+
+## Introduction
+When it comes to ${keyword}, understanding the nuances of custom framing can make all the difference in preserving and showcasing your valuable pieces.
+
+## Why ${keyword} Matters in Custom Framing
+Professional custom framing for ${keyword} offers several key benefits:
+
+1. **Enhanced Protection**: Proper framing techniques protect your pieces from environmental damage
+2. **Visual Appeal**: The right frame selection enhances the aesthetic value of your ${keyword}
+3. **Preservation**: Museum-quality materials ensure long-term conservation
+4. **Professional Presentation**: Expert craftsmanship provides a polished, professional look
+
+## Expert Tips for ${keyword}
+At Jay's Frames, we've learned that successful ${keyword} requires attention to detail and quality materials. Here are our professional recommendations:
+
+### Material Selection
+Choose archival-quality materials that won't degrade over time. This includes acid-free mats, UV-protective glass, and conservation-grade mounting techniques.
+
+### Design Considerations
+The frame style should complement both the piece and the environment where it will be displayed. Consider factors like color harmony, proportion, and architectural elements.
+
+### Professional Installation
+Proper installation ensures your framed pieces are securely mounted and properly displayed.
+
+## Conclusion
+Whether you're dealing with ${keyword} for personal or professional purposes, investing in quality custom framing is always worthwhile. Our team at Jay's Frames brings decades of experience to every project.
+
+Contact us today to discuss how we can help with your ${keyword} framing needs. Visit our Houston Heights location or call (832) 893-3794 for a consultation.`;
+
+        const excerpt = `Learn everything you need to know about ${keyword} in custom framing. Expert tips and professional guidance from Houston's premier framing studio.`;
+
+        generatedPost = {
+          title,
+          content,
+          excerpt,
+          keywords: `${keyword}, custom framing, Houston framing, picture framing, art preservation, Jay's Frames`,
+          categoryId: 1 // Default to first category
+        };
+      }
+
+      res.json({
+        response: chatResponse,
+        generatedPost
+      });
+    } catch (error) {
+      console.error("Error in AI blog generation:", error);
+      res.status(500).json({ message: "Failed to generate blog content" });
+    }
+  });
+
   // Automated blog content generation endpoint
   app.post("/api/blog/generate", async (req: Request, res: Response) => {
     try {
