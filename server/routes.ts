@@ -759,13 +759,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get order by ID (enhanced with Kanban status)
   app.get("/api/orders/:id", async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
-    console.log(`Order lookup request for ID: ${id}`);
+    console.log(`Order lookup request for ID: ${id} (raw: ${req.params.id})`);
     
     if (isNaN(id)) {
       console.log(`Invalid order ID provided: ${req.params.id}`);
       return res.status(400).json({ 
-        message: "Invalid order ID",
-        error: "ORDER_ID_INVALID"
+        message: "Invalid order ID - must be a number",
+        error: "ORDER_ID_INVALID",
+        provided: req.params.id
       });
     }
 

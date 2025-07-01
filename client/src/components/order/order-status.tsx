@@ -20,18 +20,35 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
     queryKey: [`/api/orders/${searchedOrder}`],
     queryFn: async ({ queryKey }) => {
       console.log('Fetching order data from:', queryKey[0]);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       try {
-        const response = await fetch(queryKey[0]);
+        const response = await fetch(queryKey[0], {
+          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        clearTimeout(timeoutId);
         console.log('Order fetch response status:', response.status);
         
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch {
+            errorData = { message: `HTTP ${response.status}: ${response.statusText}` };
+          }
+          
           console.error('Order fetch error:', errorData);
           
           if (response.status === 404) {
             throw new Error('Order not found');
           }
-          throw new Error(errorData.message || 'Failed to fetch order');
+          throw new Error(errorData.message || `Failed to fetch order (${response.status})`);
         }
         
         const orderData = await response.json();
@@ -43,20 +60,33 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
         
         return orderData;
       } catch (fetchError) {
+        clearTimeout(timeoutId);
         console.error('Order fetch failed:', fetchError);
+        
+        if (fetchError.name === 'AbortError') {
+          throw new Error('Request timed out. Please try again.');
+        }
         throw fetchError;
       }
     },
-    enabled: !!searchedOrder,
+    enabled: !!searchedOrder && searchedOrder.trim() !== '',
     staleTime: 30000, // 30 seconds
-    retry: 2, // Increased retry count
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
+    retry: (failureCount, error) => {
+      // Don't retry on 404 or timeout errors
+      if (error.message.includes('Order not found') || error.message.includes('timed out')) {
+        return false;
+      }
+      return failureCount < 2;
+    },
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 5000)
   });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (orderNumber) {
-      setSearchedOrder(orderNumber);
+    const trimmedOrderNumber = orderNumber.trim();
+    if (trimmedOrderNumber && trimmedOrderNumber !== searchedOrder) {
+      console.log('Searching for order:', trimmedOrderNumber);
+      setSearchedOrder(trimmedOrderNumber);
     }
   };
 
@@ -113,10 +143,11 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
         </form>
       </div>
       
-      {isLoading && (
+      {isLoading && searchedOrder && (
         <div className="text-center py-8">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
-          <p className="mt-2 text-neutral-500">Loading order information...</p>
+          <p className="mt-2 text-neutral-500">Loading order #{searchedOrder}...</p>
+          <p className="mt-1 text-sm text-neutral-400">This may take a few seconds</p>
         </div>
       )}
       
