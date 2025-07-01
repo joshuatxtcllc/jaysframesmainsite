@@ -19,18 +19,38 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
   const { data: order, isLoading, error } = useQuery({
     queryKey: [`/api/orders/${searchedOrder}`],
     queryFn: async ({ queryKey }) => {
-      const response = await fetch(queryKey[0]);
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Order not found');
+      console.log('Fetching order data from:', queryKey[0]);
+      try {
+        const response = await fetch(queryKey[0]);
+        console.log('Order fetch response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Order fetch error:', errorData);
+          
+          if (response.status === 404) {
+            throw new Error('Order not found');
+          }
+          throw new Error(errorData.message || 'Failed to fetch order');
         }
-        throw new Error('Failed to fetch order');
+        
+        const orderData = await response.json();
+        console.log('Order data received:', {
+          orderId: orderData.id,
+          status: orderData.status,
+          kanbanStatus: orderData.kanbanStatus?.status
+        });
+        
+        return orderData;
+      } catch (fetchError) {
+        console.error('Order fetch failed:', fetchError);
+        throw fetchError;
       }
-      return response.json();
     },
     enabled: !!searchedOrder,
     staleTime: 30000, // 30 seconds
-    retry: 1
+    retry: 2, // Increased retry count
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 
   const handleSearch = (e: React.FormEvent) => {

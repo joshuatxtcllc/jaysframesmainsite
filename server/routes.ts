@@ -759,7 +759,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get order by ID (enhanced with Kanban status)
   app.get("/api/orders/:id", async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
+    console.log(`Order lookup request for ID: ${id}`);
+    
     if (isNaN(id)) {
+      console.log(`Invalid order ID provided: ${req.params.id}`);
       return res.status(400).json({ 
         message: "Invalid order ID",
         error: "ORDER_ID_INVALID"
@@ -767,8 +770,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
+      console.log(`Searching for order ${id} in local database...`);
       const order = await storage.getOrderById(id);
+      
       if (!order) {
+        console.log(`Order ${id} not found in local database`);
         return res.status(404).json({ 
           message: "Order not found",
           error: "ORDER_NOT_FOUND",
@@ -776,8 +782,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      console.log(`Found order ${id} in local database:`, {
+        customerName: order.customerName,
+        status: order.status,
+        totalAmount: order.totalAmount
+      });
+
       // Try to get real-time status from Kanban app
       try {
+        console.log(`Attempting to get Kanban status for order ${id}...`);
         const { externalAPIService } = await import('./services/external-api');
         const kanbanStatus = await externalAPIService.getOrderStatusFromKanban(id.toString());
 
@@ -796,7 +809,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           };
           res.json(enhancedOrder);
         } else {
-          console.log(`No Kanban status found for order ${id}, returning local data`);
+          console.log(`No Kanban status found for order ${id}, returning local data only`);
           // Return local order data if Kanban lookup returns null
           res.json(order);
         }
@@ -812,7 +825,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error(`Error fetching order ${id}:`, error);
       res.status(500).json({ 
         message: "Internal server error while fetching order",
-        error: "SERVER_ERROR"
+        error: "SERVER_ERROR",
+        details: error instanceof Error ? error.message : 'Unknown error'
       });
     }
   });
@@ -1273,6 +1287,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         error: 'Failed to test external API connections',
         message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Debug endpoint for order lookup troubleshooting
+  app.get('/api/debug/orders/:orderId', async (req: Request, res: Response) => {
+    try {
+      const { orderId } = req.params;
+      const id = parseInt(orderId);
+      
+      if (isNaN(id)) {
+        return res.json({
+          orderId,
+          error: 'Invalid order ID - not a number',
+          timestamp: new Date().toISOString()
+        });
+      }
+
+      // Check if order exists in database
+      const order = await storage.getOrderById(id);
+      
+      if (!order) {
+        return res.json({
+          orderId,
+          found: false,
+          message: 'Order not found in local database',
+          timestamp: new Date().toISOString()
+        });
+      }
+
+      res.json({
+        orderId,
+        found: true,
+        order: {
+          id: order.id,
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          status: order.status,
+          totalAmount: order.totalAmount,
+          createdAt: order.createdAt
+        },
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Debug order lookup error:', error);
+      res.status(500).json({
+        orderId: req.params.orderId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
       });
     }
   });
