@@ -1629,7 +1629,7 @@ const FrameDesigner = ({ initialWidth = 16, initialHeight = 20 }: FrameDesignerP
                                   <div className="flex items-center space-x-1">
                                     <div className="flex">
                                       {[...Array(5)].map((_, i) => (
-                                        <div key={i} className={`w-1 h-1 rounded-full ${i < Math.floor(frameRec.score 2) ? 'bg-accent' : 'bg-neutral-200'}`} />
+                                        <div key={i} className={`w-1 h-1 rounded-full ${i < Math.floor(frameRec.score / 2) ? 'bg-accent' : 'bg-neutral-200'}`} />
                                       ))}
                                     </div>
                                     <span className="text-xs text-neutral-500">{frameRec.score}/10</span>
