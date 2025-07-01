@@ -137,7 +137,7 @@ Jay's Frames is a comprehensive e-commerce platform for a custom framing studio 
   - Focused messaging on archival acid-free materials, conservation glass, and premium clientele
 
 ## Recent Changes
-- January 1, 2025: Comprehensive SEO Recovery Implementation for Houston Framing Rankings
+- January 1, 2025: Comprehensive SEO Recovery Implementation + Automated Blog Generation System
   - Enhanced homepage with keyword-rich Houston Heights Local SEO section targeting declining search terms
   - Added comprehensive local business schema with service catalogs and area coverage
   - Created strategic Houston custom framing guide blog post specifically targeting "picture framing houston," "houston frame shop," and "custom framing houston" keywords
@@ -150,6 +150,12 @@ Jay's Frames is a comprehensive e-commerce platform for a custom framing studio 
   - Created additional local SEO landing pages for Houston neighborhoods and art framing
   - Enhanced sitemap with new location-focused pages for better crawling
   - Added comprehensive neighborhood targeting for Heights, Montrose, River Oaks, Memorial, Galleria, Midtown
+  - **NEW: Automated AI Blog Generation System**
+    - Implemented weekly automated blog post creation using OpenAI GPT-4o
+    - Scheduled posts every Wednesday at 9:00 AM CST targeting declining keywords
+    - 5-week topic rotation: Local Art Scene, Conservation/Climate, Neighborhood Spotlight, Seasonal Projects, Behind the Scenes
+    - Admin panel for managing automation, previewing posts, and manual triggering
+    - SEO-focused content generation with Houston-specific keywords and local references
 - June 24, 2025: Implemented complete Stripe payment processing system
   - Created secure server-side payment endpoints with payment intent creation
   - Built professional checkout page with customer information forms and order summary
