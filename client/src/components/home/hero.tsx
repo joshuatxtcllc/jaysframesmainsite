@@ -64,10 +64,10 @@ export default function Hero() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="max-w-6xl mx-auto"
         >
-          {/* Main heading with clean, minimal styling */}
+          {/* Main heading with Houston keywords */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-none">
             <span className="block font-heading text-white drop-shadow-lg">
-              The Future of
+              Houston Heights
             </span>
             <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 font-heading text-cyan-400 drop-shadow-lg">
               Custom Framing
@@ -81,9 +81,9 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.3 }}
             className="text-xl md:text-2xl lg:text-3xl text-white mb-12 leading-relaxed max-w-4xl mx-auto font-light drop-shadow-lg"
           >
-            <span className="text-white font-medium">Houston's Best Custom Frame Shop</span> where traditional craftsmanship meets cutting-edge technology.
+            <span className="text-white font-medium">Houston's #1 Picture Framing Studio</span> - Museum-quality archival framing in the Heights.
             <span className="block mt-2 text-lg md:text-xl text-cyan-300 font-medium drop-shadow-md">
-              Expert custom framing in Houston with museum-quality preservation.
+              Expert custom framing Houston Heights • Same-day service • 218 W 27th St
             </span>
           </motion.p>
 

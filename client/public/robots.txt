@@ -10,7 +10,7 @@ Allow: /blog
 Allow: /faq
 
 # SEO optimizations
-Sitemap: https://jaysframes.repl.co/sitemap.xml
+Sitemap: https://jaysframes.com/sitemap.xml
 
 # Performance optimizations - allow all static assets
 Allow: /images/

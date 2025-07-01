@@ -40,6 +40,7 @@ import PerformanceOptimizer from "@/components/seo/performance-optimizer";
 import FAQ from "@/pages/faq";
 import { loadCriticalCSS } from "./lib/critical-css";
 import Gallery from "./pages/gallery";
+import HoustonCustomFramingGuide from "./pages/blog/houston-custom-framing-guide";
 
 function Router() {
   return (
@@ -67,6 +68,7 @@ function Router() {
       <Route path="/api-docs" component={ApiDocs} />
       {/* Blog Routes */}
       <Route path="/blog" component={Blog} />
+      <Route path="/blog/houston-custom-framing-guide" component={HoustonCustomFramingGuide} />
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/virtual-room-visualizer" component={VirtualRoomVisualizer} /> {/* Added route */}
       <Route path="/faq" component={FAQ} />

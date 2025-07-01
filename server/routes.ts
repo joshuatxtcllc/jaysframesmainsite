@@ -12,7 +12,7 @@ import {
   insertBlogCategorySchema, 
   insertBlogPostSchema 
 } from "@shared/schema";
-import { handleChatRequest, getFrameRecommendations, askFrameAssistant, analyzeArtworkImage, type ChatMessage } from "./ai";
+import { handleChatRequest, getFrameRecommendations, askFrameAssistant, analyzeArtworkImage, generateAIResponse, type ChatMessage } from "./ai";
 import { 
   sendNotification,
   sendEmail,

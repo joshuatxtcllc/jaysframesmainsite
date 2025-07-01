@@ -15,6 +15,56 @@ const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 }) : null;
 
+/**
+ * Generates AI response using available providers
+ */
+export async function generateAIResponse(prompt: string): Promise<string> {
+  try {
+    // Try OpenAI first
+    if (openai) {
+      const response = await openai.chat.completions.create({
+        model: openaiModel,
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 4000
+      });
+
+      return response.choices[0].message.content || "I apologize, but I couldn't generate a response.";
+    }
+
+    // Try Anthropic as fallback
+    if (anthropic) {
+      const response = await anthropic.messages.create({
+        model: anthropicModel,
+        max_tokens: 4000,
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type === 'text') {
+        return content.text;
+      }
+    }
+
+    // No AI service available
+    throw new Error("No AI service available");
+    
+  } catch (error) {
+    console.error("AI generation error:", error);
+    return "I apologize, but I'm temporarily unavailable. Please try again later.";
+  }
+}
+
 // Check if at least one AI provider is available
 if (!anthropic && !openai) {
   console.error("\x1b[31mError: No AI provider available. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY.\x1b[0m");

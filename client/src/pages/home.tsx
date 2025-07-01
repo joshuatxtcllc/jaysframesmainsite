@@ -98,6 +98,82 @@ const Home = () => {
       />
 
       <Hero />
+      
+      {/* Houston Local SEO Section - Critical for ranking recovery */}
+      <section className="py-16 bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Houston's Premier Custom Framing Studio</h2>
+            <p className="text-xl text-neutral-600 max-w-3xl mx-auto">
+              Located in Houston Heights at 218 W 27th St, Jay's Frames has been Houston's trusted picture framing destination for over 25 years, serving Heights, Montrose, River Oaks, and Greater Houston with museum-quality custom framing.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+              <h3 className="text-2xl font-bold text-primary mb-3">Picture Framing Houston</h3>
+              <p className="text-neutral-600 mb-4">
+                Professional picture framing services with archival acid-free materials and conservation-grade UV protection glass. Same-day service available for standard sizes.
+              </p>
+              <ul className="text-left text-sm text-neutral-700 space-y-1">
+                <li>• Museum-quality archival matting</li>
+                <li>• Conservation UV protection glass</li>
+                <li>• Acid-free backing boards</li>
+                <li>• Custom frame cutting</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+              <h3 className="text-2xl font-bold text-primary mb-3">Houston Frame Shop</h3>
+              <p className="text-neutral-600 mb-4">
+                Houston Heights' most trusted frame shop since 1999. Expert craftsmen specializing in custom framing for artwork, photography, diplomas, and memorabilia.
+              </p>
+              <ul className="text-left text-sm text-neutral-700 space-y-1">
+                <li>• Shadow box framing</li>
+                <li>• Sports memorabilia framing</li>
+                <li>• Certificate & diploma framing</li>
+                <li>• Art restoration services</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+              <h3 className="text-2xl font-bold text-primary mb-3">Custom Framing Houston</h3>
+              <p className="text-neutral-600 mb-4">
+                Bespoke custom framing solutions for Houston's most discerning clients. From gallery-worthy art displays to treasured family heirlooms.
+              </p>
+              <ul className="text-left text-sm text-neutral-700 space-y-1">
+                <li>• Gallery-quality mounting</li>
+                <li>• Custom mat cutting</li>
+                <li>• Floating frame options</li>
+                <li>• Large format framing</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="bg-primary text-white p-8 rounded-lg text-center">
+            <h3 className="text-3xl font-bold mb-4">Visit Our Houston Heights Location</h3>
+            <p className="text-xl mb-6">
+              Experience Houston's finest custom framing at our 218 W 27th St showroom. 
+              See hundreds of frame samples, mat options, and conservation materials.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+              <div>
+                <h4 className="font-bold text-lg mb-2">Address</h4>
+                <p>218 W 27th St<br/>Houston Heights, TX 77008</p>
+              </div>
+              <div>
+                <h4 className="font-bold text-lg mb-2">Hours</h4>
+                <p>Mon-Fri: 9am-5pm<br/>Sat: 10am-3pm<br/>Sun: By appointment</p>
+              </div>
+              <div>
+                <h4 className="font-bold text-lg mb-2">Phone</h4>
+                <p>(832) 893-3794<br/>Same-day service available</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <LocationSection />
       <AboutSection />
       <CustomizationSection />
