@@ -760,40 +760,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders/:id", async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
-      return res.status(400).json({ message: "Invalid order ID" });
+      return res.status(400).json({ 
+        message: "Invalid order ID",
+        error: "ORDER_ID_INVALID"
+      });
     }
 
-    const order = await storage.getOrderById(id);
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-
-    // Try to get real-time status from Kanban app
     try {
-      const { externalAPIService } = await import('./services/external-api');
-      const kanbanStatus = await externalAPIService.getOrderStatusFromKanban(id.toString());
-
-      if (kanbanStatus) {
-        // Merge Kanban status with local order data
-        const enhancedOrder = {
-          ...order,
-          kanbanStatus: {
-            status: kanbanStatus.status,
-            stage: kanbanStatus.stage,
-            estimatedCompletion: kanbanStatus.estimatedCompletion,
-            notes: kanbanStatus.notes,
-            lastUpdated: kanbanStatus.lastUpdated
-          }
-        };
-        res.json(enhancedOrder);
-      } else {
-        // Return local order data if Kanban lookup fails
-        res.json(order);
+      const order = await storage.getOrderById(id);
+      if (!order) {
+        return res.status(404).json({ 
+          message: "Order not found",
+          error: "ORDER_NOT_FOUND",
+          orderId: id
+        });
       }
-    } catch (kanbanError) {
-      console.warn('Kanban lookup failed for order', id, ':', kanbanError);
-      // Return local order data if Kanban lookup fails
-      res.json(order);
+
+      // Try to get real-time status from Kanban app
+      try {
+        const { externalAPIService } = await import('./services/external-api');
+        const kanbanStatus = await externalAPIService.getOrderStatusFromKanban(id.toString());
+
+        if (kanbanStatus) {
+          console.log(`Successfully retrieved Kanban status for order ${id}:`, kanbanStatus.stage);
+          // Merge Kanban status with local order data
+          const enhancedOrder = {
+            ...order,
+            kanbanStatus: {
+              status: kanbanStatus.status,
+              stage: kanbanStatus.stage,
+              estimatedCompletion: kanbanStatus.estimatedCompletion,
+              notes: kanbanStatus.notes,
+              lastUpdated: kanbanStatus.lastUpdated
+            }
+          };
+          res.json(enhancedOrder);
+        } else {
+          console.log(`No Kanban status found for order ${id}, returning local data`);
+          // Return local order data if Kanban lookup returns null
+          res.json(order);
+        }
+      } catch (kanbanError) {
+        console.warn(`Kanban lookup failed for order ${id}:`, kanbanError instanceof Error ? kanbanError.message : kanbanError);
+        // Return local order data if Kanban lookup fails
+        res.json({
+          ...order,
+          kanbanError: 'Real-time status temporarily unavailable'
+        });
+      }
+    } catch (error) {
+      console.error(`Error fetching order ${id}:`, error);
+      res.status(500).json({ 
+        message: "Internal server error while fetching order",
+        error: "SERVER_ERROR"
+      });
     }
   });
 
@@ -1245,13 +1265,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
         connections: {
           kanban: kanbanStatus,
           pos: posStatus
-        }
+        },
+        timestamp: new Date().toISOString()
       });
     } catch (error) {
       console.error('Error testing external APIs:', error);
       res.status(500).json({ 
         error: 'Failed to test external API connections',
         message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Debug endpoint for testing Kanban order lookup
+  app.get('/api/debug/kanban/:orderId', async (req: Request, res: Response) => {
+    try {
+      const { orderId } = req.params;
+      const { externalAPIService } = await import('./services/external-api');
+
+      const configStatus = externalAPIService.getConfigurationStatus();
+      
+      if (!configStatus.kanban.configured) {
+        return res.json({
+          orderId,
+          error: 'Kanban API not configured',
+          configuration: configStatus.kanban,
+          message: 'Set KANBAN_API_URL and KANBAN_API_KEY environment variables'
+        });
+      }
+
+      const kanbanStatus = await externalAPIService.getOrderStatusFromKanban(orderId);
+      
+      res.json({
+        orderId,
+        kanbanStatus,
+        configuration: configStatus.kanban,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Debug Kanban lookup error:', error);
+      res.status(500).json({
+        orderId: req.params.orderId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
       });
     }
   });

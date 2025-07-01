@@ -17,9 +17,20 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
   const [searchedOrder, setSearchedOrder] = useState<string | null>(null);
 
   const { data: order, isLoading, error } = useQuery({
-    queryKey: [searchedOrder ? `/api/orders/${searchedOrder}` : null],
+    queryKey: [`/api/orders/${searchedOrder}`],
+    queryFn: async ({ queryKey }) => {
+      const response = await fetch(queryKey[0]);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Order not found');
+        }
+        throw new Error('Failed to fetch order');
+      }
+      return response.json();
+    },
     enabled: !!searchedOrder,
-    staleTime: 30000 // 30 seconds
+    staleTime: 30000, // 30 seconds
+    retry: 1
   });
 
   const handleSearch = (e: React.FormEvent) => {
@@ -92,10 +103,22 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
       {error && (
         <Card className="border-destructive mb-8">
           <CardContent className="p-6">
-            <h3 className="text-lg font-bold text-destructive mb-2">Order Not Found</h3>
-            <p className="text-neutral-500">
-              We couldn't find an order with that number. Please check your order number and try again.
+            <h3 className="text-lg font-bold text-destructive mb-2">
+              {error.message === 'Order not found' ? 'Order Not Found' : 'Error Loading Order'}
+            </h3>
+            <p className="text-neutral-500 mb-4">
+              {error.message === 'Order not found' 
+                ? "We couldn't find an order with that number. Please check your order number and try again."
+                : "There was an error loading your order information. Please try again."}
             </p>
+            {error.message !== 'Order not found' && (
+              <div className="text-sm text-neutral-400">
+                <p>Error details: {error.message}</p>
+                <p className="mt-2">
+                  If this problem persists, please contact support at (832) 893-3794 or email info@jaysframes.com
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -103,9 +126,23 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
       {order && (
         <div className="mt-8 border-t pt-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-heading font-bold text-primary">Order #{order.id}</h3>
-            <Badge className={`${getStatusColor(order.status)} text-white text-sm py-1 px-3`}>
-              {formatStatus(order.status)}
+            <div className="flex items-center gap-3">
+              <h3 className="text-lg font-heading font-bold text-primary">Order #{order.id}</h3>
+              {order.kanbanStatus && (
+                <div className="flex items-center gap-1 text-xs text-green-600">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span>Live Data</span>
+                </div>
+              )}
+              {order.kanbanError && (
+                <div className="flex items-center gap-1 text-xs text-yellow-600">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span>Local Data</span>
+                </div>
+              )}
+            </div>
+            <Badge className={`${getStatusColor(order.kanbanStatus?.status || order.status)} text-white text-sm py-1 px-3`}>
+              {formatStatus(order.kanbanStatus?.status || order.status)}
             </Badge>
           </div>
           
@@ -131,9 +168,38 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
                       <span className="text-neutral-500">Total Amount:</span>
                       <span className="font-medium">{formatPrice(order.totalAmount)}</span>
                     </div>
+                    
+                    {/* Real-time Kanban Status */}
+                    {order.kanbanStatus && (
+                      <div className="pt-2 border-t border-neutral-200 mt-2">
+                        <div className="flex justify-between">
+                          <span className="text-neutral-500">Production Status:</span>
+                          <Badge className={`${getStatusColor(order.kanbanStatus.status)} text-white text-xs`}>
+                            {formatStatus(order.kanbanStatus.stage)}
+                          </Badge>
+                        </div>
+                        {order.kanbanStatus.estimatedCompletion && (
+                          <div className="flex justify-between mt-1">
+                            <span className="text-neutral-500">Estimated Completion:</span>
+                            <span className="font-medium">{formatDate(order.kanbanStatus.estimatedCompletion)}</span>
+                          </div>
+                        )}
+                        {order.kanbanStatus.notes && (
+                          <div className="mt-2">
+                            <span className="block text-neutral-500 text-sm">Production Notes:</span>
+                            <span className="block text-sm">{order.kanbanStatus.notes}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between mt-1">
+                          <span className="text-neutral-500 text-xs">Last Updated:</span>
+                          <span className="text-xs">{formatDate(order.kanbanStatus.lastUpdated)}</span>
+                        </div>
+                      </div>
+                    )}
+                    
                     {order.notes && (
                       <div className="pt-2 border-t border-neutral-200 mt-2">
-                        <span className="block text-neutral-500">Notes:</span>
+                        <span className="block text-neutral-500">Order Notes:</span>
                         <span className="block">{order.notes}</span>
                       </div>
                     )}
@@ -177,11 +243,11 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
             <div>
               <h4 className="font-bold mb-4">Order Progress</h4>
               <OrderTimeline 
-                currentStage={order.currentStage} 
-                estimatedCompletion={order.estimatedCompletionDate}
+                currentStage={order.kanbanStatus?.stage || order.currentStage} 
+                estimatedCompletion={order.kanbanStatus?.estimatedCompletion || order.estimatedCompletionDate}
                 stageStartedAt={order.stageStartedAt}
-                notes={order.notes ? [order.notes] : []}
-                isDelayed={order.status === "delayed"}
+                notes={order.kanbanStatus?.notes ? [order.kanbanStatus.notes] : (order.notes ? [order.notes] : [])}
+                isDelayed={order.kanbanStatus?.status === "delayed" || order.status === "delayed"}
               />
               
               {/* Show detailed production stages for custom framing orders */}
