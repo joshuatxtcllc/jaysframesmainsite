@@ -770,11 +770,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
 
+    // Set a timeout for the entire request
+    const timeoutId = setTimeout(() => {
+      if (!res.headersSent) {
+        console.error(`Request timeout for order ${id}`);
+        res.status(408).json({
+          message: "Request timeout",
+          error: "REQUEST_TIMEOUT",
+          orderId: id
+        });
+      }
+    }, 7000); // 7 second timeout
+
     try {
       console.log(`Searching for order ${id} in local database...`);
       const order = await storage.getOrderById(id);
       
       if (!order) {
+        clearTimeout(timeoutId);
         console.log(`Order ${id} not found in local database`);
         return res.status(404).json({ 
           message: "Order not found",
@@ -789,46 +802,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalAmount: order.totalAmount
       });
 
-      // Try to get real-time status from Kanban app
-      try {
-        console.log(`Attempting to get Kanban status for order ${id}...`);
-        const { externalAPIService } = await import('./services/external-api');
-        const kanbanStatus = await externalAPIService.getOrderStatusFromKanban(id.toString());
+      // Try to get real-time status from Kanban app with shorter timeout
+      const kanbanPromise = (async () => {
+        try {
+          console.log(`Attempting to get Kanban status for order ${id}...`);
+          const { externalAPIService } = await import('./services/external-api');
+          
+          // Race between kanban request and timeout
+          return await Promise.race([
+            externalAPIService.getOrderStatusFromKanban(id.toString()),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Kanban timeout')), 3000)
+            )
+          ]);
+        } catch (kanbanError) {
+          console.warn(`Kanban lookup failed for order ${id}:`, kanbanError instanceof Error ? kanbanError.message : kanbanError);
+          return null;
+        }
+      })();
 
-        if (kanbanStatus) {
-          console.log(`Successfully retrieved Kanban status for order ${id}:`, kanbanStatus.stage);
-          // Merge Kanban status with local order data
-          const enhancedOrder = {
-            ...order,
-            kanbanStatus: {
-              status: kanbanStatus.status,
-              stage: kanbanStatus.stage,
-              estimatedCompletion: kanbanStatus.estimatedCompletion,
-              notes: kanbanStatus.notes,
-              lastUpdated: kanbanStatus.lastUpdated
-            }
-          };
-          res.json(enhancedOrder);
-        } else {
-          console.log(`No Kanban status found for order ${id}, returning local data only`);
-          // Return local order data if Kanban lookup returns null
-          res.json(order);
+      try {
+        const kanbanStatus = await kanbanPromise;
+        
+        clearTimeout(timeoutId);
+        
+        if (!res.headersSent) {
+          if (kanbanStatus) {
+            console.log(`Successfully retrieved Kanban status for order ${id}:`, kanbanStatus.stage);
+            // Merge Kanban status with local order data
+            const enhancedOrder = {
+              ...order,
+              kanbanStatus: {
+                status: kanbanStatus.status,
+                stage: kanbanStatus.stage,
+                estimatedCompletion: kanbanStatus.estimatedCompletion,
+                notes: kanbanStatus.notes,
+                lastUpdated: kanbanStatus.lastUpdated
+              }
+            };
+            res.json(enhancedOrder);
+          } else {
+            console.log(`No Kanban status found for order ${id}, returning local data only`);
+            // Return local order data if Kanban lookup returns null
+            res.json({
+              ...order,
+              kanbanError: 'Real-time status temporarily unavailable'
+            });
+          }
         }
       } catch (kanbanError) {
-        console.warn(`Kanban lookup failed for order ${id}:`, kanbanError instanceof Error ? kanbanError.message : kanbanError);
-        // Return local order data if Kanban lookup fails
-        res.json({
-          ...order,
-          kanbanError: 'Real-time status temporarily unavailable'
-        });
+        clearTimeout(timeoutId);
+        if (!res.headersSent) {
+          console.warn(`Kanban lookup failed for order ${id}:`, kanbanError instanceof Error ? kanbanError.message : kanbanError);
+          // Return local order data if Kanban lookup fails
+          res.json({
+            ...order,
+            kanbanError: 'Real-time status temporarily unavailable'
+          });
+        }
       }
     } catch (error) {
-      console.error(`Error fetching order ${id}:`, error);
-      res.status(500).json({ 
-        message: "Internal server error while fetching order",
-        error: "SERVER_ERROR",
-        details: error instanceof Error ? error.message : 'Unknown error'
-      });
+      clearTimeout(timeoutId);
+      if (!res.headersSent) {
+        console.error(`Error fetching order ${id}:`, error);
+        res.status(500).json({ 
+          message: "Internal server error while fetching order",
+          error: "SERVER_ERROR",
+          details: error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
     }
   });
 

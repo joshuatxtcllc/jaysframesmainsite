@@ -22,7 +22,7 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
       console.log('Fetching order data from:', queryKey[0]);
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
       
       try {
         const response = await fetch(queryKey[0], {
@@ -72,13 +72,19 @@ const OrderStatus = ({ queryClient }: OrderStatusProps) => {
     enabled: !!searchedOrder && searchedOrder.trim() !== '',
     staleTime: 30000, // 30 seconds
     retry: (failureCount, error) => {
+      console.log(`Query retry attempt ${failureCount + 1}, error:`, error.message);
       // Don't retry on 404 or timeout errors
-      if (error.message.includes('Order not found') || error.message.includes('timed out')) {
+      if (error.message.includes('Order not found') || 
+          error.message.includes('timed out') ||
+          error.message.includes('Failed to fetch')) {
         return false;
       }
-      return failureCount < 2;
+      return failureCount < 1; // Reduced retry attempts
     },
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 5000)
+    retryDelay: 2000, // Fixed 2 second delay
+    gcTime: 0, // Don't cache failed requests
+    refetchOnWindowFocus: false,
+    refetchOnMount: true
   });
 
   const handleSearch = (e: React.FormEvent) => {
