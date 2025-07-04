@@ -18,7 +18,8 @@ export default defineConfig({
     port: 5173,
     hmr: {
       port: 5173,
-      host: '0.0.0.0'
+      host: '0.0.0.0',
+      clientPort: 443,
     },
     proxy: {
       "/api": {
