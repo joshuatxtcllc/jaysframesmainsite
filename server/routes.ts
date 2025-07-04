@@ -1249,6 +1249,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // CALENDAR INTEGRATION ROUTES
+
+  // Get Google Calendar authorization URL
+  app.get('/api/calendar/auth-url', async (req: Request, res: Response) => {
+    try {
+      const { calendarService } = await import('./services/calendar-integration');
+      const authUrl = calendarService.getAuthUrl();
+      res.json({ authUrl });
+    } catch (error) {
+      console.error('Error getting auth URL:', error);
+      res.status(500).json({ error: 'Failed to get authorization URL' });
+    }
+  });
+
+  // Handle OAuth callback
+  app.get('/api/calendar/callback', async (req: Request, res: Response) => {
+    try {
+      const { code } = req.query;
+      if (!code || typeof code !== 'string') {
+        return res.status(400).json({ error: 'Authorization code required' });
+      }
+
+      const { calendarService } = await import('./services/calendar-integration');
+      const tokens = await calendarService.getTokens(code);
+      
+      // In a real app, you'd store these tokens associated with the user
+      // For now, we'll store them in session or temporary storage
+      req.session.calendarTokens = tokens;
+      
+      res.send('<script>window.close();</script>');
+    } catch (error) {
+      console.error('Error handling calendar callback:', error);
+      res.status(500).json({ error: 'Authorization failed' });
+    }
+  });
+
+  // Check calendar connection status
+  app.get('/api/calendar/status', async (req: Request, res: Response) => {
+    try {
+      const connected = !!req.session.calendarTokens;
+      const syncEnabled = req.session.calendarSyncEnabled || false;
+      res.json({ connected, syncEnabled });
+    } catch (error) {
+      console.error('Error checking calendar status:', error);
+      res.status(500).json({ error: 'Failed to check status' });
+    }
+  });
+
+  // Toggle calendar sync
+  app.post('/api/calendar/toggle-sync', async (req: Request, res: Response) => {
+    try {
+      const { enabled } = req.body;
+      req.session.calendarSyncEnabled = enabled;
+      res.json({ success: true, syncEnabled: enabled });
+    } catch (error) {
+      console.error('Error toggling calendar sync:', error);
+      res.status(500).json({ error: 'Failed to toggle sync' });
+    }
+  });
+
+  // Disconnect calendar
+  app.post('/api/calendar/disconnect', async (req: Request, res: Response) => {
+    try {
+      delete req.session.calendarTokens;
+      delete req.session.calendarSyncEnabled;
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error disconnecting calendar:', error);
+      res.status(500).json({ error: 'Failed to disconnect' });
+    }
+  });
+
   // EXTERNAL API INTEGRATION ROUTES
 
   // Get order status from Kanban app

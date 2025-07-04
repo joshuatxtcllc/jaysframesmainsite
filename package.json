@@ -70,6 +70,8 @@
     "express-fileupload": "^1.5.1",
     "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
+    "google-auth-library": "^10.1.0",
+    "googleapis": "^150.0.1",
     "input-otp": "^1.2.4",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.453.0",
