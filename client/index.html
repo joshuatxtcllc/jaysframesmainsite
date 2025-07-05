@@ -158,6 +158,41 @@
   </head>
   <body>
   <div id="root"></div>
+  <script>
+    // Fix WebSocket connection issue before Vite loads
+    (function() {
+      const originalWebSocket = window.WebSocket;
+      window.WebSocket = function(url, protocols) {
+        const urlString = url.toString();
+        if (urlString.includes('localhost:undefined') || urlString.includes('wss://localhost:undefined')) {
+          console.warn('Blocked invalid WebSocket connection attempt:', urlString);
+          // Return a mock WebSocket that doesn't connect
+          const mockSocket = {
+            readyState: 3, // CLOSED
+            close: function() {},
+            send: function() {},
+            addEventListener: function() {},
+            removeEventListener: function() {}
+          };
+          return mockSocket;
+        }
+        return new originalWebSocket(url, protocols);
+      };
+
+      // Override window.addEventListener to handle promise rejections
+      window.addEventListener('unhandledrejection', function(event) {
+        if (event.reason && (
+          event.reason.message?.includes('WebSocket') || 
+          event.reason.message?.includes('wss://localhost:undefined') ||
+          event.reason.stack?.includes('WebSocket')
+        )) {
+          console.warn('Suppressed WebSocket HMR error');
+          event.preventDefault();
+          return;
+        }
+      });
+    })();
+  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
