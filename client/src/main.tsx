@@ -5,6 +5,12 @@ import { toast } from "@/hooks/use-toast";
 
 // Handle unhandled promise rejections early
 window.addEventListener('unhandledrejection', (event) => {
+  // Suppress WebSocket HMR connection errors that are blocking the app
+  if (event.reason?.message?.includes('WebSocket') || event.reason?.message?.includes('wss://localhost:undefined')) {
+    console.warn('Suppressing WebSocket HMR connection error - app will continue without hot reload');
+    event.preventDefault();
+    return;
+  }
   console.error('Unhandled promise rejection:', event.reason);
   event.preventDefault();
 });
