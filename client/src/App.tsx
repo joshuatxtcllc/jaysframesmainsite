@@ -108,12 +108,18 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Force app to be ready after a short delay to prevent infinite loading
-    const timer = setTimeout(() => {
+    // Initialize app immediately - no artificial delays
+    const initializeApp = () => {
+      try {
+        loadCriticalCSS();
+      } catch (error) {
+        console.warn('Critical CSS loading failed:', error);
+      }
       setIsLoading(false);
-    }, 1000);
+    };
 
-    return () => clearTimeout(timer);
+    // Initialize immediately
+    initializeApp();
   }, []);
 
   if (isLoading) {
