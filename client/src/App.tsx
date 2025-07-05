@@ -43,6 +43,7 @@ import Gallery from "./pages/gallery";
 import HoustonCustomFramingGuide from "./pages/blog/houston-custom-framing-guide";
 import HoustonNeighborhoodsPage from "./pages/houston-neighborhoods";
 import HoustonArtFramingPage from "./pages/houston-art-framing";
+import LJDesigner from "./pages/ljdesigner";
 
 function Router() {
   return (
@@ -77,6 +78,7 @@ function Router() {
       <Route path="/gallery" component={Gallery} />
       <Route path="/houston-neighborhoods" component={HoustonNeighborhoodsPage} />
       <Route path="/houston-art-framing" component={HoustonArtFramingPage} />
+      <Route path="/ljdesigner" component={LJDesigner} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

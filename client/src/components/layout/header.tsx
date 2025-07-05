@@ -120,6 +120,7 @@ const Header = () => {
   // Define submenu items for Custom Framing
   const customFramingSubMenu = [
     { href: "/custom-framing", label: "Start Framing", icon: <Wand2 className="mr-2 h-4 w-4" />, highlight: true },
+    { href: "/ljdesigner", label: "Virtual Design Studio", icon: <LayoutGrid className="mr-2 h-4 w-4" /> },
     { href: "/products", label: "Products", icon: <LayoutGrid className="mr-2 h-4 w-4" /> },
     { href: "/frame-fitting-assistant", label: "Frame Fitting AI", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
     { href: "/voice-frame-assistant", label: "Frame Assistant", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
