@@ -1,3 +1,4 @@
+import React, { useState, useEffect, lazy } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -31,7 +32,6 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { CartProvider } from "@/context/cart-context";
 import { AuthProvider } from "./context/auth-context";
-import { lazy, useEffect } from 'react';
 import CatalogManagement from './pages/admin/catalog-management';
 import BlogManager from './pages/admin/blog-manager';
 import './lib/seo-monitor';
@@ -100,6 +100,29 @@ function App() {
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
     };
   }, []);
+
+  // Add fallback loading state
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Force app to be ready after a short delay to prevent infinite loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-white text-2xl font-bold mb-4">Jay's Frames</div>
+          <div className="text-teal-400 text-sm">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
