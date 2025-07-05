@@ -54,10 +54,28 @@ window.showToast = ({ title, description, variant = 'default', duration = 5000 }
   });
 };
 
-// Force app to render even if there are connection issues
-setTimeout(() => {
-  const root = document.getElementById("root");
-  if (root) {
-    createRoot(root).render(<App />);
+// Test basic functionality first
+console.log("main.tsx is loading...");
+console.log("DOM state:", document.readyState);
+console.log("Root element exists:", !!document.getElementById("root"));
+
+// Simple test render
+const root = document.getElementById("root");
+if (root) {
+  console.log("Attempting to render app...");
+  try {
+    root.innerHTML = '<div style="min-height: 100vh; background: black; color: white; display: flex; align-items: center; justify-content: center; font-family: Arial;"><div><h1 style="color: teal;">Jay\'s Frames Test</h1><p>Direct HTML render working</p></div></div>';
+    console.log("HTML render successful");
+    
+    // Now try React
+    setTimeout(() => {
+      console.log("Attempting React render...");
+      createRoot(root).render(<App />);
+    }, 100);
+  } catch (error) {
+    console.error("Render error:", error);
+    root.innerHTML = '<div style="color: red; padding: 20px;">Error: ' + error.message + '</div>';
   }
-}, 0);
+} else {
+  console.error("Root element not found");
+}
