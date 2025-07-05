@@ -46,41 +46,26 @@ import HoustonNeighborhoodsPage from "./pages/houston-neighborhoods";
 import HoustonArtFramingPage from "./pages/houston-art-framing";
 import LJDesigner from "./pages/ljdesigner";
 
+function SimpleTest() {
+  return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-teal-400 mb-4">Jay's Frames</h1>
+        <p className="text-gray-300 mb-8">App is working! Testing basic functionality...</p>
+        <div className="space-y-2">
+          <p>✅ React rendering</p>
+          <p>✅ CSS loading</p>
+          <p>✅ Components working</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/products" component={Products} />
-      <Route path="/custom-framing" component={CustomFraming} />
-      <Route path="/checkout" component={Checkout} />
-      <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
-      <Route path="/order-status" component={OrderStatus} />
-      <Route path="/admin/dashboard" component={lazy(() => import('./pages/admin/dashboard'))} />
-      <Route path="/admin/catalog-management" component={lazy(() => import('./pages/admin/catalog-management'))} />
-      <Route path="/admin/blog-manager" component={BlogManager} />
-      <Route path="/frame-assistant-test" component={FrameAssistantTest} />
-      <Route path="/voice-frame-assistant" component={VoiceFrameAssistant} />
-      <Route path="/frame-fitting-assistant" component={FrameFittingAssistant} />
-      <Route path="/notifications" component={Notifications} />
-      <Route path="/notification-test" component={NotificationTest} />
-      <Route path="/sms-settings" component={SMSSettings} />
-      <Route path="/developer/notification-embed" component={NotificationEmbed} />
-      <Route path="/ar-frame-assistant" component={ARFrameAssistant} />
-      <Route path="/reinvented" component={Reinvented} />
-      <Route path="/about" component={About} />
-      <Route path="/contact" component={Contact} />
-      <Route path="/api-docs" component={ApiDocs} />
-      {/* Blog Routes */}
-      <Route path="/blog" component={Blog} />
-      <Route path="/blog/houston-custom-framing-guide" component={HoustonCustomFramingGuide} />
-      <Route path="/blog/:slug" component={BlogPost} />
-      <Route path="/virtual-room-visualizer" component={VirtualRoomVisualizer} /> {/* Added route */}
-      <Route path="/faq" component={FAQ} />
-      <Route path="/gallery" component={Gallery} />
-      <Route path="/houston-neighborhoods" component={HoustonNeighborhoodsPage} />
-      <Route path="/houston-art-framing" component={HoustonArtFramingPage} />
-      <Route path="/ljdesigner" component={LJDesigner} />
-      {/* Fallback to 404 */}
+      <Route path="/" component={SimpleTest} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -104,23 +89,8 @@ function App() {
     };
   }, []);
 
-  // Add fallback loading state
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Initialize app immediately - no artificial delays
-    const initializeApp = () => {
-      try {
-        loadCriticalCSS();
-      } catch (error) {
-        console.warn('Critical CSS loading failed:', error);
-      }
-      setIsLoading(false);
-    };
-
-    // Initialize immediately
-    initializeApp();
-  }, []);
+  // Remove loading state completely - let components render immediately
+  const [isLoading, setIsLoading] = useState(false);
 
   if (isLoading) {
     return (
@@ -135,24 +105,10 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <ErrorBoundary>
-          <PerformanceOptimizer>
-            <PerformanceMonitor />
-            <AuthProvider>
-              <CartProvider>
-                <div className="flex flex-col min-h-screen">
-                  <Header />
-                  <main className="flex-grow">
-                    <Router />
-                  </main>
-                  <Footer />
-                </div>
-              </CartProvider>
-            </AuthProvider>
-          </PerformanceOptimizer>
-        </ErrorBoundary>
-      </HelmetProvider>
+      <ErrorBoundary>
+        <Router />
+        <Toaster />
+      </ErrorBoundary>
     </QueryClientProvider>
   );
 }
