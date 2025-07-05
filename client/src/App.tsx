@@ -37,6 +37,7 @@ import BlogManager from './pages/admin/blog-manager';
 import './lib/seo-monitor';
 import ErrorBoundary from "@/components/ui/error-boundary";
 import PerformanceOptimizer from "@/components/seo/performance-optimizer";
+import PerformanceMonitor from "@/components/performance-monitor";
 import FAQ from "@/pages/faq";
 import { loadCriticalCSS } from "./lib/critical-css";
 import Gallery from "./pages/gallery";
@@ -131,6 +132,7 @@ function App() {
       <HelmetProvider>
         <ErrorBoundary>
           <PerformanceOptimizer>
+            <PerformanceMonitor />
             <AuthProvider>
               <CartProvider>
                 <div className="flex flex-col min-h-screen">

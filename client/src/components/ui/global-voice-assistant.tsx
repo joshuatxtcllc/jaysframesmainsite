@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Mic, MicOff, Volume2, Loader2, X, 
-  Maximize2, Minimize2, ImageIcon, FileQuestion
+  Maximize2, Minimize2, ImageIcon, FileQuestion, Send
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -70,9 +70,16 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
 
   // Initialize WebSocket connection
   useEffect(() => {
+    // Improved WebSocket URL construction with better error handling
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.host;
-    // Use absolute path with API prefix to ensure proper routing
+    
+    // Validate host before creating WebSocket URL
+    if (!host || host.includes('undefined')) {
+      console.warn('Invalid host detected, skipping WebSocket connection');
+      return;
+    }
+    
     const wsUrl = `${protocol}//${host}/api/ws`;
     let reconnectAttempts = 0;
     let reconnectInterval: number | null = null;
@@ -219,8 +226,7 @@ export default function GlobalVoiceAssistant({ triggerPhrase = 'hey echo' }: Glo
             console.error('Maximum reconnection attempts reached');
             toast({
               title: "Connection Issues",
-              description: "Voice connection unavailable. You can still type your questions in the text field.",
-              variant: "warning"
+              description: "Voice connection unavailable. You can still type your questions in the text field."
             });
           }
         };
