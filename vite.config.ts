@@ -1,31 +1,24 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
-import path, { dirname } from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-import { fileURLToPath } from "url";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { fileURLToPath, URL } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ["lucide-react"],
-  },
-  server: {
-    host: '0.0.0.0',
-    port: 5173,
-    hmr: false,
-    proxy: {
-      "/api": {
-        target: "http://localhost:5000",
-        changeOrigin: true,
-      },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
   },
-  envPrefix: ['VITE_'],
-  define: {
-    'process.env.VITE_STRIPE_PUBLISHABLE_KEY': JSON.stringify(process.env.VITE_STRIPE_PUBLISHABLE_KEY),
+  build: {
+    outDir: "dist",
+    sourcemap: true,
+  },
+  server: {
+    port: 3000,
+    open: true,
   },
 });
