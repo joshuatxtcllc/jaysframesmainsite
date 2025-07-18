@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { storage } from "./storage";
 import { insertBlogPostSchema, type InsertBlogPost } from "../shared/schema";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 // Houston framing keywords to target for SEO recovery
 const TARGET_KEYWORDS = [
@@ -55,6 +55,12 @@ interface BlogPostContent {
 
 export async function generateWeeklyBlogPost(): Promise<BlogPostContent | null> {
   try {
+    // Check if OpenAI is available
+    if (!openai) {
+      console.log("OpenAI API key not available, skipping blog post generation");
+      return null;
+    }
+
     // Get current week number to rotate topics
     const weekNumber = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7)) % WEEKLY_TOPICS.length;
     const topic = WEEKLY_TOPICS[weekNumber];

@@ -67,8 +67,8 @@ export async function generateAIResponse(prompt: string): Promise<string> {
 
 // Check if at least one AI provider is available
 if (!anthropic && !openai) {
-  console.error("\x1b[31mError: No AI provider available. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY.\x1b[0m");
-  console.error("The AI features require a valid API key to function properly.");
+  console.log("\x1b[33mWarning: No AI provider available. AI features will be disabled.\x1b[0m");
+  console.log("To enable AI features, set ANTHROPIC_API_KEY or OPENAI_API_KEY.");
 }
 
 /**
