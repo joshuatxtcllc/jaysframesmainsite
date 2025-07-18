@@ -4,19 +4,19 @@ export const FEATURE_FLAGS = {
   ROUTING: true,
   BASIC_PAGES: true,
   
-  // Advanced features - disable for now
-  AI_FEATURES: false,
-  BLOG_SYSTEM: false,
-  ADMIN_DASHBOARD: false,
-  CART_SYSTEM: false,
-  AUTH_SYSTEM: false,
-  NOTIFICATIONS: false,
-  WEBSOCKETS: false,
-  EXTERNAL_API: false,
+  // Advanced features - now enabling them gradually
+  AI_FEATURES: true,
+  BLOG_SYSTEM: true,
+  ADMIN_DASHBOARD: true,
+  CART_SYSTEM: true,
+  AUTH_SYSTEM: true,
+  NOTIFICATIONS: true,
+  WEBSOCKETS: false, // Keep disabled to avoid connection issues
+  EXTERNAL_API: true,
   
   // UI Features
-  ANIMATIONS: false,
-  ADVANCED_COMPONENTS: false,
+  ANIMATIONS: true,
+  ADVANCED_COMPONENTS: true,
   
   // Development features
   DEBUG_MODE: true,

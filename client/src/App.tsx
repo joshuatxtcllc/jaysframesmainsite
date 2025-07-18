@@ -1,77 +1,86 @@
 import "./index.css";
+import { Switch, Route } from "wouter";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
+import { AuthProvider } from "@/context/auth-context";
+import { CartProvider } from "@/context/cart-context";
+import { Toaster } from "@/components/ui/toaster";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 
-// Ultra-minimal version to debug loading issues
-export default function App() {
+// Import all page components
+import Home from "@/pages/home";
+import Products from "@/pages/products";
+import CustomFraming from "@/pages/custom-framing";
+import OrderStatus from "@/pages/order-status";
+import FrameAssistantTest from "@/pages/frame-assistant-test";
+import AdminDashboard from "@/pages/admin/dashboard";
+import NotFound from "@/pages/not-found";
+import About from "@/pages/about";
+import Contact from "@/pages/contact";
+import Gallery from "@/pages/gallery";
+import Blog from "@/pages/blog/blog";
+import BlogPost from "@/pages/blog/blog-post";
+import HoustonArtFraming from "@/pages/houston-art-framing";
+import HoustonNeighborhoods from "@/pages/houston-neighborhoods";
+import FAQ from "@/pages/faq";
+import OrderConfirmation from "@/pages/order-confirmation";
+import Checkout from "@/pages/checkout";
+import Shadowboxes from "@/pages/shadowboxes";
+import Reinvented from "@/pages/reinvented";
+
+// Layout component
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-black text-white">
-      <nav className="bg-black/50 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-teal-400">Jay's Frames</h1>
-            <div className="flex space-x-6">
-              <a href="/" className="text-white hover:text-teal-400">Home</a>
-              <a href="/products" className="text-white hover:text-teal-400">Products</a>
-              <a href="/about" className="text-white hover:text-teal-400">About</a>
-              <a href="/contact" className="text-white hover:text-teal-400">Contact</a>
-            </div>
-          </div>
-        </div>
-      </nav>
-      
-      <main className="container mx-auto px-4 py-16">
-        <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl font-bold text-teal-400 mb-6">
-            Jay's Frames
-          </h1>
-          <p className="text-xl text-white/90 mb-8">
-            Houston's Premier Custom Framing Studio
-          </p>
-          <p className="text-lg text-white/70 mb-12">
-            Located in Houston Heights at 218 W 27th St, we specialize in museum-quality 
-            archival picture framing, shadow boxes, and art conservation.
-          </p>
-          
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-teal-400 mb-3">Custom Framing</h3>
-              <p className="text-white/70">
-                Professional frame design and installation for artwork, photographs, and memorabilia.
-              </p>
-            </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-teal-400 mb-3">Museum Quality</h3>
-              <p className="text-white/70">
-                Archival materials and conservation techniques to preserve your valuable pieces.
-              </p>
-            </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-teal-400 mb-3">Local Expertise</h3>
-              <p className="text-white/70">
-                Serving Houston Heights, Montrose, River Oaks, and surrounding areas since 1999.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-8">
-            <h2 className="text-3xl font-bold text-teal-400 mb-4">Visit Our Studio</h2>
-            <p className="text-white/90 mb-4">
-              218 W 27th St, Houston Heights, TX 77008
-            </p>
-            <p className="text-white/70">
-              Mon-Fri: 9am-5pm | Sat: 10am-3pm | Sun: By appointment
-            </p>
-            <p className="text-white/70 mt-2">
-              Call: (832) 893-3794
-            </p>
-          </div>
-        </div>
+      <Header />
+      <main className="flex-1">
+        {children}
       </main>
-      
-      <footer className="bg-black/50 backdrop-blur-sm border-t border-white/10 py-8">
-        <div className="container mx-auto px-4 text-center text-white/70">
-          <p>&copy; 2025 Jay's Frames. Houston's Premier Custom Framing Studio.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
+  );
+}
+
+function Router() {
+  return (
+    <Layout>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/products" component={Products} />
+        <Route path="/custom-framing" component={CustomFraming} />
+        <Route path="/order-status" component={OrderStatus} />
+        <Route path="/frame-assistant-test" component={FrameAssistantTest} />
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/about" component={About} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/gallery" component={Gallery} />
+        <Route path="/blog" component={Blog} />
+        <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/houston-art-framing" component={HoustonArtFraming} />
+        <Route path="/houston-neighborhoods" component={HoustonNeighborhoods} />
+        <Route path="/faq" component={FAQ} />
+        <Route path="/order-confirmation" component={OrderConfirmation} />
+        <Route path="/checkout" component={Checkout} />
+        <Route path="/shadowboxes" component={Shadowboxes} />
+        <Route path="/reinvented" component={Reinvented} />
+        <Route component={NotFound} />
+      </Switch>
+    </Layout>
+  );
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <CartProvider>
+          <Router />
+          <Toaster />
+        </CartProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

@@ -106,17 +106,11 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // Serve the simple static HTML file directly
-  app.get('/', (req, res) => {
-    res.sendFile('public/index.html', { root: '.' });
-  });
-
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    // Skip Vite setup for now to avoid WebSocket issues
-    // await setupVite(app, server);
+    await setupVite(app, server);
   } else {
     serveStatic(app);
   }
