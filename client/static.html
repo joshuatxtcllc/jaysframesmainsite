@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jay's Frames - Custom Framing Houston | Museum-Quality Picture Framing Heights</title>
+    <meta name="description" content="Houston's #1 custom framing studio in the Heights. Museum-quality archival picture framing, shadow boxes & art conservation.">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .bg-black { background-color: #000; }
+        .text-teal-400 { color: #14b8a6; }
+        .bg-white\/5 { background-color: rgba(255, 255, 255, 0.05); }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+        .border-white\/10 { border-color: rgba(255, 255, 255, 0.1); }
+        .text-white\/90 { color: rgba(255, 255, 255, 0.9); }
+        .text-white\/70 { color: rgba(255, 255, 255, 0.7); }
+        .hover\:text-teal-400:hover { color: #14b8a6; }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        function Navigation() {
+            return (
+                <nav className="bg-black/50 backdrop-blur-sm border-b border-white/10">
+                    <div className="container mx-auto px-4 py-4">
+                        <div className="flex items-center justify-between">
+                            <h1 className="text-2xl font-bold text-teal-400">Jay's Frames</h1>
+                            <div className="flex space-x-6">
+                                <a href="#home" className="text-white hover:text-teal-400">Home</a>
+                                <a href="#products" className="text-white hover:text-teal-400">Products</a>
+                                <a href="#custom-framing" className="text-white hover:text-teal-400">Custom Framing</a>
+                                <a href="#about" className="text-white hover:text-teal-400">About</a>
+                                <a href="#contact" className="text-white hover:text-teal-400">Contact</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        }
+        
+        function Hero() {
+            return (
+                <section className="container mx-auto px-4 py-16" id="home">
+                    <div className="text-center max-w-4xl mx-auto">
+                        <h1 className="text-5xl font-bold text-teal-400 mb-6">
+                            Jay's Frames
+                        </h1>
+                        <p className="text-xl text-white/90 mb-8">
+                            Houston's Premier Custom Framing Studio
+                        </p>
+                        <p className="text-lg text-white/70 mb-12">
+                            Located in Houston Heights at 218 W 27th St, we specialize in museum-quality 
+                            archival picture framing, shadow boxes, and art conservation.
+                        </p>
+                        
+                        <div className="grid md:grid-cols-3 gap-8 mb-16">
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">Custom Framing</h3>
+                                <p className="text-white/70">
+                                    Professional frame design and installation for artwork, photographs, and memorabilia.
+                                </p>
+                            </div>
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">Museum Quality</h3>
+                                <p className="text-white/70">
+                                    Archival materials and conservation techniques to preserve your valuable pieces.
+                                </p>
+                            </div>
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">Local Expertise</h3>
+                                <p className="text-white/70">
+                                    Serving Houston Heights, Montrose, River Oaks, and surrounding areas since 1999.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white/5 backdrop-blur-sm rounded-lg p-8 border border-white/10">
+                            <h2 className="text-3xl font-bold text-teal-400 mb-4">Visit Our Studio</h2>
+                            <p className="text-white/90 mb-4">
+                                218 W 27th St, Houston Heights, TX 77008
+                            </p>
+                            <p className="text-white/70">
+                                Mon-Fri: 9am-5pm | Sat: 10am-3pm | Sun: By appointment
+                            </p>
+                            <p className="text-white/70 mt-2">
+                                Call: (832) 893-3794
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+        
+        function Products() {
+            return (
+                <section className="container mx-auto px-4 py-16" id="products">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl font-bold text-teal-400 mb-4">Our Services</h2>
+                        <p className="text-lg text-white/70">
+                            Professional framing solutions for all your artwork and memorabilia
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[
+                            {
+                                title: "Custom Picture Frames",
+                                description: "Wood and metal frames in various styles and finishes. Perfect for artwork, photographs, and prints.",
+                                features: ["Wood frames: Oak, Maple, Cherry, Walnut", "Metal frames: Aluminum, Steel, Brass", "Custom sizes available"]
+                            },
+                            {
+                                title: "Shadow Boxes",
+                                description: "Deep frames for displaying three-dimensional objects, memorabilia, and collectibles.",
+                                features: ["Various depths available", "Custom fabric backing", "Museum-quality materials"]
+                            },
+                            {
+                                title: "Matting Options",
+                                description: "Acid-free matting in hundreds of colors to complement your artwork.",
+                                features: ["Acid-free preservation matting", "Single and double mats", "Custom cut to size"]
+                            },
+                            {
+                                title: "Conservation Glass",
+                                description: "UV-protective glass to preserve your artwork from fading and damage.",
+                                features: ["UV-filtering glass", "Anti-reflective options", "Museum-grade protection"]
+                            },
+                            {
+                                title: "Installation Services",
+                                description: "Professional installation and hanging services for your framed pieces.",
+                                features: ["Wall mounting and hanging", "Gallery lighting consultation", "Secure mounting hardware"]
+                            },
+                            {
+                                title: "Restoration Services",
+                                description: "Art restoration and conservation services for damaged or aging pieces.",
+                                features: ["Artwork cleaning and repair", "Color restoration", "Preservation consultation"]
+                            }
+                        ].map((service, index) => (
+                            <div key={index} className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">{service.title}</h3>
+                                <p className="text-white/70 mb-4">{service.description}</p>
+                                <ul className="text-white/60 text-sm space-y-1">
+                                    {service.features.map((feature, i) => (
+                                        <li key={i}>• {feature}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        }
+        
+        function CustomFraming() {
+            return (
+                <section className="container mx-auto px-4 py-16" id="custom-framing">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl font-bold text-teal-400 mb-4">Custom Framing Process</h2>
+                        <p className="text-lg text-white/70">
+                            From concept to completion - our expert process ensures perfect results
+                        </p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-12">
+                        <div className="space-y-8">
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">1. Consultation</h3>
+                                <p className="text-white/70">
+                                    We discuss your vision, assess your artwork, and recommend the best framing approach for preservation and aesthetics.
+                                </p>
+                            </div>
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">2. Design Selection</h3>
+                                <p className="text-white/70">
+                                    Choose from our extensive collection of frames, mats, and glass options with expert guidance.
+                                </p>
+                            </div>
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">3. Custom Cutting</h3>
+                                <p className="text-white/70">
+                                    Precision cutting and assembly using museum-quality materials and conservation techniques.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="space-y-8">
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">AI Frame Assistant</h3>
+                                <p className="text-white/70 mb-4">
+                                    Upload your artwork and get AI-powered frame and mat recommendations based on color analysis and style.
+                                </p>
+                                <button className="bg-teal-400 text-black px-6 py-3 rounded-lg hover:bg-teal-300 transition-colors">
+                                    Try AI Assistant
+                                </button>
+                            </div>
+                            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                                <h3 className="text-xl font-semibold text-teal-400 mb-3">Quality Guarantee</h3>
+                                <p className="text-white/70">
+                                    Every piece is crafted with meticulous attention to detail and backed by our satisfaction guarantee.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+        
+        function Footer() {
+            return (
+                <footer className="bg-black/50 backdrop-blur-sm border-t border-white/10 py-8">
+                    <div className="container mx-auto px-4 text-center text-white/70">
+                        <p>&copy; 2025 Jay's Frames. Houston's Premier Custom Framing Studio.</p>
+                    </div>
+                </footer>
+            );
+        }
+        
+        function App() {
+            return (
+                <div className="min-h-screen bg-black text-white">
+                    <Navigation />
+                    <Hero />
+                    <Products />
+                    <CustomFraming />
+                    <Footer />
+                </div>
+            );
+        }
+        
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

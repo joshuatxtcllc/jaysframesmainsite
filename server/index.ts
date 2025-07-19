@@ -106,11 +106,17 @@ app.use((req, res, next) => {
     throw err;
   });
 
+  // Serve static HTML directly to bypass Vite issues
+  app.get('/', (req, res) => {
+    res.sendFile('client/static.html', { root: '.' });
+  });
+
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    await setupVite(app, server);
+    // Skip Vite for now to avoid WebSocket connection issues
+    // await setupVite(app, server);
   } else {
     serveStatic(app);
   }
