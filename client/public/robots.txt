@@ -1,31 +1,39 @@
 User-agent: *
 Allow: /
 
-# Important pages for indexing
-Allow: /products
-Allow: /custom-framing
-Allow: /about
+# Important pages
+Allow: /picture-framing-houston
+Allow: /custom-framing-houston
+Allow: /frame-shops-houston
+Allow: /services
+Allow: /portfolio
 Allow: /contact
+Allow: /about
 Allow: /blog
-Allow: /faq
 
-# SEO optimizations
-Sitemap: https://jaysframes.com/sitemap.xml
-
-# Performance optimizations - allow all static assets
-Allow: /images/
-Allow: /js/
-Allow: /css/
-Allow: /_app/
-Allow: /api/docs
-
-# Block admin and sensitive areas
+# Block admin areas
 Disallow: /admin/
-Disallow: /api/auth/
-Disallow: /api/admin/
-Disallow: /checkout
-Disallow: /order-confirmation
-Disallow: /order-status
 
-# Crawl-delay for politeness
-Crawl-delay: 1
+# Block all API endpoints — raw JSON responses should never be indexed
+Disallow: /api/
+
+# Block transactional / internal pages
+Disallow: /checkout
+Disallow: /payment-success
+Disallow: /thank-you
+Disallow: /customer-portal
+Disallow: /seo-dashboard
+Disallow: /seo-blog-command
+
+# Block development artifacts
+Disallow: /index.html.backup
+
+# Block non-existent dynamic URL patterns (causing soft 404s)
+Disallow: /product/
+Disallow: /product-tag/
+Disallow: /product-category/
+Disallow: /image_width/
+Disallow: /image_height/
+
+# Sitemaps
+Sitemap: https://jaysframes.com/sitemap.xml
