@@ -93,11 +93,11 @@ export default function SeoHead({
         <meta name="twitter:description" content={ogDescription || description} />
         {ogImage && <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`} />}
 
-        {/* Geo Tags for Local SEO */}
+        {/* Geo Tags for Local SEO - accurate to 218 W 27th St, Houston Heights TX 77008 */}
         <meta name="geo.region" content="US-TX" />
-        <meta name="geo.placename" content="Houston" />
-        <meta name="geo.position" content="29.7604;-95.3698" />
-        <meta name="ICBM" content="29.7604, -95.3698" />
+        <meta name="geo.placename" content="Houston Heights" />
+        <meta name="geo.position" content="29.8093;-95.4030" />
+        <meta name="ICBM" content="29.8093, -95.4030" />
 
         {/* Structured Data / JSON-LD */}
         {structuredData && (
