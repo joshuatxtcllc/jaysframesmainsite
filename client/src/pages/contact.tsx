@@ -66,7 +66,7 @@ export default function Contact() {
             "description": "Houston's premier custom framing studio featuring a revolutionary hybrid production model that provides 62% faster turnaround times and AI-powered design assistants.",
             "url": "https://jaysframes.com",
             "telephone": "+18328933794",
-            "email": "Frames@Jaysframes.com",
+            "email": "frames@jaysframes.com",
             "logo": "https://jaysframes.com/images/logo.png",
             "image": "https://jaysframes.com/images/storefront.jpg",
             "currenciesAccepted": "USD",
@@ -74,7 +74,7 @@ export default function Contact() {
             "priceRange": "$$",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "1440 Yale St.",
+              "streetAddress": "218 W 27th St",
               "addressLocality": "Houston",
               "addressRegion": "TX",
               "postalCode": "77008",
@@ -82,15 +82,21 @@ export default function Contact() {
             },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": "29.7904",
-              "longitude": "-95.3988"
+              "latitude": "29.8093",
+              "longitude": "-95.4030"
             },
             "openingHoursSpecification": [
               {
                 "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
                 "opens": "10:00",
                 "closes": "18:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Saturday",
+                "opens": "11:00",
+                "closes": "17:00"
               }
             ],
             "sameAs": [
@@ -136,7 +142,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-base">Email</h3>
-                      <a href="mailto:Frames@Jaysframes.com" className="text-muted-foreground hover:text-primary transition-colors">Frames@Jaysframes.com</a>
+                      <a href="mailto:frames@jaysframes.com" className="text-muted-foreground hover:text-primary transition-colors">frames@jaysframes.com</a>
                       <p className="text-sm text-muted-foreground mt-1">We typically respond within 24 hours</p>
                     </div>
                   </div>
@@ -161,9 +167,9 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-medium text-base">Hours</h3>
-                      <p className="text-muted-foreground">Monday - Friday: 9am - 5pm</p>
-                      <p className="text-muted-foreground">Saturday: 10am - 3pm</p>
-                      <p className="text-muted-foreground">Sunday: By appointment only</p>
+                      <p className="text-muted-foreground">Monday - Friday: 10am - 6pm</p>
+                      <p className="text-muted-foreground">Saturday: 11am - 5pm</p>
+                      <p className="text-muted-foreground">Sunday: Closed</p>
                       <p className="text-sm text-muted-foreground mt-1">Customer service available 24/7 via chat</p>
                     </div>
                   </div>
@@ -278,7 +284,7 @@ export default function Contact() {
               <h2 className="text-2xl font-bold text-primary mb-6">Visit Our Location</h2>
               <div className="aspect-video w-full bg-muted rounded-md overflow-hidden">
                 <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3462.4862416112985!2d-95.40095842426697!3d29.79041457471424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c70c21347549%3A0x4a0e03f129303b15!2s1440%20Yale%20St%2C%20Houston%2C%20TX%2077008!5e0!3m2!1sen!2sus!4v1713920392064!5m2!1sen!2sus" 
+                  src="https://maps.google.com/maps?q=218+W+27th+St,+Houston,+TX+77008&output=embed" 
                   width="100%" 
                   height="100%" 
                   style={{ border: 0 }} 
